@@ -41,7 +41,7 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 		$user_data = get_user_by( $field, $username );
 
 		if ( ! $user_data ) {
-			$this->message_collection->add( __( 'Invalid username or email.', 'wpsc' ), 'error' );
+			$this->message_collection->add( __( 'Invalid username or email.', 'wp-e-commerce' ), 'error' );
 			return;
 		}
 
@@ -53,7 +53,7 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 		$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
 
 		if ( ! $allow ) {
-			wpsc_set_validation_errors( new WP_Error( 'username', __( 'Password reset is not allowed for this user', 'wpsc' ) ) );
+			wpsc_set_validation_errors( new WP_Error( 'username', __( 'Password reset is not allowed for this user', 'wp-e-commerce' ) ) );
 		} else if ( is_wp_error( $allow ) ) {
 			wpsc_set_validation_errors( $allow );
 		}
@@ -67,11 +67,11 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 			// Now insert the new md5 key into the db
 			$wpdb->update( $wpdb->users, array('user_activation_key' => $key ), array( 'user_login' => $user_login ) );
 		}
-		$message  = __( 'Someone requested that the password be reset for the following account:', 'wpsc' ) . "\r\n\r\n";
+		$message  = __( 'Someone requested that the password be reset for the following account:', 'wp-e-commerce' ) . "\r\n\r\n";
 		$message .= home_url( '/' ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s', 'wpsc' ), $user_login ) . "\r\n\r\n";
-		$message .= __( 'If this was a mistake, just ignore this email and nothing will happen.', 'wpsc' ) . "\r\n\r\n";
-		$message .= __( 'To reset your password, visit the following address:', 'wpsc' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s', 'wp-e-commerce' ), $user_login ) . "\r\n\r\n";
+		$message .= __( 'If this was a mistake, just ignore this email and nothing will happen.', 'wp-e-commerce' ) . "\r\n\r\n";
+		$message .= __( 'To reset your password, visit the following address:', 'wp-e-commerce' ) . "\r\n\r\n";
 		$message .= '<' . wpsc_get_password_reminder_url( "reset/{$user_login}/{$key}" ) . ">\r\n";
 
 		if ( is_multisite() ) {
@@ -80,20 +80,20 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
 
-		$title = sprintf( __( '[%s] Password Reset', 'wpsc' ), $blogname );
+		$title = sprintf( __( '[%s] Password Reset', 'wp-e-commerce' ), $blogname );
 
 		$title   = apply_filters( 'wpsc_retrieve_password_title', $title );
 		$message = apply_filters( 'wpsc_retrieve_password_message', $message, $key );
 
 		if ( $message && ! wp_mail( $user_email, $title, $message ) ) {
-			$this->message_collection->add( __( "Sorry, but due to an unexpected technical issue, we couldn't send you the e-mail containing password reset directions. Most likely the web host we're using have disabled e-mail features. Please contact us and we'll help you fix this. Or you can simply try again later.", 'wpsc' ), 'error' ); // by "us", we mean the site owner.
+			$this->message_collection->add( __( "Sorry, but due to an unexpected technical issue, we couldn't send you the e-mail containing password reset directions. Most likely the web host we're using have disabled e-mail features. Please contact us and we'll help you fix this. Or you can simply try again later.", 'wp-e-commerce' ), 'error' ); // by "us", we mean the site owner.
 		}
 
-		$this->message_collection->add( __( "We just sent you an e-mail containing directions to reset your password. If you don't receive it in a few minutes, check your Spam folder or simply try again.", 'wpsc' ), 'success' );
+		$this->message_collection->add( __( "We just sent you an e-mail containing directions to reset your password. If you don't receive it in a few minutes, check your Spam folder or simply try again.", 'wp-e-commerce' ), 'success' );
 	}
 
 	private function invalid_key_error() {
-		return new WP_Error( 'invalid_key', __( 'The username and reset key combination in the URL are incorrect. Please make sure that you are using the correct URL specified in your Password Reset confirmation email.', 'wpsc' ) );
+		return new WP_Error( 'invalid_key', __( 'The username and reset key combination in the URL are incorrect. Please make sure that you are using the correct URL specified in your Password Reset confirmation email.', 'wp-e-commerce' ) );
 	}
 
 	private function check_password_reset_key( $key, $login ) {
@@ -115,7 +115,7 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 	}
 
 	public function filter_fields_dont_match_message() {
-		return __( 'The password fields do not match.', 'wpsc' );
+		return __( 'The password fields do not match.', 'wp-e-commerce' );
 	}
 
 	public function reset_password( $user, $new_pass ) {
@@ -137,7 +137,7 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 		}
 
 		$this->reset_password( $user, $_POST['pass1'] );
-		$message = apply_filters( 'wpsc_reset_password_success_message', __( 'Your password has been reset successfully. Please log in with the new password.', 'wpsc' ), $user );
+		$message = apply_filters( 'wpsc_reset_password_success_message', __( 'Your password has been reset successfully. Please log in with the new password.', 'wp-e-commerce' ), $user );
 		$this->message_collection->add( $message, 'success', 'main', 'flash' );
 
 		wp_redirect( wpsc_get_login_url() );

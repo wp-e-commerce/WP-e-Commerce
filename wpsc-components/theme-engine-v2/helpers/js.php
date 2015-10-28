@@ -50,8 +50,8 @@ function _wpsc_action_enqueue_shipping_billing_scripts() {
 	wp_enqueue_script( 'wpsc-copy-billing-info' );
 
 	wp_localize_script( 'wpsc-copy-billing-info', 'wpsc_checkout_labels', array(
-		'billing_and_shipping' => apply_filters( 'wpsc_checkout_billing_header_label'     , __( '<h2>Billing &amp; Shipping Details</h2>', 'wpsc' ) ),
-		'shipping'             => apply_filters( 'wpsc_checkout_shipping_header_label'    , __( '<h2>Shipping Details</h2>', 'wpsc' ) ),
-		'billing'              => apply_filters( 'wpsc_checkout_billing_only_header_label', __( '<h2>Billing Details</h2>', 'wpsc' ) ),
+		'billing_and_shipping' => apply_filters( 'wpsc_checkout_billing_header_label'     , __( '<h2>Billing &amp; Shipping Details</h2>', 'wp-e-commerce' ) ),
+		'shipping'             => apply_filters( 'wpsc_checkout_shipping_header_label'    , __( '<h2>Shipping Details</h2>', 'wp-e-commerce' ) ),
+		'billing'              => apply_filters( 'wpsc_checkout_billing_only_header_label', __( '<h2>Billing Details</h2>', 'wp-e-commerce' ) ),
 	) );
 }

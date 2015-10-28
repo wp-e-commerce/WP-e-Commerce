@@ -201,7 +201,7 @@ function wpsc_purchlogs_get_weight_text( $id = '' ) {
 
 		$weight_in_kg = wpsc_purchlogs_get_weight( $id, 'kg' );
 
-		$weight_string = number_format( $weight_in_kg , 2 ) .' ' .  __( 'KG' , 'wpsc' ) . ' / ' .  $pound . ' ' .  __( 'LB', 'wpsc' ) . ' ' . $ounce . ' ' . __( 'OZ', 'wpsc' );
+		$weight_string = number_format( $weight_in_kg , 2 ) .' ' .  __( 'KG' , 'wp-e-commerce' ) . ' / ' .  $pound . ' ' .  __( 'LB', 'wp-e-commerce' ) . ' ' . $ounce . ' ' . __( 'OZ', 'wp-e-commerce' );
 
 	} else {
 		$weight_string = '';
@@ -322,7 +322,7 @@ function wpsc_purchaselog_details_SKU() {
 	  if ( $meta_value != null ) {
 		 return esc_attr( $meta_value );
 	  } else {
-		 return __('N/A', 'wpsc');
+		 return __('N/A', 'wp-e-commerce');
 	  }
    }
 }
@@ -605,7 +605,7 @@ function wpsc_display_purchlog_paymentmethod() {
    global $purchlogitem, $nzshpcrt_gateways;
    $gateway_name = '';
    if('wpsc_merchant_testmode' == $purchlogitem->extrainfo->gateway)
-      return __( 'Manual Payment', 'wpsc' );
+      return __( 'Manual Payment', 'wp-e-commerce' );
 
    foreach ( (array)$nzshpcrt_gateways as $gateway ) {
 	  if ( $gateway['internalname'] == $purchlogitem->extrainfo->gateway )
@@ -641,7 +641,7 @@ function wpsc_purchlogs_have_downloads_locked() {
    global $purchlogitem;
    $ip = $purchlogitem->have_downloads_locked();
    if ( $ip != '' ) {
-	  return sprintf( __( 'Release downloads locked to this IP address %s', 'wpsc' ), $ip );
+	  return sprintf( __( 'Release downloads locked to this IP address %s', 'wp-e-commerce' ), $ip );
    } else {
 	  return false;
    }
@@ -839,7 +839,7 @@ class wpsc_purchaselogs {
 		 $wpdb->query( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`='$deleteid'" );
 		 $wpdb->query( "DELETE FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` IN ('$deleteid')" );
 		 $wpdb->query( "DELETE FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`='$deleteid' LIMIT 1" );
-		 return '<div id="message" class="updated fade"><p>' . __( 'Thanks, the purchase log record has been deleted', 'wpsc' ) . '</p></div>';
+		 return '<div id="message" class="updated fade"><p>' . __( 'Thanks, the purchase log record has been deleted', 'wp-e-commerce' ) . '</p></div>';
 	  }
    }
 
@@ -952,7 +952,7 @@ class wpsc_purchaselogs {
 	  $namestring = esc_html( $fname ) . ' ' . esc_html( $lname ) . ' (<a href="mailto:' . esc_attr( $email ) . '?subject=Message From ' . home_url() . '">' . esc_html( $email ) . '</a>) ';
 
 	  if ( $fname == '' && $lname == '' && $email == '' ) {
-		 $namestring = __('N/A', 'wpsc');
+		 $namestring = __('N/A', 'wp-e-commerce');
 	  }
 
 	  return $namestring;

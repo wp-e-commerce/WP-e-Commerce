@@ -218,15 +218,15 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		}
 
 		$this->defaults = array(
-			'title'      => __( 'Category Drill Down', 'wpsc' ),
+			'title'      => __( 'Category Drill Down', 'wp-e-commerce' ),
 			'categories' => array(),
 		);
 
 		parent::__construct(
 			'wpsc_widget_drill_down',
-			__( '(WPEC) Category Drill Down', 'wpsc' ),
+			__( '(WPEC) Category Drill Down', 'wp-e-commerce' ),
 			array(
-				'description' => __( 'WP eCommerce Category Drill Down Widget', 'wpsc' ),
+				'description' => __( 'WP eCommerce Category Drill Down Widget', 'wp-e-commerce' ),
 			)
 		);
 	}
@@ -316,7 +316,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 
 		if ( ! empty( $this->url_args[ $widget_id ] ) ) {
 			echo '<li class="ancestor">';
-			echo '<a href="' . esc_attr( $this->go_up_link( $widget_id, 0 ) ) . '">' . sprintf( _x( '&lsaquo; %s', 'navigate up', 'wpsc' ), _x( 'Clear', 'category drill down', 'wpsc' ) ) . '</a>';
+			echo '<a href="' . esc_attr( $this->go_up_link( $widget_id, 0 ) ) . '">' . sprintf( _x( '&lsaquo; %s', 'navigate up', 'wp-e-commerce' ), _x( 'Clear', 'category drill down', 'wp-e-commerce' ) ) . '</a>';
 			echo '<ul class="children children-level-0">';
 
 			$ancestors = get_terms( 'wpsc_product_category', array(
@@ -335,7 +335,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 				$li_class .= ' active';
 				$link      = '<span>' . esc_html( $ancestor->name ) . '</span>';
 			} else {
-				$link = '<a href="' . esc_attr( $this->go_up_link( $widget_id, $level ) ) . '">' . sprintf( _x( '&lsaquo; %s', 'navigate up', 'wpsc' ), esc_html( $ancestor->name ) ) . '</a>';
+				$link = '<a href="' . esc_attr( $this->go_up_link( $widget_id, $level ) ) . '">' . sprintf( _x( '&lsaquo; %s', 'navigate up', 'wp-e-commerce' ), esc_html( $ancestor->name ) ) . '</a>';
 			}
 
 			$level ++;
@@ -422,7 +422,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 ?>
 <p>
 	<?php wpsc_form_label(
-		_x( 'Title', 'widget title', 'wpsc' ),
+		_x( 'Title', 'widget title', 'wp-e-commerce' ),
 		$this->get_field_id( 'title' )
 	); ?><br>
 	<?php wpsc_form_input(
@@ -434,15 +434,15 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 
 <p>
 	<?php wpsc_form_label(
-		__( 'Categories to display', 'wpsc' ),
+		__( 'Categories to display', 'wp-e-commerce' ),
 		$this->get_field_id( 'categories' )
 	); ?><br>
 	<span class="wpsc-cat-drill-down-all-actions wpsc-settings-all-none">
 		<?php
 			printf(
-				_x( 'Select: %1$s %2$s', 'select all / none', 'wpsc' ),
-				'<a href="#" data-for="' . esc_attr( $this->get_field_id( 'categories' ) ) . '" class="wpsc-multi-select-all">' . _x( 'All', 'select all', 'wpsc' ) . '</a>',
-				'<a href="#" data-for="' . esc_attr( $this->get_field_id( 'categories' ) ) . '" class="wpsc-multi-select-none">' . __( 'None', 'wpsc' ) . '</a>'
+				_x( 'Select: %1$s %2$s', 'select all / none', 'wp-e-commerce' ),
+				'<a href="#" data-for="' . esc_attr( $this->get_field_id( 'categories' ) ) . '" class="wpsc-multi-select-all">' . _x( 'All', 'select all', 'wp-e-commerce' ) . '</a>',
+				'<a href="#" data-for="' . esc_attr( $this->get_field_id( 'categories' ) ) . '" class="wpsc-multi-select-none">' . __( 'None', 'wp-e-commerce' ) . '</a>'
 			);
 		?>
 	</span>
@@ -455,7 +455,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 			'multiple'         => 'multiple',
 			'size'             => 5,
 			'class'            => 'wpsc-multi-select widefat',
-			'data-placeholder' => __( 'Select categories', 'wpsc' ),
+			'data-placeholder' => __( 'Select categories', 'wp-e-commerce' ),
 		)
 	); ?>
 </p>

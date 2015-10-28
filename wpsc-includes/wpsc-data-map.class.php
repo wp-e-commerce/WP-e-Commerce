@@ -252,7 +252,7 @@ final class WPSC_Data_Map {
 					} else {
 						$function = $this->_map_callback;
 					}
-					_wpsc_doing_it_wrong( $function , __( 'WPSC_Data_Map map creation callback is recursively calling itself.', 'wpsc' ), '3.8.14' );
+					_wpsc_doing_it_wrong( $function , __( 'WPSC_Data_Map map creation callback is recursively calling itself.', 'wp-e-commerce' ), '3.8.14' );
 				}
 
 				unset( $already_invoking_callback[$callback_unique_key] );

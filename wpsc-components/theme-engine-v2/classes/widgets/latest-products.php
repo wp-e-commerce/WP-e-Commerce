@@ -6,14 +6,14 @@ class WPSC_Widget_Latest_Products extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'wpsc_latest_products_widget',
-			__( '(WPEC) Latest Products', 'wpsc' ),
+			__( '(WPEC) Latest Products', 'wp-e-commerce' ),
 			array(
-				'description' => __( 'WP eCommerce Latest Products Widget', 'wpsc' ),
+				'description' => __( 'WP eCommerce Latest Products Widget', 'wp-e-commerce' ),
 			)
 		);
 
 		$this->defaults = array(
-			'title'      => __( 'Latest Products', 'wpsc' ),
+			'title'      => __( 'Latest Products', 'wp-e-commerce' ),
 			'width'      => 45,
 			'height'     => 45,
 			'show_name'  => true,

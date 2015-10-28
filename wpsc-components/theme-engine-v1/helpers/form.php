@@ -3,7 +3,7 @@
 function wpsc_parent_category_list( $taxonomies, $args, $parent, $current_term_id ) {
 	$myterms = get_terms( $taxonomies, $args );
 	$output = "<select name='category_parent'>";
-	$output .="<option value='0'>" . __( 'No Parent', 'wpsc' ) . "</option>";
+	$output .="<option value='0'>" . __( 'No Parent', 'wp-e-commerce' ) . "</option>";
 	$output .= wpsc_category_options(0, null, null, 0, $current_term_id );
 	$output .="</select>";
 

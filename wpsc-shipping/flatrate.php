@@ -16,7 +16,7 @@ class flatrate {
 	 */
 	function flatrate() {
 		$this->internal_name = "flatrate";
-		$this->name= __( "Flat Rate", 'wpsc' );
+		$this->name= __( "Flat Rate", 'wp-e-commerce' );
 		$this->is_external = false;
 		return true;
 	}
@@ -67,32 +67,32 @@ class flatrate {
 
 		$output .= "<table>";
 
-		$output .= "<tr><th colspan='2'><strong>" . __( 'Base Local', 'wpsc' ) . "</strong></th></tr>";
+		$output .= "<tr><th colspan='2'><strong>" . __( 'Base Local', 'wp-e-commerce' ) . "</strong></th></tr>";
 		switch ( get_option( 'base_country' ) ) {
 			case 'NZ':
-				$output .= $this->settings_form_shipping_price_field( 'southisland', __( 'South Island', 'wpsc' ),  $shipping['southisland'] );
-				$output .= $this->settings_form_shipping_price_field( 'northisland', __( 'North Island', 'wpsc' ),  $shipping['northisland'] );
+				$output .= $this->settings_form_shipping_price_field( 'southisland', __( 'South Island', 'wp-e-commerce' ),  $shipping['southisland'] );
+				$output .= $this->settings_form_shipping_price_field( 'northisland', __( 'North Island', 'wp-e-commerce' ),  $shipping['northisland'] );
 				break;
 
 			case 'US':
-				$output .= $this->settings_form_shipping_price_field( 'continental', __( 'Continental 48 States', 'wpsc' ),  $shipping['continental'] );
-				$output .= $this->settings_form_shipping_price_field( 'all',         __( 'All 50 States'        , 'wpsc' ), $shipping['all'] );
+				$output .= $this->settings_form_shipping_price_field( 'continental', __( 'Continental 48 States', 'wp-e-commerce' ),  $shipping['continental'] );
+				$output .= $this->settings_form_shipping_price_field( 'all',         __( 'All 50 States'        , 'wp-e-commerce' ), $shipping['all'] );
 				break;
 
 			default:
-				$output .= $this->settings_form_shipping_price_field( 'local',       __( 'Domestic', 'wpsc' ),      $shipping['local'] );
+				$output .= $this->settings_form_shipping_price_field( 'local',       __( 'Domestic', 'wp-e-commerce' ),      $shipping['local'] );
 				break;
 		}
 
-		$output .= "<tr><th colspan='2'><strong>" . __( 'Base International', 'wpsc' ) . "</strong></th></tr>";
-		$output .= $this->settings_form_shipping_price_field( 'northamerica', __( 'North America', 'wpsc' ),    $shipping['northamerica'] );
-		$output .= $this->settings_form_shipping_price_field( 'southamerica', __( 'South America', 'wpsc' ),    $shipping['southamerica'] );
-		$output .= $this->settings_form_shipping_price_field( 'asiapacific',  __( 'Asia and Pacific', 'wpsc' ), $shipping['asiapacific'] );
-		$output .= $this->settings_form_shipping_price_field( 'europe',       __( 'Europe', 'wpsc' ),           $shipping['europe'] );
-		$output .= $this->settings_form_shipping_price_field( 'africa',       __( 'Africa', 'wpsc' ),           $shipping['africa'] );
+		$output .= "<tr><th colspan='2'><strong>" . __( 'Base International', 'wp-e-commerce' ) . "</strong></th></tr>";
+		$output .= $this->settings_form_shipping_price_field( 'northamerica', __( 'North America', 'wp-e-commerce' ),    $shipping['northamerica'] );
+		$output .= $this->settings_form_shipping_price_field( 'southamerica', __( 'South America', 'wp-e-commerce' ),    $shipping['southamerica'] );
+		$output .= $this->settings_form_shipping_price_field( 'asiapacific',  __( 'Asia and Pacific', 'wp-e-commerce' ), $shipping['asiapacific'] );
+		$output .= $this->settings_form_shipping_price_field( 'europe',       __( 'Europe', 'wp-e-commerce' ),           $shipping['europe'] );
+		$output .= $this->settings_form_shipping_price_field( 'africa',       __( 'Africa', 'wp-e-commerce' ),           $shipping['africa'] );
 		$output .= "</table>";
 
-		$output .= "<br /><p class='description'>" . __( 'If you do not wish to ship to a particular region, leave the field blank. To offer free shipping to a region, enter 0.', 'wpsc' ) . "</p>";
+		$output .= "<br /><p class='description'>" . __( 'If you do not wish to ship to a particular region, leave the field blank. To offer free shipping to a region, enter 0.', 'wp-e-commerce' ) . "</p>";
 		$output .= "</td></tr>";
 
 		return $output;
@@ -172,7 +172,7 @@ class flatrate {
 			$flatrates = get_option('flat_rates');
 
 			if ($flatrates != '') {
-				if ( $quote_shipping_method == $this->internal_name && $quote_shipping_option != __( "Flat Rate", 'wpsc' ) )
+				if ( $quote_shipping_method == $this->internal_name && $quote_shipping_option != __( "Flat Rate", 'wp-e-commerce' ) )
 					wpsc_delete_customer_meta( 'quote_shipping_option' );
 
 				if ( isset ( $flatrates[$results] ) ) {
@@ -185,7 +185,7 @@ class flatrate {
 
 				    }
 
-                    return array( __( "Flat Rate", 'wpsc' ) => (float) $flatrates[$results] );
+                    return array( __( "Flat Rate", 'wp-e-commerce' ) => (float) $flatrates[$results] );
                 }
 			}
 
@@ -197,25 +197,25 @@ class flatrate {
 			switch ( $country ) {
 			case 'NZ':
 				if ( isset( $flatrates['northisland'] ) && strlen( $flatrates['northisland'] ) > 0 ) {
-					$shipping_quotes[ __( 'North Island', 'wpsc' ) ] = esc_attr( $flatrates['northisland'] );
+					$shipping_quotes[ __( 'North Island', 'wp-e-commerce' ) ] = esc_attr( $flatrates['northisland'] );
 				}
 				if ( isset( $flatrates['southisland'] ) && strlen( $flatrates['southisland'] ) > 0 ) {
-					$shipping_quotes[ __( 'South Island', 'wpsc' ) ] = esc_attr( $flatrates['southisland'] );
+					$shipping_quotes[ __( 'South Island', 'wp-e-commerce' ) ] = esc_attr( $flatrates['southisland'] );
 				}
 				break;
 
 			case 'US':
 				if ( isset( $flatrates['continental'] ) && strlen( $flatrates['continental'] ) > 0 ) {
-					$shipping_quotes[ __( 'Continental 48 States', 'wpsc' ) ] = esc_attr( $flatrates['continental'] );
+					$shipping_quotes[ __( 'Continental 48 States', 'wp-e-commerce' ) ] = esc_attr( $flatrates['continental'] );
 				}
 				if ( isset( $flatrates['all'] ) && strlen( $flatrates['all'] ) > 0 ) {
-					$shipping_quotes[ __( 'All 50 States', 'wpsc' ) ] = esc_attr( $flatrates['all'] );
+					$shipping_quotes[ __( 'All 50 States', 'wp-e-commerce' ) ] = esc_attr( $flatrates['all'] );
 				}
 				break;
 
 			default:
 				if ( isset( $flatrates['local'] ) && strlen( $flatrates['local'] ) > 0 ) {
-					$shipping_quotes[ __( 'Local Shipping', 'wpsc' ) ] = esc_attr( $flatrates['local'] );
+					$shipping_quotes[ __( 'Local Shipping', 'wp-e-commerce' ) ] = esc_attr( $flatrates['local'] );
 				}
 				break;
 			}

@@ -32,7 +32,7 @@ function _wpsc_shortcode_cart( $atts ) {
 	require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table-widget-form.php' );
 
 	if ( ! count( $wpsc_cart->cart_items ) ) {
-		return '<p>' . __( 'No items in cart.', 'wpsc' ) . '</p>';
+		return '<p>' . __( 'No items in cart.', 'wp-e-commerce' ) . '</p>';
 	}
 
 	switch ( $atts['type'] ) {

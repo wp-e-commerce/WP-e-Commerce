@@ -14,9 +14,9 @@ class WP_Widget_Product_Categories extends WP_Widget {
 	function __construct() {
 		$widget_ops = array(
 			'classname' => 'widget_wpsc_categorisation',
-			'description' => __( 'Product Grouping Widget', 'wpsc' )
+			'description' => __( 'Product Grouping Widget', 'wp-e-commerce' )
 		);
-		parent::__construct( 'wpsc_categorisation', __( '(WPEC) Product Categories', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_categorisation', __( '(WPEC) Product Categories', 'wp-e-commerce' ), $widget_ops );
 	}
 
 	/**
@@ -31,7 +31,7 @@ class WP_Widget_Product_Categories extends WP_Widget {
 
 		extract( $args );
 
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Categories', 'wpsc'  ) : $instance['title'] );
+		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Categories', 'wp-e-commerce'  ) : $instance['title'] );
 
 		echo $before_widget;
 
@@ -128,32 +128,32 @@ class WP_Widget_Product_Categories extends WP_Widget {
 		 ?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wp-e-commerce' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 
 		<p>
-			<?php _e('Show Categories','wpsc'); ?>:<br />
+			<?php _e('Show Categories','wp-e-commerce'); ?>:<br />
 			<?php wpsc_list_categories('wpsc_category_widget_admin_category_list', array("id"=>$this->get_field_id('categories'),"name"=>$this->get_field_name('categories'),"instance"=>$instance), 0); ?>
-			<?php _e('(leave all unchecked if you want to display all)','wpsc'); ?>
+			<?php _e('(leave all unchecked if you want to display all)','wp-e-commerce'); ?>
 		</p>
 
 		<p>
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('grid'); ?>" name="<?php echo $this->get_field_name('grid'); ?>"<?php checked( $grid ); ?> />
-			<label for="<?php echo $this->get_field_id('grid'); ?>"><?php _e('Use Category Grid View', 'wpsc'); ?></label><br />
+			<label for="<?php echo $this->get_field_id('grid'); ?>"><?php _e('Use Category Grid View', 'wp-e-commerce'); ?></label><br />
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('image'); ?>" name="<?php echo $this->get_field_name('image'); ?>"<?php checked( $image ); ?> onclick="jQuery('.wpsc_category_image').toggle()" />
-			<label for="<?php echo $this->get_field_id('image'); ?>"><?php _e('Show Thumbnails', 'wpsc'); ?></label>
+			<label for="<?php echo $this->get_field_id('image'); ?>"><?php _e('Show Thumbnails', 'wp-e-commerce'); ?></label>
 		</p>
 
 		<div class="wpsc_category_image"<?php if( !checked( $image ) ) { echo ' style="display:none;"'; } ?>>
 			<p>
 
-				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('show_name'); ?>" name="<?php echo $this->get_field_name('show_name'); ?>"<?php checked( $show_name ); ?> /><label for="<?php echo $this->get_field_id('show_name'); ?>"><?php _e(' Show N/A when No Image Available', 'wpsc'); ?></label>
+				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('show_name'); ?>" name="<?php echo $this->get_field_name('show_name'); ?>"<?php checked( $show_name ); ?> /><label for="<?php echo $this->get_field_id('show_name'); ?>"><?php _e(' Show N/A when No Image Available', 'wp-e-commerce'); ?></label>
 			</p>
 			<p>
-				<label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width:', 'wpsc'); ?></label>
+				<label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width:', 'wp-e-commerce'); ?></label>
 				<input type="text" id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" value="<?php echo $width ; ?>" size="3" />
-				<label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height:', 'wpsc'); ?></label>
+				<label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height:', 'wp-e-commerce'); ?></label>
 				<input type="text" id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" value="<?php echo $height ; ?>" size="3" />
 			</p>
 		</div>

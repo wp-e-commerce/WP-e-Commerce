@@ -149,8 +149,8 @@ class WPSC_Product_Variations_Page {
 
 	private function display_tabs() {
 		$tabs = array(
-			'manage'   => _x( 'Manage', 'manage product variations', 'wpsc' ),
-			'setup' => __( 'Setup', 'wpsc' ),
+			'manage'   => _x( 'Manage', 'manage product variations', 'wp-e-commerce' ),
+			'setup' => __( 'Setup', 'wp-e-commerce' ),
 		);
 
 		echo '<ul id="wpsc-product-variations-tabs" class="category-tabs">';

@@ -89,7 +89,7 @@ function wpsc_transaction_theme() {
 				if($result == 'Insufficient Funds' && $ec == 5){
 					$processed_id = '6';
 
-					$payment_instructions = printf( __( 'Sorry your transaction was not accepted due to insufficient funds <br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wpsc' ), get_option( "shopping_cart_url" ) );
+					$payment_instructions = printf( __( 'Sorry your transaction was not accepted due to insufficient funds <br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wp-e-commerce' ), get_option( "shopping_cart_url" ) );
 				}
 				if ( $processed_id )
 					wpsc_update_purchase_log_status( $sessionid, $processed_id, 'sessionid' );
@@ -120,6 +120,6 @@ function wpsc_transaction_theme() {
 			$cart_log_id = $wpdb->get_var( $wpdb->prepare( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $sessionid ) );
 			return transaction_results( $sessionid, true );
 		}else
-		printf( __( 'Sorry your transaction was not accepted.<br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wpsc' ), get_option( "shopping_cart_url" ) );
+		printf( __( 'Sorry your transaction was not accepted.<br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wp-e-commerce' ), get_option( "shopping_cart_url" ) );
 	}
 }

@@ -264,7 +264,7 @@ function _wpsc_filter_control_heading( $output, $field, $args ) {
 	if ( get_option( 'shippingsameasbilling', 0 ) && ! empty( $field['shipping_heading'] ) ) {
 		$title = apply_filters(
 			'wpsc_copy_billing_details_button_title',
-			__( 'Copy billing details', 'wpsc' )
+			__( 'Copy billing details', 'wp-e-commerce' )
 		);
 
 		$button = wpsc_form_input(
@@ -318,15 +318,15 @@ function _wpsc_filter_control_select_country( $output, $field, $args ) {
 
 		switch ( $isocode ) {
 			case 'US':
-				$alternatives[] = __( 'United States of America', 'wpsc' );
+				$alternatives[] = __( 'United States of America', 'wp-e-commerce' );
 				break;
 			case 'GB':
-				$alternatives[] = __( 'Great Britain', 'wpsc' );
-				$alternatives[] = __( 'England', 'wpsc' );
-				$alternatives[] = __( 'Wales', 'wpsc' );
-				$alternatives[] = __( 'UK', 'wpsc' );
-				$alternatives[] = __( 'Scotland', 'wpsc' );
-				$alternatives[] = __( 'Northern Ireland', 'wpsc' );
+				$alternatives[] = __( 'Great Britain', 'wp-e-commerce' );
+				$alternatives[] = __( 'England', 'wp-e-commerce' );
+				$alternatives[] = __( 'Wales', 'wp-e-commerce' );
+				$alternatives[] = __( 'UK', 'wp-e-commerce' );
+				$alternatives[] = __( 'Scotland', 'wp-e-commerce' );
+				$alternatives[] = __( 'Northern Ireland', 'wp-e-commerce' );
 				break;
 		}
 
@@ -361,8 +361,8 @@ function _wpsc_filter_control_select_region( $output, $field, $args ) {
 
 	if ( $country == 'all' ) {
 		$state_data = $wpdb->get_results( "SELECT `regions`.*, country.country as country, country.isocode as country_isocode FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id`" );
-		$options[__( 'No State', 'wpsc' )] = array(
-			'' => __( 'No State', 'wpsc' ),
+		$options[__( 'No State', 'wp-e-commerce' )] = array(
+			'' => __( 'No State', 'wp-e-commerce' ),
 		);
 		foreach ( $state_data as $state ) {
 
@@ -788,7 +788,7 @@ function wpsc_form_submit( $name, $value = '', $atts = array(), $echo = true ) {
 	}
 
 	$atts['name']  = $name;
-	$atts['value'] = empty( $value ) ? _x( 'Submit', 'generic submit button title', 'wpsc' ) : $value;
+	$atts['value'] = empty( $value ) ? _x( 'Submit', 'generic submit button title', 'wp-e-commerce' ) : $value;
 	$atts['type']  = 'submit';
 
 	return _wpsc_input_type_field( $atts, $echo );

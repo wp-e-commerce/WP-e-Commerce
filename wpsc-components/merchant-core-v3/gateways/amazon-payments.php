@@ -37,7 +37,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		parent::__construct();
 
-		$this->title = __( 'Amazon Payments', 'wpsc' );
+		$this->title = __( 'Amazon Payments', 'wp-e-commerce' );
 
 		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
 
@@ -129,43 +129,43 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		<!-- Account Credentials -->
 		<tr>
 			<td colspan="2">
-				<h4><?php _e( 'Register with Amazon', 'wpsc' ); ?></h4>
+				<h4><?php _e( 'Register with Amazon', 'wp-e-commerce' ); ?></h4>
 			</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td>
-				<a class="button" target="_blank" href="<?php echo esc_url( $url ); ?>"><?php _e( 'Connect WP eCommerce to Amazon', 'wpsc' ); ?></a><br />
-				<small><?php _e( 'Once registration is complete, enter your API credentials below.', 'wpsc' ); ?></small>
+				<a class="button" target="_blank" href="<?php echo esc_url( $url ); ?>"><?php _e( 'Connect WP eCommerce to Amazon', 'wp-e-commerce' ); ?></a><br />
+				<small><?php _e( 'Once registration is complete, enter your API credentials below.', 'wp-e-commerce' ); ?></small>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-ipn"><?php _e( 'Amazon Merchant IPN URL', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-ipn"><?php _e( 'Amazon Merchant IPN URL', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input id="wpsc-amazon-payments-ipn" type="text" disabled value="<?php echo $this->get_amazon_ipn_url(); ?>" /><br />
-				<small><?php printf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'wpsc' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ); ?></small>
+				<small><?php printf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'wp-e-commerce' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ); ?></small>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				<h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
+				<h4><?php _e( 'Account Credentials', 'wp-e-commerce' ); ?></h4>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-seller-id"><?php _e( 'Seller ID', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-seller-id"><?php _e( 'Seller ID', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'seller_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'seller_id' ) ); ?>" id="wpsc-amazon-payments-seller-id" /><br />
-				<small><?php _e( 'Obtained from your Amazon account. Also known as the "Merchant ID". Usually found under Settings > Integrations after logging into your merchant account.', 'wpsc' ); ?></small>
+				<small><?php _e( 'Obtained from your Amazon account. Also known as the "Merchant ID". Usually found under Settings > Integrations after logging into your merchant account.', 'wp-e-commerce' ); ?></small>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-mws-access-key"><?php _e( 'MWS Access Key', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-mws-access-key"><?php _e( 'MWS Access Key', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'mws_access_key' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'mws_access_key' ) ); ?>" id="wpsc-amazon-payments-mws-access-key" /><br />
@@ -173,79 +173,79 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-secret-key"><?php _e( 'MWS Secret Key', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-secret-key"><?php _e( 'MWS Secret Key', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'secret_key' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'secret_key' ) ); ?>" id="wpsc-amazon-payments-secret-key" /><br />
-				<small><?php _e( 'Obtained from your Amazon account. You can get these keys by logging into Seller Central and viewing the MWS Access Key section under the Integration tab.', 'wpsc' ); ?></small>
+				<small><?php _e( 'Obtained from your Amazon account. You can get these keys by logging into Seller Central and viewing the MWS Access Key section under the Integration tab.', 'wp-e-commerce' ); ?></small>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-client-id"><?php _e( 'Client ID', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-client-id"><?php _e( 'Client ID', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'client_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'client_id' ) ); ?>" id="wpsc-amazon-payments-client_id" /><br />
-				<small><?php _e( 'Obtained from your Amazon account, under Web Settings.', 'wpsc' ); ?></small>
+				<small><?php _e( 'Obtained from your Amazon account, under Web Settings.', 'wp-e-commerce' ); ?></small>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-sandbox-mode"><?php _e( 'Sandbox Mode', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-sandbox-mode"><?php _e( 'Sandbox Mode', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-payment-capture"><?php _e( 'Payment Capture', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-payment-capture"><?php _e( 'Payment Capture', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<select id="wpsc-amazon-payments-payment-capture" name="<?php echo esc_attr( $this->setting->get_field_name( 'payment_capture' ) ); ?>">
-					<option value='' <?php selected( '', $this->setting->get( 'payment_capture' ) ); ?>><?php _e( 'Authorize and capture the payment when the order is placed.', 'wpsc' )?></option>
-					<option value='authorize' <?php selected( 'authorize', $this->setting->get( 'payment_capture' ) ); ?>><?php _e( 'Authorize the payment when the order is placed.', 'wpsc' )?></option>
-					<option value='manual' <?php selected( 'manual', $this->setting->get( 'payment_capture' ) ); ?>><?php _e( 'Don’t authorize the payment when the order is placed (i.e. for pre-orders).', 'wpsc' )?></option>
+					<option value='' <?php selected( '', $this->setting->get( 'payment_capture' ) ); ?>><?php _e( 'Authorize and capture the payment when the order is placed.', 'wp-e-commerce' )?></option>
+					<option value='authorize' <?php selected( 'authorize', $this->setting->get( 'payment_capture' ) ); ?>><?php _e( 'Authorize the payment when the order is placed.', 'wp-e-commerce' )?></option>
+					<option value='manual' <?php selected( 'manual', $this->setting->get( 'payment_capture' ) ); ?>><?php _e( 'Don’t authorize the payment when the order is placed (i.e. for pre-orders).', 'wp-e-commerce' )?></option>
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-cart-button-display"><?php _e( 'Cart login button display', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-cart-button-display"><?php _e( 'Cart login button display', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<select id="wpsc-amazon-payments-cart-button-display" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_button_display' ) ); ?>">
-					<option value='button' <?php selected( 'button', $this->setting->get( 'cart_button_display' ) ); ?>><?php _e( 'Button', 'wpsc' )?></option>
-					<option value='banner' <?php selected( 'banner', $this->setting->get( 'cart_button_display' ) ); ?>><?php _e( 'Banner', 'wpsc' )?></option>
-					<option value='disabled' <?php selected( 'disabled', $this->setting->get( 'cart_button_display' ) ); ?>><?php _e( 'Disabled', 'wpsc' )?></option>
+					<option value='button' <?php selected( 'button', $this->setting->get( 'cart_button_display' ) ); ?>><?php _e( 'Button', 'wp-e-commerce' )?></option>
+					<option value='banner' <?php selected( 'banner', $this->setting->get( 'cart_button_display' ) ); ?>><?php _e( 'Banner', 'wp-e-commerce' )?></option>
+					<option value='disabled' <?php selected( 'disabled', $this->setting->get( 'cart_button_display' ) ); ?>><?php _e( 'Disabled', 'wp-e-commerce' )?></option>
 				</select><br />
 				<small><?php _e( 'How the Login with Amazon button gets displayed on the cart page.' ); ?></small>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-hide-button-display"><?php _e( 'Hide Standard Checkout Button', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-hide-button-display"><?php _e( 'Hide Standard Checkout Button', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'hide_button_display' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'hide_button_display' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'hide_button_display' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'hide_button_display' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'hide_button_display' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'hide_button_display' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'hide_button_display' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'hide_button_display' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
 		</tr>
 		<!-- Error Logging -->
 		<tr>
 			<td colspan="2">
-				<h4><?php _e( 'Error Logging', 'wpsc' ); ?></h4>
+				<h4><?php _e( 'Error Logging', 'wp-e-commerce' ); ?></h4>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label><?php _e( 'Enable Debugging', 'wpsc' ); ?></label>
+				<label><?php _e( 'Enable Debugging', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
 		</tr>
 		<?php
@@ -264,7 +264,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		try {
 
 			if ( ! $amazon_reference_id ) {
-				throw new Exception( __( 'An Amazon payment method was not chosen.', 'wpsc' ) );
+				throw new Exception( __( 'An Amazon payment method was not chosen.', 'wp-e-commerce' ) );
 			}
 
 			// Update order reference with amounts
@@ -273,7 +273,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				'AmazonOrderReferenceId'                                       => $amazon_reference_id,
 				'OrderReferenceAttributes.OrderTotal.Amount'                   => $order->get( 'totalprice' ),
 				'OrderReferenceAttributes.OrderTotal.CurrencyCode'             => strtoupper( $this->get_currency_code() ),
-				'OrderReferenceAttributes.SellerNote'                          => sprintf( __( 'Order %s from %s.', 'wpsc' ), $order->get( 'id' ), remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ) ),
+				'OrderReferenceAttributes.SellerNote'                          => sprintf( __( 'Order %s from %s.', 'wp-e-commerce' ), $order->get( 'id' ), remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ) ),
 				'OrderReferenceAttributes.SellerOrderAttributes.SellerOrderId' => $order->get( 'id' ),
 				'OrderReferenceAttributes.SellerOrderAttributes.StoreName'     => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
 				'OrderReferenceAttributes.PlatformId'                          => 'A2Z8DY3R4G08IM'
@@ -323,7 +323,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				case 'manual' :
 
 					// Mark as on-hold
-					$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wpsc' ) );
+					$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wp-e-commerce' ) );
 
 				break;
 				case 'authorize' :
@@ -333,11 +333,11 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 					if ( $result ) {
 						// Mark as on-hold
-						$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wpsc' ) )->save();
+						$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wp-e-commerce' ) )->save();
 
 					} else {
 						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED )->save();
-						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) )->save();
+						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wp-e-commerce' ) )->save();
 
 						$this->handle_declined_transaction( $order );
 					}
@@ -350,10 +350,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 					if ( $result ) {
 						// Payment complete
-						$order->set( 'amazon-status', __( 'Amazon order completed.  Funds have been authorized and captured.', 'wpsc' ) );
+						$order->set( 'amazon-status', __( 'Amazon order completed.  Funds have been authorized and captured.', 'wp-e-commerce' ) );
 					} else {
 						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
-						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) );
+						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wp-e-commerce' ) );
 
 						$this->handle_declined_transaction( $order );
 					}
@@ -388,10 +388,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$reason_code = $order->get( 'amazon-reason-code' );
 
 		if ( 'InvalidPaymentMethod' == $reason_code ) {
-			$message = __( 'Selected payment method was not valid.  Please select a valid payment method.', 'wpsc' );
+			$message = __( 'Selected payment method was not valid.  Please select a valid payment method.', 'wp-e-commerce' );
 			$url     = add_query_arg( $_GET, wpsc_get_checkout_url( 'shipping-and-billing' ) );
 		} else {
-			$message = __( 'It is not currently possible to complete this transaction with Amazon Payments. Please contact the store administrator or try again later.', 'wpsc' );
+			$message = __( 'It is not currently possible to complete this transaction with Amazon Payments. Please contact the store administrator or try again later.', 'wp-e-commerce' );
 			$url     = wpsc_get_cart_url();
 		}
 
@@ -545,7 +545,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		try {
 
 			if ( ! $this->reference_id ) {
-				throw new Exception( __( 'An Amazon payment method was not chosen.', 'wpsc' ) );
+				throw new Exception( __( 'An Amazon payment method was not chosen.', 'wp-e-commerce' ) );
 			}
 
 			if ( is_null( $this->purchase_log ) ) {
@@ -562,7 +562,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				'AmazonOrderReferenceId'                                       => $this->reference_id,
 				'OrderReferenceAttributes.OrderTotal.Amount'                   => $wpsc_cart->calculate_total_price(),
 				'OrderReferenceAttributes.OrderTotal.CurrencyCode'             => strtoupper( $this->get_currency_code() ),
-				'OrderReferenceAttributes.SellerNote'                          => sprintf( __( 'Order %s from %s.', 'wpsc' ), $this->purchase_log->get( 'id' ), urlencode( remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ) ) ),
+				'OrderReferenceAttributes.SellerNote'                          => sprintf( __( 'Order %s from %s.', 'wp-e-commerce' ), $this->purchase_log->get( 'id' ), urlencode( remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ) ) ),
 				'OrderReferenceAttributes.SellerOrderAttributes.SellerOrderId' => $this->purchase_log->get( 'id' ),
 				'OrderReferenceAttributes.SellerOrderAttributes.StoreName'     => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
 				'OrderReferenceAttributes.PlatformId'                          => 'A2Z8DY3R4G08IM'
@@ -682,7 +682,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 */
 	public function checkout_message() {
 		if ( empty( $this->reference_id ) && ! $this->user_is_authenticated ) {
-			echo '<div class="wpsc-alert wpsc-alert-block wpsc-alert-success"><div id="pay_with_amazon"></div><p>' . apply_filters( 'wpsc_amazon_pa_checkout_message', __( 'Have an Amazon account?', 'wpsc' ) ) . '</p></div>';
+			echo '<div class="wpsc-alert wpsc-alert-block wpsc-alert-success"><div id="pay_with_amazon"></div><p>' . apply_filters( 'wpsc_amazon_pa_checkout_message', __( 'Have an Amazon account?', 'wp-e-commerce' ) ) . '</p></div>';
 		}
 	}
 
@@ -738,9 +738,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			<div class="col-1">
 				<?php
 				if ( wpsc_uses_shipping() ) {
-					?><h3><?php _e( 'Shipping Address', 'wpsc' ); ?></h3><?php
+					?><h3><?php _e( 'Shipping Address', 'wp-e-commerce' ); ?></h3><?php
 				} else {
-					?><h3><?php _e( 'Your Address', 'wpsc' ); ?></h3><?php
+					?><h3><?php _e( 'Your Address', 'wp-e-commerce' ); ?></h3><?php
 				}
 				?>
 				<div id="amazon_addressbook_widget"></div>
@@ -770,7 +770,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	public function payment_widget() {
 		?>
 			<div class="col-2">
-				<h3><?php _e( 'Payment Method', 'wpsc' ); ?></h3>
+				<h3><?php _e( 'Payment Method', 'wp-e-commerce' ); ?></h3>
 				<div id="amazon_wallet_widget"></div>
 				<?php $this->insert_reference_id(); ?>
 			</div>
@@ -1224,10 +1224,10 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 		<div class="metabox-holder">
 			<div id="wpsc-amazon-payments" class="postbox">
-				<h3 class='hndle'><?php _e( 'Amazon Payments' , 'wpsc' ); ?></h3>
+				<h3 class='hndle'><?php _e( 'Amazon Payments' , 'wp-e-commerce' ); ?></h3>
 				<div class='inside'>
 					<p><?php
-							_e( 'Current status: ', 'wpsc' );
+							_e( 'Current status: ', 'wp-e-commerce' );
 							echo wp_kses_data( $this->log->get( 'amazon-status' ) );
 						?>
 					</p>
@@ -1240,38 +1240,38 @@ class WPSC_Amazon_Payments_Order_Handler {
 			switch ( $amazon_capture_state ) {
 				case 'Pending' :
 
-					echo wpautop( sprintf( __( 'Capture Reference %s is <strong>%s</strong>.', 'wpsc' ), $amazon_capture_id, $amazon_capture_state ) . ' <a href="#" data-action="refresh" class="refresh">' . __( 'Refresh', 'wpsc' ) . '</a>' );
+					echo wpautop( sprintf( __( 'Capture Reference %s is <strong>%s</strong>.', 'wp-e-commerce' ), $amazon_capture_id, $amazon_capture_state ) . ' <a href="#" data-action="refresh" class="refresh">' . __( 'Refresh', 'wp-e-commerce' ) . '</a>' );
 
 					// Admin will need to re-check this, so clear the stored value
 					$this->clear_stored_states( $order_id );
 				break;
 				case 'Declined' :
 
-					echo wpautop( __( 'The capture was declined.', 'wpsc' ) );
+					echo wpautop( __( 'The capture was declined.', 'wp-e-commerce' ) );
 
 					$actions['authorize'] = array(
 						'id' => $amazon_reference_id,
-						'button' => __( 'Re-authorize?', 'wpsc' )
+						'button' => __( 'Re-authorize?', 'wp-e-commerce' )
 					);
 
 				break;
 				case 'Completed' :
 
-					echo wpautop( sprintf( __( 'Capture Reference %s is <strong>%s</strong>.', 'wpsc' ), $amazon_capture_id, $amazon_capture_state ) . ' <a href="#" class="toggle_refund">' . __( 'Make a refund?', 'wpsc' ) . '</a>' );
+					echo wpautop( sprintf( __( 'Capture Reference %s is <strong>%s</strong>.', 'wp-e-commerce' ), $amazon_capture_id, $amazon_capture_state ) . ' <a href="#" class="toggle_refund">' . __( 'Make a refund?', 'wp-e-commerce' ) . '</a>' );
 
 					// Refund form
 					?>
 					<p class="refund_form" style="display:none">
 						<input type="number" step="any" style="width:100%" class="amazon_refund_amount" value="<?php echo $this->log->get( 'totalprice' ); ?>" />
-						<input type="text" style="width:100%" class="amazon_refund_note" placeholder="<?php _e( 'Add a note about this refund', 'wpsc' ); ?>" /><br/>
-						<a href="#" class="button" data-action="refund" data-id="<?php echo esc_attr( $amazon_capture_id ); ?>"><?php _e( 'Refund', 'wpsc' ); ?></a>
+						<input type="text" style="width:100%" class="amazon_refund_note" placeholder="<?php _e( 'Add a note about this refund', 'wp-e-commerce' ); ?>" /><br/>
+						<a href="#" class="button" data-action="refund" data-id="<?php echo esc_attr( $amazon_capture_id ); ?>"><?php _e( 'Refund', 'wp-e-commerce' ); ?></a>
 					</form>
 					<?php
 
 				break;
 				case 'Closed' :
 
-					echo wpautop( sprintf( __( 'Capture Reference %s is <strong>%s</strong>.', 'wpsc' ), $amazon_capture_id, $amazon_capture_state ) );
+					echo wpautop( sprintf( __( 'Capture Reference %s is <strong>%s</strong>.', 'wp-e-commerce' ), $amazon_capture_id, $amazon_capture_state ) );
 
 				break;
 			}
@@ -1286,11 +1286,11 @@ class WPSC_Amazon_Payments_Order_Handler {
 					if ( isset( $refunds[ $amazon_refund_id ] ) ) {
 
 						if ( empty( $refunds[ $amazon_refund_id ]['note'] ) ) {
-							$refunds[ $amazon_refund_id ]['note'] = _x( 'no note was entered', 'Amazon refund default note', 'wpsc' );
+							$refunds[ $amazon_refund_id ]['note'] = _x( 'no note was entered', 'Amazon refund default note', 'wp-e-commerce' );
 						}
 
 						echo wpautop(
-							sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wpsc' ),
+							sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wp-e-commerce' ),
 								$amazon_refund_id,
 								wpsc_currency_display( $refunds[ $amazon_refund_id ]['amount'] ),
 								$refunds[ $amazon_refund_id ]['state'],
@@ -1311,7 +1311,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 							$amount = $response['GetRefundDetailsResult']['RefundDetails']['RefundAmount']['Amount'];
 
 							echo wpautop(
-								sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wpsc' ),
+								sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wp-e-commerce' ),
 									$amazon_refund_id,
 									wpsc_currency_display( $amount ),
 									$state,
@@ -1338,25 +1338,25 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 			$amazon_authorization_state = $this->get_authorization_state( $order_id, $amazon_authorization_id );
 
-			echo wpautop( sprintf( __( 'Auth Reference %s is <strong>%s</strong>.', 'wpsc' ), $amazon_reference_id, $amazon_authorization_state ) . ' <a href="#" data-action="refresh" class="refresh">' . __( 'Refresh', 'wpsc' ) . '</a>' );
+			echo wpautop( sprintf( __( 'Auth Reference %s is <strong>%s</strong>.', 'wp-e-commerce' ), $amazon_reference_id, $amazon_authorization_state ) . ' <a href="#" data-action="refresh" class="refresh">' . __( 'Refresh', 'wp-e-commerce' ) . '</a>' );
 
 			switch ( $amazon_authorization_state ) {
 				case 'Open' :
 
 					$actions['capture'] = array(
 						'id' => $amazon_authorization_id,
-						'button' => __( 'Capture funds', 'wpsc' )
+						'button' => __( 'Capture funds', 'wp-e-commerce' )
 					);
 
 					$actions['close_authorization'] = array(
 						'id' => $amazon_authorization_id,
-						'button' => __( 'Close Authorization', 'wpsc' )
+						'button' => __( 'Close Authorization', 'wp-e-commerce' )
 					);
 
 				break;
 				case 'Pending' :
 
-					echo wpautop( __( 'You cannot capture funds while the authorization is pending. Try again later.', 'wpsc' ) );
+					echo wpautop( __( 'You cannot capture funds while the authorization is pending. Try again later.', 'wp-e-commerce' ) );
 
 					// Admin will need to re-check this, so clear the stored value
 					$this->clear_stored_states( $order_id );
@@ -1366,7 +1366,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 				case 'Declined' :
 					$actions['authorize'] = array(
 						'id' => $amazon_reference_id,
-						'button' => __( 'Authorize again', 'wpsc' )
+						'button' => __( 'Authorize again', 'wp-e-commerce' )
 					);
 				break;
 			}
@@ -1376,31 +1376,31 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 			$amazon_reference_state = $this->get_reference_state( $amazon_reference_id );
 
-			echo wpautop( sprintf( __( 'Order Reference %s is <strong>%s</strong>.', 'wpsc' ), $amazon_reference_id, $amazon_reference_state ) . ' <a href="#" data-action="refresh" class="refresh">' . __( 'Refresh', 'wpsc' ) . '</a>' );
+			echo wpautop( sprintf( __( 'Order Reference %s is <strong>%s</strong>.', 'wp-e-commerce' ), $amazon_reference_id, $amazon_reference_state ) . ' <a href="#" data-action="refresh" class="refresh">' . __( 'Refresh', 'wp-e-commerce' ) . '</a>' );
 
 			switch ( $amazon_reference_state ) {
 				case 'Open' :
 
 					$actions['authorize'] = array(
 						'id' => $amazon_reference_id,
-						'button' => __( 'Authorize', 'wpsc' )
+						'button' => __( 'Authorize', 'wp-e-commerce' )
 					);
 
 					$actions['authorize_capture'] = array(
 						'id' => $amazon_reference_id,
-						'button' => __( 'Authorize &amp; Capture', 'wpsc' )
+						'button' => __( 'Authorize &amp; Capture', 'wp-e-commerce' )
 					);
 
 				break;
 				case 'Suspended' :
 
-					echo wpautop( __( 'The reference has been suspended. Another form of payment is required.', 'wpsc' ) );
+					echo wpautop( __( 'The reference has been suspended. Another form of payment is required.', 'wp-e-commerce' ) );
 
 				break;
 				case 'Canceled' :
 				case 'Suspended' :
 
-					echo wpautop( __( 'The reference has been cancelled/closed. No authorizations can be made.', 'wpsc' ) );
+					echo wpautop( __( 'The reference has been cancelled/closed. No authorizations can be made.', 'wp-e-commerce' ) );
 
 				break;
 			}
@@ -1476,7 +1476,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 			if ( is_wp_error( $response ) ) {
 
-				$this->log->set( 'amazon-status', __( 'Unable to authorize funds with amazon:', 'wpsc' ) . ' ' . $response->get_error_message() )->save();
+				$this->log->set( 'amazon-status', __( 'Unable to authorize funds with amazon:', 'wp-e-commerce' ) . ' ' . $response->get_error_message() )->save();
 
 				return false;
 
@@ -1504,7 +1504,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 				$this->maybe_update_billing_details( $response['AuthorizeResult']['AuthorizationDetails'] );
 
 				if ( 'declined' == $state ) {
-					$this->log->set( 'amazon-status', sprintf( __( 'Order Declined with reason code: %s', 'wpsc' ), $response['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'] ) )->save();
+					$this->log->set( 'amazon-status', sprintf( __( 'Order Declined with reason code: %s', 'wp-e-commerce' ), $response['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'] ) )->save();
 					$this->log->set( 'amazon-reason-code', $response['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'] )->save();
 					// Payment was not authorized
 					return false;
@@ -1512,10 +1512,10 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 				if ( $capture_now ) {
 					$this->log->set( 'amazon_capture_id', str_replace( '-A', '-C', $auth_id ) )->save();
-					$this->log->set( 'amazon-status', sprintf( __( 'Captured (Auth ID: %s)', 'wpsc' ), str_replace( '-A', '-C', $auth_id ) ) )->save();
+					$this->log->set( 'amazon-status', sprintf( __( 'Captured (Auth ID: %s)', 'wp-e-commerce' ), str_replace( '-A', '-C', $auth_id ) ) )->save();
 					$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
 				} else {
-					$this->log->set( 'amazon-status', sprintf( __( 'Authorized (Auth ID: %s)', 'wpsc' ), $auth_id ) )->save();
+					$this->log->set( 'amazon-status', sprintf( __( 'Authorized (Auth ID: %s)', 'wp-e-commerce' ), $auth_id ) )->save();
 				}
 
 				return true;
@@ -1549,7 +1549,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 			} else {
 				wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'amazon_authorization_id' );
-				$this->log->set( 'amazon-status', sprintf( __( 'Authorization closed (Auth ID: %s)', 'wpsc' ), $amazon_authorization_id ) )->save();
+				$this->log->set( 'amazon-status', sprintf( __( 'Authorization closed (Auth ID: %s)', 'wp-e-commerce' ), $amazon_authorization_id ) )->save();
 				$this->log->set( 'processed', WPSC_Purchase_Log::CLOSED_ORDER )->save();
 
 			}
@@ -1589,7 +1589,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 			$seller_id = $data['SellerId'];
 
 			if ( $seller_id != $this->gateway->seller_id ) {
-				wp_die( __( 'Invalid Amazon seller ID', 'wpsc' ), __( 'IPN Error', 'wpsc' ), array( 'response' => 401 ) );
+				wp_die( __( 'Invalid Amazon seller ID', 'wp-e-commerce' ), __( 'IPN Error', 'wp-e-commerce' ), array( 'response' => 401 ) );
 			}
 
 			switch( $data['NotificationType'] ) {
@@ -1617,7 +1617,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED )->save();
 
 						// Update Amazon note
-						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) )->save();
+						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wp-e-commerce' ) )->save();
 
 						// Email user
 						$hard = 'InvalidPaymentMethod' == $reason;
@@ -1639,7 +1639,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 						$order->set( 'processed', WPSC_Purchase_Log::REFUNDED )->save();
 
 						// Add payment note for refund.
-						$order->set( 'amazon-status', sprintf( __( 'Refunded %s', 'wpsc' ), wpsc_currency_display( $amount ) ) )->save();
+						$order->set( 'amazon-status', sprintf( __( 'Refunded %s', 'wp-e-commerce' ), wpsc_currency_display( $amount ) ) )->save();
 
 						// Update refund ID
 						wpsc_add_purchase_meta( $order->get( 'id' ), 'amazon_refund_id', $refund_id );
@@ -1648,7 +1648,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 					break;
 			}
 		} catch( Exception $e ) {
-			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'wpsc' ), array( 'response' => 401 ) );
+			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'wp-e-commerce' ), array( 'response' => 401 ) );
 		}
 	}
 
@@ -1713,24 +1713,24 @@ class WPSC_Amazon_Payments_Order_Handler {
 		$decline   = $hard ? 'hard' : 'soft';
 		$whitelist = apply_filters( 'wpsc_amazon_decline_email_locales', array(
 			'en' => array(
-				'hard' => __( 'Please contact us about your order' , 'wpsc' ),
-				'soft' => __( 'Please update your payment information', 'wpsc' )
+				'hard' => __( 'Please contact us about your order' , 'wp-e-commerce' ),
+				'soft' => __( 'Please update your payment information', 'wp-e-commerce' )
 			),
 			'de' => array(
-				'hard' => __( 'Bitte kontaktieren Sie uns wegen Ihrer Bestellung', 'wpsc' ),
-				'soft' => __( 'Bitte aktualisieren Sie Ihre Zahlungsinformationen', 'wpsc' )
+				'hard' => __( 'Bitte kontaktieren Sie uns wegen Ihrer Bestellung', 'wp-e-commerce' ),
+				'soft' => __( 'Bitte aktualisieren Sie Ihre Zahlungsinformationen', 'wp-e-commerce' )
 			),
 			'it' => array(
-				'hard' => __( 'La preghiamo di contattarci per informazioni riguardo al suo ordine', 'wpsc' ),
-				'soft' => __( 'Aggiorna i tuoi dati di pagamento', 'wpsc' )
+				'hard' => __( 'La preghiamo di contattarci per informazioni riguardo al suo ordine', 'wp-e-commerce' ),
+				'soft' => __( 'Aggiorna i tuoi dati di pagamento', 'wp-e-commerce' )
 			),
 			'fr' => array(
-				'hard' => __( 'Veuillez nous contacter pour votre commande', 'wpsc' ),
-				'soft' => __( 'Veuillez mettre à jour vos informations de paiement', 'wpsc' )
+				'hard' => __( 'Veuillez nous contacter pour votre commande', 'wp-e-commerce' ),
+				'soft' => __( 'Veuillez mettre à jour vos informations de paiement', 'wp-e-commerce' )
 			),
 			'es' => array(
-				'hard' => __( 'Por favor, contáctanos en referencia a tu pedido', 'wpsc' ),
-				'soft' => __( 'Por favor, actualiza tu información de pago.', 'wpsc' )
+				'hard' => __( 'Por favor, contáctanos en referencia a tu pedido', 'wp-e-commerce' ),
+				'soft' => __( 'Por favor, actualiza tu información de pago.', 'wp-e-commerce' )
 			),
 		) );
 
@@ -1775,7 +1775,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 			if ( is_wp_error( $response ) ) {
 
-				$this->log->set( 'amazon-status', __( 'Unable to authorize funds with amazon:', 'wpsc' ) . ' ' . $response->get_error_message() )->save();
+				$this->log->set( 'amazon-status', __( 'Unable to authorize funds with amazon:', 'wp-e-commerce' ) . ' ' . $response->get_error_message() )->save();
 
 			} elseif ( isset( $response['Error']['Message'] ) ) {
 
@@ -1784,7 +1784,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 			} else {
 				$capture_id = $response['CaptureResult']['CaptureDetails']['AmazonCaptureId'];
 
-				$this->log->set( 'amazon-status', sprintf( __( 'Capture Attempted (Capture ID: %s)', 'wpsc' ), $capture_id ) )->save();
+				$this->log->set( 'amazon-status', sprintf( __( 'Capture Attempted (Capture ID: %s)', 'wp-e-commerce' ), $capture_id ) )->save();
 				$this->log->set( 'amazon_capture_id', $capture_id )->save();
 				$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
 			}
@@ -1808,11 +1808,11 @@ class WPSC_Amazon_Payments_Order_Handler {
 			$base_country = new WPSC_Country( wpsc_get_base_country() );
 
 			if ( 'US' == $base_country->get_isocode() && $amount > $this->log->get( 'totalprice' ) ) {
-				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . __( 'Refund amount is greater than order total.', 'wpsc' ) )->save();
+				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wp-e-commerce' ) . ' ' . __( 'Refund amount is greater than order total.', 'wp-e-commerce' ) )->save();
 
 				return;
 			} elseif ( $amount > min( ( $this->log->get( 'totalprice' ) * 1.15 ), ( $this->log->get( 'totalprice' ) + 75 ) ) ) {
-				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . __( 'Refund amount is greater than the max refund amount.', 'wpsc' ) )->save();
+				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wp-e-commerce' ) . ' ' . __( 'Refund amount is greater than the max refund amount.', 'wp-e-commerce' ) )->save();
 
 				return;
 			}
@@ -1828,7 +1828,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 			if ( is_wp_error( $response ) ) {
 
-				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . $response->get_error_message() )->save();
+				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wp-e-commerce' ) . ' ' . $response->get_error_message() )->save();
 
 			} elseif ( isset( $response['Error']['Message'] ) ) {
 
@@ -1837,7 +1837,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 			} else {
 				$refund_id = $response['RefundResult']['RefundDetails']['AmazonRefundId'];
 
-				$this->log->set( 'amazon-status', sprintf( __( 'Refunded %s (%s)', 'wpsc' ), wpsc_currency_display( $amount ), $note ) )->save();
+				$this->log->set( 'amazon-status', sprintf( __( 'Refunded %s (%s)', 'wp-e-commerce' ), wpsc_currency_display( $amount ), $note ) )->save();
 				$this->log->set( 'processed', WPSC_Purchase_Log::REFUNDED )->save();
 				wpsc_add_purchase_meta( $this->log->get( 'id' ), 'amazon_refund_id', $refund_id );
 			}

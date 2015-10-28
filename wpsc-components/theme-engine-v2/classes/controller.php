@@ -34,7 +34,7 @@ class WPSC_Controller {
 	protected function verify_nonce( $action ) {
 		if ( ! wp_verify_nonce( $_POST['_wp_nonce'], $action ) ) {
 			$this->message_collection->add(
-				__( 'Your form submission could not be processed by our system because the page has been left idle for too long. Please try submitting it again.', 'wpsc' ),
+				__( 'Your form submission could not be processed by our system because the page has been left idle for too long. Please try submitting it again.', 'wp-e-commerce' ),
 				'error'
 			);
 

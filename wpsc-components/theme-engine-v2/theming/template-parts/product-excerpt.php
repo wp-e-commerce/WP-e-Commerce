@@ -20,22 +20,22 @@
 				><?php wpsc_product_title(); ?></a>
 
 				<?php if ( wpsc_is_product_on_sale() ): ?>
-					<span class="wpsc-label wpsc-label-important"><?php echo esc_html_x( 'Sale', 'sale label', 'wpsc' ); ?></span>
+					<span class="wpsc-label wpsc-label-important"><?php echo esc_html_x( 'Sale', 'sale label', 'wp-e-commerce' ); ?></span>
 				<?php endif ?>
 			</h2>
 			<div class="wpsc-product-price">
 				<?php if ( wpsc_is_product_on_sale() ): ?>
 					<del class="wpsc-old-price">
-						<strong><?php esc_html_e( 'Old Price', 'wpsc' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
+						<strong><?php esc_html_e( 'Old Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
 					</del><br />
 					<ins class="wpsc-sale-price">
-						<strong><?php esc_html_e( 'Price', 'wpsc' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_sale_price(); ?></span>
+						<strong><?php esc_html_e( 'Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_sale_price(); ?></span>
 					</ins><br />
 					<span class="wpsc-you-save">
-						<strong><?php esc_html_e( 'You save', 'wpsc' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_you_save(); ?></span>
+						<strong><?php esc_html_e( 'You save', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_you_save(); ?></span>
 					</span>
 				<?php else: ?>
-					<strong><?php esc_html_e( 'Price', 'wpsc' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
+					<strong><?php esc_html_e( 'Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
 				<?php endif; ?>
 			</div>
 		</div><!-- .entry-header -->

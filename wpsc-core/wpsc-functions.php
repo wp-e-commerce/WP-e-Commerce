@@ -110,19 +110,19 @@ function wpsc_core_load_checkout_data() {
  */
 function wpsc_checkout_form_fields() {
 	$form_types = array(
-			__( 'Text', 'wpsc' )             => 'text',
-			__( 'Email Address', 'wpsc' )    => 'email',
-			__( 'Street Address', 'wpsc' )   => 'address',
-			__( 'City', 'wpsc' )             => 'city',
-			__( 'Country', 'wpsc' )          => 'country',
-			__( 'Delivery Address', 'wpsc' ) => 'delivery_address',
-			__( 'Delivery City', 'wpsc' )    => 'delivery_city',
-			__( 'Delivery Country', 'wpsc' ) => 'delivery_country',
-			__( 'Text Area', 'wpsc' )        => 'textarea',
-			__( 'Heading', 'wpsc' )          => 'heading',
-			__( 'Select', 'wpsc' )           => 'select',
-			__( 'Radio Button', 'wpsc' )     => 'radio',
-			__( 'Checkbox', 'wpsc' )         => 'checkbox',
+			__( 'Text', 'wp-e-commerce' )             => 'text',
+			__( 'Email Address', 'wp-e-commerce' )    => 'email',
+			__( 'Street Address', 'wp-e-commerce' )   => 'address',
+			__( 'City', 'wp-e-commerce' )             => 'city',
+			__( 'Country', 'wp-e-commerce' )          => 'country',
+			__( 'Delivery Address', 'wp-e-commerce' ) => 'delivery_address',
+			__( 'Delivery City', 'wp-e-commerce' )    => 'delivery_city',
+			__( 'Delivery Country', 'wp-e-commerce' ) => 'delivery_country',
+			__( 'Text Area', 'wp-e-commerce' )        => 'textarea',
+			__( 'Heading', 'wp-e-commerce' )          => 'heading',
+			__( 'Select', 'wp-e-commerce' )           => 'select',
+			__( 'Radio Button', 'wp-e-commerce' )     => 'radio',
+			__( 'Checkbox', 'wp-e-commerce' )         => 'checkbox',
 	);
 
 	$form_types = apply_filters( 'wpsc_add_form_types', $form_types );
@@ -204,8 +204,8 @@ function wpsc_javascript_localizations( $localizations = false ) {
 		$localizations['wpsc_ajax'] = array(
 			'ajaxurl'                 => admin_url( 'admin-ajax.php', 'relative' ),
 			'spinner'                 => esc_url( wpsc_get_ajax_spinner() ),
-			'no_quotes'               => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
-			'ajax_get_cart_error'     => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
+			'no_quotes'               => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wp-e-commerce' ),
+			'ajax_get_cart_error'     => __( 'There was a problem getting the current contents of the shopping cart.', 'wp-e-commerce' ),
 			'slide_to_shipping_error' => true,
 		);
 
@@ -214,7 +214,7 @@ function wpsc_javascript_localizations( $localizations = false ) {
 		$localizations['WPSC_IMAGE_URL']           = WPSC_IMAGE_URL;
 		$localizations['WPSC_CORE_IMAGES_URL']     = WPSC_CORE_IMAGES_URL;
 		$localizations['fileThickboxLoadingImage'] = WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif';
-		$localizations['msg_shipping_need_recalc'] = __( 'Please click the <em>Calculate</em> button to refresh your shipping quotes, as your shipping information has been modified.', 'wpsc' );
+		$localizations['msg_shipping_need_recalc'] = __( 'Please click the <em>Calculate</em> button to refresh your shipping quotes, as your shipping information has been modified.', 'wp-e-commerce' );
 	}
 
 	/**
@@ -241,70 +241,70 @@ function wpsc_core_load_purchase_log_statuses() {
 	$wpsc_purchlog_statuses = array(
 		array(
 			'internalname' => 'incomplete_sale',
-			'label'        => __( 'Incomplete Sale', 'wpsc' ),
+			'label'        => __( 'Incomplete Sale', 'wp-e-commerce' ),
 			'view_label'   => _nx_noop(
 				'Incomplete Sale <span class="count">(%d)</span>',
 				'Incomplete Sale <span class="count">(%d)</span>',
 				'Purchase log view links',
-				'wpsc'
+				'wp-e-commerce'
 			),
 			'order'        => 1,
 		),
 		array(
 			'internalname' => 'order_received',
-			'label'        => __( 'Order Received', 'wpsc' ),
+			'label'        => __( 'Order Received', 'wp-e-commerce' ),
 			'view_label'   => _nx_noop(
 				'Order Received <span class="count">(%d)</span>',
 				'Order Received <span class="count">(%d)</span>',
 				'Purchase log view links',
-				'wpsc'
+				'wp-e-commerce'
 			),
 			'order'        => 2,
 		),
 		array(
 			'internalname'   => 'accepted_payment',
-			'label'          => __( 'Accepted Payment', 'wpsc' ),
+			'label'          => __( 'Accepted Payment', 'wp-e-commerce' ),
 			'view_label'     => _nx_noop(
 				'Accepted Payment <span class="count">(%d)</span>',
 				'Accepted Payment <span class="count">(%d)</span>',
 				'Purchase log view links',
-				'wpsc'
+				'wp-e-commerce'
 			),
 			'is_transaction' => true,
 			'order'          => 3,
 		),
 		array(
 			'internalname'   => 'job_dispatched',
-			'label'          => __( 'Job Dispatched', 'wpsc' ),
+			'label'          => __( 'Job Dispatched', 'wp-e-commerce' ),
 			'view_label'     => _nx_noop(
 				'Job Dispatched <span class="count">(%d)</span>',
 				'Job Dispatched <span class="count">(%d)</span>',
 				'Purchase log view links',
-				'wpsc'
+				'wp-e-commerce'
 			),
 			'is_transaction' => true,
 			'order'          => 4,
 		),
 		array(
 			'internalname'   => 'closed_order',
-			'label'          => __( 'Closed Order', 'wpsc' ),
+			'label'          => __( 'Closed Order', 'wp-e-commerce' ),
 			'view_label'     => _nx_noop(
 				'Closed Order <span class="count">(%d)</span>',
 				'Closed Order <span class="count">(%d)</span>',
 				'Purchase log view links',
-				'wpsc'
+				'wp-e-commerce'
 			),
 			'is_transaction' => true,
 			'order'          => 5,
 		),
 		array(
 			'internalname'   => 'declined_payment',
-			'label'          => __( 'Payment Declined', 'wpsc' ),
+			'label'          => __( 'Payment Declined', 'wp-e-commerce' ),
 			'view_label'     => _nx_noop(
 				'Payment Declined <span class="count">(%d)</span>',
 				'Payment Declined <span class="count">(%d)</span>',
 				'Purchase log view links',
-				'wpsc'
+				'wp-e-commerce'
 			),
 			'order'          => 6,
 		),
@@ -395,8 +395,8 @@ function _wpsc_action_get_shipping_method() {
  * @since 3.7.6.1
  */
 function wpsc_update_notice() {
-	$info_title = __( 'Please backup your website before updating!', 'wpsc' );
-	$info_text =  __( 'Before updating please backup your database and files in case anything goes wrong.', 'wpsc' );
+	$info_title = __( 'Please backup your website before updating!', 'wp-e-commerce' );
+	$info_text =  __( 'Before updating please backup your database and files in case anything goes wrong.', 'wp-e-commerce' );
 	echo '<div style="border-top:1px solid #CCC; margin-top:3px; padding-top:3px; font-weight:normal;"><strong style="color:#CC0000">' . strip_tags( $info_title ) . '</strong> ' . strip_tags( $info_text, '<br><a><strong><em><span>' ) . '</div>';
 }
 
@@ -431,17 +431,17 @@ function wpsc_register_post_types() {
 
 	// Products
     $labels = array(
-		'name'               => _x( 'Products'                  , 'post type name'             , 'wpsc' ),
-		'singular_name'      => _x( 'Product'                   , 'post type singular name'    , 'wpsc' ),
-		'add_new'            => _x( 'Add New'                   , 'admin menu: add new product', 'wpsc' ),
-		'add_new_item'       => __( 'Add New Product'           , 'wpsc' ),
-		'edit_item'          => __( 'Edit Product'              , 'wpsc' ),
-		'new_item'           => __( 'New Product'               , 'wpsc' ),
-		'view_item'          => __( 'View Product'              , 'wpsc' ),
-		'search_items'       => __( 'Search Products'           , 'wpsc' ),
-		'not_found'          => __( 'No products found'         , 'wpsc' ),
-		'not_found_in_trash' => __( 'No products found in Trash', 'wpsc' ),
-		'menu_name'          => __( 'Products'                  , 'wpsc' ),
+		'name'               => _x( 'Products'                  , 'post type name'             , 'wp-e-commerce' ),
+		'singular_name'      => _x( 'Product'                   , 'post type singular name'    , 'wp-e-commerce' ),
+		'add_new'            => _x( 'Add New'                   , 'admin menu: add new product', 'wp-e-commerce' ),
+		'add_new_item'       => __( 'Add New Product'           , 'wp-e-commerce' ),
+		'edit_item'          => __( 'Edit Product'              , 'wp-e-commerce' ),
+		'new_item'           => __( 'New Product'               , 'wp-e-commerce' ),
+		'view_item'          => __( 'View Product'              , 'wp-e-commerce' ),
+		'search_items'       => __( 'Search Products'           , 'wp-e-commerce' ),
+		'not_found'          => __( 'No products found'         , 'wp-e-commerce' ),
+		'not_found_in_trash' => __( 'No products found in Trash', 'wp-e-commerce' ),
+		'menu_name'          => __( 'Products'                  , 'wp-e-commerce' ),
 		'parent_item_colon'  => '',
       );
     $args = array(
@@ -472,8 +472,8 @@ function wpsc_register_post_types() {
 		'exclude_from_search' => true,
 		'rewrite'             => false,
 		'labels'              => array(
-			'name'          => __( 'Product Files', 'wpsc' ),
-			'singular_name' => __( 'Product File' , 'wpsc' ),
+			'name'          => __( 'Product Files', 'wp-e-commerce' ),
+			'singular_name' => __( 'Product File' , 'wp-e-commerce' ),
 		),
 	);
 	$args = apply_filters( 'wpsc_register_post_types_product_files_args', $args );
@@ -481,23 +481,23 @@ function wpsc_register_post_types() {
 
 	// Product tags
 	$labels = array(
-		'name'          => _x( 'Product Tags'        , 'taxonomy general name' , 'wpsc' ),
-		'singular_name' => _x( 'Product Tag'         , 'taxonomy singular name', 'wpsc' ),
-		'search_items'  => __( 'Search Product Tags' , 'wpsc' ),
-		'all_items'     => __( 'All Product Tags'    , 'wpsc' ),
-		'edit_item'     => __( 'Edit Tag'            , 'wpsc' ),
-		'update_item'   => __( 'Update Tag'          , 'wpsc' ),
-		'add_new_item'  => __( 'Add New Product Tag' , 'wpsc' ),
-		'new_item_name' => __( 'New Product Tag Name', 'wpsc' ),
-		'choose_from_most_used' => __('Choose from most used Product Tags', 'wpsc' ),
-		'not_found'	=> __('No Product Tags found', 'wpsc'),
+		'name'          => _x( 'Product Tags'        , 'taxonomy general name' , 'wp-e-commerce' ),
+		'singular_name' => _x( 'Product Tag'         , 'taxonomy singular name', 'wp-e-commerce' ),
+		'search_items'  => __( 'Search Product Tags' , 'wp-e-commerce' ),
+		'all_items'     => __( 'All Product Tags'    , 'wp-e-commerce' ),
+		'edit_item'     => __( 'Edit Tag'            , 'wp-e-commerce' ),
+		'update_item'   => __( 'Update Tag'          , 'wp-e-commerce' ),
+		'add_new_item'  => __( 'Add New Product Tag' , 'wp-e-commerce' ),
+		'new_item_name' => __( 'New Product Tag Name', 'wp-e-commerce' ),
+		'choose_from_most_used' => __('Choose from most used Product Tags', 'wp-e-commerce' ),
+		'not_found'	=> __('No Product Tags found', 'wp-e-commerce'),
 	);
 
 	$args = array(
 		'hierarchical' => false,
 		'labels' => $labels,
 		'rewrite' => array(
-			'slug' => '/' . sanitize_title_with_dashes( _x( 'tagged', 'slug, part of url', 'wpsc' ) ),
+			'slug' => '/' . sanitize_title_with_dashes( _x( 'tagged', 'slug, part of url', 'wp-e-commerce' ) ),
 			'with_front' => false )
 	);
 	$args = apply_filters( 'wpsc_register_taxonomies_product_tag_args', $args );
@@ -505,17 +505,17 @@ function wpsc_register_post_types() {
 
 	// Product categories, is heirarchical and can use permalinks
 	$labels = array(
-		'name'              => _x( 'Product Categories'       , 'taxonomy general name' , 'wpsc' ),
-		'singular_name'     => _x( 'Product Category'         , 'taxonomy singular name', 'wpsc' ),
-		'search_items'      => __( 'Search Product Categories', 'wpsc' ),
-		'all_items'         => __( 'All Product Categories'   , 'wpsc' ),
-		'parent_item'       => __( 'Parent Product Category'  , 'wpsc' ),
-		'parent_item_colon' => __( 'Parent Product Category:' , 'wpsc' ),
-		'edit_item'         => __( 'Edit Product Category'    , 'wpsc' ),
-		'update_item'       => __( 'Update Product Category'  , 'wpsc' ),
-		'add_new_item'      => __( 'Add New Product Category' , 'wpsc' ),
-		'new_item_name'     => __( 'New Product Category Name', 'wpsc' ),
-		'menu_name'         => _x( 'Categories'               , 'taxonomy general name', 'wpsc' ),
+		'name'              => _x( 'Product Categories'       , 'taxonomy general name' , 'wp-e-commerce' ),
+		'singular_name'     => _x( 'Product Category'         , 'taxonomy singular name', 'wp-e-commerce' ),
+		'search_items'      => __( 'Search Product Categories', 'wp-e-commerce' ),
+		'all_items'         => __( 'All Product Categories'   , 'wp-e-commerce' ),
+		'parent_item'       => __( 'Parent Product Category'  , 'wp-e-commerce' ),
+		'parent_item_colon' => __( 'Parent Product Category:' , 'wp-e-commerce' ),
+		'edit_item'         => __( 'Edit Product Category'    , 'wp-e-commerce' ),
+		'update_item'       => __( 'Update Product Category'  , 'wp-e-commerce' ),
+		'add_new_item'      => __( 'Add New Product Category' , 'wp-e-commerce' ),
+		'new_item_name'     => __( 'New Product Category Name', 'wp-e-commerce' ),
+		'menu_name'         => _x( 'Categories'               , 'taxonomy general name', 'wp-e-commerce' ),
 	);
 	$args = array(
 		'labels'       => $labels,
@@ -530,16 +530,16 @@ function wpsc_register_post_types() {
 
 	register_taxonomy( 'wpsc_product_category', 'wpsc-product', $args );
 	$labels = array(
-		'name'              => _x( 'Variations'        , 'taxonomy general name' , 'wpsc' ),
-		'singular_name'     => _x( 'Variation'         , 'taxonomy singular name', 'wpsc' ),
-		'search_items'      => __( 'Search Variations' , 'wpsc' ),
-		'all_items'         => __( 'All Variations'    , 'wpsc' ),
-		'parent_item'       => __( 'Parent Variation'  , 'wpsc' ),
-		'parent_item_colon' => __( 'Parent Variations:', 'wpsc' ),
-		'edit_item'         => __( 'Edit Variation'    , 'wpsc' ),
-		'update_item'       => __( 'Update Variation'  , 'wpsc' ),
-		'add_new_item'      => __( 'Add New Variation' , 'wpsc' ),
-		'new_item_name'     => __( 'New Variation Name', 'wpsc' ),
+		'name'              => _x( 'Variations'        , 'taxonomy general name' , 'wp-e-commerce' ),
+		'singular_name'     => _x( 'Variation'         , 'taxonomy singular name', 'wp-e-commerce' ),
+		'search_items'      => __( 'Search Variations' , 'wp-e-commerce' ),
+		'all_items'         => __( 'All Variations'    , 'wp-e-commerce' ),
+		'parent_item'       => __( 'Parent Variation'  , 'wp-e-commerce' ),
+		'parent_item_colon' => __( 'Parent Variations:', 'wp-e-commerce' ),
+		'edit_item'         => __( 'Edit Variation'    , 'wp-e-commerce' ),
+		'update_item'       => __( 'Update Variation'  , 'wp-e-commerce' ),
+		'add_new_item'      => __( 'Add New Variation' , 'wp-e-commerce' ),
+		'new_item_name'     => __( 'New Variation Name', 'wp-e-commerce' ),
 	);
 	$args = array(
 		'hierarchical' => true,
@@ -577,19 +577,19 @@ function wpsc_post_updated_messages( $messages ) {
 
 	$messages['wpsc-product'] = array(
 		0  => '', // Unused. Messages start at index 1.
-		1  => sprintf( __( 'Product updated. <a href="%s">View product</a>', 'wpsc' ), esc_url( get_permalink( $post_ID ) ) ),
-		2  => __( 'Custom field updated.', 'wpsc' ),
-		3  => __( 'Custom field deleted.', 'wpsc' ),
-		4  => __( 'Product updated.', 'wpsc' ),
+		1  => sprintf( __( 'Product updated. <a href="%s">View product</a>', 'wp-e-commerce' ), esc_url( get_permalink( $post_ID ) ) ),
+		2  => __( 'Custom field updated.', 'wp-e-commerce' ),
+		3  => __( 'Custom field deleted.', 'wp-e-commerce' ),
+		4  => __( 'Product updated.', 'wp-e-commerce' ),
 		// translators: %s: date and time of the revision
-		5  => isset( $_GET['revision'] ) ? sprintf( __('Product restored to revision from %s', 'wpsc' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-		6  => sprintf( __( 'Product published. <a href="%s">View product</a>', 'wpsc' ), esc_url( get_permalink( $post_ID ) ) ),
-		7  => __( 'Product saved.', 'wpsc' ),
-		8  => sprintf( __( 'Product submitted. <a target="_blank" href="%s">Preview product</a>', 'wpsc' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-		9  => sprintf( __( 'Product scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview product</a>', 'wpsc' ),
+		5  => isset( $_GET['revision'] ) ? sprintf( __('Product restored to revision from %s', 'wp-e-commerce' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+		6  => sprintf( __( 'Product published. <a href="%s">View product</a>', 'wp-e-commerce' ), esc_url( get_permalink( $post_ID ) ) ),
+		7  => __( 'Product saved.', 'wp-e-commerce' ),
+		8  => sprintf( __( 'Product submitted. <a target="_blank" href="%s">Preview product</a>', 'wp-e-commerce' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+		9  => sprintf( __( 'Product scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview product</a>', 'wp-e-commerce' ),
 			// translators: Publish box date format, see http://php.net/date
-			date_i18n( __( 'M j, Y @ G:i', 'wpsc' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
-		10 => sprintf( __( 'Product draft updated. <a target="_blank" href="%s">Preview product</a>', 'wpsc' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+			date_i18n( __( 'M j, Y @ G:i', 'wp-e-commerce' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
+		10 => sprintf( __( 'Product draft updated. <a target="_blank" href="%s">Preview product</a>', 'wp-e-commerce' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
 	);
 
 	return $messages;
@@ -634,7 +634,7 @@ function wpsc_change_title_placeholder( $title ) {
 	$screen = get_current_screen();
 
 	if  ( 'wpsc-product' == $screen->post_type ) {
-		$title =  __( 'Enter product title here', 'wpsc' );
+		$title =  __( 'Enter product title here', 'wp-e-commerce' );
 	}
 	return $title;
 }
@@ -1115,7 +1115,7 @@ add_action( 'init', 'wpsc_check_visitor_tables' );
  * @return void
  */
 function wpsc_visitor_tables_need_repair() {
-	echo '<div class="error"><p>' . sprintf( __( 'It appears that your WP eCommerce database tables are in need of repair. This is very important for both security and performance. <a href="%s">Repair your tables now</a>. <br />Note: If you encounter errors upon repairing your tables, simply refresh the page.', 'wpsc' ), esc_url( admin_url( 'maint/repair.php' ) ) ) . '</p></div>';
+	echo '<div class="error"><p>' . sprintf( __( 'It appears that your WP eCommerce database tables are in need of repair. This is very important for both security and performance. <a href="%s">Repair your tables now</a>. <br />Note: If you encounter errors upon repairing your tables, simply refresh the page.', 'wp-e-commerce' ), esc_url( admin_url( 'maint/repair.php' ) ) ) . '</p></div>';
 }
 
 /**

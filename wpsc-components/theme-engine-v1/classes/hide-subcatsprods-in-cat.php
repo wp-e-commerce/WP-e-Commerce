@@ -42,7 +42,7 @@ class WPSC_Hide_subcatsprods_in_cat {
 	 */
 	function _wpsc_doing_it_wrong( $method ) {
 
-		_wpsc_doing_it_wrong( 'WPSC_Hide_subcatsprods_in_cat->' . $method . '()', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wpsc' ), '4.0' );
+		_wpsc_doing_it_wrong( 'WPSC_Hide_subcatsprods_in_cat->' . $method . '()', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wp-e-commerce' ), '4.0' );
 
 	}
 

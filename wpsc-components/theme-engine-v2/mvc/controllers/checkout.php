@@ -55,7 +55,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		// If no shipping is available, show an error message.
 		if ( wpsc_uses_shipping() && ! $this->shipping_calculator->has_quotes ) {
 			$this->message_collection->add(
-				__( 'Sorry but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wpsc' ),
+				__( 'Sorry but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wp-e-commerce' ),
 				'error'
 			);
 			return;
@@ -63,7 +63,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		// Alert the user that the payment process is not complete.
 		$this->message_collection->add(
-			__( 'Your payment is not completed, please review your order details, select a Shipping method and press "Place Order" to complete your order', 'wpsc' ),
+			__( 'Your payment is not completed, please review your order details, select a Shipping method and press "Place Order" to complete your order', 'wp-e-commerce' ),
 			'info'
 		);
 
@@ -85,7 +85,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 	 * @return string
 	 */
 	public function review_order_button_title() {
-		return __( 'Place Order', 'wpsc' );
+		return __( 'Place Order', 'wp-e-commerce' );
 	}
 
 	/**
@@ -215,7 +215,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		if ( is_wp_error( $validation ) ) {
 			$this->message_collection->add(
-				__( 'Sorry but it looks like there are some errors with your submitted information.', 'wpsc' ),
+				__( 'Sorry but it looks like there are some errors with your submitted information.', 'wp-e-commerce' ),
 				'error'
 			);
 			wpsc_set_validation_errors( $validation, 'inline' );
@@ -317,7 +317,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		//Check to ensure purchase log row was inserted successfully
 		if(is_null($purchase_log->get( 'id' ))) {
 			$this->message_collection->add(
-				__( 'A database error occured while processing your request.', 'wpsc' ),
+				__( 'A database error occured while processing your request.', 'wp-e-commerce' ),
 				'error'
 			);
 			return;
@@ -333,7 +333,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		if ( wpsc_uses_shipping() && ! $this->shipping_calculator->has_quotes ) {
 			$this->message_collection->add(
-				__( 'Sorry but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wpsc' ),
+				__( 'Sorry but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wp-e-commerce' ),
 				'error'
 			);
 
@@ -427,7 +427,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		if ( empty( $_POST['wpsc_payment_method'] ) && ! wpsc_is_free_cart() ) {
 			$this->message_collection->add(
-				__( 'Please select a payment method', 'wpsc' ),
+				__( 'Please select a payment method', 'wp-e-commerce' ),
 				'validation'
 			);
 		}
@@ -487,10 +487,10 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 	private function init_checkout_wizard() {
 		$this->wizard = WPSC_Checkout_Wizard::get_instance();
 		$this->wizard->steps = array(
-			'shipping-and-billing' => __( 'Details', 'wpsc' ),
-			'shipping-method'      => __( 'Delivery', 'wpsc' ),
-			'payment'              => __( 'Place Order', 'wpsc' ),
-			'results'              => __( 'Complete', 'wpsc' ),
+			'shipping-and-billing' => __( 'Details', 'wp-e-commerce' ),
+			'shipping-method'      => __( 'Delivery', 'wp-e-commerce' ),
+			'payment'              => __( 'Place Order', 'wp-e-commerce' ),
+			'results'              => __( 'Complete', 'wp-e-commerce' ),
 		);
 
 		if ( ! wpsc_uses_shipping() ) {

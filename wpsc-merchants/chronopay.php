@@ -1,11 +1,11 @@
 <?php
-$nzshpcrt_gateways[$num]['name'] = __( 'ChronoPay', 'wpsc' );
+$nzshpcrt_gateways[$num]['name'] = __( 'ChronoPay', 'wp-e-commerce' );
 $nzshpcrt_gateways[$num]['internalname'] = 'chronopay';
 $nzshpcrt_gateways[$num]['function'] = 'gateway_chronopay';
 $nzshpcrt_gateways[$num]['form'] = "form_chronopay";
 $nzshpcrt_gateways[$num]['submit_function'] = "submit_chronopay";
 $nzshpcrt_gateways[$num]['payment_type'] = "credit_card";
-$nzshpcrt_gateways[$num]['display_name'] = __( 'Credit Card', 'wpsc' );
+$nzshpcrt_gateways[$num]['display_name'] = __( 'Credit Card', 'wp-e-commerce' );
 $nzshpcrt_gateways[$num]['image'] = WPSC_URL . '/images/cc.gif';
 
 function gateway_chronopay($separator, $sessionid)
@@ -315,35 +315,35 @@ function form_chronopay()
 
 	$output = "
 		<tr>
-			<td>" . __( 'Product ID', 'wpsc' ) . "</td>
+			<td>" . __( 'Product ID', 'wp-e-commerce' ) . "</td>
 			<td>
 				<input type='text' size='40' value='" . get_option( 'chronopay_product_id' ) . "' name='chronopay_product_id' />
 				<p class='description'>
-					" . __( 'This should be set to your product ID that has been set up in the ChronoPay client interface. This is the ChronoPay product that all purchases will be processed against. The cost will be changed depending on the grand total of the users cart.', 'wpsc' ) . "
+					" . __( 'This should be set to your product ID that has been set up in the ChronoPay client interface. This is the ChronoPay product that all purchases will be processed against. The cost will be changed depending on the grand total of the users cart.', 'wp-e-commerce' ) . "
 				</p>
 			</td>
 		</tr>
 		<tr>
-			<td>" . __( 'Product Name', 'wpsc' ) . "</td>
+			<td>" . __( 'Product Name', 'wp-e-commerce' ) . "</td>
 			<td>
 				<input type='text' size='40' value='" . get_option( 'chronopay_product_name' ) . "' name='chronopay_product_name' />
 				<p class='description'>
-					" . __( 'This is not important and is usually set to the name of the web shop. It is displayed on the ChronoPay secure processing page.', 'wpsc' ) . "
+					" . __( 'This is not important and is usually set to the name of the web shop. It is displayed on the ChronoPay secure processing page.', 'wp-e-commerce' ) . "
 				</p>
 		</tr>
 		<tr>
-			<td>" . __( 'Accepted Currency', 'wpsc' ) . "</td>
+			<td>" . __( 'Accepted Currency', 'wp-e-commerce' ) . "</td>
 			<td>
 				<select name='chronopay_curcode'>
-					<option " . $select_currency['USD'] . " value='USD'>" . __( 'USD - U.S. Dollar', 'wpsc' ) . "</option>
-					<option " . $select_currency['EUR'] . " value='EUR'>" . __( 'EUR - Euros', 'wpsc' ) . "</option>
+					<option " . $select_currency['USD'] . " value='USD'>" . __( 'USD - U.S. Dollar', 'wp-e-commerce' ) . "</option>
+					<option " . $select_currency['EUR'] . " value='EUR'>" . __( 'EUR - Euros', 'wp-e-commerce' ) . "</option>
 				</select>
 				<p class='description'>
-					" . __( 'The currency code that ChronoPay will process the payment in. All products must be set up in this currency.', 'wpsc' ) . "
+					" . __( 'The currency code that ChronoPay will process the payment in. All products must be set up in this currency.', 'wp-e-commerce' ) . "
 				</p>
 		</tr>
 		<tr>
-			<td>" . __( 'Language', 'wpsc' ) . "</td>
+			<td>" . __( 'Language', 'wp-e-commerce' ) . "</td>
 			<td>
 				<select name='chronopay_language'>
 					<option " . $select_language['EN'] . " value='EN'>Engish</option>
@@ -352,42 +352,42 @@ function form_chronopay()
 					<option " . $select_language['RU'] . " value='RU'>Russian</option>
 				</select>
 				<p class='description'>
-					" . __( 'The language that the ChronoPay secure processing page will be displayed in.', 'wpsc' ) . "
+					" . __( 'The language that the ChronoPay secure processing page will be displayed in.', 'wp-e-commerce' ) . "
 				</p>
 		</tr>
 		<tr>
-			<td>" . __( 'Processing URL', 'wpsc' ) . "</td>
+			<td>" . __( 'Processing URL', 'wp-e-commerce' ) . "</td>
 			<td>
 				<input type='text' size='40' value='" . $chronopay_url . "' name='chronopay_url' />
 				<p class='description'>
-					" . __( 'URL of the secure payment page customers are sent to for payment processing. If unsure leave at default setting.', 'wpsc' ) . "
+					" . __( 'URL of the secure payment page customers are sent to for payment processing. If unsure leave at default setting.', 'wp-e-commerce' ) . "
 				</p>
 		</tr>
 		<tr>
-			<td>" . __( 'Return URL', 'wpsc' ) . "</td>
+			<td>" . __( 'Return URL', 'wp-e-commerce' ) . "</td>
 			<td>
 				<input type='text' size='40' value='".get_option('transact_url')."' name='chronopay_return_url' />
 				<p class='description'>
-					" . __( 'Enter this URL in the ChronoPay web client against the Product ID that you have set up. This page is the transaction details page that you have configured in Shop Options.  It can not be edited on this page.', 'wpsc' ) . "
+					" . __( 'Enter this URL in the ChronoPay web client against the Product ID that you have set up. This page is the transaction details page that you have configured in Shop Options.  It can not be edited on this page.', 'wp-e-commerce' ) . "
 				</p>
 		</tr>
 		<tr>
-			<td>" . __( 'Security Key', 'wpsc' ) . "</td>
+			<td>" . __( 'Security Key', 'wp-e-commerce' ) . "</td>
 			<td>
 				<input type='text' size='40' value='" . $chronopay_salt . "' name='chronopay_salt' />
 				<p class='description'>
-					" . __( 'A bit of security... This is a keyword that is used to ensure transaction approval calls from ChronoPay to this application are real and were instigated from this server.  Enter a unique word into this field.' , 'wpsc' ) . "
+					" . __( 'A bit of security... This is a keyword that is used to ensure transaction approval calls from ChronoPay to this application are real and were instigated from this server.  Enter a unique word into this field.' , 'wp-e-commerce' ) . "
 				</p>
 		</tr>
 
 		<tr class='firstrowth'>
 			<td style='border-bottom: medium none;' colspan='2'>
-				<strong class='form_group'>" . __( 'Forms Sent to Gateway', 'wpsc' ) . "</strong>
+				<strong class='form_group'>" . __( 'Forms Sent to Gateway', 'wp-e-commerce' ) . "</strong>
 			</td>
 		</tr>
 
 		<tr>
-			<td>" . __( 'First Name Field', 'wpsc' ) . "</td>
+			<td>" . __( 'First Name Field', 'wp-e-commerce' ) . "</td>
 			<td>
 				<select name='chronopay_form[first_name]'>
 				" . nzshpcrt_form_field_list(get_option('chronopay_form_first_name')) . "
@@ -395,42 +395,42 @@ function form_chronopay()
 			</td>
 		</tr>
 		<tr>
-			<td>" . __( 'Last Name Field', 'wpsc' ) . "</td>
+			<td>" . __( 'Last Name Field', 'wp-e-commerce' ) . "</td>
 			<td><select name='chronopay_form[last_name]'>
 				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_last_name' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td>" . __( 'Address Field', 'wpsc' ) . "</td>
+			<td>" . __( 'Address Field', 'wp-e-commerce' ) . "</td>
 			<td><select name='chronopay_form[address]'>
 				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_address' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td>" . __( 'City Field', 'wpsc' ) . "</td>
+			<td>" . __( 'City Field', 'wp-e-commerce' ) . "</td>
 			<td><select name='chronopay_form[city]'>
 				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_city' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td>" . __( 'State Field', 'wpsc' ) . "</td>
+			<td>" . __( 'State Field', 'wp-e-commerce' ) . "</td>
 			<td><select name='chronopay_form[state]'>
 				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_state' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td>" . __( 'Postal/ZIP Code Field', 'wpsc' ) . "</td>
+			<td>" . __( 'Postal/ZIP Code Field', 'wp-e-commerce' ) . "</td>
 			<td><select name='chronopay_form[post_code]'>
 				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_post_code' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td>" . __( 'Country Field', 'wpsc' ) . "</td>
+			<td>" . __( 'Country Field', 'wp-e-commerce' ) . "</td>
 			<td><select name='chronopay_form[country]'>
 				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_country' ) ) . "
 				</select>
@@ -438,7 +438,7 @@ function form_chronopay()
 		</tr>
 		   <tr>
            <td colspan='2'>
-           	" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wpsc' ), esc_url( 'https://docs.wpecommerce.org/documentation/chronopay/' ) ) . "
+           	" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wp-e-commerce' ), esc_url( 'https://docs.wpecommerce.org/documentation/chronopay/' ) ) . "
            </td>
        </tr>";
 

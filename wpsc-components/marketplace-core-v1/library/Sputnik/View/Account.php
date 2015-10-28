@@ -22,14 +22,14 @@ class Sputnik_View_Account extends Sputnik_View_Browser {
 		<div class="account-card">
 			<div class="block">
 				<?php echo get_avatar($account->email) ?>
-				<p class="lead-in"><?php _e('Logged in as', 'wpsc') ?></p>
+				<p class="lead-in"><?php _e('Logged in as', 'wp-e-commerce') ?></p>
 				<h3><?php echo esc_html($account->name) ?></h3>
-				<p><?php printf(__('<a href="%s">Log out</a> of your account', 'wpsc'), Sputnik_Admin::build_url(array('oauth' => 'reset'))) ?></p>
+				<p><?php printf(__('<a href="%s">Log out</a> of your account', 'wp-e-commerce'), Sputnik_Admin::build_url(array('oauth' => 'reset'))) ?></p>
 			</div>
 			<div class="block">
-				<p><?php printf(__('Email: %s', 'wpsc'), '<code>' . $account->email . '</code>') ?></p>
-				<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you can install right now">Available</abbr>', 'wpsc'), count($account->purchased)) ?></p>
-				<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you have bought from the store">Purchased</abbr>', 'wpsc'), $this->count) ?></p>
+				<p><?php printf(__('Email: %s', 'wp-e-commerce'), '<code>' . $account->email . '</code>') ?></p>
+				<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you can install right now">Available</abbr>', 'wp-e-commerce'), count($account->purchased)) ?></p>
+				<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you have bought from the store">Purchased</abbr>', 'wp-e-commerce'), $this->count) ?></p>
 			</div>
 		</div>
 
@@ -46,8 +46,8 @@ class Sputnik_View_Account extends Sputnik_View_Browser {
 
 	public function get_tabs() {
 		$tabs = array();
-		$tabs['purchased'] = __( 'Purchased Plugins', 'wpsc' );
-		$tabs['yours'] = __( 'Your Plugins', 'wpsc' );
+		$tabs['purchased'] = __( 'Purchased Plugins', 'wp-e-commerce' );
+		$tabs['yours'] = __( 'Your Plugins', 'wp-e-commerce' );
 		return $tabs;
 	}
 
@@ -76,8 +76,8 @@ class Sputnik_View_Account extends Sputnik_View_Browser {
 		if ($tab === 'yours') {
 			$api['body'][] = (object) array(
 				'slug' => '__add_new',
-				'name' => __('Add Your Plugin', 'wpsc'),
-				'description' => __('List your plugin on the WPEconomy store. Read our developer documentation and get started!', 'wpsc'),
+				'name' => __('Add Your Plugin', 'wp-e-commerce'),
+				'description' => __('List your plugin on the WPEconomy store. Read our developer documentation and get started!', 'wp-e-commerce'),
 				'rating' => (object) array('average' => 0, 'count' => 0),
 				'price' => 0,
 				'version' => '',
@@ -116,10 +116,10 @@ class Sputnik_View_Account extends Sputnik_View_Browser {
 		global $tab;
 		echo '<p>';
 		if ($tab === 'yours') {
-			_e( "You haven't created any plugins yet. Check out our <a href='http://developer.renku.me/'>developer documentation</a> to find out how!", 'wpsc' );
+			_e( "You haven't created any plugins yet. Check out our <a href='http://developer.renku.me/'>developer documentation</a> to find out how!", 'wp-e-commerce' );
 		}
 		else {
-			printf(__( "You haven't purchased any plugins yet. Why not <a href='%s'>buy some</a>?", 'wpsc' ), Sputnik_Admin::build_url());
+			printf(__( "You haven't purchased any plugins yet. Why not <a href='%s'>buy some</a>?", 'wp-e-commerce' ), Sputnik_Admin::build_url());
 		}
 		echo '</p>';
 	}
@@ -132,8 +132,8 @@ class Sputnik_View_Account extends Sputnik_View_Browser {
 		$actions[] = sprintf(
 			'<a href="%s" class="button edit" title="%s">%s</a>',
 			sprintf(Sputnik::SITE_BASE . '/plugins/%d/edit/', $plugin->product_id),
-			esc_attr(sprintf(_x('Edit %s', 'Edit button title', 'wpsc'), $plugin->name)),
-			_x('Edit', 'Edit button text', 'wpsc')
+			esc_attr(sprintf(_x('Edit %s', 'Edit button title', 'wp-e-commerce'), $plugin->name)),
+			_x('Edit', 'Edit button text', 'wp-e-commerce')
 		);
 		return $actions;
 	}

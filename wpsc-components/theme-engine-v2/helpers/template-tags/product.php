@@ -195,7 +195,7 @@ function wpsc_get_product_category_list( $args = '' ) {
 		'id'        => 0,
 		'before'    => '',
 		'after'     => '',
-		'separator' => __( ', ', 'category list separator', 'wpsc' ),
+		'separator' => __( ', ', 'category list separator', 'wp-e-commerce' ),
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -232,7 +232,7 @@ function wpsc_get_product_tag_list( $args = '' ) {
 		'id'        => 0,
 		'before'    => '',
 		'after'     => '',
-		'separator' => __( ', ', 'tag list separator', 'wpsc' ),
+		'separator' => __( ', ', 'tag list separator', 'wp-e-commerce' ),
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -295,7 +295,7 @@ function wpsc_edit_product_link( $args = '' ) {
 		'id'     => 0,
 		'before' => '<span class="edit-link">',
 		'after'  => '</span>',
-		'title'  => _x( 'Edit This Product', 'product edit link template tag', 'wpsc' ),
+		'title'  => _x( 'Edit This Product', 'product edit link template tag', 'wp-e-commerce' ),
 	);
 
 	$defaults = apply_filters( 'wpsc_edit_product_link_default_args', $defaults );
@@ -617,7 +617,7 @@ function wpsc_get_product_description( $more_link_text = null, $mode = 'with-tea
 	}
 
 	if ( ! $more_link_text ) {
-		$more_link_text = __( 'More details &raquo;', 'wpsc' );
+		$more_link_text = __( 'More details &raquo;', 'wp-e-commerce' );
 	}
 
 	$content = get_the_content( $more_link_text, $stripteaser );
@@ -772,7 +772,7 @@ function wpsc_get_product_original_price( $product_id = null, $from_text = true 
 }
 
 function _wpsc_get_from_text( $price ) {
-	$from_text = apply_filters( 'wpsc_from_text', __( 'from %s', 'wpsc' ) );
+	$from_text = apply_filters( 'wpsc_from_text', __( 'from %s', 'wp-e-commerce' ) );
 	$from_text = sprintf( $from_text, $price );
 	return $from_text;
 }
@@ -837,7 +837,7 @@ function wpsc_get_product_you_save( $product_id = null, $format = false, $from_t
 
 	if ( ! $format ) {
 		/* translators: %1$s: saving amount, %2$s: saving percent */
-		$format = _x( '%1$s (%2$s)', 'product saving format', 'wpsc' );
+		$format = _x( '%1$s (%2$s)', 'product saving format', 'wp-e-commerce' );
 	}
 
 	$product = WPSC_Product::get_instance( $product_id );
@@ -845,7 +845,7 @@ function wpsc_get_product_you_save( $product_id = null, $format = false, $from_t
 	$saving         = wpsc_format_currency( $product->saving );
 	$saving_percent = sprintf(
 		/* translators: %1$s: saving percent, %%: percentage sign */
-		_x( '%1$s%%', 'product saving percent', 'wpsc' ),
+		_x( '%1$s%%', 'product saving percent', 'wp-e-commerce' ),
 		$product->saving_percent
 	);
 
@@ -936,14 +936,14 @@ function wpsc_product_pagination_count() {
 
 	if ( $total > 1 ) {
 		if ( $from == $to ) {
-			$output = sprintf( __( 'Viewing product %1$s (of %2$s total)', 'wpsc' ), $from, $total );
+			$output = sprintf( __( 'Viewing product %1$s (of %2$s total)', 'wp-e-commerce' ), $from, $total );
 		} elseif ( $total_pages === 1 ) {
-			$output = sprintf( __( 'Viewing %1$s products', 'wpsc' ), $total );
+			$output = sprintf( __( 'Viewing %1$s products', 'wp-e-commerce' ), $total );
 		} else {
-			$output = sprintf( __( 'Viewing %1$s products - %2$s through %3$s (of %4$s total)', 'wpsc' ), $post_count, $from, $to, $total );
+			$output = sprintf( __( 'Viewing %1$s products - %2$s through %3$s (of %4$s total)', 'wp-e-commerce' ), $post_count, $from, $to, $total );
 		}
 	} else {
-		$output = sprintf( __( 'Viewing %1$s product', 'wpsc' ), $total );
+		$output = sprintf( __( 'Viewing %1$s product', 'wp-e-commerce' ), $total );
 	}
 
 	// Filter and return
@@ -1010,8 +1010,8 @@ function wpsc_get_product_pagination_links( $args = '' ) {
 		'format'    => $format,
 		'total'     => $wp_query->max_num_pages,
 		'current'   => wpsc_get_current_page_number(),
-		'prev_text' => is_rtl() ? __( '&rarr;', 'wpsc' ) : __( '&larr;', 'wpsc' ),
-		'next_text' => is_rtl() ? __( '&larr;', 'wpsc' ) : __( '&rarr;', 'wpsc' ),
+		'prev_text' => is_rtl() ? __( '&rarr;', 'wp-e-commerce' ) : __( '&larr;', 'wp-e-commerce' ),
+		'next_text' => is_rtl() ? __( '&larr;', 'wp-e-commerce' ) : __( '&rarr;', 'wp-e-commerce' ),
 		'end_size'  => 3,
 		'mid_size'  => 2,
 	);
@@ -1027,7 +1027,7 @@ function wpsc_product_pagination_links( $args = '' ) {
 }
 
 function wpsc_get_category_archive_title() {
-	$title = sprintf( __( 'Product Category: %s', 'wpsc' ), '<span>' . single_term_title( '', false ) . '</span>' );
+	$title = sprintf( __( 'Product Category: %s', 'wp-e-commerce' ), '<span>' . single_term_title( '', false ) . '</span>' );
 	return apply_filters( 'wpsc_get_category_archive_title', $title );
 }
 
@@ -1060,7 +1060,7 @@ function wpsc_get_category_filter( $args = '' ) {
 		'divider'                   => '|',
 		'drill_down_divider'        => '&raquo;',
 		'padding'                   => 1,
-		'all_text'                  => _x( 'All', 'category filter', 'wpsc' ),
+		'all_text'                  => _x( 'All', 'category filter', 'wp-e-commerce' ),
 	);
 
 	$defaults = apply_filters( 'wpsc_get_category_filter_default_args', $defaults );
@@ -1117,7 +1117,7 @@ function wpsc_get_category_filter( $args = '' ) {
 
 		// First item is always "All"
 		$before_all  = sprintf( $before_item, 'wpsc-category-filter-drill-down-item wpsc-category-filter-drill-down-item-all' );
-		$link        = '<a href="' . esc_url( wpsc_get_store_url() ) . '">' . esc_html_x( 'All', 'category filter', 'wpsc' ) . '</a>';
+		$link        = '<a href="' . esc_url( wpsc_get_store_url() ) . '">' . esc_html_x( 'All', 'category filter', 'wp-e-commerce' ) . '</a>';
 		$drilldown[] = $before_all . $link . $drill_down_divider . $after_item;
 
 		$ancestors = array_reverse( $ancestors );
@@ -1160,7 +1160,7 @@ function wpsc_get_category_filter( $args = '' ) {
 
 		// First item is always "All"
 		$before_all = sprintf( $before_item, 'wpsc-category-filter-item wpsc-category-filter-item-all' );
-		$link       = '<a href="' . esc_url( wpsc_get_store_url() ) . '">' . esc_html_x( 'All', 'category filter', 'wpsc' ) . '</a>';
+		$link       = '<a href="' . esc_url( wpsc_get_store_url() ) . '">' . esc_html_x( 'All', 'category filter', 'wp-e-commerce' ) . '</a>';
 		$filters[]  = $before_all . $link . $divider . $after_item;
 	}
 

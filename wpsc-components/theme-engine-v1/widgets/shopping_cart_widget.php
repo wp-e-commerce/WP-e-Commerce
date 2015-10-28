@@ -16,10 +16,10 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_shopping_cart',
-			'description' => __( 'Shopping Cart Widget', 'wpsc' )
+			'description' => __( 'Shopping Cart Widget', 'wp-e-commerce' )
 		);
 
-		parent::__construct( 'wpsc_shopping_cart', __( '(WPEC) Shopping Cart', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_shopping_cart', __( '(WPEC) Shopping Cart', 'wp-e-commerce' ), $widget_ops );
 
 	}
 
@@ -55,7 +55,7 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 		}
 
 		// Start widget output
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Shopping Cart', 'wpsc' ) : $instance['title'] );
+		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Shopping Cart', 'wp-e-commerce' ) : $instance['title'] );
 		echo $before_widget;
 
 		if ( $title )
@@ -73,12 +73,12 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 			if ( ( strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) == false ) && ( $use_object_frame == true ) ) {
 				?>
 				<object codetype="text/html" type="text/html" data="index.php?wpsc_action=cart_html_page" border="0">
-					<p><?php _e( 'Loading...', 'wpsc' ); ?></p>
+					<p><?php _e( 'Loading...', 'wp-e-commerce' ); ?></p>
 				</object>
 				<?php
 			} else {
 				?>
-				<div class="wpsc_cart_loading"><p><?php _e( 'Loading...', 'wpsc' ); ?></p></div>
+				<div class="wpsc_cart_loading"><p><?php _e( 'Loading...', 'wp-e-commerce' ); ?></p></div>
 				<?php
 			}
 			echo '</div>';
@@ -119,7 +119,7 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 
 		// Defaults
 		$instance = wp_parse_args( (array)$instance, array(
-			'title' => __( 'Shopping Cart', 'wpsc' ),
+			'title' => __( 'Shopping Cart', 'wp-e-commerce' ),
 			'show_sliding_cart' => 0
 		) );
 
@@ -132,13 +132,13 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 			$show_sliding_cart = '';
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wp-e-commerce' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<input type='hidden' name="<?php echo $this->get_field_name( 'show_sliding_cart' ); ?>" value='0' />
 		<p>
 
-			<label for="<?php echo $this->get_field_id('show_sliding_cart'); ?>"><?php _e( 'Use Sliding Cart:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id('show_sliding_cart'); ?>"><?php _e( 'Use Sliding Cart:', 'wp-e-commerce' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'show_sliding_cart' ); ?>" name="<?php echo $this->get_field_name( 'show_sliding_cart' ); ?>" type="checkbox" value="1" <?php echo $show_sliding_cart; ?> />
 		</p>
 

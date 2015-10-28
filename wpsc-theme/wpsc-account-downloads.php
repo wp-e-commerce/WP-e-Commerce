@@ -10,14 +10,14 @@
 ?>
 
 <?php if ( empty( $items ) ) : ?>
-	<?php _e( 'You have not purchased any downloadable products yet.', 'wpsc' ); ?>
+	<?php _e( 'You have not purchased any downloadable products yet.', 'wp-e-commerce' ); ?>
 <?php else : ?>
 	<table class="logdisplay">
 		<thead>
 			<tr>
-				<th class="wpsc-user-log-file-name" scope="col"><?php _e( 'File Names', 'wpsc' ); ?> </th>
-				<th class="wpsc-user-log-downloads-left" scope="col"><?php _e( 'Downloads Left', 'wpsc' ); ?> </th>
-				<th class="wpsc-user-log-file-date" scope="col"><?php _e( 'Date', 'wpsc' ); ?> </th>
+				<th class="wpsc-user-log-file-name" scope="col"><?php _e( 'File Names', 'wp-e-commerce' ); ?> </th>
+				<th class="wpsc-user-log-downloads-left" scope="col"><?php _e( 'Downloads Left', 'wp-e-commerce' ); ?> </th>
+				<th class="wpsc-user-log-file-date" scope="col"><?php _e( 'Date', 'wp-e-commerce' ); ?> </th>
 			</tr>
 		</thead>
 

@@ -126,25 +126,25 @@ function wpsc_install() {
 		$pages = array(
 			'products-page' => array(
 				'name' => 'products-page',
-				'title' => __( 'Products Page', 'wpsc' ),
+				'title' => __( 'Products Page', 'wp-e-commerce' ),
 				'tag' => '[productspage]',
 				'option' => 'product_list_url'
 			),
 			'checkout' => array(
 				'name' => 'checkout',
-				'title' => __( 'Checkout', 'wpsc' ),
+				'title' => __( 'Checkout', 'wp-e-commerce' ),
 				'tag' => '[shoppingcart]',
 				'option' => 'shopping_cart_url'
 			),
 			'transaction-results' => array(
 				'name' => 'transaction-results',
-				'title' => __( 'Transaction Results', 'wpsc' ),
+				'title' => __( 'Transaction Results', 'wp-e-commerce' ),
 				'tag' => '[transactionresults]',
 				'option' => 'transact_url'
 			),
 			'your-account' => array(
 				'name' => 'your-account',
-				'title' => __( 'Your Account', 'wpsc' ),
+				'title' => __( 'Your Account', 'wp-e-commerce' ),
 				'tag' => '[userlog]',
 				'option' => 'user_account_url'
 			)
@@ -273,9 +273,9 @@ function wpsc_install() {
 	add_option( 'product_ratings', '0', '', 'no' );
 	add_option( 'wpsc_email_receipt', __( 'Thank you for purchasing with %shop_name%, any items to be shipped will be processed as soon as possible, any items that can be downloaded can be downloaded using the links on this page. All prices include tax and postage and packaging where applicable.
 You ordered these items:
-%product_list%%total_shipping%%total_price%', 'wpsc' ), '', 'no' );
+%product_list%%total_shipping%%total_price%', 'wp-e-commerce' ), '', 'no' );
 
-	add_option( 'wpsc_email_admin', __( '%product_list%%total_shipping%%total_price%', 'wpsc' ), '','no' );
+	add_option( 'wpsc_email_admin', __( '%product_list%%total_shipping%%total_price%', 'wp-e-commerce' ), '','no' );
 
 	add_option( 'wpsc_selected_theme', 'default', '', 'no' );
 
@@ -315,13 +315,13 @@ You ordered these items:
 	if ( count( $category_list ) == 0 ) {
 		require_once( WPSC_FILE_PATH . '/wpsc-includes/meta.functions.php' );
 
-		$new_category = wp_insert_term( __( 'Product Category', 'wpsc' ), 'wpsc_product_category', "parent=0" );
+		$new_category = wp_insert_term( __( 'Product Category', 'wp-e-commerce' ), 'wpsc_product_category', "parent=0" );
 		$category_id = $new_category['term_id'];
 		$term = get_term_by( 'id', $new_category['term_id'], 'wpsc_product_category' );
 		$url_name = $term->slug;
 
 		wpsc_update_categorymeta( $category_id, 'nice-name', $url_name );
-		wpsc_update_categorymeta( $category_id, 'description', __( "This is a description", 'wpsc' ) );
+		wpsc_update_categorymeta( $category_id, 'description', __( "This is a description", 'wp-e-commerce' ) );
 		wpsc_update_categorymeta( $category_id, 'image', '' );
 		wpsc_update_categorymeta( $category_id, 'fee', '0' );
 		wpsc_update_categorymeta( $category_id, 'active', '1' );
@@ -718,26 +718,26 @@ function wpsc_add_checkout_fields() {
 
 	if ( isset( $data_forms[0] ) && $data_forms[0]['count'] == 0 ) {
 
-		$sql = " INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name`) VALUES ( '" . __( 'Your billing/contact details', 'wpsc' ) . "', 'heading', '0', '0', '1', '1', 1,''),
-	( '" . __( 'First Name', 'wpsc' ) . "', 'text', '1', '1', '1', '1', 2,'billingfirstname'),
-	( '" . __( 'Last Name', 'wpsc' ) . "', 'text', '1', '1', '1', '1', 3,'billinglastname'),
-	( '" . __( 'Address', 'wpsc' ) . "', 'address', '1', '0', '1', '1', 4,'billingaddress'),
-	( '" . __( 'City', 'wpsc' ) . "', 'city', '1', '0', '1', '1', 5,'billingcity'),
-	( '" . __( 'State', 'wpsc' ) . "', 'text', '0', '0', '1', '1', 6,'billingstate'),
-	( '" . __( 'Country', 'wpsc' ) . "', 'country', '1', '0', '1', '1', 7,'billingcountry'),
-	( '" . __( 'Postal Code', 'wpsc' ) . "', 'text', '0', '0', '1', '1', 8,'billingpostcode'),
-	( '" . __( 'Email', 'wpsc' ) . "', 'email', '1', '1', '1', '1', 9,'billingemail'),
-	( '" . __( 'Shipping Address', 'wpsc' ) . "', 'heading', '0', '0', '1', '1', 10,'delivertoafriend'),
-	( '" . __( 'First Name', 'wpsc' ) . "', 'text', '0', '0', '1', '1', 11,'shippingfirstname'),
-	( '" . __( 'Last Name', 'wpsc' ) . "', 'text', '0', '0', '1', '1', 12,'shippinglastname'),
-	( '" . __( 'Address', 'wpsc' ) . "', 'address', '0', '0', '1', '1', 13,'shippingaddress'),
-	( '" . __( 'City', 'wpsc' ) . "', 'city', '0', '0', '1', '1', 14,'shippingcity'),
-	( '" . __( 'State', 'wpsc' ) . "', 'text', '0', '0', '1', '1', 15,'shippingstate'),
-	( '" . __( 'Country', 'wpsc' ) . "', 'delivery_country', '0', '0', '1', '1', 16,'shippingcountry'),
-	( '" . __( 'Postal Code', 'wpsc' ) . "', 'text', '0', '0', '1', '1', 17,'shippingpostcode');";
+		$sql = " INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name`) VALUES ( '" . __( 'Your billing/contact details', 'wp-e-commerce' ) . "', 'heading', '0', '0', '1', '1', 1,''),
+	( '" . __( 'First Name', 'wp-e-commerce' ) . "', 'text', '1', '1', '1', '1', 2,'billingfirstname'),
+	( '" . __( 'Last Name', 'wp-e-commerce' ) . "', 'text', '1', '1', '1', '1', 3,'billinglastname'),
+	( '" . __( 'Address', 'wp-e-commerce' ) . "', 'address', '1', '0', '1', '1', 4,'billingaddress'),
+	( '" . __( 'City', 'wp-e-commerce' ) . "', 'city', '1', '0', '1', '1', 5,'billingcity'),
+	( '" . __( 'State', 'wp-e-commerce' ) . "', 'text', '0', '0', '1', '1', 6,'billingstate'),
+	( '" . __( 'Country', 'wp-e-commerce' ) . "', 'country', '1', '0', '1', '1', 7,'billingcountry'),
+	( '" . __( 'Postal Code', 'wp-e-commerce' ) . "', 'text', '0', '0', '1', '1', 8,'billingpostcode'),
+	( '" . __( 'Email', 'wp-e-commerce' ) . "', 'email', '1', '1', '1', '1', 9,'billingemail'),
+	( '" . __( 'Shipping Address', 'wp-e-commerce' ) . "', 'heading', '0', '0', '1', '1', 10,'delivertoafriend'),
+	( '" . __( 'First Name', 'wp-e-commerce' ) . "', 'text', '0', '0', '1', '1', 11,'shippingfirstname'),
+	( '" . __( 'Last Name', 'wp-e-commerce' ) . "', 'text', '0', '0', '1', '1', 12,'shippinglastname'),
+	( '" . __( 'Address', 'wp-e-commerce' ) . "', 'address', '0', '0', '1', '1', 13,'shippingaddress'),
+	( '" . __( 'City', 'wp-e-commerce' ) . "', 'city', '0', '0', '1', '1', 14,'shippingcity'),
+	( '" . __( 'State', 'wp-e-commerce' ) . "', 'text', '0', '0', '1', '1', 15,'shippingstate'),
+	( '" . __( 'Country', 'wp-e-commerce' ) . "', 'delivery_country', '0', '0', '1', '1', 16,'shippingcountry'),
+	( '" . __( 'Postal Code', 'wp-e-commerce' ) . "', 'text', '0', '0', '1', '1', 17,'shippingpostcode');";
 
 		$wpdb->query( $sql );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name` ) VALUES ( '" . __( 'Phone', 'wpsc' ) . "', 'text', '0', '0', '', '1', '8','billingphone');" );
+		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name` ) VALUES ( '" . __( 'Phone', 'wp-e-commerce' ) . "', 'text', '0', '0', '', '1', '8','billingphone');" );
 	}
 }
 function wpsc_rename_checkout_column(){
@@ -772,23 +772,23 @@ function wpsc_3882_database_updates() {
 		return;
 
 	$unique_names = array(
-		'billingfirstname'  => __( 'First Name', 'wpsc' ),
-		'billinglastname'   => __( 'Last Name', 'wpsc' ),
-		'billingaddress'    => __( 'Address', 'wpsc' ),
-		'billingcity'       => __( 'City', 'wpsc' ),
-		'billingstate'      => __( 'State', 'wpsc' ),
-		'billingcountry'    => __( 'Country', 'wpsc' ),
-		'billingemail'      => __( 'Email', 'wpsc' ),
-		'billingphone'      => __( 'Phone', 'wpsc' ),
-		'billingpostcode'   => __( 'Postal Code', 'wpsc' ),
-		'delivertoafriend'  => __( 'Shipping Address', 'wpsc' ),
-		'shippingfirstname' => __( 'First Name', 'wpsc' ),
-		'shippinglastname'  => __( 'Last Name', 'wpsc' ),
-		'shippingaddress'   => __( 'Address', 'wpsc' ),
-		'shippingcity'      => __( 'City', 'wpsc' ),
-		'shippingstate'     => __( 'State', 'wpsc' ),
-		'shippingcountry'   => __( 'Country', 'wpsc' ),
-		'shippingpostcode'  => __( 'Postal Code', 'wpsc' ),
+		'billingfirstname'  => __( 'First Name', 'wp-e-commerce' ),
+		'billinglastname'   => __( 'Last Name', 'wp-e-commerce' ),
+		'billingaddress'    => __( 'Address', 'wp-e-commerce' ),
+		'billingcity'       => __( 'City', 'wp-e-commerce' ),
+		'billingstate'      => __( 'State', 'wp-e-commerce' ),
+		'billingcountry'    => __( 'Country', 'wp-e-commerce' ),
+		'billingemail'      => __( 'Email', 'wp-e-commerce' ),
+		'billingphone'      => __( 'Phone', 'wp-e-commerce' ),
+		'billingpostcode'   => __( 'Postal Code', 'wp-e-commerce' ),
+		'delivertoafriend'  => __( 'Shipping Address', 'wp-e-commerce' ),
+		'shippingfirstname' => __( 'First Name', 'wp-e-commerce' ),
+		'shippinglastname'  => __( 'Last Name', 'wp-e-commerce' ),
+		'shippingaddress'   => __( 'Address', 'wp-e-commerce' ),
+		'shippingcity'      => __( 'City', 'wp-e-commerce' ),
+		'shippingstate'     => __( 'State', 'wp-e-commerce' ),
+		'shippingcountry'   => __( 'Country', 'wp-e-commerce' ),
+		'shippingpostcode'  => __( 'Postal Code', 'wp-e-commerce' ),
 	);
 
 	// Check if any uniquenames are missing

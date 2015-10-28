@@ -17,7 +17,7 @@ class tablerate {
 	 */
 	function tablerate() {
 		$this->internal_name = "tablerate";
-		$this->name = __( "Table Rate", 'wpsc' );
+		$this->name = __( "Table Rate", 'wp-e-commerce' );
 		$this->is_external=false;
 		return true;
 	}
@@ -53,7 +53,7 @@ class tablerate {
 					<div class="cell-wrapper">
 						<small><?php echo esc_html( $currency ); ?></small>
 						<input type="text" name="wpsc_shipping_tablerate_layer[]" value="<?php echo esc_attr( $key ); ?>" size="4" />
-						<small><?php _e( ' and above', 'wpsc' ); ?></small>
+						<small><?php _e( ' and above', 'wp-e-commerce' ); ?></small>
 					</div>
 				</td>
 				<td <?php echo $class; ?>>
@@ -61,8 +61,8 @@ class tablerate {
 						<small><?php echo esc_html( $currency ); ?></small>
 						<input type="text" name="wpsc_shipping_tablerate_shipping[]" value="<?php echo esc_attr( $shipping ); ?>" size="4" />
 						<span class="actions">
-							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
-							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
+							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
+							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
 						</span>
 					</div>
 				</td>
@@ -85,14 +85,14 @@ class tablerate {
 				<table>
 					<thead>
 						<tr>
-							<th class="total"><?php _e('Total Price', 'wpsc' ); ?></th>
-							<th class="shipping"><?php _e( 'Shipping Price', 'wpsc' ); ?></th>
+							<th class="total"><?php _e('Total Price', 'wp-e-commerce' ); ?></th>
+							<th class="shipping"><?php _e( 'Shipping Price', 'wp-e-commerce' ); ?></th>
 						</tr>
 					</thead>
 					<tbody class="table-rate">
 						<tr class="js-warning">
 							<td colspan="2">
-								<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wpsc'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
+								<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wp-e-commerce'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
 							</td>
 						</tr>
 						<?php if ( ! empty( $layers ) ): ?>
@@ -183,7 +183,7 @@ class tablerate {
 
 					}
 
-					return array( __( "Table Rate", 'wpsc' ) => $shipping_amount );
+					return array( __( "Table Rate", 'wp-e-commerce' ) => $shipping_amount );
 
 				}
 
@@ -198,7 +198,7 @@ class tablerate {
 				$shipping_amount = $shipping;
 			}
 
-			return array( __( "Table Rate", 'wpsc' ) => $shipping_amount );
+			return array( __( "Table Rate", 'wp-e-commerce' ) => $shipping_amount );
 
 		}
 	}

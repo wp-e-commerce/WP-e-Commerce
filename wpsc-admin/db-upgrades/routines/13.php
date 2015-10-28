@@ -19,7 +19,7 @@ function _wpsc_db_upgrade_13() {
  */
 function _wpsc_add_region_label_to_uk() {
 	$wpsc_country = new WPSC_Country( 'GB' );
-	$wpsc_country->set( 'region_label', __( 'County', 'wpsc' ) );
+	$wpsc_country->set( 'region_label', __( 'County', 'wp-e-commerce' ) );
 }
 
 function _wpsc_fix_bad_checkout_form_rows() {

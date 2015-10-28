@@ -19,7 +19,7 @@ class Sputnik_View_Info extends Sputnik_View_Mini {
 	protected $api;
 
 	public function __construct() {
-		parent::__construct( __('Plugin Information', 'wpsc') );
+		parent::__construct( __('Plugin Information', 'wp-e-commerce') );
 		$this->plugin = $_GET['info'];
 
 		try {
@@ -28,7 +28,7 @@ class Sputnik_View_Info extends Sputnik_View_Mini {
 		}
 		catch (Exception $e) {
 			status_header(500);
-			iframe_header( __('', 'wpsc') );
+			iframe_header( __('', 'wp-e-commerce') );
 			echo $e->getMessage();
 			iframe_footer();
 			die();
@@ -48,12 +48,12 @@ class Sputnik_View_Info extends Sputnik_View_Mini {
 									'img' => array('src' => array(), 'class' => array(), 'alt' => array()));
 
 		$plugins_section_titles = array(
-			'description'  => _x('Description',  'Plugin installer section title', 'wpsc'),
-			'installation' => _x('Installation', 'Plugin installer section title', 'wpsc'),
-			'faq'          => _x('FAQ',          'Plugin installer section title', 'wpsc'),
-			'screenshots'  => _x('Screenshots',  'Plugin installer section title', 'wpsc'),
-			'changelog'    => _x('Changelog',    'Plugin installer section title', 'wpsc'),
-			'other_notes'  => _x('Other Notes',  'Plugin installer section title', 'wpsc')
+			'description'  => _x('Description',  'Plugin installer section title', 'wp-e-commerce'),
+			'installation' => _x('Installation', 'Plugin installer section title', 'wp-e-commerce'),
+			'faq'          => _x('FAQ',          'Plugin installer section title', 'wp-e-commerce'),
+			'screenshots'  => _x('Screenshots',  'Plugin installer section title', 'wp-e-commerce'),
+			'changelog'    => _x('Changelog',    'Plugin installer section title', 'wp-e-commerce'),
+			'other_notes'  => _x('Other Notes',  'Plugin installer section title', 'wp-e-commerce')
 		);
 		//Sanitize HTML
 		$api->sections = (array) $api->sections;
@@ -92,21 +92,21 @@ class Sputnik_View_Info extends Sputnik_View_Mini {
 				case 'purchase':
 				default:
 					if ( $status['url'] )
-						echo '<a href="' . $status['url'] . '" target="_parent" class="button-primary buy">' . sprintf(__('<span>$%.2f</span> Buy &amp; Install', 'wpsc'), $api->price) . '</a>';
+						echo '<a href="' . $status['url'] . '" target="_parent" class="button-primary buy">' . sprintf(__('<span>$%.2f</span> Buy &amp; Install', 'wp-e-commerce'), $api->price) . '</a>';
 					break;
 				case 'install':
 					if ( $status['url'] )
-						echo '<a href="' . $status['url'] . '" class="button-primary install" title="' . __('You have already purchased, install now', 'wpsc') . '">' . __('Install Now', 'wpsc') . '</a>';
+						echo '<a href="' . $status['url'] . '" class="button-primary install" title="' . __('You have already purchased, install now', 'wp-e-commerce') . '">' . __('Install Now', 'wp-e-commerce') . '</a>';
 					break;
 				case 'update_available':
 					if ( $status['url'] )
-						echo '<a href="' . $status['url'] . '" class="button-primary install">' . __('Install Update Now', 'wpsc') .'</a>';
+						echo '<a href="' . $status['url'] . '" class="button-primary install">' . __('Install Update Now', 'wp-e-commerce') .'</a>';
 					break;
 				case 'newer_installed':
-					echo '<a>' . sprintf(__('Newer Version (%s) Installed', 'wpsc'), $status['version']) . '</a>';
+					echo '<a>' . sprintf(__('Newer Version (%s) Installed', 'wp-e-commerce'), $status['version']) . '</a>';
 					break;
 				case 'latest_installed':
-					echo '<a>' . __('Latest Version Installed', 'wpsc') . '</a>';
+					echo '<a>' . __('Latest Version Installed', 'wp-e-commerce') . '</a>';
 					break;
 			}
 ?>
@@ -137,23 +137,23 @@ class Sputnik_View_Info extends Sputnik_View_Mini {
 		echo "</ul>\n";
 		echo "</div>\n";
 ?>
-			<h2 class="mainheader"><?php /* translators: For Your Information */ _e('FYI', 'wpsc') ?></h2>
+			<h2 class="mainheader"><?php /* translators: For Your Information */ _e('FYI', 'wp-e-commerce') ?></h2>
 			<ul>
 	<?php if ( ! empty($api->version) ) : ?>
-				<li><strong><?php _e('Version:', 'wpsc') ?></strong> <?php echo $api->version ?></li>
+				<li><strong><?php _e('Version:', 'wp-e-commerce') ?></strong> <?php echo $api->version ?></li>
 	<?php endif; if ( ! empty($api->author) ) : ?>
-				<li><strong><?php _e('Author:', 'wpsc') ?></strong> <?php echo $api->author ?></li>
+				<li><strong><?php _e('Author:', 'wp-e-commerce') ?></strong> <?php echo $api->author ?></li>
 	<?php endif; if ( ! empty($api->last_updated) ) : ?>
-				<li><strong><?php _e('Last Updated:', 'wpsc') ?></strong> <span title="<?php echo $api->last_updated ?>"><?php
-								printf( __('%s ago', 'wpsc'), human_time_diff(strtotime($api->last_updated)) ) ?></span></li>
+				<li><strong><?php _e('Last Updated:', 'wp-e-commerce') ?></strong> <span title="<?php echo $api->last_updated ?>"><?php
+								printf( __('%s ago', 'wp-e-commerce'), human_time_diff(strtotime($api->last_updated)) ) ?></span></li>
 	<?php endif; if ( ! empty($api->requires) ) : ?>
-				<li><strong><?php _e('Requires WordPress Version:', 'wpsc') ?></strong> <?php printf(__('%s or higher', 'wpsc'), $api->requires) ?></li>
+				<li><strong><?php _e('Requires WordPress Version:', 'wp-e-commerce') ?></strong> <?php printf(__('%s or higher', 'wp-e-commerce'), $api->requires) ?></li>
 	<?php endif; if ( ! empty($api->tested) ) : ?>
-				<li><strong><?php _e('Compatible up to:', 'wpsc') ?></strong> <?php echo $api->tested ?></li>
+				<li><strong><?php _e('Compatible up to:', 'wp-e-commerce') ?></strong> <?php echo $api->tested ?></li>
 	<?php endif; if ( ! empty($api->downloaded) ) : ?>
-				<li><strong><?php _e('Downloaded:', 'wpsc') ?></strong> <?php printf(_n('%s time', '%s times', $api->downloaded, 'wpsc'), number_format_i18n($api->downloaded)) ?></li>
+				<li><strong><?php _e('Downloaded:', 'wp-e-commerce') ?></strong> <?php printf(_n('%s time', '%s times', $api->downloaded, 'wp-e-commerce'), number_format_i18n($api->downloaded)) ?></li>
 	<?php endif; if ( ! empty($api->homepage) ) : ?>
-				<li><a target="_blank" href="<?php echo $api->homepage ?>"><?php _e('Plugin Homepage  &#187;', 'wpsc') ?></a></li>
+				<li><a target="_blank" href="<?php echo $api->homepage ?>"><?php _e('Plugin Homepage  &#187;', 'wp-e-commerce') ?></a></li>
 	<?php endif; ?>
 			</ul>
 
@@ -161,10 +161,10 @@ class Sputnik_View_Info extends Sputnik_View_Mini {
 		<div id="section-holder" class="wrap">
 		<?php
 			if ( !empty($api->tested) && version_compare( substr($GLOBALS['wp_version'], 0, strlen($api->tested)), $api->tested, '>') )
-				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your current version of WordPress.', 'wpsc') . '</p></div>';
+				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your current version of WordPress.', 'wp-e-commerce') . '</p></div>';
 
 			else if ( !empty($api->requires) && version_compare( substr($GLOBALS['wp_version'], 0, strlen($api->requires)), $api->requires, '<') )
-				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WordPress.', 'wpsc') . '</p></div>';
+				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WordPress.', 'wp-e-commerce') . '</p></div>';
 
 			foreach ( $api->sections as $section_name => $content ) {
 				if ( isset( $plugins_section_titles[ $section_name ] ) )

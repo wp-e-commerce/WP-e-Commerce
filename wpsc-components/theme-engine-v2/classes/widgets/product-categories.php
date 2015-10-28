@@ -17,17 +17,17 @@ class WPSC_Widget_Product_Categories extends WP_Widget {
 	 */
 	public function __construct() {
 		$widget_ops = array(
-			'description' => __( 'Product Categories Widget', 'wpsc' )
+			'description' => __( 'Product Categories Widget', 'wp-e-commerce' )
 		);
 
 		parent::__construct(
 			'wpsc_product_categories',
-			__( '(WPEC) Product Categories', 'wpsc' ),
+			__( '(WPEC) Product Categories', 'wp-e-commerce' ),
 			$widget_ops
 		);
 
 		$this->defaults = array(
-			'title'          => __( 'Product Categories', 'wpsc' ),
+			'title'          => __( 'Product Categories', 'wp-e-commerce' ),
 			'width'          => 45,
 			'height'         => 45,
 			'show_name'      => true,

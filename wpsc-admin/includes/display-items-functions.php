@@ -156,12 +156,12 @@ function wpsc_price_control_forms() {
 		<?php /* Check product if a product has variations */ ?>
 		<?php if ( wpsc_product_has_children( $post->ID ) ) : ?>
 			<?php $price = wpsc_product_variation_price_from( $post->ID ); ?>
-			<p style="margin-top: 6px;"><?php echo sprintf( __( 'This product has variations. To edit the price, please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ); ?></p>
-			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ), $price ); ?></p>
+			<p style="margin-top: 6px;"><?php echo sprintf( __( 'This product has variations. To edit the price, please use the <a href="%s">Variation Controls</a>.' , 'wp-e-commerce'  ), '#wpsc_product_variation_forms' ); ?></p>
+			<p><?php printf( __( 'Price: %s and above.' , 'wp-e-commerce' ), $price ); ?></p>
 		<?php else: ?>
 
 		<div class='wpsc_floatleft' style="width:100px;">
-			<label for="wpsc_price"><?php _e( 'Price', 'wpsc' ); ?></label>
+			<label for="wpsc_price"><?php _e( 'Price', 'wp-e-commerce' ); ?></label>
 			<?php echo esc_html( $ct_symb ); ?> <input id="wpsc_price"
 					type="text"
 					style="width: 70px;"
@@ -170,7 +170,7 @@ function wpsc_price_control_forms() {
 		</div>
 
 		<div class='wpsc_floatleft' style='width:95px; margin-left:30px;'>
-			<label for='wpsc_sale_price'><?php _e( 'Sale Price', 'wpsc' ); ?></label>
+			<label for='wpsc_sale_price'><?php _e( 'Sale Price', 'wp-e-commerce' ); ?></label>
 			<?php echo esc_html( $ct_symb ); ?> <input id = "wpsc_sale_price"
 					type="text"
 					style="width: 70px;"
@@ -182,8 +182,8 @@ function wpsc_price_control_forms() {
 			<table>
 				<thead>
 					<tr>
-						<th class="type" colspan="2"><?php esc_html_e( 'Alternative Currencies:', 'wpsc' ); ?></th>
-						<th class="price"><?php esc_html_e( 'Price:', 'wpsc' ); ?></th>
+						<th class="type" colspan="2"><?php esc_html_e( 'Alternative Currencies:', 'wp-e-commerce' ); ?></th>
+						<th class="price"><?php esc_html_e( 'Price:', 'wp-e-commerce' ); ?></th>
 					<tr>
 				</thead>
 				<tbody>
@@ -225,7 +225,7 @@ function wpsc_price_control_forms() {
 					</tr>
 				</tbody>
 			</table>
-			<a href="#wpsc_currency_row_template" class="button button-small wpsc_add_new_currency"><?php esc_html_e( 'Add a Currency Option', 'wpsc' ); ?></a>
+			<a href="#wpsc_currency_row_template" class="button button-small wpsc_add_new_currency"><?php esc_html_e( 'Add a Currency Option', 'wp-e-commerce' ); ?></a>
 			<?php wp_nonce_field( 'update-options', 'wpsc-update-currency-layers', false ); ?>
 		</div>
 
@@ -233,9 +233,9 @@ function wpsc_price_control_forms() {
 			<table>
 				<thead>
 					<tr>
-						<th class="qty" colspan="2"><?php esc_html_e( 'Quantity:', 'wpsc' ); ?></th>
-						<th class="curr"><span class="hidden"><?php esc_html_e( 'Currency:', 'wpsc' ); ?><span></th>
-						<th class="price"><?php esc_html_e( 'Price:', 'wpsc' ); ?></th>
+						<th class="qty" colspan="2"><?php esc_html_e( 'Quantity:', 'wp-e-commerce' ); ?></th>
+						<th class="curr"><span class="hidden"><?php esc_html_e( 'Currency:', 'wp-e-commerce' ); ?><span></th>
+						<th class="price"><?php esc_html_e( 'Price:', 'wp-e-commerce' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -249,7 +249,7 @@ function wpsc_price_control_forms() {
 									<td class="remove"><a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a></td>
 									<td class="qty">
 										<input type="text" size="5" value="<?php echo absint( $quantity ); ?>" name="table_rate_price[quantity][]" />
-										<?php esc_html_e( '+', 'wpsc' ); ?>
+										<?php esc_html_e( '+', 'wp-e-commerce' ); ?>
 									</td>
 									<td class="curr"><?php echo $ct_code . ' ' . $ct_symb; ?></td>
 									<td><input class="newCurrPrice text" value="<?php echo $table_price; ?>" name="table_rate_price[table_price][]" /></td>
@@ -263,19 +263,19 @@ function wpsc_price_control_forms() {
 						<td class="remove"><a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a></td>
 						<td class="qty">
 							<input size="5" value="0" name="table_rate_price[quantity][]" />
-							<?php esc_html_e( '+', 'wpsc' ); ?>
+							<?php esc_html_e( '+', 'wp-e-commerce' ); ?>
 						</td>
 						<td class="curr"><?php echo $ct_code . ' ' . $ct_symb; ?></td>
 						<td><input size="10"class="newCurrPrice text" value="0" name="table_rate_price[table_price][]" /></td>
 					</tr>
 				</tbody>
 			</table>
-			<a href="#wpsc_quantity_discount_row_template" class="add_level button button-small"><?php esc_html_e( 'Add a Quantity Discount', 'wpsc' ); ?></a>
+			<a href="#wpsc_quantity_discount_row_template" class="add_level button button-small"><?php esc_html_e( 'Add a Quantity Discount', 'wp-e-commerce' ); ?></a>
 			<?php wp_nonce_field( 'update-options', 'wpsc-update-quantity-discounts', false ); ?>
 		</div>
 
 		<input id="add_form_donation" type="checkbox" name="meta[_wpsc_is_donation]" value="yes" <?php checked( $product_data['meta']['_wpsc_is_donation'], 1 ); ?> />
-		<label for="add_form_donation"><?php _e( 'Purchase is a donation.', 'wpsc' ) ?></label>
+		<label for="add_form_donation"><?php _e( 'Purchase is a donation.', 'wp-e-commerce' ) ?></label>
 		<?php wp_nonce_field( 'update', 'wpsc_product_pricing_nonce' ); ?>
 
 <?php endif;
@@ -315,7 +315,7 @@ function wpsc_stock_control_forms() {
 	// Display live title if stock is set
 	if ( isset( $product_data['meta']['_wpsc_stock'] ) && is_numeric( $product_data['meta']['_wpsc_stock'] ) ) {
 		$live_title = '<em id="wpsc_product_stock_metabox_live_title" class="wpsc_metabox_live_title">';
-		$live_title .= sprintf( '<p><span>%s</span> %s</p>', wpsc_format_number( $product_data['meta']['_wpsc_stock'], 0 ), _x( 'left in stock', 'live preview of stock remaining in admin', 'wpsc' ) );
+		$live_title .= sprintf( '<p><span>%s</span> %s</p>', wpsc_format_number( $product_data['meta']['_wpsc_stock'], 0 ), _x( 'left in stock', 'live preview of stock remaining in admin', 'wp-e-commerce' ) );
 		$live_title .= '</em>';
 
 		echo $live_title;
@@ -323,7 +323,7 @@ function wpsc_stock_control_forms() {
 
 	if ( ! empty( $product_meta['unpublish_when_none_left'] ) && ! isset( $product_meta['notify_when_none_left'] ) )
 ?>
-		<label for="wpsc_sku"><abbr title="<?php esc_attr_e( 'Stock Keeping Unit', 'wpsc' ); ?>"><?php esc_html_e( 'SKU:', 'wpsc' ); ?></abbr></label>
+		<label for="wpsc_sku"><abbr title="<?php esc_attr_e( 'Stock Keeping Unit', 'wp-e-commerce' ); ?>"><?php esc_html_e( 'SKU:', 'wp-e-commerce' ); ?></abbr></label>
 <?php
 	if ( !isset( $product_data['meta']['_wpsc_sku'] ) )
 		$product_data['meta']['_wpsc_sku'] = $wpsc_product_defaults['meta']['sku']; ?><br />
@@ -333,7 +333,7 @@ function wpsc_stock_control_forms() {
 	if ( !isset( $product_data['meta']['_wpsc_stock'] ) )
 		$product_data['meta']['_wpsc_stock'] = ''; ?>
 			<br /><input class='limited_stock_checkbox' id='add_form_quantity_limited' type='checkbox' value='yes' <?php if ( is_numeric( $product_data['meta']['_wpsc_stock'] ) ) echo 'checked="checked"'; else echo ''; ?> name='meta[_wpsc_limited_stock]' />
-			<label for='add_form_quantity_limited' class='small'><?php esc_html_e( 'Product has limited stock', 'wpsc' ); ?></label>
+			<label for='add_form_quantity_limited' class='small'><?php esc_html_e( 'Product has limited stock', 'wp-e-commerce' ); ?></label>
 			<?php
 	if ( $post->ID > 0 ) {
 		if ( is_numeric( $product_data['meta']['_wpsc_stock'] ) ) {?>
@@ -343,11 +343,11 @@ function wpsc_stock_control_forms() {
 		} ?>
 					<?php if ( wpsc_product_has_children( $post->ID ) ) : ?>
 						<?php $stock = wpsc_variations_stock_remaining( $post->ID ); ?>
-						<p><?php echo sprintf( __( 'This product has variations. To edit the quantity, please use the <a href="%s">Variation Controls</a> below.' , 'wpsc' ), '#wpsc_product_variation_forms' ); ?></p>
-						<p><?php printf( _n( "%s variant item in stock.", "%s variant items in stock.", $stock, 'wpsc' ), $stock ); ?></p>
+						<p><?php echo sprintf( __( 'This product has variations. To edit the quantity, please use the <a href="%s">Variation Controls</a> below.' , 'wp-e-commerce' ), '#wpsc_product_variation_forms' ); ?></p>
+						<p><?php printf( _n( "%s variant item in stock.", "%s variant items in stock.", $stock, 'wp-e-commerce' ), $stock ); ?></p>
 					<?php else: ?>
 						<div style="margin-bottom:20px;">
-							<label for="stock_limit_quantity"><?php esc_html_e( 'Quantity in stock', 'wpsc' ); ?></label>
+							<label for="stock_limit_quantity"><?php esc_html_e( 'Quantity in stock', 'wp-e-commerce' ); ?></label>
 							<input type='number' min="0" step="1" style="width:80px; margin-left:50px;"
 									id="stock_limit_quantity" name='meta[_wpsc_stock]'
 									size='3' value='<?php echo absint( $product_data['meta']['_wpsc_stock'] ); ?>'
@@ -361,34 +361,34 @@ function wpsc_stock_control_forms() {
 								echo '<p><em>';
 								printf( _n('%s of them is reserved for pending or recently completed orders.',
 										  '%s of them are reserved for pending or recently completed orders.',
-										  $reserved_quantity, 'wpsc'), $reserved_quantity );
+										  $reserved_quantity, 'wp-e-commerce'), $reserved_quantity );
 
 								echo '</em></p>';
 							}
 						?>
 					<?php endif; ?>
 
-						<p><?php esc_html_e( 'When stock reduces to zero:', 'wpsc' ); ?></p>
+						<p><?php esc_html_e( 'When stock reduces to zero:', 'wp-e-commerce' ); ?></p>
 						<div class='notify_when_none_left'>
 							<input  type='checkbox' id="notify_when_oos"
 									name='meta[_wpsc_product_metadata][notify_when_none_left]'
 									class='notify_when_oos'<?php checked( $product_meta['notify_when_none_left'] ); ?> />
-							<label for="notify_when_oos"><?php esc_html_e( 'Notify site owner via email', 'wpsc' ); ?></label>
+							<label for="notify_when_oos"><?php esc_html_e( 'Notify site owner via email', 'wp-e-commerce' ); ?></label>
 						</div>
 						<div class='unpublish_when_none_left'>
 							<input  type='checkbox' id="unpublish_when_oos"
 									name='meta[_wpsc_product_metadata][unpublish_when_none_left]'
 									class='unpublish_when_oos'<?php checked( $product_meta['unpublish_when_none_left'] ); ?> />
-							<label for="unpublish_when_oos"><?php esc_html_e( 'Unpublish product from website', 'wpsc' ); ?></label>
+							<label for="unpublish_when_oos"><?php esc_html_e( 'Unpublish product from website', 'wp-e-commerce' ); ?></label>
 
 						</div>
 				</div> <?php
 	} else { ?>
 				<div style='display: none;' class='edit_stock'>
-					 <?php esc_html_e( 'Stock Qty', 'wpsc' ); ?><input type='text' name='meta[_wpsc_stock]' value='0' size='10' />
+					 <?php esc_html_e( 'Stock Qty', 'wp-e-commerce' ); ?><input type='text' name='meta[_wpsc_stock]' value='0' size='10' />
 					<div style='font-size:9px; padding:5px;'>
-						<input type='checkbox' class='notify_when_oos' name='meta[_wpsc_product_metadata][notify_when_none_left]' /> <?php esc_html_e( 'Email site owner if this Product runs out of stock', 'wpsc' ); ?>
-						<input type='checkbox' class='unpublish_when_oos' name='meta[_wpsc_product_metadata][unpublish_when_none_left]' /> <?php esc_html_e( 'Set status to Unpublished if this Product runs out of stock', 'wpsc' ); ?>
+						<input type='checkbox' class='notify_when_oos' name='meta[_wpsc_product_metadata][notify_when_none_left]' /> <?php esc_html_e( 'Email site owner if this Product runs out of stock', 'wp-e-commerce' ); ?>
+						<input type='checkbox' class='unpublish_when_oos' name='meta[_wpsc_product_metadata][unpublish_when_none_left]' /> <?php esc_html_e( 'Set status to Unpublished if this Product runs out of stock', 'wp-e-commerce' ); ?>
 					</div>
 				</div>
 		<?php
@@ -422,7 +422,7 @@ function wpsc_product_taxes_forms() {
 	$band_select_settings = array(
 		'id' => 'wpec_taxes_band',
 		'name' => 'meta[_wpsc_product_metadata][wpec_taxes_band]',
-		'label' => __( 'Custom Tax Band', 'wpsc' )
+		'label' => __( 'Custom Tax Band', 'wp-e-commerce' )
 	);
 	$wpec_taxes_band = '';
 	if ( isset( $product_meta['wpec_taxes_band'] ) ) {
@@ -434,7 +434,7 @@ function wpsc_product_taxes_forms() {
 		'type' => 'checkbox',
 		'id' => 'wpec_taxes_taxable',
 		'name' => 'meta[_wpsc_product_metadata][wpec_taxes_taxable]',
-		'label' => __( 'Product is exempt from taxation.', 'wpsc' )
+		'label' => __( 'Product is exempt from taxation.', 'wp-e-commerce' )
 	);
 
 	if ( isset( $product_meta['wpec_taxes_taxable'] ) && 'on' == $product_meta['wpec_taxes_taxable'] ) {
@@ -446,8 +446,8 @@ function wpsc_product_taxes_forms() {
 		$taxable_amount_input_settings = array(
 			'id'          =>  'wpec_taxes_taxable_amount',
 			'name'        => 'meta[_wpsc_product_metadata][wpec_taxes_taxable_amount]',
-			'label'       => __( 'Taxable Amount', 'wpsc' ),
-			'description' => __( 'Taxable amount in your currency, not percentage of price.', 'wpsc' ),
+			'label'       => __( 'Taxable Amount', 'wp-e-commerce' ),
+			'description' => __( 'Taxable amount in your currency, not percentage of price.', 'wp-e-commerce' ),
 		);
 
 		if ( isset( $product_meta['wpec_taxes_taxable_amount'] ) ) {
@@ -468,7 +468,7 @@ function wpsc_product_taxes_forms() {
 	$output .= '</p>';
 
 	if ( ! $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_enabled() ) {
-		$output = '<p>' . sprintf( __( 'Taxes are not enabled. See <a href="%s">Settings &gt; Taxes</a>', 'wpsc' ), admin_url( 'options-general.php?page=wpsc-settings&tab=taxes' ) ) . '</p>';
+		$output = '<p>' . sprintf( __( 'Taxes are not enabled. See <a href="%s">Settings &gt; Taxes</a>', 'wp-e-commerce' ), admin_url( 'options-general.php?page=wpsc-settings&tab=taxes' ) ) . '</p>';
 	}
 
 	echo $output;
@@ -504,9 +504,9 @@ function wpsc_product_shipping_forms_metabox() {
  */
 function wpsc_dimension_units() {
 	return array(
-		'in'    => __( 'inches', 'wpsc' ),
-		'cm'    => __( 'cm', 'wpsc' ),
-		'meter' => __( 'meters', 'wpsc' )
+		'in'    => __( 'inches', 'wp-e-commerce' ),
+		'cm'    => __( 'cm', 'wp-e-commerce' ),
+		'meter' => __( 'meters', 'wp-e-commerce' )
 	);
 }
 
@@ -519,10 +519,10 @@ function wpsc_dimension_units() {
  */
 function wpsc_weight_units() {
 	return array(
-		'pound'    => __( 'pounds', 'wpsc' ),
-		'ounce'    => __( 'ounces', 'wpsc' ),
-		'gram'     => __( 'grams', 'wpsc' ),
-		'kilogram' => __( 'kilograms', 'wpsc' )
+		'pound'    => __( 'pounds', 'wp-e-commerce' ),
+		'ounce'    => __( 'ounces', 'wp-e-commerce' ),
+		'gram'     => __( 'grams', 'wp-e-commerce' ),
+		'kilogram' => __( 'kilograms', 'wp-e-commerce' )
 	);
 }
 
@@ -539,14 +539,14 @@ function wpsc_weight_units() {
 function wpsc_weight_unit_display( $unit ) {
 	switch ( $unit ) {
 		case 'pound' :
-			return __( ' lbs.', 'wpsc' );
+			return __( ' lbs.', 'wp-e-commerce' );
 		case 'ounce' :
-			return __( ' oz.', 'wpsc' );
+			return __( ' oz.', 'wp-e-commerce' );
 		case 'gram' :
-			return __( ' g', 'wpsc' );
+			return __( ' g', 'wp-e-commerce' );
 		case 'kilograms' :
 		case 'kilogram' :
-			return __( ' kgs.', 'wpsc' );
+			return __( ' kgs.', 'wp-e-commerce' );
 	}
 	return '';
 }
@@ -660,18 +660,18 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 	<div class="wpsc-stock-editor<?php if ( $bulk ) echo ' wpsc-bulk-edit' ?>">
 		<p class="wpsc-form-field">
 			<input type="checkbox" id="wpsc-product-no-shipping" name="<?php echo esc_attr( $field_name_prefix ); ?>[no_shipping]" value="1" <?php checked( $no_shipping && ! $bulk ); ?>>
-			<label for="wpsc-product-no-shipping"><?php _e( 'Product will <em>not</em> be shipped to customer', 'wpsc' ); ?></label>
+			<label for="wpsc-product-no-shipping"><?php _e( 'Product will <em>not</em> be shipped to customer', 'wp-e-commerce' ); ?></label>
 		</p>
 
 		<div class="wpsc-product-shipping-section wpsc-product-shipping-weight-dimensions">
-			<p><strong><?php esc_html_e( 'Calculate Shipping Costs based on measurements', 'wpsc' ); ?></strong></p>
+			<p><strong><?php esc_html_e( 'Calculate Shipping Costs based on measurements', 'wp-e-commerce' ); ?></strong></p>
 
 			<!-- WEIGHT INPUT -->
 			<p class="wpsc-form-field">
 				<?php if ( $bulk ) : ?>
 					<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][measurements][weight]" value="1" />
 				<?php endif; ?>
-				<label for="wpsc-product-shipping-weight"><?php echo esc_html_e( 'Weight', 'wpsc' ); ?></label>
+				<label for="wpsc-product-shipping-weight"><?php echo esc_html_e( 'Weight', 'wp-e-commerce' ); ?></label>
 				<span class="wpsc-product-shipping-input">
 					<input type="text" id="wpsc-product-shipping-weight" name="<?php echo esc_attr( $field_name_prefix ); ?>[weight]" value="<?php if ( ! $bulk ) echo esc_attr( wpsc_format_number( $weight ) ); ?>" />
 					<select id="wpsc-product-shipping-weight-unit" name="<?php echo $field_name_prefix; ?>[weight_unit]">
@@ -688,7 +688,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<?php if ( $bulk ) : ?>
 					<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][measurements][dimensions]" value="1" />
 				<?php endif; ?>
-				<label for="wpsc-product-shipping-weight"><?php echo esc_html_e( 'Dimensions', 'wpsc' ); ?></label>
+				<label for="wpsc-product-shipping-weight"><?php echo esc_html_e( 'Dimensions', 'wp-e-commerce' ); ?></label>
 				<span class="wpsc-product-shipping-input">
 					<input placeholder="L" type="text" id="wpsc-product-shipping-length" name="<?php echo esc_attr( $field_name_prefix ); ?>[dimensions][length]" value="<?php if ( !$bulk && $dimensions['length']>0 ) echo esc_attr( wpsc_format_number( $dimensions['length'] ) ); ?>" />&nbsp;&times;&nbsp;
 					<input placeholder="W" type="text" id="wpsc-product-shipping-width" name="<?php echo esc_attr( $field_name_prefix ); ?>[dimensions][width]" value="<?php if ( !$bulk && $dimensions['width']>0 ) echo esc_attr( wpsc_format_number( $dimensions['width'] ) ); ?>" />&nbsp;&times;&nbsp;
@@ -712,12 +712,12 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 		?>
 
 		<div class="wpsc-product-shipping-section wpsc-product-shipping-flat-rate">
-			<p><strong><?php esc_html_e( 'Flat Rate Settings', 'wpsc' ); ?></strong></p>
+			<p><strong><?php esc_html_e( 'Flat Rate Settings', 'wp-e-commerce' ); ?></strong></p>
 			<p class="wpsc-form-field">
 				<?php if ( $bulk ): ?>
 					<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][shipping][local]" value="1" />
 				<?php endif; ?>
-				<label for="wpsc-product-shipping-flatrate-local"><?php esc_html_e( 'Local Shipping Fee', 'wpsc' ); ?></label>
+				<label for="wpsc-product-shipping-flatrate-local"><?php esc_html_e( 'Local Shipping Fee', 'wp-e-commerce' ); ?></label>
 				<span>
 					<?php echo esc_html( $ct_symb ); ?>
 					<input type="text" id="wpsc-product-shipping-flatrate-local" name="<?php echo esc_html( $field_name_prefix ); ?>[shipping][local]" value="<?php if ( ! $bulk ) echo $shipping['local']; ?>"  />
@@ -727,7 +727,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<?php if ( $bulk ): ?>
 					<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][shipping][international]" value="1" />
 				<?php endif; ?>
-				<label for="wpsc-product-shipping-flatrate-international"><?php esc_html_e( 'International Shipping Fee', 'wpsc' ); ?></label>
+				<label for="wpsc-product-shipping-flatrate-international"><?php esc_html_e( 'International Shipping Fee', 'wp-e-commerce' ); ?></label>
 				<span>
 					<?php echo esc_html( $ct_symb ); ?>
 					<input type="text" id="wpsc-product-shipping-flatrate-international" name="<?php echo esc_html( $field_name_prefix ); ?>[shipping][international]" value="<?php if ( ! $bulk ) echo $shipping['international']; ?>"  />
@@ -769,23 +769,23 @@ function wpsc_product_advanced_forms() {
 	$output = '<table id="wpsc_product_meta_table" class="wp-list-table widefat posts">';
 		$output .= '<thead>';
 			$output .= '<tr>';
-				$output .= '<th id="wpsc_custom_meta_name_th">' . _x( 'Name', 'Product meta UI', 'wpsc' ) . '</th>';
-				$output .= '<th id="wpsc_custom_meta_value_th">' . _x( 'Value', 'Product meta UI', 'wpsc' ) . '</th>';
-				$output .= '<th id="wpsc_custom_meta_action_th">' . _x( 'Action', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th id="wpsc_custom_meta_name_th">' . _x( 'Name', 'Product meta UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th id="wpsc_custom_meta_value_th">' . _x( 'Value', 'Product meta UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th id="wpsc_custom_meta_action_th">' . _x( 'Action', 'Product meta UI', 'wp-e-commerce' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</thead>';
 		$output .= '<tfoot>';
 			$output .= '<tr>';
-				$output .= '<th>' . _x( 'Name', 'Product meta UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Value', 'Product meta UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Action', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Name', 'Product meta UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th>' . _x( 'Value', 'Product meta UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th>' . _x( 'Action', 'Product meta UI', 'wp-e-commerce' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</tfood>';
 
 		$output .= '<tbody>';
 
 		if ( empty( $custom_fields ) ) {
-			$output .= '<tr class="no-meta"><td colspan="3"><p>' . sprintf( __( 'You have no custom metadata. You can set any arbitrary meta you like and access it programatically via the <a href="">Post Meta API</a>.', 'wpsc' ), esc_url( 'https://codex.wordpress.org/Function_Reference/get_post_meta' ) ) . '</p></td></tr>';
+			$output .= '<tr class="no-meta"><td colspan="3"><p>' . sprintf( __( 'You have no custom metadata. You can set any arbitrary meta you like and access it programatically via the <a href="">Post Meta API</a>.', 'wp-e-commerce' ), esc_url( 'https://codex.wordpress.org/Function_Reference/get_post_meta' ) ) . '</p></td></tr>';
 		} else {
 			// Display all available metadata
 			$alternate = false;
@@ -796,7 +796,7 @@ function wpsc_product_advanced_forms() {
 				$output .= '<tr'. ($alternate ? ' class="alternate"' : '') .'>';
 					$output .= '<td><input type="text" value="'.esc_attr( $custom_field['meta_key'] ).'" name="custom_meta['.$i.'][name]" id="custom_meta_name_'.$i.'"></input></td>';
 					$output .= '<td><input type="text" value="'.esc_attr( $custom_field['meta_value'] ).'" name="custom_meta['.$i.'][value]" id="custom_meta_value_'.$i.'"></input></td>';
-					$output .= '<td><a href="#" data-nonce="'.esc_attr( $delete_nonce ).'" class="wpsc_remove_meta" onclick="wpsc_remove_custom_meta(this,'.$i.')">'.esc_html( 'Delete', 'wpsc' ).'</a></td>';
+					$output .= '<td><a href="#" data-nonce="'.esc_attr( $delete_nonce ).'" class="wpsc_remove_meta" onclick="wpsc_remove_custom_meta(this,'.$i.')">'.esc_html( 'Delete', 'wp-e-commerce' ).'</a></td>';
 				$output .= '</tr>';
 			}
 		}
@@ -805,13 +805,13 @@ function wpsc_product_advanced_forms() {
 			$output .= '<tr id="wpsc_new_meta_template">';
 				$output .= '<td><input type="text" name="new_custom_meta[name][]"  value=""></input></td>';
 				$output .= '<td><input type="text" name="new_custom_meta[value][]" value=""></input></td>';
-				$output .= '<td><a href="#" class="wpsc_remove_meta" onclick="wpsc_remove_empty_meta(this)">'.esc_html( 'Delete', 'wpsc' ).'</a></td>';
+				$output .= '<td><a href="#" class="wpsc_remove_meta" onclick="wpsc_remove_empty_meta(this)">'.esc_html( 'Delete', 'wp-e-commerce' ).'</a></td>';
 			$output .= '</tr>';
 
 		$output .= '</tbody>';
 	$output .= '</table>';
 
-	$output .= '<a href="#" class="add_more_meta  button button-small" id="wpsc_add_custom_meta">'.esc_html( '+ Add Custom Meta', 'wpsc' ).'</a>';
+	$output .= '<a href="#" class="add_more_meta  button button-small" id="wpsc_add_custom_meta">'.esc_html( '+ Add Custom Meta', 'wp-e-commerce' ).'</a>';
 
 	echo $output;
 
@@ -838,37 +838,37 @@ function wpsc_product_external_link_forms() {
 	<table class="form-table" style="width: 100%;" cellspacing="2" cellpadding="5">
 		<tbody>
 			<tr class="form-field">
-				<th valign="top" scope="row"><label for="external_link"><?php esc_html_e( 'URL', 'wpsc' ); ?></label></th>
+				<th valign="top" scope="row"><label for="external_link"><?php esc_html_e( 'URL', 'wp-e-commerce' ); ?></label></th>
 				<td><input type="text" name="meta[_wpsc_product_metadata][external_link]" id="external_link" value="<?php echo esc_url( $product_meta['external_link'] ); ?>" size="50" style="width: 95%" placeholder="http://" /></td>
 			</tr>
 			<tr class="form-field">
-				<th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wpsc' ); ?></label></th>
-				<td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php echo esc_attr( $product_meta['external_link_text'] ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wpsc' ); ?>" /></td>
+				<th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wp-e-commerce' ); ?></label></th>
+				<td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php echo esc_attr( $product_meta['external_link_text'] ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wp-e-commerce' ); ?>" /></td>
 			</tr>
 			<tr class="form-field">
-				<th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wpsc' ); ?></label></th>
+				<th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wp-e-commerce' ); ?></label></th>
 				<td id="external_link_target">
 
 					<label>
 						<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value=""<?php checked( '', $product_meta['external_link_target'] ); ?> />
-						<?php _ex( 'Default (set by theme)', 'External product link target', 'wpsc' ); ?>
+						<?php _ex( 'Default (set by theme)', 'External product link target', 'wp-e-commerce' ); ?>
 					</label>
 
 					<label>
 						<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self"<?php checked( '_self', $product_meta['external_link_target'] ); ?> />
-						<?php esc_html_e( 'Force open in same window', 'wpsc' ); ?>
+						<?php esc_html_e( 'Force open in same window', 'wp-e-commerce' ); ?>
 					</label>
 
 					<label>
 						<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank"<?php checked( '_blank', $product_meta['external_link_target'] ); ?> />
-						<?php esc_html_e( 'Force open in new window', 'wpsc' ); ?>
+						<?php esc_html_e( 'Force open in new window', 'wp-e-commerce' ); ?>
 					</label>
 
 				</td>
 			</tr>
 		</tbody>
 	</table>
-	<em><?php esc_html_e( 'This option overrides the "Buy Now" and "Add to Cart" buttons, replacing them with the link you describe here.', 'wpsc' ); ?></em>
+	<em><?php esc_html_e( 'This option overrides the "Buy Now" and "Add to Cart" buttons, replacing them with the link you describe here.', 'wp-e-commerce' ); ?></em>
 	<?php
 
 	wp_nonce_field( 'update', 'wpsc_product_external_link_nonce' );
@@ -878,7 +878,7 @@ function wpsc_product_external_link_forms() {
 function wpsc_additional_desc() {
 ?>
 	<textarea name='additional_description' id='additional_description' cols='40' rows='5' ><?php echo esc_textarea( get_post_field( 'post_excerpt', get_the_ID() ) ); ?></textarea>
-	<em><?php _e( 'Short Descriptions are optional hand-crafted summaries of your content that can be used in your theme.', 'wpsc' ); ?></em>
+	<em><?php _e( 'Short Descriptions are optional hand-crafted summaries of your content that can be used in your theme.', 'wp-e-commerce' ); ?></em>
 <?php
 
 }
@@ -924,8 +924,8 @@ function wpsc_product_gallery( $post ) {
   <?php
 	// button for old iframe for non JS people
 	$output .= '<p class="hide-if-no-js">';
-		$output .= '<a class="button button-small thickbox" title="' . esc_attr__( 'Manage Product Image Gallery...', 'wpsc' ).'" href="' . $upload_iframe_src . '" id="wpsc-manage-product-gallery">';
-			$output .= esc_html__( 'Manage Product Image Gallery...', 'wpsc' );
+		$output .= '<a class="button button-small thickbox" title="' . esc_attr__( 'Manage Product Image Gallery...', 'wp-e-commerce' ).'" href="' . $upload_iframe_src . '" id="wpsc-manage-product-gallery">';
+			$output .= esc_html__( 'Manage Product Image Gallery...', 'wp-e-commerce' );
 		$output .= '</a>';
 	$output .= '</p>';
 
@@ -950,10 +950,10 @@ function wpsc_product_download_forms() {
 ?>
 	<?php echo wpsc_select_product_file( $post->ID ); ?>
 
-	<a href="admin.php?wpsc_admin_action=product_files_existing&amp;product_id=<?php echo absint( $post->ID ); ?>" class="thickbox button button-small" title="<?php echo esc_attr( sprintf( __( 'Select all downloadable files for %s', 'wpsc' ), $post->post_title ) ); ?>"><?php esc_html_e( 'Add existing files...', 'wpsc' ); ?></a>
+	<a href="admin.php?wpsc_admin_action=product_files_existing&amp;product_id=<?php echo absint( $post->ID ); ?>" class="thickbox button button-small" title="<?php echo esc_attr( sprintf( __( 'Select all downloadable files for %s', 'wp-e-commerce' ), $post->post_title ) ); ?>"><?php esc_html_e( 'Add existing files...', 'wp-e-commerce' ); ?></a>
 
 	<div class="wpsc_fileUpload button button-small">
-		<span><?php esc_html_e('Upload new file...','wpsc'); ?></span>
+		<span><?php esc_html_e('Upload new file...','wp-e-commerce'); ?></span>
 		<input type='file' name='file' class="button button-small" value='' onchange="wpsc_push_v2t(this, '#wpsc_fileupload_path')" />
 	</div>
 	<em id="wpsc_fileupload_path"></em>
@@ -962,10 +962,10 @@ function wpsc_product_download_forms() {
 	if ( function_exists( "make_mp3_preview" ) || function_exists( "wpsc_media_player" ) ) {
 ?>
 			<br />
-			<h4><?php esc_html_e( 'Select an MP3 file to upload as a preview', 'wpsc' ) ?></h4>
+			<h4><?php esc_html_e( 'Select an MP3 file to upload as a preview', 'wp-e-commerce' ) ?></h4>
 			<input type='file' name='preview_file' value='' /><br />
 
-			<h4><?php esc_html_e( 'Your preview for this product', 'wpsc' ) ?>:</h4>
+			<h4><?php esc_html_e( 'Your preview for this product', 'wp-e-commerce' ) ?>:</h4>
 
 			 <?php
 				$args = array(
@@ -1008,15 +1008,15 @@ function wpsc_product_personalization_forms() {
 	<ul id="wpsc_product_personalization_option">
 		<li>
 			<input type="checkbox" name="meta[_wpsc_product_metadata][engraved]" <?php checked( $product_meta['engraved'], '1' ); ?> id="add_engrave_text" />
-			<label for="add_engrave_text"><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wpsc' ); ?></label>
+			<label for="add_engrave_text"><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wp-e-commerce' ); ?></label>
 		</li>
 		<li>
 			<input type="checkbox" name="meta[_wpsc_product_metadata][can_have_uploaded_image]" <?php checked( $product_meta['can_have_uploaded_image'], '1' ); ?> id="can_have_uploaded_image" />
-			<label for="can_have_uploaded_image"> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wpsc' ); ?></label>
+			<label for="can_have_uploaded_image"> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wp-e-commerce' ); ?></label>
 		</li>
 		<?php do_action( 'wpsc_add_advanced_options', $post->ID ); ?>
 	</ul>
-	<em><?php _e( "Form fields for the customer to personalize this product will be shown on it's single product page.", 'wpsc' ); ?></em>
+	<em><?php _e( "Form fields for the customer to personalize this product will be shown on it's single product page.", 'wp-e-commerce' ); ?></em>
 	<?php
 
 	wp_nonce_field( 'update', 'wpsc_product_personalization_nonce' );
@@ -1034,9 +1034,9 @@ function wpsc_product_delivery_forms(){
 
 	<div id="wpsc_product_delivery_forms" class="categorydiv wpsc-categorydiv">
 		<ul id="wpsc_product_delivery_tabs" class="category-tabs">
-			<li class="tabs"><a href="#wpsc_product_delivery-shipping"><?php _e( 'Shipping', 'wpsc' ); ?></a></li>
-			<li><a href="#wpsc_product_delivery-download"><?php _e( 'Download', 'wpsc' ); ?></a></li>
-			<li><a href="#wpsc_product_delivery-external_link"><?php _e( 'External Link', 'wpsc' ); ?></a></li>
+			<li class="tabs"><a href="#wpsc_product_delivery-shipping"><?php _e( 'Shipping', 'wp-e-commerce' ); ?></a></li>
+			<li><a href="#wpsc_product_delivery-download"><?php _e( 'Download', 'wp-e-commerce' ); ?></a></li>
+			<li><a href="#wpsc_product_delivery-external_link"><?php _e( 'External Link', 'wp-e-commerce' ); ?></a></li>
 		</ul>
 
 		<div id="wpsc_product_delivery-shipping" class="tabs-panel" style="display:block;">
@@ -1044,7 +1044,7 @@ function wpsc_product_delivery_forms(){
 				if ( ! $has_variations ) {
 					wpsc_product_shipping_forms();
 				} else {
-					echo '<p>' . sprintf( __( 'This product has variations. To edit the shipping, please use the <a href="%s">Variation Controls</a>.', 'wpsc'  ), '#wpsc_product_variation_forms' ) . '</p>';
+					echo '<p>' . sprintf( __( 'This product has variations. To edit the shipping, please use the <a href="%s">Variation Controls</a>.', 'wp-e-commerce'  ), '#wpsc_product_variation_forms' ) . '</p>';
 				}
 			?>
 		</div>
@@ -1068,10 +1068,10 @@ function wpsc_product_details_forms(){
 
 	<div id="wpsc_product_details_forms" class="categorydiv wpsc-categorydiv">
 		<ul id="wpsc_product_details_tabs"  class="category-tabs">
-			<li class="tabs"><a href="#wpsc_product_details-image"><?php _e( 'Image Gallery', 'wpsc' ); ?></a></li>
-			<li><a href="#wpsc_product_details-desc"><?php _e( 'Short Description', 'wpsc' ); ?></a></li>
-			<li><a href="#wpsc_product_details-personalization"><?php _e( 'Personalization', 'wpsc' ); ?></a></li>
-			<li><a href="#wpsc_product_details-meta"><?php _e( 'Metadata', 'wpsc' ); ?></a></li>
+			<li class="tabs"><a href="#wpsc_product_details-image"><?php _e( 'Image Gallery', 'wp-e-commerce' ); ?></a></li>
+			<li><a href="#wpsc_product_details-desc"><?php _e( 'Short Description', 'wp-e-commerce' ); ?></a></li>
+			<li><a href="#wpsc_product_details-personalization"><?php _e( 'Personalization', 'wp-e-commerce' ); ?></a></li>
+			<li><a href="#wpsc_product_details-meta"><?php _e( 'Metadata', 'wp-e-commerce' ); ?></a></li>
 		</ul>
 
 		<div id="wpsc_product_details-image" class="tabs-panel" style="display: block;">
@@ -1120,9 +1120,9 @@ function wpsc_filter_gettex_with_context( $translation, $text, $context, $domain
 
 	if ( 'Taxonomy Parent' == $context && 'Parent' == $text && isset($_GET['taxonomy']) && 'wpsc-variation' == $_GET['taxonomy'] ) {
 		$translations = get_translations_for_domain( $domain );
-		return $translations->translate( 'Variation Set', 'wpsc' );
+		return $translations->translate( 'Variation Set', 'wp-e-commerce' );
 		//this will never happen, this is here only for gettext to pick up the translation
-		return __( 'Variation Set', 'wpsc' );
+		return __( 'Variation Set', 'wp-e-commerce' );
 	}
 	return $translation;
 }
@@ -1148,7 +1148,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		jQuery("a.wp-post-thumbnail").each(function(){
 			var product_image = jQuery(this).text();
 			if (product_image == "' . esc_js( __( 'Use as featured image' ) ) . '") {
-				jQuery(this).text("' . esc_js( __('Use as Product Thumbnail', 'wpsc') ) . '");
+				jQuery(this).text("' . esc_js( __('Use as Product Thumbnail', 'wp-e-commerce') ) . '");
 			}
 		});
 
@@ -1164,7 +1164,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 </script>';
 		$out .= ob_get_clean();
 
-		$size_names = array( 'small-product-thumbnail' => __( 'Default Product Thumbnail Size', 'wpsc' ), 'medium-single-product' => __( 'Single Product Image Size', 'wpsc' ), 'full' => __( 'Full Size', 'wpsc' ) );
+		$size_names = array( 'small-product-thumbnail' => __( 'Default Product Thumbnail Size', 'wp-e-commerce' ), 'medium-single-product' => __( 'Single Product Image Size', 'wp-e-commerce' ), 'full' => __( 'Full Size', 'wp-e-commerce' ) );
 
 		$check = get_post_meta( $post->ID, '_wpsc_selected_image_size', true );
 		if ( !$check )
@@ -1192,7 +1192,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 			$html .= "<label for='{$css_id}'>$name</label>";
 			// only show the dimensions if that choice is available
 			if ( $enabled )
-				$html .= " <label for='{$css_id}' class='help'>" . sprintf( __( "(%d&nbsp;&times;&nbsp;%d)", 'wpsc' ), $downsize[1], $downsize[2] ). "</label>";
+				$html .= " <label for='{$css_id}' class='help'>" . sprintf( __( "(%d&nbsp;&times;&nbsp;%d)", 'wp-e-commerce' ), $downsize[1], $downsize[2] ). "</label>";
 
 			$html .= '</div>';
 
@@ -1200,13 +1200,13 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		}
 
 		unset( $form_fields['post_excerpt'], $form_fields['image_url'], $form_fields['post_content'], $form_fields['post_title'], $form_fields['url'], $form_fields['align'], $form_fields['image_alt']['helps'], $form_fields["image-size"] );
-		$form_fields['image_alt']['helps'] =  __( 'Alt text for the product image, e.g. &#8220;Rockstar T-Shirt&#8221;', 'wpsc' );
+		$form_fields['image_alt']['helps'] =  __( 'Alt text for the product image, e.g. &#8220;Rockstar T-Shirt&#8221;', 'wp-e-commerce' );
 
 		$form_fields["wpsc_image_size"] = array(
-			'label' => __( 'Single Product Page Thumbnail:', 'wpsc' ),
+			'label' => __( 'Single Product Page Thumbnail:', 'wp-e-commerce' ),
 			'input' => 'html',
 			'html'  => $out,
-			'helps' => "<span style='text-align:left; clear:both; display:block; padding-top:3px;'>" . __( 'This is the Thumbnail size that will be displayed on the Single Product page. You can change the default sizes under your store settings', 'wpsc' ) . "</span>"
+			'helps' => "<span style='text-align:left; clear:both; display:block; padding-top:3px;'>" . __( 'This is the Thumbnail size that will be displayed on the Single Product page. You can change the default sizes under your store settings', 'wp-e-commerce' ) . "</span>"
 		);
 
 		//This is for the custom thumbnail size.
@@ -1219,9 +1219,9 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 
 		";
 		$form_fields["wpsc_custom_thumb"] = array(
-			"label" => __( 'Products Page Thumbnail Size:', 'wpsc' ),
+			"label" => __( 'Products Page Thumbnail Size:', 'wp-e-commerce' ),
 			"input" => "html", // this is default if "input" is omitted
-			"helps" => "<span style='text-align:left; clear:both; display:block; padding-top:3px;'>" . __( 'Custom thumbnail size for this image on the main Product Page', 'wpsc') . "</span>",
+			"helps" => "<span style='text-align:left; clear:both; display:block; padding-top:3px;'>" . __( 'Custom thumbnail size for this image on the main Product Page', 'wp-e-commerce') . "</span>",
 			"html" => $custom_thumb_html
 		);
 	}
@@ -1336,7 +1336,7 @@ function wpsc_save_quickedit_box( $post_id ) {
 					break;
 
 				case 'sku':
-					if ( $value == __( 'N/A', 'wpsc' ) ) {
+					if ( $value == __( 'N/A', 'wp-e-commerce' ) ) {
 						$value = '';
 					} else {
 						$value = sanitize_text_field( $value );
@@ -1379,9 +1379,9 @@ function wpsc_quick_edit_boxes( $col_name, $_screen_post_type = null ) {
 	case 'SKU' :
 ?>
 			<label style="max-width: 85%" class="alignleft">
-				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'SKU:', 'wpsc' ); ?> </span>
+				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'SKU:', 'wp-e-commerce' ); ?> </span>
 				<input type="text" name="sku" class="wpsc_ie_sku" />
-				<input type="checkbox" name="sku_variant"> <span><?php esc_html_e( 'Update Variants', 'wpsc');?></span>
+				<input type="checkbox" name="sku_variant"> <span><?php esc_html_e( 'Update Variants', 'wp-e-commerce');?></span>
 
 			</label>
 			<?php
@@ -1389,36 +1389,36 @@ function wpsc_quick_edit_boxes( $col_name, $_screen_post_type = null ) {
 case 'weight' :
 ?>
 			<label style="max-width: 85%" class="alignleft">
-				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'Weight:', 'wpsc' ); ?> </span>
+				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'Weight:', 'wp-e-commerce' ); ?> </span>
 				<input type="text" name="weight" class="wpsc_ie_weight" />
-				<input type="checkbox" name="weight_variant"> <span><?php esc_html_e( 'Update Variants', 'wpsc');?></span>
+				<input type="checkbox" name="weight_variant"> <span><?php esc_html_e( 'Update Variants', 'wp-e-commerce');?></span>
 			</label>
 			<?php
 	break;
 case 'stock' :
 ?>
 			<label style="max-width: 85%" class="alignleft">
-				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'Stock:', 'wpsc' ); ?> </span>
+				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'Stock:', 'wp-e-commerce' ); ?> </span>
 				<input type="text" name="stock" class="wpsc_ie_stock" />
-				<input type="checkbox" name="stock_variant"> <span><?php esc_html_e( 'Update Variants', 'wpsc');?></span>
+				<input type="checkbox" name="stock_variant"> <span><?php esc_html_e( 'Update Variants', 'wp-e-commerce');?></span>
 			</label>
 			<?php
 	break;
 case 'price' :
 ?>
 			<label style="max-width: 85%" class="alignleft">
-				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'Price:', 'wpsc' ); ?> </span>
+				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'Price:', 'wp-e-commerce' ); ?> </span>
 				<input type="text" name="price" class="wpsc_ie_price" />
-				<input type="checkbox" name="price_variant"> <span><?php esc_html_e( 'Update Variants', 'wpsc');?></span>
+				<input type="checkbox" name="price_variant"> <span><?php esc_html_e( 'Update Variants', 'wp-e-commerce');?></span>
 			</label>
 			<?php
 	break;
 case 'sale_price' :
 ?>
 			<label style="max-width: 85%" class="alignleft">
-				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'Sale Price:', 'wpsc' ); ?> </span>
+				<span class="checkbox-title wpsc-quick-edit"><?php esc_html_e( 'Sale Price:', 'wp-e-commerce' ); ?> </span>
 				<input type="text" name="sale_price" class="wpsc_ie_sale_price" />
-				<input type="checkbox" name="sale_price_variant"> <span><?php esc_html_e( 'Update Variants', 'wpsc');?></span>
+				<input type="checkbox" name="sale_price_variant"> <span><?php esc_html_e( 'Update Variants', 'wp-e-commerce');?></span>
 			</label>
 			<?php
 	break;
@@ -1465,9 +1465,9 @@ function variation_price_field( $variation ) {
 	if( !isset( $_GET['action'] ) ) {
 	?>
 	<div class="form-field">
-		<label for="variation_price"><?php esc_html_e( 'Variation Price', 'wpsc' ); ?></label>
+		<label for="variation_price"><?php esc_html_e( 'Variation Price', 'wp-e-commerce' ); ?></label>
 		<input type="text" name="variation_price" id="variation_price" style="width:50px;" value="<?php echo $price; ?>"><br />
-		<span class="description"><?php esc_html_e( 'You can list a default price here for this variation.  You can list a regular price (18.99), differential price (+1.99 / -2) or even a percentage-based price (+50% / -25%).', 'wpsc' ); ?></span>
+		<span class="description"><?php esc_html_e( 'You can list a default price here for this variation.  You can list a regular price (18.99), differential price (+1.99 / -2) or even a percentage-based price (+50% / -25%).', 'wp-e-commerce' ); ?></span>
 	</div>
 	<script type="text/javascript">
 		jQuery('#parent option:contains("   ")').remove();
@@ -1480,11 +1480,11 @@ function variation_price_field( $variation ) {
 	?>
 	<tr class="form-field">
 			<th scope="row" valign="top">
-		<label for="variation_price"><?php esc_html_e( 'Variation Price', 'wpsc' ); ?></label>
+		<label for="variation_price"><?php esc_html_e( 'Variation Price', 'wp-e-commerce' ); ?></label>
 			</th>
 			<td>
 		<input type="text" name="variation_price" id="variation_price" style="width:50px;" value="<?php echo $price; ?>"><br />
-		<span class="description"><?php esc_html_e( 'You can list a default price here for this variation.  You can list a regular price (18.99), differential price (+1.99 / -2) or even a percentage-based price (+50% / -25%).', 'wpsc' ); ?></span>
+		<span class="description"><?php esc_html_e( 'You can list a default price here for this variation.  You can list a regular price (18.99), differential price (+1.99 / -2) or even a percentage-based price (+50% / -25%).', 'wp-e-commerce' ); ?></span>
 			</td>
 	</tr>
 	<?php
@@ -1534,9 +1534,9 @@ function variation_price_field_check( $variation ) {
 		$checked = ''; ?>
 
 	<tr class="form-field">
-		<th scope="row" valign="top"><label for="apply_to_current"><?php esc_html_e( 'Apply to current variations?', 'wpsc' ) ?></label></th>
+		<th scope="row" valign="top"><label for="apply_to_current"><?php esc_html_e( 'Apply to current variations?', 'wp-e-commerce' ) ?></label></th>
 		<td>
-			<span class="description"><input type="checkbox" name="apply_to_current" id="apply_to_current" style="width:2%;" <?php echo $checked; ?> /><?php _e( 'By checking this box, the price rule you implement above will be applied to all variations that currently exist.  If you leave it unchecked, it will only apply to products that use this variation created or edited from now on.  Take note, this will apply this rule to <strong>every</strong> product using this variation.  If you need to override it for any reason on a specific product, simply go to that product and change the price.', 'wpsc' ); ?></span>
+			<span class="description"><input type="checkbox" name="apply_to_current" id="apply_to_current" style="width:2%;" <?php echo $checked; ?> /><?php _e( 'By checking this box, the price rule you implement above will be applied to all variations that currently exist.  If you leave it unchecked, it will only apply to products that use this variation created or edited from now on.  Take note, this will apply this rule to <strong>every</strong> product using this variation.  If you need to override it for any reason on a specific product, simply go to that product and change the price.', 'wp-e-commerce' ); ?></span>
 		</td>
 	</tr>
 <?php

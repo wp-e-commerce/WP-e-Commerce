@@ -2,7 +2,7 @@
 
 class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 	public function __construct() {
-		$this->page_title = __( 'General Settings', 'wpsc' );
+		$this->page_title = __( 'General Settings', 'wp-e-commerce' );
 	}
 
 	public function category_list() {
@@ -17,16 +17,16 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 		else
 			$selected = '';
 
-		$categorylist .= "<option value='all' " . $selected . " >" . __( 'Show All Products', 'wpsc' ) . "</option>";
+		$categorylist .= "<option value='all' " . $selected . " >" . __( 'Show All Products', 'wp-e-commerce' ) . "</option>";
 
 		if ( $current_default == 'list' )
 			$selected = "selected='selected'";
 		else
 			$selected = '';
 
-		$categorylist .= "<option value='list' " . $selected . " >" . __( 'Show list of product categories', 'wpsc' ) . "</option>";
+		$categorylist .= "<option value='list' " . $selected . " >" . __( 'Show list of product categories', 'wp-e-commerce' ) . "</option>";
 
-		$categorylist .= "<optgroup label='" . __( 'Product Categories', 'wpsc' ) . "'>";
+		$categorylist .= "<optgroup label='" . __( 'Product Categories', 'wp-e-commerce' ) . "'>";
 		foreach ( $group_data as $group ) {
 			$selected = "";
 			if ( $current_default == $group->term_id )
@@ -81,7 +81,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 	?>
 		<div id="poststuff" class="metabox-holder">
 			<div id="themes_and_appearance" class='postbox'>
-				<h3 class="hndle"><span><?php esc_html_e( "Advanced Theme Settings", 'wpsc' ); ?></span></h3>
+				<h3 class="hndle"><span><?php esc_html_e( "Advanced Theme Settings", 'wp-e-commerce' ); ?></span></h3>
 					<div class="inside">
 					<?php
 
@@ -89,7 +89,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						?>
 
 							<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
-								<p><?php esc_html_e( 'You did not specify any template files to be moved.', 'wpsc' ); ?></p>
+								<p><?php esc_html_e( 'You did not specify any template files to be moved.', 'wp-e-commerce' ); ?></p>
 							</div>
 						<?php
 						$_SESSION['wpsc_theme_empty'] = false;
@@ -99,9 +99,9 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						?>
 							<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
 								<?php if(in_array(false, $_SESSION['wpsc_themes_copied_results'], true)): ?>
-									<p style="color:red;"><?php esc_html_e( 'Error: some files could not be copied. Please make sure that theme folder is writable.', 'wpsc' ); ?></p>
+									<p style="color:red;"><?php esc_html_e( 'Error: some files could not be copied. Please make sure that theme folder is writable.', 'wp-e-commerce' ); ?></p>
 								<?php else: ?>
-									<p><?php esc_html_e( 'Thanks, the themes have been copied.', 'wpsc' ); ?></p>
+									<p><?php esc_html_e( 'Thanks, the themes have been copied.', 'wp-e-commerce' ); ?></p>
 								<?php endif; ?>
 							</div>
 						<?php
@@ -111,8 +111,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						if ( isset( $_SESSION['wpsc_themes_backup'] ) && ($_SESSION['wpsc_themes_backup'] == true) ) {
 						?>
 							<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
-								<p><?php _e( 'Thanks, you have made a succesful backup of your theme.  It is located at the URL below.  Please note each backup you create will replace your previous backups.', 'wpsc' ); ?></p>
-								<p><?php _e( 'URL:', 'wpsc' ); ?> <?php echo "/" . str_replace( ABSPATH, "", WPSC_THEME_BACKUP_DIR ); ?></p>
+								<p><?php _e( 'Thanks, you have made a succesful backup of your theme.  It is located at the URL below.  Please note each backup you create will replace your previous backups.', 'wp-e-commerce' ); ?></p>
+								<p><?php _e( 'URL:', 'wp-e-commerce' ); ?> <?php echo "/" . str_replace( ABSPATH, "", WPSC_THEME_BACKUP_DIR ); ?></p>
 							</div>
 						<?php
 							$_SESSION['wpsc_themes_backup'] = false;
@@ -121,9 +121,9 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<p>
 					<?php if(false !== $themes_location)
 							//Some themes have been moved to the themes folder
-						_e( 'Some Theme files have been moved to your WordPress Theme Folder.', 'wpsc' );
+						_e( 'Some Theme files have been moved to your WordPress Theme Folder.', 'wp-e-commerce' );
 					else
-					    _e( 'No Theme files have been moved to your WordPress Theme Folder.', 'wpsc' );
+					    _e( 'No Theme files have been moved to your WordPress Theme Folder.', 'wp-e-commerce' );
 
 					 ?>
 
@@ -131,7 +131,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<p>
 						<?php _e( 'WP eCommerce provides you the ability to move your theme files to a safe place for theming control.
 
-	If you want to change the look of your site, select the files you want to edit from the list and click the move button. This will copy the template files to your active WordPress theme. ','wpsc' ); ?>
+	If you want to change the look of your site, select the files you want to edit from the list and click the move button. This will copy the template files to your active WordPress theme. ','wp-e-commerce' ); ?>
 					</p>
 					<ul>
 					<?php
@@ -147,7 +147,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					 </ul>
 					 <p>
 					 <?php if(false !== $themes_location){
-					 esc_html_e( 'To change the look of certain aspects of your shop, you can edit the moved files that are found here:', 'wpsc' );
+					 esc_html_e( 'To change the look of certain aspects of your shop, you can edit the moved files that are found here:', 'wp-e-commerce' );
 					 ?>
 					 </p>
 					 <p class="howto">	<?php echo get_stylesheet_directory(); ?></p>
@@ -157,17 +157,17 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						?>
 						<input type='submit' value='<?php esc_attr_e( 'Move Template Files &rarr;' ); ?>' class="button" name='wpsc_move_themes' />
 					</p>
-					 <p><?php _e( 'You can create a copy of your WordPress Theme by clicking the backup button bellow. Once copied you can find them here:' ,'wpsc' ); ?></p>
+					 <p><?php _e( 'You can create a copy of your WordPress Theme by clicking the backup button bellow. Once copied you can find them here:' ,'wp-e-commerce' ); ?></p>
 					<p class="howto"><?php echo esc_html( '/wp-content/uploads/wpsc/theme_backup/' ); ?></p>
 					<p>
 						<?php
-						printf( __( '<a href="%s" class="button">Backup Your WordPress Theme</a>', 'wpsc' ), wp_nonce_url( 'admin.php?wpsc_admin_action=backup_themes', 'backup_themes' ) ); ?>
+						printf( __( '<a href="%s" class="button">Backup Your WordPress Theme</a>', 'wp-e-commerce' ), wp_nonce_url( 'admin.php?wpsc_admin_action=backup_themes', 'backup_themes' ) ); ?>
 						<br style="clear:both" />
 					</p>
 
 					<br style="clear:both" />
-					 <p><?php esc_html_e( 'If you have moved your files in some other way i.e FTP, you may need to click the Flush Theme Cache. This will refresh the locations WordPress looks for your templates.' ,'wpsc' ); ?></p>
-					<p><?php printf( __( '<a href="%s" class="button">Flush Theme Cache</a>', 'wpsc' ), wp_nonce_url( 'admin.php?wpsc_flush_theme_transients=true', 'wpsc_flush_theme_transients' ) ); ?></p>
+					 <p><?php esc_html_e( 'If you have moved your files in some other way i.e FTP, you may need to click the Flush Theme Cache. This will refresh the locations WordPress looks for your templates.' ,'wp-e-commerce' ); ?></p>
+					<p><?php printf( __( '<a href="%s" class="button">Flush Theme Cache</a>', 'wp-e-commerce' ), wp_nonce_url( 'admin.php?wpsc_flush_theme_transients=true', 'wpsc_flush_theme_transients' ) ); ?></p>
 					<br style="clear:both" />
 					<br style="clear:both" />
 					</div>
@@ -182,10 +182,10 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 
 			<?php $this->theme_metabox(); ?>
 
-			<h3 class="form_group"><?php esc_html_e( 'Button Settings', 'wpsc' ); ?></h3>
+			<h3 class="form_group"><?php esc_html_e( 'Button Settings', 'wp-e-commerce' ); ?></h3>
 			<table class='wpsc_options form-table' style="width:550px">
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Button Type', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Button Type', 'wp-e-commerce' ); ?>:</th>
 					<td>
 						<?php
 						$addtocart_or_buynow = get_option( 'addtocart_or_buynow' );
@@ -202,22 +202,22 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						}
 						?>
 						<input type='radio' value='0' name='wpsc_options[addtocart_or_buynow]' id='addtocart_or_buynow1' <?php echo $addtocart_or_buynow1; ?> />
-						<label for='addtocart_or_buynow1'><?php esc_html_e( 'Add To Cart', 'wpsc' ); ?></label> &nbsp;<br />
+						<label for='addtocart_or_buynow1'><?php esc_html_e( 'Add To Cart', 'wp-e-commerce' ); ?></label> &nbsp;<br />
 				<?php $selected_gateways = get_option( 'custom_gateway_options' );
 					$disable_buy_now = '';
 					$message = '';
 					if (!in_array( 'wpsc_merchant_paypal_standard', (array)$selected_gateways )){
 							$disable_buy_now = 'disabled="disabled"';
-							$message = __( 'Buy Now Button only works for Paypal Standard, please activate Paypal Standard to enable this option.','wpsc' );
+							$message = __( 'Buy Now Button only works for Paypal Standard, please activate Paypal Standard to enable this option.','wp-e-commerce' );
 					} ?>
 						<input <?php echo $disable_buy_now; ?> type='radio' value='1' name='wpsc_options[addtocart_or_buynow]' id='addtocart_or_buynow2' <?php echo $addtocart_or_buynow2; ?> />
-						<label for='addtocart_or_buynow2'><?php _e( 'Buy Now', 'wpsc' ); ?></label><br />
+						<label for='addtocart_or_buynow2'><?php _e( 'Buy Now', 'wp-e-commerce' ); ?></label><br />
 						<?php echo $message; ?>
 					</td>
 				</tr>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Hide "Add to cart" button', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Hide "Add to cart" button', 'wp-e-commerce' ); ?>:</th>
 					<td>
 						<?php
 						$hide_addtocart_button = get_option( 'hide_addtocart_button' );
@@ -233,18 +233,18 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 						?>
-						<input type='radio' value='1' name='wpsc_options[hide_addtocart_button]' id='hide_addtocart_button1' <?php echo $hide_addtocart_button1; ?> /> 				<label for='hide_addtocart_button1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[hide_addtocart_button]' id='hide_addtocart_button2' <?php echo $hide_addtocart_button2; ?> /> 				<label for='hide_addtocart_button2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[hide_addtocart_button]' id='hide_addtocart_button1' <?php echo $hide_addtocart_button1; ?> /> 				<label for='hide_addtocart_button1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[hide_addtocart_button]' id='hide_addtocart_button2' <?php echo $hide_addtocart_button2; ?> /> 				<label for='hide_addtocart_button2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 			</table>
 
-			<h3 class="form_group"><?php esc_html_e( 'Product Settings', 'wpsc' ); ?></h3>
+			<h3 class="form_group"><?php esc_html_e( 'Product Settings', 'wp-e-commerce' ); ?></h3>
 
 			<table class='wpsc_options form-table'>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Show Product Ratings', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Show Product Ratings', 'wp-e-commerce' ); ?>:</th>
 					<td>
 						<?php
 						$display_pnp = get_option( 'product_ratings' );
@@ -260,8 +260,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 						?>
-						<input type='radio' value='1' name='wpsc_options[product_ratings]' id='product_ratings1' <?php echo $product_ratings1; ?> /> <label for='product_ratings1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[product_ratings]' id='product_ratings2' <?php echo $product_ratings2; ?> /> <label for='product_ratings2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[product_ratings]' id='product_ratings1' <?php echo $product_ratings1; ?> /> <label for='product_ratings1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[product_ratings]' id='product_ratings2' <?php echo $product_ratings2; ?> /> <label for='product_ratings2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 				<tr>
@@ -274,16 +274,16 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						$list_view_quantity_value2 = 'checked="checked"';
 					?>
 					<th scope="row">
-						<?php esc_html_e( 'Show Stock Availability', 'wpsc' ); ?>:
+						<?php esc_html_e( 'Show Stock Availability', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
-						<input type='radio' value='1' name='wpsc_options[list_view_quantity]' id='list_view_quantity1' <?php echo $list_view_quantity_value1; ?> /> <label for='list_view_quantity1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						 <input type='radio' value='0' name='wpsc_options[list_view_quantity]' id='list_view_quantity2' <?php echo $list_view_quantity_value2; ?> /> <label for='list_view_quantity2'><?php _e( 'No', 'wpsc' ); ?></label> &nbsp;
+						<input type='radio' value='1' name='wpsc_options[list_view_quantity]' id='list_view_quantity1' <?php echo $list_view_quantity_value1; ?> /> <label for='list_view_quantity1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						 <input type='radio' value='0' name='wpsc_options[list_view_quantity]' id='list_view_quantity2' <?php echo $list_view_quantity_value2; ?> /> <label for='list_view_quantity2'><?php _e( 'No', 'wp-e-commerce' ); ?></label> &nbsp;
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<?php esc_html_e( 'Display Fancy Purchase Notifications', 'wpsc' ); ?>:
+						<?php esc_html_e( 'Display Fancy Purchase Notifications', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
 						<?php
@@ -300,14 +300,14 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 						?>
-						<input type='radio' value='1' name='wpsc_options[fancy_notifications]' id='fancy_notifications1' <?php echo $fancy_notifications1; ?> /> <label for='fancy_notifications1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[fancy_notifications]' id='fancy_notifications2' <?php echo $fancy_notifications2; ?> /> <label for='fancy_notifications2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[fancy_notifications]' id='fancy_notifications1' <?php echo $fancy_notifications1; ?> /> <label for='fancy_notifications1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[fancy_notifications]' id='fancy_notifications2' <?php echo $fancy_notifications2; ?> /> <label for='fancy_notifications2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Display per item shipping', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Display per item shipping', 'wp-e-commerce' ); ?>:</th>
 					<td>
 						<?php
 						$display_pnp = get_option( 'display_pnp' );
@@ -323,13 +323,13 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 						?>
-						<input type='radio' value='1' name='wpsc_options[display_pnp]' id='display_pnp1' <?php echo $display_pnp1; ?> /> <label for='display_pnp1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[display_pnp]' id='display_pnp2' <?php echo $display_pnp2; ?> /> <label for='display_pnp2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[display_pnp]' id='display_pnp1' <?php echo $display_pnp1; ?> /> <label for='display_pnp1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[display_pnp]' id='display_pnp2' <?php echo $display_pnp2; ?> /> <label for='display_pnp2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Disable link in Title', 'wpsc' ); ?>:	</th>
+					<th scope="row"><?php esc_html_e( 'Disable link in Title', 'wp-e-commerce' ); ?>:	</th>
 					<td>
 						<?php
 						$hide_name_link = get_option( 'hide_name_link' );
@@ -346,14 +346,14 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						}
 						?>
 						<input type='radio' value='1' name='wpsc_options[hide_name_link]' id='hide_name_link1' <?php echo $hide_name_link1; ?> />
-						<label for='hide_name_link1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
+						<label for='hide_name_link1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
 						<input type='radio' value='0' name='wpsc_options[hide_name_link]' id='hide_name_link2' <?php echo $hide_name_link2; ?> />
-						<label for='hide_name_link2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<label for='hide_name_link2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Add quantity field to each product description', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Add quantity field to each product description', 'wp-e-commerce' ); ?>:</th>
 					<td>
 						<?php
 						$multi_adding = get_option( 'multi_add' );
@@ -369,20 +369,20 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						?>
 						<input type='radio' value='1' name='wpsc_options[multi_add]' id='multi_adding1' <?php if ( isset( $multi_adding1 ) )
 							echo $multi_adding1; ?> />
-						<label for='multi_adding1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
+						<label for='multi_adding1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
 						<input type='radio' value='0' name='wpsc_options[multi_add]' id='multi_adding2' <?php if ( isset( $multi_adding2 ) )
 							echo $multi_adding2; ?> />
-						<label for='multi_adding2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<label for='multi_adding2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 			</table>
 		</div>
 
 
-			<h3 class="form_group"><?php esc_html_e( 'Product Page Settings', 'wpsc' ); ?></h3>
+			<h3 class="form_group"><?php esc_html_e( 'Product Page Settings', 'wp-e-commerce' ); ?></h3>
 			<table class='wpsc_options form-table'>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Product Display', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Product Display', 'wp-e-commerce' ); ?>:</th>
 					<td>
 					<?php
 						$display_pnp = get_option( 'product_view' );
@@ -434,25 +434,25 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						}
 					?>
 					<select name='wpsc_options[product_view]'>
-						<option value='default' <?php echo $product_view1; ?>><?php esc_html_e( 'Default View', 'wpsc' ); ?></option>
+						<option value='default' <?php echo $product_view1; ?>><?php esc_html_e( 'Default View', 'wp-e-commerce' ); ?></option>
 <?php
 						if ( function_exists( 'product_display_list' ) ) {
 ?>
-							<option value='list' <?php echo $product_view2; ?>><?php esc_html_e( 'List View', 'wpsc' ); ?></option>
+							<option value='list' <?php echo $product_view2; ?>><?php esc_html_e( 'List View', 'wp-e-commerce' ); ?></option>
 <?php
 						} else {
 ?>
-							<option value='list' disabled='disabled' <?php echo $product_view2; ?>><?php esc_html_e( 'List View', 'wpsc' ); ?></option>
+							<option value='list' disabled='disabled' <?php echo $product_view2; ?>><?php esc_html_e( 'List View', 'wp-e-commerce' ); ?></option>
 						<?php
 						}
 
 						if ( function_exists( 'product_display_grid' ) ) {
 						?>
-							<option value='grid' <?php echo $product_view3; ?>><?php esc_html_e( 'Grid View', 'wpsc' ); ?></option>
+							<option value='grid' <?php echo $product_view3; ?>><?php esc_html_e( 'Grid View', 'wp-e-commerce' ); ?></option>
 						<?php
 						} else {
 						?>
-							<option value='grid' disabled='disabled' <?php echo $product_view3; ?>><?php esc_html_e( 'Grid View', 'wpsc' ); ?></option>
+							<option value='grid' disabled='disabled' <?php echo $product_view3; ?>><?php esc_html_e( 'Grid View', 'wp-e-commerce' ); ?></option>
 						<?php
 						}
 						?>
@@ -460,7 +460,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<?php
 						if ( ! function_exists( 'product_display_grid' ) ) {
 					?>
-					<a href='http://wpecommerce.org/store/premium-plugins/gold-cart/'><?php esc_html_e( 'Purchase unavailable options', 'wpsc' ); ?></a>
+					<a href='http://wpecommerce.org/store/premium-plugins/gold-cart/'><?php esc_html_e( 'Purchase unavailable options', 'wp-e-commerce' ); ?></a>
 					<?php
 						}
 					?>
@@ -468,30 +468,30 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 				</tr>
 
 				<tr id="wpsc-grid-settings">
-					<th scope="row"><?php esc_html_e( 'Grid view settings:', 'wpsc' ) ?></th>
+					<th scope="row"><?php esc_html_e( 'Grid view settings:', 'wp-e-commerce' ) ?></th>
 					<td>
 						<input type='number' min="0" name='wpsc_options[grid_number_per_row]' id='grid_number_per_row' size='2' value='<?php esc_attr_e( get_option( 'grid_number_per_row' ) ); ?>' class='small-text' />
-						<label for='grid_number_per_row'><?php esc_html_e( 'Products Per Row', 'wpsc' ); ?></label><br />
+						<label for='grid_number_per_row'><?php esc_html_e( 'Products Per Row', 'wp-e-commerce' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[show_images_only]' />
 						<input type='checkbox' value='1' name='wpsc_options[show_images_only]' id='wpsc-show-images-only' <?php echo $show_images_only_value; ?> />
-						<label for='wpsc-show-images-only'><?php esc_html_e( 'Show images only', 'wpsc' ); ?></label><br />
+						<label for='wpsc-show-images-only'><?php esc_html_e( 'Show images only', 'wp-e-commerce' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[display_variations]' />
 						<input type='checkbox' value='1' name='wpsc_options[display_variations]' id='wpsc-display-variations' <?php echo $display_variations; ?> />
-						<label for='wpsc-display-variations'><?php esc_html_e( 'Display Variations', 'wpsc' ); ?></label><br />
+						<label for='wpsc-display-variations'><?php esc_html_e( 'Display Variations', 'wp-e-commerce' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[display_description]' />
 						<input type='checkbox' value='1' name='wpsc_options[display_description]' id='wpsc-display-description' <?php echo $display_description; ?> />
-						<label for='wpsc-display-description'><?php esc_html_e( 'Display Description', 'wpsc' ); ?></label><br />
+						<label for='wpsc-display-description'><?php esc_html_e( 'Display Description', 'wp-e-commerce' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[display_addtocart]' />
 						<input type='checkbox' value='1' name='wpsc_options[display_addtocart]' id='wpsc-display-add-to-cart' <?php echo $display_addtocart; ?> />
-						<label for='wpsc-display-add-to-cart'><?php esc_html_e( 'Display "Add To Cart" Button', 'wpsc' ); ?></label><br />
+						<label for='wpsc-display-add-to-cart'><?php esc_html_e( 'Display "Add To Cart" Button', 'wp-e-commerce' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[display_moredetails]' />
 						<input type='checkbox' value='1' name='wpsc_options[display_moredetails]' id='wpsc-display-more-details' <?php echo $display_moredetails; ?> />
-						<label for='wpsc-display-more-details'><?php esc_html_e( 'Display "More Details" Button', 'wpsc' ); ?></label>
+						<label for='wpsc-display-more-details'><?php esc_html_e( 'Display "More Details" Button', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 
@@ -504,17 +504,17 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					?>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Show list of categories', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Show list of categories', 'wp-e-commerce' ); ?>:</th>
 					<td>
 						<input type='radio' value='1' name='wpsc_options[wpsc_display_categories]' id='display_categories2' <?php echo $selected1; ?> />
-						<label for='display_categories2'><?php _e( 'Yes', 'wpsc' ); ?></label>
+						<label for='display_categories2'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label>
 						<input type='radio' value='0' name='wpsc_options[wpsc_display_categories]' id='display_categories1' <?php echo $selected2; ?> />
-						<label for='display_categories1'><?php _e( 'No', 'wpsc' ); ?></label><br />
+						<label for='display_categories1'><?php _e( 'No', 'wp-e-commerce' ); ?></label><br />
 					</td>
 				</tr>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Select what product category you want to display on the products page', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Select what product category you want to display on the products page', 'wp-e-commerce' ); ?>:</th>
 					<td>
 						<?php echo $this->category_list(); ?>
 					</td>
@@ -542,29 +542,29 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 			?>
 				<tr>
 					<th scope="row">
-						<?php _e( 'Sort Product By', 'wpsc' ); ?>:
+						<?php _e( 'Sort Product By', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
 						<select name='wpsc_options[wpsc_sort_by]'>
 							<option <?php if ( isset( $wpsc_sort_by1 ) )
-							echo $wpsc_sort_by1; ?> value='name'><?php esc_html_e( 'Name', 'wpsc' ); ?></option>
+							echo $wpsc_sort_by1; ?> value='name'><?php esc_html_e( 'Name', 'wp-e-commerce' ); ?></option>
 							<option <?php if ( isset( $wpsc_sort_by2 ) )
-							echo $wpsc_sort_by2; ?> value='price'><?php esc_html_e( 'Price', 'wpsc' ); ?></option>
+							echo $wpsc_sort_by2; ?> value='price'><?php esc_html_e( 'Price', 'wp-e-commerce' ); ?></option>
 							<option <?php if ( isset( $wpsc_sort_by4 ) )
-							echo $wpsc_sort_by4; ?> value='dragndrop'><?php esc_html_e( 'Drag &amp; Drop', 'wpsc' ); ?></option>
+							echo $wpsc_sort_by4; ?> value='dragndrop'><?php esc_html_e( 'Drag &amp; Drop', 'wp-e-commerce' ); ?></option>
 							<option <?php if ( isset( $wpsc_sort_by3 ) )
-							echo $wpsc_sort_by3; ?> value='id'><?php esc_html_e( 'Time Uploaded', 'wpsc' ); ?></option>
+							echo $wpsc_sort_by3; ?> value='id'><?php esc_html_e( 'Time Uploaded', 'wp-e-commerce' ); ?></option>
 						</select>
 
 						 <select name="wpsc_options[wpsc_product_order]">
-						 	<option value="ASC" <?php selected( get_option( 'wpsc_product_order' ), 'ASC' ); ?>><?php _ex( 'Ascending', 'product order setting', 'wpsc' ); ?></option>
-						 	<option value="DESC"  <?php selected( get_option( 'wpsc_product_order' ), 'DESC' ); ?>><?php _ex( 'Descending', 'product order setting', 'wpsc' ); ?></option>
+						 	<option value="ASC" <?php selected( get_option( 'wpsc_product_order' ), 'ASC' ); ?>><?php _ex( 'Ascending', 'product order setting', 'wp-e-commerce' ); ?></option>
+						 	<option value="DESC"  <?php selected( get_option( 'wpsc_product_order' ), 'DESC' ); ?>><?php _ex( 'Descending', 'product order setting', 'wp-e-commerce' ); ?></option>
 						 </select>
 					</td>
 				</tr>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Show Breadcrumbs', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Show Breadcrumbs', 'wp-e-commerce' ); ?>:</th>
 					<td>
 					<?php
 						$show_breadcrumbs = get_option( 'show_breadcrumbs' );
@@ -580,8 +580,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 					?>
-						<input type='radio' value='1' name='wpsc_options[show_breadcrumbs]' id='show_breadcrumbs1' <?php echo $show_breadcrumbs1; ?> /> <label for='show_breadcrumbs1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[show_breadcrumbs]' id='show_breadcrumbs2' <?php echo $show_breadcrumbs2; ?> /> <label for='show_breadcrumbs2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[show_breadcrumbs]' id='show_breadcrumbs1' <?php echo $show_breadcrumbs1; ?> /> <label for='show_breadcrumbs1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[show_breadcrumbs]' id='show_breadcrumbs2' <?php echo $show_breadcrumbs2; ?> /> <label for='show_breadcrumbs2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 
@@ -589,7 +589,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 
 				<tr>
 					<th scope="row">
-					<?php esc_html_e( 'Product Groups/Products Display', 'wpsc' ); ?>:
+					<?php esc_html_e( 'Product Groups/Products Display', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
 					<?php
@@ -606,14 +606,14 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 					?>
-								<input type='radio' value='0' name='wpsc_options[catsprods_display_type]' id='catsprods_display_type1' <?php echo $catsprods_display_type1; ?> /> <label for='catsprods_display_type1'><?php _e( 'Product Groups Only (All products displayed)', 'wpsc' ); ?></label><br/>
-								<input type='radio' value='1' name='wpsc_options[catsprods_display_type]' id='catsprods_display_type2' <?php echo $catsprods_display_type2; ?> /> <label for='catsprods_display_type2'><?php _e( 'Sliding Product Groups (1 product per page)', 'wpsc' ); ?></label>
+								<input type='radio' value='0' name='wpsc_options[catsprods_display_type]' id='catsprods_display_type1' <?php echo $catsprods_display_type1; ?> /> <label for='catsprods_display_type1'><?php _e( 'Product Groups Only (All products displayed)', 'wp-e-commerce' ); ?></label><br/>
+								<input type='radio' value='1' name='wpsc_options[catsprods_display_type]' id='catsprods_display_type2' <?php echo $catsprods_display_type2; ?> /> <label for='catsprods_display_type2'><?php _e( 'Sliding Product Groups (1 product per page)', 'wp-e-commerce' ); ?></label>
 							</td>
 						</tr>
 
 						<tr>
 							<th scope="row">
-								<?php esc_html_e( 'Show Subcategory Products in Parent Category', 'wpsc' ); ?>:
+								<?php esc_html_e( 'Show Subcategory Products in Parent Category', 'wp-e-commerce' ); ?>:
 							</th>
 							<td>
 								<?php
@@ -629,8 +629,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 										break;
 								}
 								?>
-								<input type="radio" value="1" name="wpsc_options[show_subcatsprods_in_cat]" id="show_subcatsprods_in_cat_on" <?php echo $show_subcatsprods_in_cat_on; ?> /> <label for="show_subcatsprods_in_cat_on"><?php echo __( 'Yes', 'wpsc' ); ?></label> &nbsp;
-								<input type="radio" value="0" name="wpsc_options[show_subcatsprods_in_cat]" id="show_subcatsprods_in_cat_off" <?php echo $show_subcatsprods_in_cat_off; ?> /> <label for="show_subcatsprods_in_cat_off"><?php echo __( 'No', 'wpsc' ); ?></label>
+								<input type="radio" value="1" name="wpsc_options[show_subcatsprods_in_cat]" id="show_subcatsprods_in_cat_on" <?php echo $show_subcatsprods_in_cat_on; ?> /> <label for="show_subcatsprods_in_cat_on"><?php echo __( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+								<input type="radio" value="0" name="wpsc_options[show_subcatsprods_in_cat]" id="show_subcatsprods_in_cat_off" <?php echo $show_subcatsprods_in_cat_off; ?> /> <label for="show_subcatsprods_in_cat_off"><?php echo __( 'No', 'wp-e-commerce' ); ?></label>
 							</td>
 						</tr>
 
@@ -638,7 +638,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						if ( function_exists( 'gold_shpcrt_search_form' ) ) {
 					?>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Show Search', 'wpsc' ); ?>:</th>
+						<th scope="row"><?php esc_html_e( 'Show Search', 'wp-e-commerce' ); ?>:</th>
 						<td>
 					<?php
 							$display_pnp = get_option( 'show_search' );
@@ -675,19 +675,19 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 
 							$embed_live_search_results = get_option( 'embed_live_search_results', '0' ) == '1' ? ' checked="checked"' : '';
 					?>
-						<input type='radio' onclick='jQuery("#wpsc_advanced_search").show()' value='1' name='wpsc_options[show_search]' id='show_search1' <?php echo $show_search1; ?> /> <label for='show_search1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' onclick='jQuery("#wpsc_advanced_search").hide()' value='0' name='wpsc_options[show_search]' id='show_search2' <?php echo $show_search2; ?> /> <label for='show_search2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' onclick='jQuery("#wpsc_advanced_search").show()' value='1' name='wpsc_options[show_search]' id='show_search1' <?php echo $show_search1; ?> /> <label for='show_search1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' onclick='jQuery("#wpsc_advanced_search").hide()' value='0' name='wpsc_options[show_search]' id='show_search2' <?php echo $show_search2; ?> /> <label for='show_search2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 
 						<div <?php echo $dis; ?> id='wpsc_advanced_search'>
 							<input  type='hidden' name='wpsc_options[show_advanced_search]' value='0' />
 							<input  type='checkbox' name='wpsc_options[show_advanced_search]' id='show_advanced_search' <?php echo $show_advanced_search; ?>  value='1' />
-							<?php esc_html_e( 'Show Advanced Search', 'wpsc' ); ?><br />
+							<?php esc_html_e( 'Show Advanced Search', 'wp-e-commerce' ); ?><br />
 							<input type='hidden' name='wpsc_options[show_live_search]' value='0' />
 							<input type='checkbox' name='wpsc_options[show_live_search]' id='show_live_search' <?php echo $show_live_search; ?> value='1' />
-							<?php esc_html_e( 'Use Live Search', 'wpsc' ); ?><br />
+							<?php esc_html_e( 'Use Live Search', 'wp-e-commerce' ); ?><br />
 							<input type='hidden' name='wpsc_options[embed_live_search_results]' value='0' />
 							<input type='checkbox' name='wpsc_options[embed_live_search_results]' id='embed_live_search_results'<?php echo $embed_live_search_results; ?> value='1' />
-							<?php esc_html_e( 'Dynamically replace search results into product list', 'wpsc' ); ?>
+							<?php esc_html_e( 'Dynamically replace search results into product list', 'wp-e-commerce' ); ?>
 						</div>
 					</td>
 				</tr>
@@ -697,7 +697,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Replace Page Title With Product/Category Name', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Replace Page Title With Product/Category Name', 'wp-e-commerce' ); ?>:</th>
 					<td>
 					<?php
 						$wpsc_replace_page_title = get_option( 'wpsc_replace_page_title' );
@@ -713,12 +713,12 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 					?>
-						<input type='radio' value='1' name='wpsc_options[wpsc_replace_page_title]' id='wpsc_replace_page_title1' <?php echo $wpsc_replace_page_title1; ?> /> <label for='wpsc_replace_page_title1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[wpsc_replace_page_title]' id='wpsc_replace_page_title2' <?php echo $wpsc_replace_page_title2; ?> /> <label for='wpsc_replace_page_title2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[wpsc_replace_page_title]' id='wpsc_replace_page_title1' <?php echo $wpsc_replace_page_title1; ?> /> <label for='wpsc_replace_page_title1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[wpsc_replace_page_title]' id='wpsc_replace_page_title2' <?php echo $wpsc_replace_page_title2; ?> /> <label for='wpsc_replace_page_title2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 					<tr>
-					<th scope="row"><?php esc_html_e( 'Display Featured Product above Product Pages', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Display Featured Product above Product Pages', 'wp-e-commerce' ); ?>:</th>
 					<td>
 					<?php
 						$wpsc_hide_featured_products = get_option( 'wpsc_hide_featured_products' );
@@ -735,16 +735,16 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 					?>
-						<input type='radio' value='1' name='wpsc_options[wpsc_hide_featured_products]' id='wpsc_hide_featured_products1' <?php echo $wpsc_hide_featured_products1; ?> /> <label for='wpsc_hide_featured_products1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[wpsc_hide_featured_products]' id='wpsc_hide_featured_products2' <?php echo $wpsc_hide_featured_products2; ?> /> <label for='wpsc_hide_featured_products2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[wpsc_hide_featured_products]' id='wpsc_hide_featured_products1' <?php echo $wpsc_hide_featured_products1; ?> /> <label for='wpsc_hide_featured_products1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[wpsc_hide_featured_products]' id='wpsc_hide_featured_products2' <?php echo $wpsc_hide_featured_products2; ?> /> <label for='wpsc_hide_featured_products2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 			</table>
 
-			<h3 class="form_group"><?php esc_html_e( 'Shopping Cart Settings', 'wpsc' ); ?></h3>
+			<h3 class="form_group"><?php esc_html_e( 'Shopping Cart Settings', 'wp-e-commerce' ); ?></h3>
 			<table class='wpsc_options form-table'>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Cart Location', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Cart Location', 'wp-e-commerce' ); ?>:</th>
 					<td>
 					<?php
 						$cart_location = get_option( 'cart_location' );
@@ -770,31 +770,31 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-						<input type='radio' onclick='hideelement1("dropshop_option", this.value)' value='2' name='wpsc_options[cart_location]' id='cart2' <?php echo $cart2; ?> /> <label for='cart2'><?php esc_html_e( 'Page', 'wpsc' ); ?></label> &nbsp;
+						<input type='radio' onclick='hideelement1("dropshop_option", this.value)' value='2' name='wpsc_options[cart_location]' id='cart2' <?php echo $cart2; ?> /> <label for='cart2'><?php esc_html_e( 'Page', 'wp-e-commerce' ); ?></label> &nbsp;
 <?php
 						if ( function_exists( 'wp_register_sidebar_widget' ) ) {
 ?>
-							<input type='radio' value='4' onclick='hideelement1("dropshop_option", this.value)' name='wpsc_options[cart_location]' id='cart4' <?php echo $cart4; ?> /> <label for='cart4'><?php esc_html_e( 'Widget', 'wpsc' ); ?></label> &nbsp;
+							<input type='radio' value='4' onclick='hideelement1("dropshop_option", this.value)' name='wpsc_options[cart_location]' id='cart4' <?php echo $cart4; ?> /> <label for='cart4'><?php esc_html_e( 'Widget', 'wp-e-commerce' ); ?></label> &nbsp;
 					<?php
 						} else {
 					?>
-							<input type='radio'  disabled='disabled' value='4' name='wpsc_options[cart_location]' id='cart4' alt='<?php esc_attr_e( 'You need to enable the widgets plugin to use this', 'wpsc' ); ?>' title='<?php esc_attr_e( 'You need to enable the widgets plugin to use this', 'wpsc' ); ?>' <?php echo $cart4; ?> /> <label style='color: #666666;' for='cart4' title='<?php esc_attr_e( 'You need to enable the widgets plugin to use this', 'wpsc' ); ?>'><?php esc_html_e( 'Widget', 'wpsc' ); ?></label> &nbsp;
+							<input type='radio'  disabled='disabled' value='4' name='wpsc_options[cart_location]' id='cart4' alt='<?php esc_attr_e( 'You need to enable the widgets plugin to use this', 'wp-e-commerce' ); ?>' title='<?php esc_attr_e( 'You need to enable the widgets plugin to use this', 'wp-e-commerce' ); ?>' <?php echo $cart4; ?> /> <label style='color: #666666;' for='cart4' title='<?php esc_attr_e( 'You need to enable the widgets plugin to use this', 'wp-e-commerce' ); ?>'><?php esc_html_e( 'Widget', 'wp-e-commerce' ); ?></label> &nbsp;
 					<?php
 						}
 
 						if ( function_exists( 'drag_and_drop_cart_ajax' ) ) {
 					?>
-							<input type='radio' onclick='hideelement1("dropshop_option", this.value)' value='5' name='wpsc_options[cart_location]' id='cart5' <?php echo $cart5; ?> /> <label for='cart5'><?php esc_html_e( 'DropShop', 'wpsc' ); ?></label> &nbsp;
+							<input type='radio' onclick='hideelement1("dropshop_option", this.value)' value='5' name='wpsc_options[cart_location]' id='cart5' <?php echo $cart5; ?> /> <label for='cart5'><?php esc_html_e( 'DropShop', 'wp-e-commerce' ); ?></label> &nbsp;
 <?php
 						} else {
 ?>
-							<input type='radio' disabled='disabled' value='5' name='wpsc_options[cart_location]' id='cart5' alt='<?php esc_attr_e( 'You need to enable the widgets plugin to use this', 'wpsc' ); ?>' title='<?php esc_attr_e( 'You need to install the Gold and DropShop extentions to use this', 'wpsc' ); ?>' <?php if ( isset( $cart5 ) )
-								echo $cart5; ?> /> <label style='color: #666666;' for='cart5' title='<?php esc_attr_e( 'You need to install the Gold and DropShop extentions to use this', 'wpsc' ); ?>'><?php esc_html_e( 'DropShop', 'wpsc' ); ?></label> &nbsp;
+							<input type='radio' disabled='disabled' value='5' name='wpsc_options[cart_location]' id='cart5' alt='<?php esc_attr_e( 'You need to enable the widgets plugin to use this', 'wp-e-commerce' ); ?>' title='<?php esc_attr_e( 'You need to install the Gold and DropShop extentions to use this', 'wp-e-commerce' ); ?>' <?php if ( isset( $cart5 ) )
+								echo $cart5; ?> /> <label style='color: #666666;' for='cart5' title='<?php esc_attr_e( 'You need to install the Gold and DropShop extentions to use this', 'wp-e-commerce' ); ?>'><?php esc_html_e( 'DropShop', 'wp-e-commerce' ); ?></label> &nbsp;
 <?php
 						}
 ?>
 						<input type='radio' onclick='hideelement1("dropshop_option", this.value)' value='3' name='wpsc_options[cart_location]' id='cart3' <?php if ( isset( $cart3 ) )
-							echo $cart3; ?> /> <label for='cart3'><?php esc_html_e( 'Manual', 'wpsc' ); ?> <span style='font-size: 7pt;'><?php echo esc_html( '(PHP code: <?php echo wpsc_shopping_cart(); ?> )')?></span></label>
+							echo $cart3; ?> /> <label for='cart3'><?php esc_html_e( 'Manual', 'wp-e-commerce' ); ?> <span style='font-size: 7pt;'><?php echo esc_html( '(PHP code: <?php echo wpsc_shopping_cart(); ?> )')?></span></label>
 						<div  style='display: <?php if ( !empty( $cart5 ) ) {
 							echo "block";
 						} else {
@@ -803,21 +803,21 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 							<p>
 								<input type="radio" id="drop1" value="all" <?php if ( get_option( 'dropshop_display' ) == 'all' ) {
 							echo "checked='checked'";
-						} ?> name="wpsc_options[dropshop_display]" /><label for="drop1"><?php esc_html_e( 'Show Dropshop on every page', 'wpsc' ); ?></label>
+						} ?> name="wpsc_options[dropshop_display]" /><label for="drop1"><?php esc_html_e( 'Show Dropshop on every page', 'wp-e-commerce' ); ?></label>
 								<input type="radio" id="drop2" value="product" <?php if ( get_option( 'dropshop_display' ) == 'product' ) {
 							echo "checked='checked'";
-						} ?> name="wpsc_options[dropshop_display]"/><label for="drop2"><?php esc_html_e( 'Show Dropshop only on product page', 'wpsc' ); ?></label>
+						} ?> name="wpsc_options[dropshop_display]"/><label for="drop2"><?php esc_html_e( 'Show Dropshop only on product page', 'wp-e-commerce' ); ?></label>
 							</p>
 							<p>
 								<input type="radio" id="wpsc_dropshop_theme1" value="light" <?php if ( get_option( 'wpsc_dropshop_theme' ) != 'dark' ) {
 							echo "checked='checked'";
-						} ?> name="wpsc_options[wpsc_dropshop_theme]" /><label for="wpsc_dropshop_theme1"><?php esc_html_e( 'Use light Dropshop style', 'wpsc' ); ?></label>
+						} ?> name="wpsc_options[wpsc_dropshop_theme]" /><label for="wpsc_dropshop_theme1"><?php esc_html_e( 'Use light Dropshop style', 'wp-e-commerce' ); ?></label>
 								<input type="radio" id="wpsc_dropshop_theme2" value="dark" <?php if ( get_option( 'wpsc_dropshop_theme' ) == 'dark' ) {
 							echo "checked='checked'";
-						} ?> name="wpsc_options[wpsc_dropshop_theme]"/><label for="wpsc_dropshop_theme2"><?php esc_html_e( 'Use dark Dropshop style', 'wpsc' ); ?></label>
+						} ?> name="wpsc_options[wpsc_dropshop_theme]"/><label for="wpsc_dropshop_theme2"><?php esc_html_e( 'Use dark Dropshop style', 'wp-e-commerce' ); ?></label>
 								<input type="radio" id="wpsc_dropshop_theme3" value="craftyc" <?php if ( get_option( 'wpsc_dropshop_theme' ) == 'craftyc' ) {
 							echo "checked='checked'";
-						} ?> name="wpsc_options[wpsc_dropshop_theme]"/><label for="wpsc_dropshop_theme2"><?php esc_html_e( 'Crafty', 'wpsc' ); ?></label>
+						} ?> name="wpsc_options[wpsc_dropshop_theme]"/><label for="wpsc_dropshop_theme2"><?php esc_html_e( 'Crafty', 'wp-e-commerce' ); ?></label>
 
 							</p>
 						</div>
@@ -826,7 +826,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 
 				<tr>
 					<th scope="row">
-						<?php esc_html_e( 'Display "+ Postage & Tax"', 'wpsc' ); ?>:
+						<?php esc_html_e( 'Display "+ Postage & Tax"', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
 <?php
@@ -843,17 +843,17 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-						<input type='radio' value='1' name='wpsc_options[add_plustax]' id='add_plustax1' <?php echo $add_plustax1; ?> /> <label for='add_plustax1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[add_plustax]' id='add_plustax2' <?php echo $add_plustax2; ?> /> <label for='add_plustax2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[add_plustax]' id='add_plustax1' <?php echo $add_plustax1; ?> /> <label for='add_plustax1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[add_plustax]' id='add_plustax2' <?php echo $add_plustax2; ?> /> <label for='add_plustax2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 			</table>
 
-			<h3 class="form_group"><?php esc_html_e( 'Product Category Settings', 'wpsc' ); ?></h3>
+			<h3 class="form_group"><?php esc_html_e( 'Product Category Settings', 'wp-e-commerce' ); ?></h3>
 			<table class='wpsc_options form-table'>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Show Product Category Description', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Show Product Category Description', 'wp-e-commerce' ); ?>:</th>
 					<td>
 <?php
 						$wpsc_category_description = get_option( 'wpsc_category_description' );
@@ -870,14 +870,14 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-						<input type='radio' value='1' name='wpsc_options[wpsc_category_description]' id='wpsc_category_description1' <?php echo $wpsc_category_description1; ?> /> <label for='wpsc_category_description1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[wpsc_category_description]' id='wpsc_category_description2' <?php echo $wpsc_category_description2; ?> /> <label for='wpsc_category_description2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[wpsc_category_description]' id='wpsc_category_description1' <?php echo $wpsc_category_description1; ?> /> <label for='wpsc_category_description1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[wpsc_category_description]' id='wpsc_category_description2' <?php echo $wpsc_category_description2; ?> /> <label for='wpsc_category_description2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 
 				<tr>
 					<th scope="row">
-						<?php esc_html_e( 'Show Product Category Thumbnails', 'wpsc' ); ?>:
+						<?php esc_html_e( 'Show Product Category Thumbnails', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
 <?php
@@ -894,8 +894,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-						<input type='radio' value='1' name='wpsc_options[show_category_thumbnails]' id='show_category_thumbnails1' <?php echo $show_category_thumbnails1; ?> /> <label for='show_category_thumbnails1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[show_category_thumbnails]' id='show_category_thumbnails2' <?php echo $show_category_thumbnails2; ?> /> <label for='show_category_thumbnails2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[show_category_thumbnails]' id='show_category_thumbnails1' <?php echo $show_category_thumbnails1; ?> /> <label for='show_category_thumbnails1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[show_category_thumbnails]' id='show_category_thumbnails2' <?php echo $show_category_thumbnails2; ?> /> <label for='show_category_thumbnails2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 
@@ -903,7 +903,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 
 				<tr>
 					<th scope="row">
-						<?php esc_html_e( 'Show Product Count per Product Category', 'wpsc' ); ?>:
+						<?php esc_html_e( 'Show Product Count per Product Category', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
 <?php
@@ -920,15 +920,15 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-						<input type='radio' value='1' name='wpsc_options[show_category_count]' id='show_category_count1' <?php echo $show_category_count1; ?> /> <label for='show_category_count1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[show_category_count]' id='show_category_count2' <?php echo $show_category_count2; ?> /> <label for='show_category_count2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[show_category_count]' id='show_category_count1' <?php echo $show_category_count1; ?> /> <label for='show_category_count1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[show_category_count]' id='show_category_count2' <?php echo $show_category_count2; ?> /> <label for='show_category_count2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 
 				<!-- // Adrian - options for displaying category display type -->
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Use Category Grid View', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Use Category Grid View', 'wp-e-commerce' ); ?>:</th>
 					<td>
 <?php
 						$wpsc_category_grid_view = get_option( 'wpsc_category_grid_view' );
@@ -945,50 +945,50 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-						<input type='radio' value='1' name='wpsc_options[wpsc_category_grid_view]' id='wpsc_category_grid_view1' <?php echo $wpsc_category_grid_view1; ?> /> <label for='wpsc_category_grid_view1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[wpsc_category_grid_view]' id='wpsc_category_grid_view2' <?php echo $wpsc_category_grid_view2; ?> /> <label for='wpsc_category_grid_view2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[wpsc_category_grid_view]' id='wpsc_category_grid_view1' <?php echo $wpsc_category_grid_view1; ?> /> <label for='wpsc_category_grid_view1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[wpsc_category_grid_view]' id='wpsc_category_grid_view2' <?php echo $wpsc_category_grid_view2; ?> /> <label for='wpsc_category_grid_view2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 			</table>
 
 
-			<h3 class="form_group"><a name='thumb_settings'><?php esc_html_e( 'Thumbnail Settings', 'wpsc' ); ?></a></h3>
-			<p><em><?php esc_html_e( 'Note: Anytime you update any of the thumbnail settings, WPeC will automatically resize all of your thumbnails for you.  Depending on how many images you have, this could take awhile.', 'wpsc' ); ?></em></p>
+			<h3 class="form_group"><a name='thumb_settings'><?php esc_html_e( 'Thumbnail Settings', 'wp-e-commerce' ); ?></a></h3>
+			<p><em><?php esc_html_e( 'Note: Anytime you update any of the thumbnail settings, WPeC will automatically resize all of your thumbnails for you.  Depending on how many images you have, this could take awhile.', 'wp-e-commerce' ); ?></em></p>
 			<table class='wpsc_options form-table'>
 				<?php if ( function_exists( "getimagesize" ) ) { ?>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Default Product Thumbnail Size', 'wpsc' ); ?>:</th>
+						<th scope="row"><?php esc_html_e( 'Default Product Thumbnail Size', 'wp-e-commerce' ); ?>:</th>
 						<td>
 							<fieldset class="wpsc-width-height-fields">
-								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+								<label for="image_width"><?php esc_html_e( 'Width', 'wp-e-commerce' ); ?></label>
 								<input name="wpsc_options[product_image_width]" type="number" step="1" min="0" id="product_image_width" value="<?php esc_attr_e( get_option( 'product_image_width' ) ); ?>" class="small-text">
-								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+								<label for="large_size_h"><?php esc_html_e( 'Height', 'wp-e-commerce' ); ?></label>
 								<input name="wpsc_options[product_image_height]" type="number" step="1" min="0" id="product_image_height" value="<?php esc_attr_e( get_option( 'product_image_height' ) ); ?>" class="small-text">
 							</fieldset>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Default Product Category Thumbnail Size', 'wpsc' ); ?>:
+							<?php esc_html_e( 'Default Product Category Thumbnail Size', 'wp-e-commerce' ); ?>:
 						</th>
 						<td>
 							<fieldset class="wpsc-width-height-fields">
-								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+								<label for="image_width"><?php esc_html_e( 'Width', 'wp-e-commerce' ); ?></label>
 								<input name="wpsc_options[category_image_width]" type="number" step="1" min="0" id="category_image_width" value="<?php esc_attr_e( get_option( 'category_image_width' ) ); ?>" class="small-text">
-								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+								<label for="large_size_h"><?php esc_html_e( 'Height', 'wp-e-commerce' ); ?></label>
 								<input name="wpsc_options[category_image_height]" type="number" step="1" min="0" id="category_image_height" value="<?php esc_attr_e( get_option( 'category_image_height' ) ); ?>" class="small-text">
 							</fieldset>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Single Product Image Size', 'wpsc' ); ?>:
+							<?php esc_html_e( 'Single Product Image Size', 'wp-e-commerce' ); ?>:
 						</th>
 						<td>
 							<fieldset class="wpsc-width-height-fields">
-								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+								<label for="image_width"><?php esc_html_e( 'Width', 'wp-e-commerce' ); ?></label>
 								<input name="wpsc_options[single_view_image_width]" type="number" step="1" min="0" id="single_view_image_width" value="<?php esc_attr_e( get_option( 'single_view_image_width' ) ); ?>" class="small-text">
-								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+								<label for="large_size_h"><?php esc_html_e( 'Height', 'wp-e-commerce' ); ?></label>
 								<input name="wpsc_options[single_view_image_height]" type="number" step="1" min="0" id="single_view_image_height" value="<?php esc_attr_e( get_option( 'single_view_image_height' ) ); ?>" class="small-text">
 							</fieldset>
 						</td>
@@ -1009,12 +1009,12 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 									break;
 							}
 ?>
-									<?php esc_html_e( 'Crop Thumbnails', 'wpsc' ); ?>:
+									<?php esc_html_e( 'Crop Thumbnails', 'wp-e-commerce' ); ?>:
 								</th>
 								<td>
-									<input type='radio' value='1' name='wpsc_options[wpsc_crop_thumbnails]' id='wpsc_crop_thumbnails1' <?php echo $crop1; ?> /> <label for='crop1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-									<input type='radio' value='0' name='wpsc_options[wpsc_crop_thumbnails]' id='wpsc_crop_thumbnails2' <?php echo $crop2; ?> /> <label for='crop2'><?php _e( 'No', 'wpsc' ); ?></label><br />
-									<?php esc_html_e( 'Choosing "Yes" means that thumbnails are cropped to exact dimensions (normally thumbnails are proportional)', 'wpsc' ); ?>
+									<input type='radio' value='1' name='wpsc_options[wpsc_crop_thumbnails]' id='wpsc_crop_thumbnails1' <?php echo $crop1; ?> /> <label for='crop1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+									<input type='radio' value='0' name='wpsc_options[wpsc_crop_thumbnails]' id='wpsc_crop_thumbnails2' <?php echo $crop2; ?> /> <label for='crop2'><?php _e( 'No', 'wp-e-commerce' ); ?></label><br />
+									<?php esc_html_e( 'Choosing "Yes" means that thumbnails are cropped to exact dimensions (normally thumbnails are proportional)', 'wp-e-commerce' ); ?>
 								</td>
 							</tr>
 					<?php
@@ -1022,7 +1022,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					?>
 
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Show Thumbnails', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Show Thumbnails', 'wp-e-commerce' ); ?>:</th>
 					<td>
 <?php
 						$show_thumbnails = get_option( 'show_thumbnails' );
@@ -1038,12 +1038,12 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-						<input type='radio' value='1' name='wpsc_options[show_thumbnails]' id='show_thumbnails1' <?php echo $show_thumbnails1; ?> /> <label for='show_thumbnails1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[show_thumbnails]' id='show_thumbnails2' <?php echo $show_thumbnails2; ?> /> <label for='show_thumbnails2'><?php _e( 'No', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[show_thumbnails]' id='show_thumbnails1' <?php echo $show_thumbnails1; ?> /> <label for='show_thumbnails1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[show_thumbnails]' id='show_thumbnails2' <?php echo $show_thumbnails2; ?> /> <label for='show_thumbnails2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Use Lightbox Effect for product images', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Use Lightbox Effect for product images', 'wp-e-commerce' ); ?>:</th>
 					<td>
 					<?php
 						$show_thumbnails_thickbox = get_option( 'show_thumbnails_thickbox' );
@@ -1059,13 +1059,13 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 					?>
-						<input type='radio' value='1' name='wpsc_options[show_thumbnails_thickbox]' id='show_thumbnails_thickbox1' <?php echo $show_thumbnails_thickbox1; ?> /> <label for='show_thumbnails_thickbox1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='0' name='wpsc_options[show_thumbnails_thickbox]' id='show_thumbnails_thickbox2' <?php echo $show_thumbnails_thickbox2; ?> /> <label for='show_thumbnails_thickbox2'><?php _e( 'No', 'wpsc' ); ?></label><br />
-					<?php esc_html_e( 'Using lightbox means that when clicking on a product image, a larger version will be displayed in a "lightbox" style window. If you are using a plugin such as Shutter Reloaded, you may want to disable lightbox.', 'wpsc' ); ?>
+						<input type='radio' value='1' name='wpsc_options[show_thumbnails_thickbox]' id='show_thumbnails_thickbox1' <?php echo $show_thumbnails_thickbox1; ?> /> <label for='show_thumbnails_thickbox1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='0' name='wpsc_options[show_thumbnails_thickbox]' id='show_thumbnails_thickbox2' <?php echo $show_thumbnails_thickbox2; ?> /> <label for='show_thumbnails_thickbox2'><?php _e( 'No', 'wp-e-commerce' ); ?></label><br />
+					<?php esc_html_e( 'Using lightbox means that when clicking on a product image, a larger version will be displayed in a "lightbox" style window. If you are using a plugin such as Shutter Reloaded, you may want to disable lightbox.', 'wp-e-commerce' ); ?>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Lightbox script to use', 'wpsc' ); ?>:</th>
+					<th scope="row"><?php esc_html_e( 'Lightbox script to use', 'wp-e-commerce' ); ?>:</th>
 					<td>
 					<?php
 						$wpsc_lightbox = get_option( 'wpsc_lightbox', 'thickbox' );
@@ -1076,8 +1076,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						if( $wpsc_lightbox == "colorbox" )
 							$wpsc_lightbox_thickbox1 = "checked ='checked'";
 					?>
-						<input type='radio' value='colorbox' name='wpsc_options[wpsc_lightbox]' id='wpsc_lightbox_thickbox1' <?php echo $wpsc_lightbox_thickbox1; ?> /> <label for='show_thumbnails_thickbox1'><?php _e( 'Colorbox', 'wpsc' ); ?></label> &nbsp;
-						<input type='radio' value='thickbox' name='wpsc_options[wpsc_lightbox]' id='wpsc_lightbox_thickbox2' <?php echo $wpsc_lightbox_thickbox2; ?> /> <label for='show_thumbnails_thickbox2'><?php _e( 'Thickbox', 'wpsc' ); ?></label><br />
+						<input type='radio' value='colorbox' name='wpsc_options[wpsc_lightbox]' id='wpsc_lightbox_thickbox1' <?php echo $wpsc_lightbox_thickbox1; ?> /> <label for='show_thumbnails_thickbox1'><?php _e( 'Colorbox', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input type='radio' value='thickbox' name='wpsc_options[wpsc_lightbox]' id='wpsc_lightbox_thickbox2' <?php echo $wpsc_lightbox_thickbox2; ?> /> <label for='show_thumbnails_thickbox2'><?php _e( 'Thickbox', 'wp-e-commerce' ); ?></label><br />
 					</td>
 				</tr>
 
@@ -1086,7 +1086,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					?>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Show Thumbnail Gallery', 'wpsc' ); ?>:
+							<?php esc_html_e( 'Show Thumbnail Gallery', 'wp-e-commerce' ); ?>:
 						</th>
 						<td>
 <?php
@@ -1103,18 +1103,18 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 									break;
 							}
 ?>
-									<input type='radio' value='1' name='wpsc_options[show_gallery]' id='show_gallery1' <?php echo $show_gallery1; ?> /> <label for='show_gallery1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-									<input type='radio' value='0' name='wpsc_options[show_gallery]' id='show_gallery2' <?php echo $show_gallery2; ?> /> <label for='show_gallery2'><?php _e( 'No', 'wpsc' ); ?></label>
+									<input type='radio' value='1' name='wpsc_options[show_gallery]' id='show_gallery1' <?php echo $show_gallery1; ?> /> <label for='show_gallery1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+									<input type='radio' value='0' name='wpsc_options[show_gallery]' id='show_gallery2' <?php echo $show_gallery2; ?> /> <label for='show_gallery2'><?php _e( 'No', 'wp-e-commerce' ); ?></label>
 								</td>
 							</tr>
 
 							<tr>
 								<th scope="row">
-									<?php esc_html_e( 'Gallery Thumbnail Image Size', 'wpsc' ); ?>:
+									<?php esc_html_e( 'Gallery Thumbnail Image Size', 'wp-e-commerce' ); ?>:
 								</th>
 								<td>
-									<?php esc_html_e( 'Width', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_width]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_width' ) ); ?>' />
-									<?php esc_html_e( 'Height', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_height]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_height' ) ); ?>' /><br />
+									<?php esc_html_e( 'Width', 'wp-e-commerce' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_width]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_width' ) ); ?>' />
+									<?php esc_html_e( 'Height', 'wp-e-commerce' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_height]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_height' ) ); ?>' /><br />
 
 								</td>
 							</tr>
@@ -1125,11 +1125,11 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						</table>
 
 
-			<h3 class="form_group"><?php esc_html_e( 'Pagination Settings', 'wpsc' ); ?></h3>
+			<h3 class="form_group"><?php esc_html_e( 'Pagination Settings', 'wp-e-commerce' ); ?></h3>
 			<table class='wpsc_options form-table'>
 				<tr>
 					<th scope="row">
-					<?php esc_html_e( 'Use Pagination', 'wpsc' ); ?>:
+					<?php esc_html_e( 'Use Pagination', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
 <?php
@@ -1148,40 +1148,40 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-						<input onclick='jQuery("#wpsc_products_per_page").show()'  type='radio' value='1' name='wpsc_options[use_pagination]' id='use_pagination1' <?php echo $use_pagination1; ?> /> <label for='use_pagination1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-						<input onclick='jQuery("#wpsc_products_per_page").hide()' type='radio' value='0' name='wpsc_options[use_pagination]' id='use_pagination2' <?php echo $use_pagination2; ?> /> <label for='use_pagination2'><?php _e( 'No', 'wpsc' ); ?></label><br />
+						<input onclick='jQuery("#wpsc_products_per_page").show()'  type='radio' value='1' name='wpsc_options[use_pagination]' id='use_pagination1' <?php echo $use_pagination1; ?> /> <label for='use_pagination1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+						<input onclick='jQuery("#wpsc_products_per_page").hide()' type='radio' value='0' name='wpsc_options[use_pagination]' id='use_pagination2' <?php echo $use_pagination2; ?> /> <label for='use_pagination2'><?php _e( 'No', 'wp-e-commerce' ); ?></label><br />
 						<div id='wpsc_products_per_page' <?php echo $page_count_display_state; ?> >
-							<input type='text' size='6' name='wpsc_options[wpsc_products_per_page]' value='<?php echo get_option( 'wpsc_products_per_page' ); ?>' /> <?php _e( 'number of products to show per page', 'wpsc' ); ?>
+							<input type='text' size='6' name='wpsc_options[wpsc_products_per_page]' value='<?php echo get_option( 'wpsc_products_per_page' ); ?>' /> <?php _e( 'number of products to show per page', 'wp-e-commerce' ); ?>
 						</div>
 					</td>
 				</tr>
 
 				<tr>
 					<th scope="row">
-					<?php esc_html_e( 'Page Number position', 'wpsc' ); ?>:
+					<?php esc_html_e( 'Page Number position', 'wp-e-commerce' ); ?>:
 					</th>
 					<td>
 						<input type='radio' value='1' name='wpsc_options[wpsc_page_number_position]' id='wpsc_page_number_position1' <?php if ( get_option( 'wpsc_page_number_position' ) == 1 ) {
 							echo "checked='checked'";
-						} ?> />&nbsp;<label for='wpsc_page_number_position1'><?php esc_html_e( 'Top', 'wpsc' ); ?></label> &nbsp;
+						} ?> />&nbsp;<label for='wpsc_page_number_position1'><?php esc_html_e( 'Top', 'wp-e-commerce' ); ?></label> &nbsp;
 						<input type='radio' value='2' name='wpsc_options[wpsc_page_number_position]' id='wpsc_page_number_position2' <?php if ( get_option( 'wpsc_page_number_position' ) == 2 ) {
 							echo "checked='checked'";
-						} ?> />&nbsp;<label for='wpsc_page_number_position2'><?php esc_html_e( 'Bottom', 'wpsc' ); ?></label>&nbsp;
+						} ?> />&nbsp;<label for='wpsc_page_number_position2'><?php esc_html_e( 'Bottom', 'wp-e-commerce' ); ?></label>&nbsp;
 						<input type='radio' value='3' name='wpsc_options[wpsc_page_number_position]' id='wpsc_page_number_position3' <?php if ( get_option( 'wpsc_page_number_position' ) == 3 ) {
 							echo "checked='checked'";
-						} ?> />&nbsp;<label for='wpsc_page_number_position3'><?php esc_html_e( 'Both', 'wpsc' ); ?></label>
+						} ?> />&nbsp;<label for='wpsc_page_number_position3'><?php esc_html_e( 'Both', 'wp-e-commerce' ); ?></label>
 						<br />
 					</td>
 				</tr>
 			</table>
 
 
-			<h3 class="form_group"><?php esc_html_e( 'Comment Settings', 'wpsc' ); ?></h3>
+			<h3 class="form_group"><?php esc_html_e( 'Comment Settings', 'wp-e-commerce' ); ?></h3>
 			<table class='wpsc_options form-table'>
 				<tr>
 					<th scope="row">
-						<?php esc_html_e( 'Use IntenseDebate Comments', 'wpsc' ); ?>:
-						<a href="http://intensedebate.com/" title="<?php esc_attr_e( 'IntenseDebate comments enhance and encourage conversation on your blog or website', 'wpsc' ); ?>" target="_blank"><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/intensedebate-logo.png" alt="<?php esc_attr_e( 'intensedebate-logo', 'wpsc' ); ?>" title="<?php esc_attr_e( 'IntenseDebate', 'wpsc' ); ?>" /></a>
+						<?php esc_html_e( 'Use IntenseDebate Comments', 'wp-e-commerce' ); ?>:
+						<a href="http://intensedebate.com/" title="<?php esc_attr_e( 'IntenseDebate comments enhance and encourage conversation on your blog or website', 'wp-e-commerce' ); ?>" target="_blank"><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/intensedebate-logo.png" alt="<?php esc_attr_e( 'intensedebate-logo', 'wp-e-commerce' ); ?>" title="<?php esc_attr_e( 'IntenseDebate', 'wp-e-commerce' ); ?>" /></a>
 					</th>
 					<td>
 <?php
@@ -1201,12 +1201,12 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 ?>
-					<input onclick='jQuery("#wpsc_enable_comments,.wpsc_comments_details").show()'  type='radio' value='1' name='wpsc_options[wpsc_enable_comments]' id='wpsc_enable_comments1' <?php echo $enable_comments1; ?> /> <label for='wpsc_enable_comments1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-					<input onclick='jQuery("#wpsc_enable_comments,.wpsc_comments_details").hide()' type='radio' value='0' name='wpsc_options[wpsc_enable_comments]' id='wpsc_enable_comments2' <?php echo $enable_comments2; ?> /> <label for='wpsc_enable_comments1'><?php _e( 'No', 'wpsc' ); ?></label><br />
+					<input onclick='jQuery("#wpsc_enable_comments,.wpsc_comments_details").show()'  type='radio' value='1' name='wpsc_options[wpsc_enable_comments]' id='wpsc_enable_comments1' <?php echo $enable_comments1; ?> /> <label for='wpsc_enable_comments1'><?php _e( 'Yes', 'wp-e-commerce' ); ?></label> &nbsp;
+					<input onclick='jQuery("#wpsc_enable_comments,.wpsc_comments_details").hide()' type='radio' value='0' name='wpsc_options[wpsc_enable_comments]' id='wpsc_enable_comments2' <?php echo $enable_comments2; ?> /> <label for='wpsc_enable_comments1'><?php _e( 'No', 'wp-e-commerce' ); ?></label><br />
 					<div id='wpsc_enable_comments' <?php echo $intense_debate_account_id_display_state; ?> >
-						<?php esc_html_e( 'IntenseDebate Account ID', 'wpsc' ); ?>:<br/>
+						<?php esc_html_e( 'IntenseDebate Account ID', 'wp-e-commerce' ); ?>:<br/>
 						<input type='text' size='30' name='wpsc_options[wpsc_intense_debate_account_id]' value='<?php esc_attr_e( get_option( 'wpsc_intense_debate_account_id' ) ); ?>' /><br/>
-						<small><a href='http://intensedebate.com/sitekey/' title='<?php esc_attr_e( 'Help on finding the Account ID', 'wpsc' ); ?>'><?php _e( 'Help on finding the Account ID', 'wpsc' ); ?></a></small>
+						<small><a href='http://intensedebate.com/sitekey/' title='<?php esc_attr_e( 'Help on finding the Account ID', 'wp-e-commerce' ); ?>'><?php _e( 'Help on finding the Account ID', 'wp-e-commerce' ); ?></a></small>
 					</div>
 				</td>
 			</tr>
@@ -1215,17 +1215,17 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 
 				<th scope="row">
 					<div class='wpsc_comments_details' <?php echo $intense_debate_account_id_display_state ?> >
-						<?php esc_html_e( 'By Default Display Comments on', 'wpsc' ); ?>:
+						<?php esc_html_e( 'By Default Display Comments on', 'wp-e-commerce' ); ?>:
 					</div>
 				</th>
 				<td>
 					<div class='wpsc_comments_details' <?php echo $intense_debate_account_id_display_state ?> >
 									<input type='radio' value='1' name='wpsc_options[wpsc_comments_which_products]' id='wpsc_comments_which_products1' <?php if ( get_option( 'wpsc_comments_which_products' ) == 1 || !get_option( 'wpsc_comments_which_products' ) ) {
 				echo "checked='checked'";
-			} ?> /><label for='wpsc_comments_which_products1'><?php esc_html_e( 'All Products', 'wpsc' ); ?></label>&nbsp;
+			} ?> /><label for='wpsc_comments_which_products1'><?php esc_html_e( 'All Products', 'wp-e-commerce' ); ?></label>&nbsp;
 									<input type='radio' value='2' name='wpsc_options[wpsc_comments_which_products]' id='wpsc_comments_which_products2' <?php if ( get_option( 'wpsc_comments_which_products' ) == 2 ) {
 				echo "checked='checked'";
-			} ?> /><label for='wpsc_comments_which_products2'><?php esc_html_e( 'Per Product', 'wpsc' ); ?></label>&nbsp;
+			} ?> /><label for='wpsc_comments_which_products2'><?php esc_html_e( 'Per Product', 'wp-e-commerce' ); ?></label>&nbsp;
 						<br />
 					</div>
 				</td>

@@ -69,19 +69,19 @@ class WP_eCommerce {
 	 */
 	public function _register_core_components( $components ) {
 		$components['merchant']['core-v2'] = array(
-			'title'    => __( 'WP eCommerce Merchant API v2', 'wpsc' ),
+			'title'    => __( 'WP eCommerce Merchant API v2', 'wp-e-commerce' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v2/merchant-core-v2.php'
 		);
 
 		$components['merchant']['core-v3'] = array(
-			'title'    => __( 'WP eCommerce Merchant API v3', 'wpsc' ),
+			'title'    => __( 'WP eCommerce Merchant API v3', 'wp-e-commerce' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v3/merchant-core-v3.php'
 		);
 
 		$components['marketplace']['core-v1'] = array(
-			'title'    => __( 'WP eCommerce Marketplace API v1', 'wpsc' ),
+			'title'    => __( 'WP eCommerce Marketplace API v1', 'wp-e-commerce' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/marketplace-core-v1.php'
 		);
@@ -110,8 +110,8 @@ class WP_eCommerce {
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 
 		//load text domain
-		if ( ! load_plugin_textdomain( 'wpsc', false, '../languages/' ) ) {
-			load_plugin_textdomain( 'wpsc', false, dirname( WPSC_PLUGIN_BASENAME ) . '/wpsc-languages/' );
+		if ( ! load_plugin_textdomain( 'wp-e-commerce', false, '../languages/' ) ) {
+			load_plugin_textdomain( 'wp-e-commerce', false, dirname( WPSC_PLUGIN_BASENAME ) . '/wpsc-languages/' );
 		}
 
 		// Finished starting

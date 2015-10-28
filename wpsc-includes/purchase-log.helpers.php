@@ -316,7 +316,7 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
     if ( $checkout_session_id == $purchase_log->get( 'sessionid' ) ) {
     	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $notification );
 	} else {
-		$output = apply_filters( 'wpsc_get_transaction_unauthorized_view', __( "You don't have the permission to view this page", 'wpsc' ), $output, $notification );
+		$output = apply_filters( 'wpsc_get_transaction_unauthorized_view', __( "You don't have the permission to view this page", 'wp-e-commerce' ), $output, $notification );
 	}
 
 	return $output;

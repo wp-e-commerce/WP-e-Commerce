@@ -108,7 +108,7 @@ class WPSC_Countries {
 			} elseif ( is_string( $country ) ) {
 				$country_id = self::$country_id_by_iso_code->value( $country, $country_id );
 			} else {
-				_wpsc_doing_it_wrong( 'WPSC_Countries::country_id', __( 'Method "get_country_id" of WPSC_Countries requires an integer country code or a string ISO code ', 'wpsc' ), '3.8.14' );
+				_wpsc_doing_it_wrong( 'WPSC_Countries::country_id', __( 'Method "get_country_id" of WPSC_Countries requires an integer country code or a string ISO code ', 'wp-e-commerce' ), '3.8.14' );
 			}
 		}
 
@@ -706,7 +706,7 @@ class WPSC_Countries {
 		}
 
 		if ( ! $region_id ) {
-			_wpsc_doing_it_wrong( 'WPSC_Countries::get_country_id_by_region_id', __( 'Function "get_country_id_by_region_id" requires an integer $region_id', 'wpsc' ), '3.8.14' );
+			_wpsc_doing_it_wrong( 'WPSC_Countries::get_country_id_by_region_id', __( 'Function "get_country_id_by_region_id" requires an integer $region_id', 'wp-e-commerce' ), '3.8.14' );
 			return false;
 		}
 
@@ -1584,7 +1584,7 @@ class WPSC_Countries {
 		 *  a row in the table, nor could we insrt a row that could reliably be updated.
 		 */
 		if ( empty( $country_id ) && empty( $country_iso_code ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'To insert a country either country id or country ISO code must be specified.', 'wpsc' ), '3.8.11' );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'To insert a country either country id or country ISO code must be specified.', 'wp-e-commerce' ), '3.8.11' );
 			return false;
 		}
 

@@ -40,7 +40,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	if ( isset( $post_data['meta']['_wpsc_special_price'] ) )
 		$post_data['meta']['_wpsc_special_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_special_price'] );
 
-	if ( isset( $post_data['meta']['_wpsc_sku'] ) && $post_data['meta']['_wpsc_sku'] == __('N/A', 'wpsc') ) {
+	if ( isset( $post_data['meta']['_wpsc_sku'] ) && $post_data['meta']['_wpsc_sku'] == __('N/A', 'wp-e-commerce') ) {
 		$post_data['meta']['_wpsc_sku'] = '';
 	}
 

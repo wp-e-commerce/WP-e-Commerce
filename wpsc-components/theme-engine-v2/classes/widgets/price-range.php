@@ -5,14 +5,14 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 
 	public function __construct() {
 		$this->defaults = array(
-			'title' => __( 'Price Range', 'wpsc' ),
+			'title' => __( 'Price Range', 'wp-e-commerce' ),
 		);
 
 		parent::__construct(
 			'wpsc_widget_price_range',
-			__( '(WPEC) Price Range', 'wpsc' ),
+			__( '(WPEC) Price Range', 'wp-e-commerce' ),
 			array(
-				'description' => __( 'WP eCommerce Price Range Widget', 'wpsc' )
+				'description' => __( 'WP eCommerce Price Range Widget', 'wp-e-commerce' )
 			)
 		);
 
@@ -99,7 +99,7 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 
 		echo '<ul>';
 		/** %1$s: min price, %2$s: max price **/
-		$text      = _x( 'From %1$s to %2$s', 'price range widget', 'wpsc' );
+		$text      = _x( 'From %1$s to %2$s', 'price range widget', 'wp-e-commerce' );
 		$range_max = $prices->min - 0.01;
 
 		$i = 0;
@@ -113,9 +113,9 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 			echo '<li>';
 
 			if ( $i === 0 ) {
-				echo '<a href="' . esc_url( $href ) . '">' . sprintf( __( 'Under %s', 'price range widget', 'wpsc' ), wpsc_format_currency( $range_max ) ) . '</a>';
+				echo '<a href="' . esc_url( $href ) . '">' . sprintf( __( 'Under %s', 'price range widget', 'wp-e-commerce' ), wpsc_format_currency( $range_max ) ) . '</a>';
 			} elseif ( $range_max >= $prices->max ) {
-				echo '<a href="' . esc_url( $href ) . '">' . sprintf( __( 'Over %s', 'price range widget', 'wpsc' ), wpsc_format_currency( $range_min ) ) . '</a>';
+				echo '<a href="' . esc_url( $href ) . '">' . sprintf( __( 'Over %s', 'price range widget', 'wp-e-commerce' ), wpsc_format_currency( $range_min ) ) . '</a>';
 			} else {
 				echo '<a href="' . esc_url( $href ) . '">' . sprintf( $text, wpsc_format_currency( $range_min ), wpsc_format_currency( $range_max ) ) . '</a>';
 			}
@@ -134,7 +134,7 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 ?>
 <p>
 	<?php wpsc_form_label(
-		__( 'Title:', 'wpsc' ),
+		__( 'Title:', 'wp-e-commerce' ),
 		$this->get_field_id( 'title' )
 	); ?><br />
 	<?php wpsc_form_input(

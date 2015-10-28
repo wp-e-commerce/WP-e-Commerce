@@ -7,7 +7,7 @@ function _wpsc_is_country_disabled( $country, $args ) {
 			'selected'          => '',
 			'disabled'          => null,
 			'disabled_ids'      => null,
-			'placeholder'       => __( 'Please select a country', 'wpsc' ),
+			'placeholder'       => __( 'Please select a country', 'wp-e-commerce' ),
 			'include_invisible' => false,
 	);
 
@@ -46,7 +46,7 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 			'selected'          => '',
 			'disabled'          => null,
 			'disabled_ids'      => null,
-			'placeholder'       => __( 'Please select a country', 'wpsc' ),
+			'placeholder'       => __( 'Please select a country', 'wp-e-commerce' ),
 			'include_invisible' => false,
 	);
 
@@ -76,10 +76,10 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 		if ( is_admin() && 11 > wpsc_core_get_db_version() ) {
 			if ( in_array( $isocode, array( 'TP', 'UK' ) ) ) {
 				/* translators: This string will mark the legacy isocode "UK" and "TP" in the country selection dropdown as "legacy" */
-				$name = sprintf( __( '%s (legacy)', 'wpsc' ), $name );
+				$name = sprintf( __( '%s (legacy)', 'wp-e-commerce' ), $name );
 			} elseif ( in_array( $isocode, array( 'GB', 'TL' ) ) ) {
 				/* translators: This string will mark the legacy isocode "GB" and "TL" in the country selection dropdown as "ISO 3166" */
-				$name = sprintf( __( '%s (ISO 3166)', 'wpsc' ), $name );
+				$name = sprintf( __( '%s (ISO 3166)', 'wp-e-commerce' ), $name );
 			}
 		}
 

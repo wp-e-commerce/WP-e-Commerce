@@ -14,9 +14,9 @@ add_filter( 'wpsc_javascript_localizations', '_wpsc_countries_localizations', 10
  */
 function _wpsc_countries_localizations( $localizations_array ) {
 
-	$localizations_array['no_country_selected']       = __( 'Please select a country', 'wpsc' );
-	$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wpsc' );
-	$localizations_array['no_region_label']           = __( 'State/Province', 'wpsc' );
+	$localizations_array['no_country_selected']       = __( 'Please select a country', 'wp-e-commerce' );
+	$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wp-e-commerce' );
+	$localizations_array['no_region_label']           = __( 'State/Province', 'wp-e-commerce' );
 	$localizations_array['base_country']              = get_option( 'base_country' );
 
 	$country_list = array();

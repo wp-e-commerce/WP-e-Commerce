@@ -39,8 +39,8 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		$payment_data = $this->get_gateway_form( $selected_gateway );
 		if ( ! $payment_data ) {
 			$payment_data = array(
-				'name'              => __( 'Edit Gateway Settings', 'wpsc' ),
-				'form_fields'       => __( 'Modify a payment gateway settings by clicking "Edit" link on the left.', 'wpsc' ),
+				'name'              => __( 'Edit Gateway Settings', 'wp-e-commerce' ),
+				'form_fields'       => __( 'Modify a payment gateway settings by clicking "Edit" link on the left.', 'wp-e-commerce' ),
 				'has_submit_button' => 1,
 			);
 		}
@@ -54,8 +54,8 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 						<?php // hidden because most gateways provide their own update button. ?>
 						<?php if ( $payment_data['has_submit_button'] !== 1 ) { ?>
 							<p class="submit inline-edit-save">
-								<a class="button edit-payment-module-cancel" title="<?php esc_attr_e( "Cancel editing this Payment Gateway's settings", 'wpsc' ) ?>"><?php esc_html_e( "Cancel", 'wpsc' ); ?></a>
-								<input type="submit" name="submit" class="button button-primary edit-payment-module-update" value='<?php _e( "Update &raquo;", 'wpsc' ); ?>'>
+								<a class="button edit-payment-module-cancel" title="<?php esc_attr_e( "Cancel editing this Payment Gateway's settings", 'wp-e-commerce' ) ?>"><?php esc_html_e( "Cancel", 'wp-e-commerce' ); ?></a>
+								<input type="submit" name="submit" class="button button-primary edit-payment-module-update" value='<?php _e( "Update &raquo;", 'wp-e-commerce' ); ?>'>
 							</p>
 						<?php } ?>
 					</td></tr>
@@ -69,22 +69,22 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		global $wpdb, $nzshpcrt_gateways;
 	?>
 
-		<h3><?php _e( 'Select Payment Gateways', 'wpsc' ); ?></h3>
-		<p><?php _e( 'Activate the payment gateways that you want to make available to your customers by selecting them below.', 'wpsc' ); ?></p>
+		<h3><?php _e( 'Select Payment Gateways', 'wp-e-commerce' ); ?></h3>
+		<p><?php _e( 'Activate the payment gateways that you want to make available to your customers by selecting them below.', 'wp-e-commerce' ); ?></p>
 
 		<table id='wpsc-payment-gateway-settings' class='wpsc-edit-module-options wp-list-table widefat plugins'>
 			<thead>
 				<tr>
 					<th scope="col" id="wpsc-gateway-active" class="manage-column"></th>
-					<th scope="col" id="wpsc-gateway-name" class="manage-column column-name"><?php _e( 'Payment Gateway', 'wpsc' ); ?></th>
-					<th scope="col" id="wpsc-gateway-display-name" class="manage-column column-description"><?php _e( 'Display Name', 'wpsc' ); ?></th>
+					<th scope="col" id="wpsc-gateway-name" class="manage-column column-name"><?php _e( 'Payment Gateway', 'wp-e-commerce' ); ?></th>
+					<th scope="col" id="wpsc-gateway-display-name" class="manage-column column-description"><?php _e( 'Display Name', 'wp-e-commerce' ); ?></th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
 					<th scope="col" id="wpsc-gateway-active" class="manage-column"></th>
-					<th scope="col" id="wpsc-gateway-name" class="manage-column column-name"><?php _e( 'Payment Gateway', 'wpsc' ); ?></th>
-					<th scope="col" id="wpsc-gateway-display-name" class="manage-column column-description"><?php _e( 'Display Name', 'wpsc' ); ?></th>
+					<th scope="col" id="wpsc-gateway-name" class="manage-column column-name"><?php _e( 'Payment Gateway', 'wp-e-commerce' ); ?></th>
+					<th scope="col" id="wpsc-gateway-display-name" class="manage-column column-description"><?php _e( 'Display Name', 'wp-e-commerce' ); ?></th>
 				</tr>
 			</tfoot>
 			<tbody>
@@ -108,14 +108,14 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		?>
 			<tr class="wpsc-select-gateway <?php echo $active; ?>" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" id="gateway_list_item_<?php echo $gateway['id'];?>">
 				<th scope="row" class="check-column">
-					<label class="screen-reader-text" for="<?php echo esc_attr( $gateway['id'] ); ?>_id"><?php _e( "Select", "wpsc" ); ?> <?php echo esc_html( $gateway['name'] ); ?></label>
+					<label class="screen-reader-text" for="<?php echo esc_attr( $gateway['id'] ); ?>_id"><?php _e( "Select", 'wp-e-commerce' ); ?> <?php echo esc_html( $gateway['name'] ); ?></label>
 					<input name='wpsc_options[custom_gateway_options][]' <?php checked( $checked ); ?> type='checkbox' value='<?php echo esc_attr( $gateway['id'] ); ?>' id='<?php echo esc_attr( $gateway['id'] ); ?>_id' />
 				</th>
 				<td class="plugin-title">
 					<label for='<?php echo esc_attr( $gateway['id'] ); ?>_id'><strong><?php echo esc_html( $gateway['name'] ); ?></strong></label>
 					<div class="row-actions-visible">
 						<span class="edit">
-							<a class='edit-payment-module' title="<?php esc_attr_e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_url( $this->get_gateway_settings_url( $gateway['id'] ) ); ?>'><?php esc_html_e( 'Settings', 'wpsc' ); ?></a>
+							<a class='edit-payment-module' title="<?php esc_attr_e( "Edit this Payment Gateway's Settings", 'wp-e-commerce' ) ?>" href='<?php echo esc_url( $this->get_gateway_settings_url( $gateway['id'] ) ); ?>'><?php esc_html_e( 'Settings', 'wp-e-commerce' ); ?></a>
 							<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
 						</span>
 					</div>

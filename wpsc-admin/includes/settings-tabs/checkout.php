@@ -37,12 +37,12 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 		$this->form_fields = $wpdb->get_results( $form_sql );
 
 		$columns = array(
-			'drag'        => __( 'Drag', 'wpsc' ),
-			'name'        => __( 'Title', 'wpsc' ),
-			'type'        => __( 'Type', 'wpsc' ),
+			'drag'        => __( 'Drag', 'wp-e-commerce' ),
+			'name'        => __( 'Title', 'wp-e-commerce' ),
+			'type'        => __( 'Type', 'wp-e-commerce' ),
 			'unique_name' => '&nbsp;',
-			'display'     => __( 'Display', 'wpsc' ),
-			'mandatory'   => __( 'Mandatory', 'wpsc' ),
+			'display'     => __( 'Display', 'wp-e-commerce' ),
+			'mandatory'   => __( 'Mandatory', 'wp-e-commerce' ),
 			'actions'     => '&nbsp;',
 		);
 		register_column_headers( 'display-checkout-list', $columns );
@@ -76,7 +76,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 			$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
 			$checkout_sets[] = sanitize_text_field( $_POST['new_form_set'] );
 			update_option( 'wpsc_checkout_form_sets', $checkout_sets );
-			add_settings_error( 'wpsc-settings', 'wpsc_form_set_added', __( 'New form set successfully created.', 'wpsc' ), 'updated' );
+			add_settings_error( 'wpsc-settings', 'wpsc_form_set_added', __( 'New form set successfully created.', 'wp-e-commerce' ), 'updated' );
 		}
 
 		if ( isset( $_POST['checkout_set'] ) ) {
@@ -267,7 +267,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 		<tr id="<?php echo $row_id; ?>" class="<?php echo $row_class; ?>" <?php echo $data; ?> <?php echo $style; ?>>
 			<td class="drag">
 				<div class="cell-wrapper">
-					<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">
+					<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wp-e-commerce' ); ?>">
 						<img src="<?php echo esc_url( WPSC_CORE_IMAGES_URL . '/drag.png' ); ?>" />
 					</a>
 					<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
@@ -290,7 +290,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 				</div>
 			</td>
 			<td class="uniquenamecol">
-				<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
+				<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wp-e-commerce' ); ?></a>
 			</td>
 			<td class="displaycol">
 				<div class="cell-wrapper">
@@ -304,8 +304,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 			</td>
 			<td class="actionscol">
 				<div class="cell-wrapper">
-					<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
-					<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
+					<a tabindex="-1" title="<?php _e( 'Delete Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
+					<a tabindex="-1" title="<?php _e( 'Add Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
 				</div>
 			</td>
 		</tr>
@@ -316,8 +316,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 					<h4></h4>
 					<table class="wpsc-field-options-table">
 						<thead>
-							<th class="column-labels"><?php echo esc_html_x( 'Label', "checkout field's options", 'wpsc' ); ?></th>
-							<th class="column-values"><?php echo esc_html_x( 'Value', "checkout field's options", 'wpsc' ); ?></th>
+							<th class="column-labels"><?php echo esc_html_x( 'Label', "checkout field's options", 'wp-e-commerce' ); ?></th>
+							<th class="column-values"><?php echo esc_html_x( 'Value', "checkout field's options", 'wp-e-commerce' ); ?></th>
 							<th class="column-actions">&nbsp;</th>
 						</thead>
 						<tbody>
@@ -334,8 +334,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 								</td>
 								<td class="column-actions">
 									<div class="field-option-cell-wrapper">
-										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
-										<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
+										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
+										<a tabindex="-1" title="<?php _e( 'Add Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
 									</div>
 								</td>
 							</tr>
@@ -359,62 +359,62 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 		?>
 
 		<input type='hidden' name='checkout_submits' value='true' />
-		<h3><?php esc_html_e( 'Checkout Settings' , 'wpsc' ); ?></h3>
+		<h3><?php esc_html_e( 'Checkout Settings' , 'wp-e-commerce' ); ?></h3>
 		<table class='form-table'>
 			<tr>
-				<th scope="row"><?php esc_html_e('Force User Registration', 'wpsc'); ?></th>
+				<th scope="row"><?php esc_html_e('Force User Registration', 'wp-e-commerce'); ?></th>
 				<td>
 					<input type='radio' value='0' name='wpsc_options[require_register]' id='require_register2' <?php checked( $this->require_register, 0 ); ?> />
-					<label for='require_register2'><?php _e( 'Users can checkout without a user account', 'wpsc' );?></label><br />
+					<label for='require_register2'><?php _e( 'Users can checkout without a user account', 'wp-e-commerce' );?></label><br />
 					<input type='radio' value='1' name='wpsc_options[require_register]' id='require_register1' <?php checked( $this->require_register, 1 ); ?> />
-					<label for='require_register1'><?php _e( 'Users must register before checking out', 'wpsc' );?></label>
-					<p class='description'><?php esc_attr_e( 'Enabling this will also turn on "Membership: Anyone can register" from within WordPress Settings > General if it\'s not already enabled', 'wpsc' ); ?></p>
+					<label for='require_register1'><?php _e( 'Users must register before checking out', 'wp-e-commerce' );?></label>
+					<p class='description'><?php esc_attr_e( 'Enabling this will also turn on "Membership: Anyone can register" from within WordPress Settings > General if it\'s not already enabled', 'wp-e-commerce' ); ?></p>
 				</td>
 			</tr>
 
 			<tr>
-				<th scope="row"><?php esc_html_e('Shipping Same as Billing', 'wpsc' ); ?></th>
+				<th scope="row"><?php esc_html_e('Shipping Same as Billing', 'wp-e-commerce' ); ?></th>
 				<td>
 					<input type='radio' value='1' name='wpsc_options[shippingsameasbilling]' id='shippingsameasbilling1' <?php checked( $this->shipping_same_as_billing, 1 ); ?> />
-					<label for='shippingsameasbilling1'><?php _e( 'Enable "Same as billing address" checkbox with Shipping Address fields', 'wpsc' );?></label><br />
+					<label for='shippingsameasbilling1'><?php _e( 'Enable "Same as billing address" checkbox with Shipping Address fields', 'wp-e-commerce' );?></label><br />
 					<input type='radio' value='0' name='wpsc_options[shippingsameasbilling]' id='shippingsameasbilling2' <?php checked( $this->shipping_same_as_billing, 0 ); ?> />
-					<label for='shippingsameasbilling2'><?php _e( 'Users must re-enter Shipping Address', 'wpsc' );?></label>
+					<label for='shippingsameasbilling2'><?php _e( 'Users must re-enter Shipping Address', 'wp-e-commerce' );?></label>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><?php _e('Security and Encryption', 'wpsc'); ?></th>
+				<th scope="row"><?php _e('Security and Encryption', 'wp-e-commerce'); ?></th>
 				<td>
 					<input type='radio' value='1' name='wpsc_options[wpsc_force_ssl]' id='wpsc_force_ssl1' <?php checked( $this->force_ssl, 1 ); ?> />
-					<label for='wpsc_force_ssl1'><?php _e( 'Force users to use SSL Encryption', 'wpsc' );?></label><br />
+					<label for='wpsc_force_ssl1'><?php _e( 'Force users to use SSL Encryption', 'wp-e-commerce' );?></label><br />
 					<input type='radio' value='0' name='wpsc_options[wpsc_force_ssl]' id='wpsc_force_ssl2' <?php checked( $this->force_ssl, 0 ); ?> />
-					<label for='wpsc_force_ssl2'><?php _e( 'Allow site to be used insecurely and unencrypted', 'wpsc' );?></label>
-					<p class='description'><?php esc_html_e( 'This can cause warnings for your users if you do not have a properly configured SSL certificate', 'wpsc' );?></p>
+					<label for='wpsc_force_ssl2'><?php _e( 'Allow site to be used insecurely and unencrypted', 'wp-e-commerce' );?></label>
+					<p class='description'><?php esc_html_e( 'This can cause warnings for your users if you do not have a properly configured SSL certificate', 'wp-e-commerce' );?></p>
 				</td>
 			</tr>
 		</table>
 
 
-		<h3><?php esc_html_e( 'Checkout Form Fields', 'wpsc' ); ?></h3>
-		<p><?php esc_html_e( 'Here you can customise the forms to be displayed in your checkout page. The checkout page is where you collect important user information that will show up in your purchase logs i.e. the buyer\'s address, and name...', 'wpsc' );?></p>
+		<h3><?php esc_html_e( 'Checkout Form Fields', 'wp-e-commerce' ); ?></h3>
+		<p><?php esc_html_e( 'Here you can customise the forms to be displayed in your checkout page. The checkout page is where you collect important user information that will show up in your purchase logs i.e. the buyer\'s address, and name...', 'wp-e-commerce' );?></p>
 
 		<p>
-			<label for='wpsc_form_set'><?php esc_html_e( 'Select a Form Set' , 'wpsc' ); ?>:</label>
+			<label for='wpsc_form_set'><?php esc_html_e( 'Select a Form Set' , 'wp-e-commerce' ); ?>:</label>
 			<select id='wpsc_form_set' name='checkout_set'>
 				<?php foreach ( $this->checkout_sets as $key => $value ): ?>
 					<option <?php selected( $this->current_checkout_set, $key ); ?> value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
 				<?php endforeach; ?>
 			</select>
 
-			<input type='submit' value='<?php esc_attr_e( 'Filter', 'wpsc' ); ?>' name='wpsc_checkout_set_filter' class='button-secondary' />
-			<input <?php if (! $this->current_checkout_set) echo 'style="display:none;"'; ?> id="wpsc-delete-checkout-set" type='submit' value='<?php esc_attr_e( 'Delete', 'wpsc' ); ?>' name='wpsc_checkout_set_delete' class='button-secondary' />
+			<input type='submit' value='<?php esc_attr_e( 'Filter', 'wp-e-commerce' ); ?>' name='wpsc_checkout_set_filter' class='button-secondary' />
+			<input <?php if (! $this->current_checkout_set) echo 'style="display:none;"'; ?> id="wpsc-delete-checkout-set" type='submit' value='<?php esc_attr_e( 'Delete', 'wp-e-commerce' ); ?>' name='wpsc_checkout_set_delete' class='button-secondary' />
 		</p>
 
-		<p><a class="add_new_form_set button-secondary" href='#'><?php esc_html_e("Add New Form Set", 'wpsc'); ?></a></p>
+		<p><a class="add_new_form_set button-secondary" href='#'><?php esc_html_e("Add New Form Set", 'wp-e-commerce'); ?></a></p>
 
 		<p class='add_new_form_set_forms'>
-			<label><?php esc_html_e( "Add new Form Set", 'wpsc' ); ?>:
+			<label><?php esc_html_e( "Add new Form Set", 'wp-e-commerce' ); ?>:
 			<input type="text" value="" name="new_form_set" /></label>
-			<input type="submit" value="<?php esc_attr_e( 'Add', 'wpsc' ); ?>" class="button-primary" id="formset-add-sumbit"/>
+			<input type="submit" value="<?php esc_attr_e( 'Add', 'wp-e-commerce' ); ?>" class="button-primary" id="formset-add-sumbit"/>
 		</p>
 
 		<input type="hidden" name="selected_form_set" value="<?php echo esc_attr( $this->current_checkout_set ); ?>" />
@@ -441,7 +441,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 						<tr data-field-id="<?php echo esc_attr( $form_field->id ); ?>" data-field-type="<?php echo $form_field->type; ?>" id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field field_type_<?php echo $form_field->type; ?>">
 							<td class="drag">
 								<div class="cell-wrapper">
-									<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">
+									<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wp-e-commerce' ); ?>">
 										<img src="<?php echo esc_url( WPSC_CORE_IMAGES_URL . '/drag.png' ); ?>" />
 									</a>
 									<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
@@ -489,7 +489,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 											$style = 'style="display: inline;"';
 										}
 									?>
-									<a class="edit-options" href="#" <?php echo $style; ?> ><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
+									<a class="edit-options" href="#" <?php echo $style; ?> ><?php esc_html_e( 'Edit Options', 'wp-e-commerce' ); ?></a>
 								</div>
 							</td>
 							<td class="displaycol">
@@ -507,11 +507,11 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 							<td class="actionscol">
 								<div class="cell-wrapper">
 									<?php if ( ! $this->is_field_default( $form_field ) ): ?>
-										<a tabindex="-1" title="<?php esc_attr_e( 'Delete Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
+										<a tabindex="-1" title="<?php esc_attr_e( 'Delete Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
 									<?php else: ?>
-										<span title="<?php _e( 'Cannot Delete Default Fields', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></span>
+										<span title="<?php _e( 'Cannot Delete Default Fields', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></span>
 									<?php endif; ?>
-									<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
+									<a tabindex="-1" title="<?php _e( 'Add Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
 								</div>
 							</td>
 						</tr>

@@ -75,10 +75,10 @@ class WPSC_Cart_Item_Table_Order extends WPSC_Cart_Item_Table {
 ?>
 		<div class="wpsc-cart-item-downloadable">
 <?php 	if ( count( $links ) === 1 ): ?>
-			<strong><?php esc_html_e( 'Download link: ', 'wpsc'); ?></strong><br />
+			<strong><?php esc_html_e( 'Download link: ', 'wp-e-commerce'); ?></strong><br />
 			<a href="<?php echo esc_url( $links[0]['url'] ); ?>"><?php echo esc_html( $links[0]['name'] ); ?></a>
 <?php 	else: ?>
-			<strong><?php esc_html_e( 'Digital Contents', 'wpsc' ); ?></strong>
+			<strong><?php esc_html_e( 'Digital Contents', 'wp-e-commerce' ); ?></strong>
 			<ul>
 <?php 		foreach ( $links as $link ): ?>
 				<li><a href="<?php echo esc_url( $link['url'] ); ?>"><?php echo esc_html( $link['name'] ); ?></a></li>

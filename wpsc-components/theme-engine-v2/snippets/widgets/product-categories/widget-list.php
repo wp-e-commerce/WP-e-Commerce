@@ -10,7 +10,7 @@
 		<a href="<?php echo esc_url( get_term_link( (int) $cat->term_id, 'wpsc_product_category' ) ); ?>">
 <?php		$string =    $this->instance['show_count']
 			            /** translator: %1$s: category name, %2$s: category count **/
-			          ? _x( '%1$s (%2$s)', 'product category widget name and count', 'wpsc' )
+			          ? _x( '%1$s (%2$s)', 'product category widget name and count', 'wp-e-commerce' )
 			          : '%1$s';
 			printf(
 				$string,

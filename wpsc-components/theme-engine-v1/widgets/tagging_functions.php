@@ -97,7 +97,7 @@ function wp_generate_product_tag_cloud( $tags, $args = '' ) {
 		$tag_id = $tag_ids[$tag];
 		$tag_link = esc_url( $tag_links[$tag] );
 		$tag = str_replace( ' ', '&nbsp;', esc_html( $tag ) );
-		$a[] = "<a href='$tag_link' class='tag-link-$tag_id' title='" . esc_attr( sprintf( _n( '%d topic', '%d topics', $count, 'wpsc' ), $count ) ) . "'$rel style='font-size: " .
+		$a[] = "<a href='$tag_link' class='tag-link-$tag_id' title='" . esc_attr( sprintf( _n( '%d topic', '%d topics', $count, 'wp-e-commerce' ), $count ) ) . "'$rel style='font-size: " .
 				( $smallest + ( ( $count - $min_count ) * $font_step ) )
 				. "$unit;'>$tag</a>";
 	}
@@ -161,6 +161,6 @@ function wpsc_get_the_product_tag_list( $before = '', $sep = '', $after = '' ) {
 
 function wpsc_the_product_tags( $before = null, $sep = ', ', $after = '' ) {
 	if ( is_null( $before ) )
-		$before = __( 'Tags', 'wpsc' );
+		$before = __( 'Tags', 'wp-e-commerce' );
 	echo wpsc_get_the_product_tag_list( $before, $sep, $after );
 }

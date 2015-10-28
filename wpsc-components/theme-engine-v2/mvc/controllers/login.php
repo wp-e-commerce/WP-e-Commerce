@@ -29,7 +29,7 @@ class WPSC_Controller_Login extends WPSC_Controller
 
 	private function callback_login() {
 		if ( empty( $_COOKIE[ TEST_COOKIE ] ) ) {
-			$this->message_collection->add( __( "Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to log in to your account.", 'wpsc' ), 'error' );
+			$this->message_collection->add( __( "Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to log in to your account.", 'wp-e-commerce' ), 'error' );
 		}
 
 		$form_args  = wpsc_get_login_form_args();
@@ -47,7 +47,7 @@ class WPSC_Controller_Login extends WPSC_Controller
 		) );
 
 		if ( is_wp_error( $user ) ) {
-			$this->message_collection->add( __( 'We do not recognize the login information you entered. Please try again.', 'wpsc' ), 'error' );
+			$this->message_collection->add( __( 'We do not recognize the login information you entered. Please try again.', 'wp-e-commerce' ), 'error' );
 			return;
 		}
 

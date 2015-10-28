@@ -318,26 +318,26 @@ class wpec_taxes_controller {
 			//retrieve the bands and add the disabled value
 			$tax_bands = $this->wpec_taxes->wpec_taxes_get_bands();
 			if ( ! empty( $tax_bands ) ) {
-				array_unshift( $tax_bands, __( 'Disabled', 'wpsc' ) );
+				array_unshift( $tax_bands, __( 'Disabled', 'wp-e-commerce' ) );
 
 				//set select settings
 				$default_select_settings = array(
 					'id' => 'wpec_taxes_band',
 					'name' => 'wpec_taxes_band',
-					'label' => __( 'Custom Tax Band', 'wpsc' )
+					'label' => __( 'Custom Tax Band', 'wp-e-commerce' )
 				);
 				$band_select_settings = wp_parse_args( $input_settings, $default_select_settings );
 
 				//set the default option
-				$default_option = ( isset( $custom_tax_band ) ) ? $custom_tax_band : __( 'Disabled', 'wpsc' );
+				$default_option = ( isset( $custom_tax_band ) ) ? $custom_tax_band : __( 'Disabled', 'wp-e-commerce' );
 
 				//echo select
 				$returnable = $this->wpec_taxes_build_select_options( $tax_bands, 'index', 'name', $default_option, $band_select_settings );
 			} else {
-				$returnable = '<p>' . sprintf( __( 'No Tax Bands Setup. Set Tax Bands up in <a href="%s">Settings &gt; Taxes</a>', 'wpsc' ), admin_url( 'options-general.php?page=wpsc-settings&tab=taxes' ) ) . '</p>';
+				$returnable = '<p>' . sprintf( __( 'No Tax Bands Setup. Set Tax Bands up in <a href="%s">Settings &gt; Taxes</a>', 'wp-e-commerce' ), admin_url( 'options-general.php?page=wpsc-settings&tab=taxes' ) ) . '</p>';
 			}// if
 		} elseif ( ! $this->wpec_taxes->wpec_taxes_get_enabled() ) {
-			$returnable .= sprintf( __( 'Taxes are not enabled. See <a href="%s">Settings &gt; Taxes</a>', 'wpsc' ), admin_url( 'options-general.php?page=wpsc-settings&tab=taxes' ) );
+			$returnable .= sprintf( __( 'Taxes are not enabled. See <a href="%s">Settings &gt; Taxes</a>', 'wp-e-commerce' ), admin_url( 'options-general.php?page=wpsc-settings&tab=taxes' ) );
 		}// if
 
 		return $returnable;
@@ -567,7 +567,7 @@ class wpec_taxes_controller {
 		} else {
 			$selected_country = array(
 				'isocode' => 'all-markets',
-				'country' => __('All Markets', 'wpsc')
+				'country' => __('All Markets', 'wp-e-commerce')
 			);
 		}
 
@@ -641,15 +641,15 @@ class wpec_taxes_controller {
 				<td>
 					<label>
 						<input type='checkbox' id="shipping-<?php esc_attr_e( $row_key ); ?>" name="wpsc_options[wpec_taxes_<?php esc_attr_e( $row_mode ); ?>][<?php esc_attr_e( $row_key ); ?>][shipping]" class="taxes-<?php esc_attr_e( $row_mode ); ?>" <?php checked( $tax_rate['shipping'] == 1 ); ?> />
-						<?php _e( 'Apply to Shipping', 'wpsc' ); ?>
+						<?php _e( 'Apply to Shipping', 'wp-e-commerce' ); ?>
 					</label>
 				</td>
 			<?php endif; ?>
 
 			<?php // ACTIONS ?>
 			<td>
-				<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-delete" id="wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-delete-<?php esc_attr_e( $row_key ); ?>" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
-				<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-add" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
+				<a tabindex="-1" title="<?php _e( 'Delete Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-delete" id="wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-delete-<?php esc_attr_e( $row_key ); ?>" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
+				<a tabindex="-1" title="<?php _e( 'Add Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-add" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
 			</td>
 
 		</tr>

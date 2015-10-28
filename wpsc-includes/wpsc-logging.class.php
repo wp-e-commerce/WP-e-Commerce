@@ -143,7 +143,7 @@ class WPSC_Logging {
         /* logs post type */
 
         $log_args = array(
-            'labels'          => array( 'name' => __( 'Logs', 'wpsc' ) ),
+            'labels'          => array( 'name' => __( 'Logs', 'wp-e-commerce' ) ),
             'public'          => false,
             'show_in_ui'      => defined( 'WP_DEBUG' ) && WP_DEBUG,
             'query_var'       => false,

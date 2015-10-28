@@ -39,7 +39,7 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 	} else if ( ($state == 3) || ($state == 4) ) {
 		if ( $state == 4 ) {
 			echo "<div id='widgetshoppingcart'>";
-			echo "<h3>" . __( 'Shopping Cart', 'wpsc' ) . "$fancy_collapser</h3>";
+			echo "<h3>" . __( 'Shopping Cart', 'wp-e-commerce' ) . "$fancy_collapser</h3>";
 			echo "  <div id='shoppingcartcontents'>";
 			echo wpsc_shopping_basket_internals(false, false, true );
 			echo "  </div>";
@@ -47,7 +47,7 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 			$dont_add_input = true;
 		} else {
 			echo "<div id='sideshoppingcart'>";
-			echo "<h3>" . __( 'Shopping Cart', 'wpsc' ) . "$fancy_collapser</h3>";
+			echo "<h3>" . __( 'Shopping Cart', 'wp-e-commerce' ) . "$fancy_collapser</h3>";
 			echo "  <div id='shoppingcartcontents'>";
 			echo wpsc_shopping_basket_internals( false, false, true );
 			echo "  </div>";
@@ -56,7 +56,7 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 	} else {
 		if ( (isset( $GLOBALS['nzshpcrt_activateshpcrt'] ) && $GLOBALS['nzshpcrt_activateshpcrt'] === true ) ) {
 			echo "<div id='shoppingcart'>";
-			echo "<h3>" . __( 'Shopping Cart', 'wpsc' ) . "$fancy_collapser</h3>";
+			echo "<h3>" . __( 'Shopping Cart', 'wp-e-commerce' ) . "$fancy_collapser</h3>";
 			echo "  <div id='shoppingcartcontents'>";
 			echo wpsc_shopping_basket_internals( false, false, true );
 			echo "  </div>";
@@ -119,7 +119,7 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 				'class'                 => 'current_country wpsc-visitor-meta',
 				'selected'              => $selected_country->get_isocode(),
 				'additional_attributes' => $additional_attributes,
-				'placeholder'           => __( 'Please select a country', 'wpsc' ),
+				'placeholder'           => __( 'Please select a country', 'wp-e-commerce' ),
 		)
 	);
 
@@ -146,7 +146,7 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 
 		if ( count( $region_list ) > 1 ) {
 			$label = $selected_country->get( 'region_label' );
-			$please_select_message = sprintf( __( 'Please select a %s', 'wpsc' ), $label );
+			$please_select_message = sprintf( __( 'Please select a %s', 'wp-e-commerce' ), $label );
 			$output .= "<option value='0'>"  . $please_select_message. "</option>\n\r";
 		}
 
@@ -224,7 +224,7 @@ function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = n
 													'class'                 => 'current_country wpsc-visitor-meta',
 													'selected'              => $selected_country,
 													'additional_attributes' => $additional_attributes,
-													'placeholder'           => __( 'Please select a country', 'wpsc' ),
+													'placeholder'           => __( 'Please select a country', 'wp-e-commerce' ),
 												)
 										);
 	$output .= "</div>\n\r";
@@ -354,7 +354,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 
 		if ( count( $region_list ) > 1 ) {
 			$label = $wpsc_country->get( 'region_label' );
-			$please_select_message = sprintf( __( 'Please select a %s', 'wpsc' ), $label );
+			$please_select_message = sprintf( __( 'Please select a %s', 'wp-e-commerce' ), $label );
 			$output .= "<option value='0'>"  . $please_select_message. "</option>\n\r";
 		}
 
@@ -495,7 +495,7 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 		if ( count( $region_list ) > 1 ) {
 			$label = $wpsc_country->get( 'region_label' );
-			$please_select_message = sprintf( __( 'Please select a %s', 'wpsc' ), $label );
+			$please_select_message = sprintf( __( 'Please select a %s', 'wp-e-commerce' ), $label );
 			$output .= "<option value='0'>"  . $please_select_message. "</option>\n\r";
 		}
 

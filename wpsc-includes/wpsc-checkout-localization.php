@@ -4,7 +4,7 @@ _wpsc_deprecated_file(
 	__FILE__,
 	'3.9',
 	'/wpsc-components/theme-engine-v1/classes/checkout-localization.php',
-	__( 'This file has been scoped specifically to the 1.0 theme engine component.', 'wpsc' )
+	__( 'This file has been scoped specifically to the 1.0 theme engine component.', 'wp-e-commerce' )
 );
 
 if ( ! function_exists( '_wpsc_countries_localizations' ) ) {
@@ -23,9 +23,9 @@ if ( ! function_exists( '_wpsc_countries_localizations' ) ) {
 	 */
 	function _wpsc_countries_localizations( $localizations_array ) {
 
-		$localizations_array['no_country_selected']       = __( 'Please select a country', 'wpsc' );
-		$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wpsc' );
-		$localizations_array['no_region_label']           = __( 'State/Province', 'wpsc' );
+		$localizations_array['no_country_selected']       = __( 'Please select a country', 'wp-e-commerce' );
+		$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wp-e-commerce' );
+		$localizations_array['no_region_label']           = __( 'State/Province', 'wp-e-commerce' );
 		$localizations_array['base_country']              = get_option( 'base_country' );
 
 		$country_list = array();

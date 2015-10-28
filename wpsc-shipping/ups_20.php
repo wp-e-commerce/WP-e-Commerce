@@ -20,7 +20,7 @@ class ash_ups {
 
 	function ash_ups () {
 		$this->internal_name = 'ups';
-		$this->name = _x( 'UPS', 'Shipping Module', 'wpsc' );
+		$this->name = _x( 'UPS', 'Shipping Module', 'wp-e-commerce' );
 		$this->is_external = true;
 		$this->requires_curl = true;
 		$this->requires_weight = true;
@@ -65,39 +65,39 @@ class ash_ups {
 
 	private function _includeUPSData () {
 		$this->drop_types = array(
-			'01' => __( 'Daily Pickup', 'wpsc' ),
-			'03' => __( 'Customer Counter', 'wpsc' ),
-			'06' => __( 'One Time Pickup', 'wpsc' ),
-			'07' => __( 'On Call Air', 'wpsc' ),
-			'19' => __( 'Letter Center', 'wpsc' ),
-			'20' => __( 'Air Service Center', 'wpsc' ),
-			'11' => __( 'Suggested Retail Rates (Advanced Config)', 'wpsc' ),
+			'01' => __( 'Daily Pickup', 'wp-e-commerce' ),
+			'03' => __( 'Customer Counter', 'wp-e-commerce' ),
+			'06' => __( 'One Time Pickup', 'wp-e-commerce' ),
+			'07' => __( 'On Call Air', 'wp-e-commerce' ),
+			'19' => __( 'Letter Center', 'wp-e-commerce' ),
+			'20' => __( 'Air Service Center', 'wp-e-commerce' ),
+			'11' => __( 'Suggested Retail Rates (Advanced Config)', 'wp-e-commerce' ),
 		);
 
 		$this->cust_types = array(
-			'01' => __( 'Daily Pickup, with UPS Account', 'wpsc' ),
-			'03' => __( 'No Daily Pickup, with No or Other Account', 'wpsc' ),
-			'04' => __( 'Retail Outlet (Only US origin shipments)', 'wpsc' )
+			'01' => __( 'Daily Pickup, with UPS Account', 'wp-e-commerce' ),
+			'03' => __( 'No Daily Pickup, with No or Other Account', 'wp-e-commerce' ),
+			'04' => __( 'Retail Outlet (Only US origin shipments)', 'wp-e-commerce' )
 		);
 
 		$this->Services = array(
-			'14' => __( 'Next Day Air Early AM', 'wpsc' ),
-			'01' => __( 'Next Day Air', 'wpsc' ),
-			'13' => __( 'Next Day Air Saver', 'wpsc' ),
-			'59' => __( '2nd Day Air AM', 'wpsc' ),
-			'02' => __( '2nd Day Air', 'wpsc' ),
-			'12' => __( '3 Day Select', 'wpsc' ),
-			'03' => __( 'Ground', 'wpsc' ),
-			'11' => __( 'Standard', 'wpsc' ),
-			'07' => __( 'Worldwide Express', 'wpsc' ),
-			'54' => __( 'Worldwide Express Plus', 'wpsc' ),
-			'08' => __( 'Worldwide Expedited', 'wpsc' ),
-			'65' => __( 'Saver', 'wpsc' ),
-			'82' => __( 'UPS Today Standard', 'wpsc' ),
-			'83' => __( 'UPS Today Dedicated Courier', 'wpsc' ),
-			'84' => __( 'UPS Today Intercity', 'wpsc' ),
-			'85' => __( 'UPS Today Express', 'wpsc' ),
-			'86' => __( 'UPS Today Express Saver', 'wpsc' )
+			'14' => __( 'Next Day Air Early AM', 'wp-e-commerce' ),
+			'01' => __( 'Next Day Air', 'wp-e-commerce' ),
+			'13' => __( 'Next Day Air Saver', 'wp-e-commerce' ),
+			'59' => __( '2nd Day Air AM', 'wp-e-commerce' ),
+			'02' => __( '2nd Day Air', 'wp-e-commerce' ),
+			'12' => __( '3 Day Select', 'wp-e-commerce' ),
+			'03' => __( 'Ground', 'wp-e-commerce' ),
+			'11' => __( 'Standard', 'wp-e-commerce' ),
+			'07' => __( 'Worldwide Express', 'wp-e-commerce' ),
+			'54' => __( 'Worldwide Express Plus', 'wp-e-commerce' ),
+			'08' => __( 'Worldwide Expedited', 'wp-e-commerce' ),
+			'65' => __( 'Saver', 'wp-e-commerce' ),
+			'82' => __( 'UPS Today Standard', 'wp-e-commerce' ),
+			'83' => __( 'UPS Today Dedicated Courier', 'wp-e-commerce' ),
+			'84' => __( 'UPS Today Intercity', 'wp-e-commerce' ),
+			'85' => __( 'UPS Today Express', 'wp-e-commerce' ),
+			'86' => __( 'UPS Today Express Saver', 'wp-e-commerce' )
 		);
 	}
 
@@ -105,32 +105,32 @@ class ash_ups {
 		if ( ! isset( $this->Services ) ) {
 			$this->_includeUPSData();
 		}
-		//__('Your Packaging', 'wpsc');  <-- use to translate
+		//__('Your Packaging', 'wp-e-commerce');  <-- use to translate
 		$wpsc_ups_settings = get_option( 'wpsc_ups_settings' );
 		$wpsc_ups_services = get_option( 'wpsc_ups_services' );
 		// Defined on page 41 in UPS API documentation RSS_Tool_06_10_09.pdf
-		/*$packaging_options['00'] = __('**UNKNOWN**', 'wpsc');*/
-		$packaging_options['01'] = __( 'UPS Letter', 'wpsc' );
-		$packaging_options['02'] = __( 'Your Packaging', 'wpsc' );
-		$packaging_options['03'] = __( 'UPS Tube', 'wpsc' );
-		$packaging_options['04'] = __( 'UPS Pak', 'wpsc' );
-		$packaging_options['21'] = __( 'UPS Express Box', 'wpsc' );
-		$packaging_options['2a'] = __( 'UPS Express Box - Small', 'wpsc' );
-		$packaging_options['2b'] = __( 'UPS Express Box - Medium', 'wpsc' );
-		$packaging_options['2c'] = __( 'UPS Express Box - Large', 'wpsc' );
+		/*$packaging_options['00'] = __('**UNKNOWN**', 'wp-e-commerce');*/
+		$packaging_options['01'] = __( 'UPS Letter', 'wp-e-commerce' );
+		$packaging_options['02'] = __( 'Your Packaging', 'wp-e-commerce' );
+		$packaging_options['03'] = __( 'UPS Tube', 'wp-e-commerce' );
+		$packaging_options['04'] = __( 'UPS Pak', 'wp-e-commerce' );
+		$packaging_options['21'] = __( 'UPS Express Box', 'wp-e-commerce' );
+		$packaging_options['2a'] = __( 'UPS Express Box - Small', 'wp-e-commerce' );
+		$packaging_options['2b'] = __( 'UPS Express Box - Medium', 'wp-e-commerce' );
+		$packaging_options['2c'] = __( 'UPS Express Box - Large', 'wp-e-commerce' );
 
 		ob_start();
 		?>
 		<tr><td><table class='form-table'>
 			<tr>
-				<td><?php _e( 'Destination Type', 'wpsc' ); ?></td>
+				<td><?php _e( 'Destination Type', 'wp-e-commerce' ); ?></td>
 				<td>
 					<label>
 						<input type='radio' <?php checked( '2' != $wpsc_ups_settings['49_residential'] ); ?> value='1' name='wpsc_ups_settings[49_residential]' />
-						<?php _e( 'Residential Address', 'wpsc' ); ?>
+						<?php _e( 'Residential Address', 'wp-e-commerce' ); ?>
 					</label><br />
 					<label><input type='radio' <?php checked( '2' == $wpsc_ups_settings['49_residential'] ); ?>value='2' name='wpsc_ups_settings[49_residential]' />
-						<?php _e( 'Commercial Address', 'wpsc' )?>
+						<?php _e( 'Commercial Address', 'wp-e-commerce' )?>
 					</label>
 				</td>
 			</tr>
@@ -144,7 +144,7 @@ class ash_ups {
 			}
 			?>
 			<tr>
-				<td><?php _e( 'Dropoff Type', 'wpsc' ); ?></td>
+				<td><?php _e( 'Dropoff Type', 'wp-e-commerce' ); ?></td>
 				<td>
 					<script type="text/javascript">
 						function checkDropValue () {
@@ -175,7 +175,7 @@ class ash_ups {
 				}
 			?>
 			<tr>
-				<td><?php _e( 'Customer Type', 'wpsc' ); ?></td>
+				<td><?php _e( 'Customer Type', 'wp-e-commerce' ); ?></td>
 				<td>
 					<select id='cust_type' name='wpsc_ups_settings[CustomerType]' <?php disabled( $wpsc_ups_settings['DropoffType'] != '11' ); ?> >
 						<?php foreach( array_keys( $this->cust_types ) as $dkey ): ?>
@@ -188,7 +188,7 @@ class ash_ups {
 			</tr>
 
 			<tr>
-				<td><?php _e( 'Packaging', 'wpsc' ); ?></td>
+				<td><?php _e( 'Packaging', 'wp-e-commerce' ); ?></td>
 				<td>
 					<select name='wpsc_ups_settings[48_container]'>
 						<?php foreach ( $packaging_options as $key => $name ): ?>
@@ -201,23 +201,23 @@ class ash_ups {
 			</tr>
 
 			<tr>
-				<td><?php _e( 'Shipping Settings', 'wpsc' ); ?></td>
+				<td><?php _e( 'Shipping Settings', 'wp-e-commerce' ); ?></td>
 				<td>
 					<input type="checkbox" id="ups_env_test" name="wpsc_ups_settings[upsenvironment]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['upsenvironment'] ) && (bool) $wpsc_ups_settings['upsenvironment'] ); ?> />
-					<label for="ups_env_test" ><?php _e( 'Use Testing Environment', 'wpsc' ); ?></label>
+					<label for="ups_env_test" ><?php _e( 'Use Testing Environment', 'wp-e-commerce' ); ?></label>
 					<br />
 					<input type="checkbox" id="ups_negotiated_rates" name="wpsc_ups_settings[ups_negotiated_rates]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['ups_negotiated_rates'] ) && (bool) $wpsc_ups_settings['ups_negotiated_rates'] ); ?> />
-					<label for="ups_negotiated_rates" ><?php _e( 'Show UPS negotiated rates', 'wpsc' ); ?> *</label>
+					<label for="ups_negotiated_rates" ><?php _e( 'Show UPS negotiated rates', 'wp-e-commerce' ); ?> *</label>
 					<br />
 					<input type="checkbox" id="ups_insured_shipment" name="wpsc_ups_settings[insured_shipment]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['insured_shipment'] ) && (bool) $wpsc_ups_settings['insured_shipment'] ); ?> />
-					<label for="ups_insured_shipment" ><?php _e( 'Insure shipment against cart total', 'wpsc' ); ?> *</label>
+					<label for="ups_insured_shipment" ><?php _e( 'Insure shipment against cart total', 'wp-e-commerce' ); ?> *</label>
 					<br />
 					<input type="checkbox" id="ups_singular_shipping" name="wpsc_ups_settings[singular_shipping]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['singular_shipping'] ) && (bool) $wpsc_ups_settings['singular_shipping'] ); ?> />
-					<label for="ups_singular_shipping" ><?php _e( 'Singular Shipping', 'wpsc' ); ?> *</label>
-					<p class='description'><?php _e( 'Rate each quantity of items in a cart as its own package using dimensions on product', 'wpsc' ); ?></p>
+					<label for="ups_singular_shipping" ><?php _e( 'Singular Shipping', 'wp-e-commerce' ); ?> *</label>
+					<p class='description'><?php _e( 'Rate each quantity of items in a cart as its own package using dimensions on product', 'wp-e-commerce' ); ?></p>
 					<input type="checkbox" id="ups_intl_rate" name="wpsc_ups_settings[intl_rate]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['intl_rate'] ) && (bool) $wpsc_ups_settings['intl_rate'] ); ?> />
-					<label for="ups_intl_rate" ><?php _e( 'Disable International Shipping', 'wpsc' ); ?></label>
-					<p class='description'><?php _e( 'No shipping rates will be displayed if the shipment destination country is different than your base country/region.', 'wpsc' ); ?></p>
+					<label for="ups_intl_rate" ><?php _e( 'Disable International Shipping', 'wp-e-commerce' ); ?></label>
+					<p class='description'><?php _e( 'No shipping rates will be displayed if the shipment destination country is different than your base country/region.', 'wp-e-commerce' ); ?></p>
 				</td>
 			</tr>
 
@@ -226,7 +226,7 @@ class ash_ups {
 				$first = false;
 			?>
 			<tr>
-				<td><?php _e( 'UPS Preferred Services', 'wpsc' ); ?></td>
+				<td><?php _e( 'UPS Preferred Services', 'wp-e-commerce' ); ?></td>
 				<td>
 					<div class="ui-widget-content multiple-select">
 						<?php foreach( array_keys( $this->Services ) as $service ): ?>
@@ -234,42 +234,42 @@ class ash_ups {
 							<label for="wps_ups_srv_<?php esc_attr_e( $service); ?>"><?php esc_html_e( $this->Services[$service] ); ?></label><br />
 						<?php endforeach; ?>
 					</div>
-					<p class='description'><?php _e( 'Note: All services used if no services selected', 'wpsc' ); ?></p>
+					<p class='description'><?php _e( 'Note: All services used if no services selected', 'wp-e-commerce' ); ?></p>
 				</td>
 			</tr>
 
 			<tr>
-				<td colspan='2'><strong><?php _e( 'My UPS', 'wpsc' ); ?></strong></td>
+				<td colspan='2'><strong><?php _e( 'My UPS', 'wp-e-commerce' ); ?></strong></td>
 			</tr>
 			<tr>
-				<td><?php _e( 'Account Number', 'wpsc' ); ?> *</td>
+				<td><?php _e( 'Account Number', 'wp-e-commerce' ); ?> *</td>
 				<td>
 					<input type="text" name='wpsc_ups_settings[upsaccount]' value="<?php esc_attr_e( $wpsc_ups_settings['upsaccount'] ); ?>" />
 				</td>
 			</tr>
 			<tr>
-				<td><?php _e( 'Username', 'wpsc' ); ?></td>
+				<td><?php _e( 'Username', 'wp-e-commerce' ); ?></td>
 				<td>
 					<input type="text" name='wpsc_ups_settings[upsusername]' value="<?php esc_attr_e( base64_decode( $wpsc_ups_settings['upsusername'] ) ); ?>" />
 				</td>
 			</tr>
 			<tr>
-				<td><?php _e( 'Password', 'wpsc' ); ?></td>
+				<td><?php _e( 'Password', 'wp-e-commerce' ); ?></td>
 				<td>
 					<input type="password" name='wpsc_ups_settings[upspassword]' value="<?php esc_attr_e( base64_decode( $wpsc_ups_settings['upspassword'] ) ); ?>" />
 				</td>
 			</tr>
 			<tr>
-				<td><?php _e( 'UPS XML API Key', 'wpsc' ); ?></td>
+				<td><?php _e( 'UPS XML API Key', 'wp-e-commerce' ); ?></td>
 				<td>
 					<input type="text" name='wpsc_ups_settings[upsid]' value="<?php esc_attr_e( base64_decode( $wpsc_ups_settings['upsid'] ) ); ?>" />
-					<p class='description'><?php printf( __( "Don't have an API login/ID? <a href='%s' target='_blank'>Sign up for My UPS</a>", 'wpsc' ), esc_url( "https://www.ups.com/upsdeveloperkit?loc=en_US" ) ); ?></p>
+					<p class='description'><?php printf( __( "Don't have an API login/ID? <a href='%s' target='_blank'>Sign up for My UPS</a>", 'wp-e-commerce' ), esc_url( "https://www.ups.com/upsdeveloperkit?loc=en_US" ) ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<p class='description'><?php _e( '* For Negotiated rates, you must enter a UPS account number and select "Show UPS negotiated rates" ', 'wpsc' ); ?></p>
-					<p class='description'><?php printf( __( "For more help configuring UPS, please <a href='%s'>read our documentation</a>", 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/wiki/documentation/shipping/ups' ) ); ?></p>
+					<p class='description'><?php _e( '* For Negotiated rates, you must enter a UPS account number and select "Show UPS negotiated rates" ', 'wp-e-commerce' ); ?></p>
+					<p class='description'><?php printf( __( "For more help configuring UPS, please <a href='%s'>read our documentation</a>", 'wp-e-commerce' ), esc_url( 'http://docs.wpecommerce.org/wiki/documentation/shipping/ups' ) ); ?></p>
 				</td>
 			</tr>
 		</table></td></tr>
@@ -786,7 +786,7 @@ class ash_ups {
 		if ( $args['weight'] > 150 && ! (boolean) $args['singular_shipping'] ) { // This is where shipping breaks out of UPS if weight is higher than 150 LBS
 				$over_weight_txt = apply_filters(
 						'wpsc_shipment_over_weight',
-						__( 'Your order exceeds the standard shipping weight limit. Please contact us to quote other shipping alternatives.', 'wpsc' ),
+						__( 'Your order exceeds the standard shipping weight limit. Please contact us to quote other shipping alternatives.', 'wp-e-commerce' ),
 						$args
 					);
 				$shipping_quotes[$over_weight_txt] = 0; // yes, a constant.

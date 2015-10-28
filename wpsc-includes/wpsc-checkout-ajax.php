@@ -4,7 +4,7 @@ _wpsc_deprecated_file(
 	__FILE__,
 	'3.9',
 	'/wpsc-components/theme-engine-v1/classes/checkout-ajax.php',
-	__( 'This file has been scoped specifically to the 1.0 theme engine component.', 'wpsc' )
+	__( 'This file has been scoped specifically to the 1.0 theme engine component.', 'wp-e-commerce' )
 );
 
 if ( ! function_exists( '_wpsc_get_checkout_info' ) ) {
@@ -222,7 +222,7 @@ if ( ! function_exists( '_wpsc_get_checkout_info' ) ) {
 		} elseif ( ! empty( $_REQUEST['meta_key'] ) && isset( $_REQUEST['meta_value'] ) ) {
 			$customer_meta = array( $_REQUEST['meta_key'] => $_REQUEST['meta_value'] );
 		} else {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key or meta array', 'wpsc' ), '3.8.14' );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key or meta array', 'wp-e-commerce' ), '3.8.14' );
 			$customer_meta = array();
 		}
 
@@ -259,11 +259,11 @@ if ( ! function_exists( '_wpsc_get_checkout_info' ) ) {
 				$response['error'] = '';
 			} else {
 				$response['type']  = 'error';
-				$response['error'] = __( 'meta values may not have been updated', 'wpsc' );
+				$response['error'] = __( 'meta values may not have been updated', 'wp-e-commerce' );
 			}
 		} else {
 			$response['type']  = 'error';
-			$response['error'] = __( 'invalid parameters, meta array or meta key value pair required', 'wpsc' );
+			$response['error'] = __( 'invalid parameters, meta array or meta key value pair required', 'wp-e-commerce' );
 		}
 
 		// Let's see what the current state of the customer meta set is after we applied the requested updates

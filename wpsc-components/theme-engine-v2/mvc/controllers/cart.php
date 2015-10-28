@@ -21,7 +21,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		global $wpsc_cart;
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-add-to-cart-{$product_id}" ) ) {
-			wp_die( __( 'Request expired. Please try adding the item to your cart again.', 'wpsc' ) );
+			wp_die( __( 'Request expired. Please try adding the item to your cart again.', 'wp-e-commerce' ) );
 		}
 
 		extract( $_REQUEST, EXTR_SKIP );
@@ -52,7 +52,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 			if ( $variation_product_id > 0 ) {
 				$product_id = $variation_product_id;
 			} else {
-				$this->message_collection->add( __( 'This variation combination is no longer available.  Please choose a different combination.', 'wpsc' ), 'error', 'main', 'flash' );
+				$this->message_collection->add( __( 'This variation combination is no longer available.  Please choose a different combination.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
 				wp_safe_redirect( wp_get_referer() );
 				exit;
 			}
@@ -81,7 +81,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		$parameters = array_merge( $defaults, $provided_parameters );
 
 		if ( $parameters['quantity'] <= 0 ) {
-			$this->message_collection->add( __( 'Sorry, but the quantity you just entered is not valid. Please try again.', 'wpsc' ), 'error', 'main', 'flash' );
+			$this->message_collection->add( __( 'Sorry, but the quantity you just entered is not valid. Please try again.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
 			return;
 		}
 
@@ -93,12 +93,12 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 
 		if ( $stock !== '' && $remaining_quantity !== true ) {
 			if ( $remaining_quantity <= 0 ) {
-				$message = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, the product "%s" is out of stock.', 'wpsc' ) );
+				$message = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, the product "%s" is out of stock.', 'wp-e-commerce' ) );
 				$this->message_collection->add( sprintf( $message, $product->post_title ), 'error', 'main', 'flash' );
 				wp_safe_redirect( wp_get_referer() );
 				exit;
 			} elseif ( $remaining_quantity < $parameters['quantity'] ) {
-				$message = __( 'Sorry, but the quantity you just specified is larger than the available stock. There are only %d of the item in stock.', 'wpsc' );
+				$message = __( 'Sorry, but the quantity you just specified is larger than the available stock. There are only %d of the item in stock.', 'wp-e-commerce' );
 				$this->message_collection->add( sprintf( $message, $remaining_quantity ), 'error', 'main', 'flash' );
 				wp_safe_redirect( wp_get_referer() );
 				exit;
@@ -106,19 +106,19 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		}
 
 		if ( wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ) ) {
-			$message = apply_filters( 'wpsc_add_to_cart_variation_missing_message', sprintf( __( 'This product has several options to choose from.<br /><br /><a href="%s" style="display:inline; float:none; margin: 0; padding: 0;">Visit the product page</a> to select options.', 'wpsc' ), esc_url( get_permalink( $product_id ) ) ), $product_id );
+			$message = apply_filters( 'wpsc_add_to_cart_variation_missing_message', sprintf( __( 'This product has several options to choose from.<br /><br /><a href="%s" style="display:inline; float:none; margin: 0; padding: 0;">Visit the product page</a> to select options.', 'wp-e-commerce' ), esc_url( get_permalink( $product_id ) ) ), $product_id );
 			$this->message_collection->add( sprintf( $message, $product->post_title ), 'error', 'main', 'flash' );
 			wp_safe_redirect( wp_get_referer() );
 			exit;
 		}
 
 		if ( $wpsc_cart->set_item( $product_id, $parameters ) ) {
-			$message = sprintf( __( 'You just added %s to your cart.', 'wpsc' ), $product->post_title );
+			$message = sprintf( __( 'You just added %s to your cart.', 'wp-e-commerce' ), $product->post_title );
 			$this->message_collection->add( $message, 'success', 'main', 'flash' );
 			wp_safe_redirect( wpsc_get_cart_url() );
 			exit;
 		} else {
-			$this->message_collection->add( __( 'An unknown error just occured. Please contact the shop administrator.', 'wpsc' ), 'error', 'main', 'flash' );
+			$this->message_collection->add( __( 'An unknown error just occured. Please contact the shop administrator.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
 			wp_safe_redirect( wp_get_referer() );
 			exit;
 		}
@@ -129,7 +129,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		global $wpsc_cart;
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], 'wpsc-cart-update' ) ) {
-			wp_die( __( 'Request expired. Please try updating the items in your cart again.', 'wpsc' ) );
+			wp_die( __( 'Request expired. Please try updating the items in your cart again.', 'wp-e-commerce' ) );
 		}
 
 		$changed    = 0;
@@ -143,13 +143,13 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 				$product = get_post( $item->product_id );
 
 				if ( ! is_numeric( $quantity[ $key ] ) ) {
-					$message = sprintf( __( 'Invalid quantity for %s.', 'wpsc' ), $product->post_title );
+					$message = sprintf( __( 'Invalid quantity for %s.', 'wp-e-commerce' ), $product->post_title );
 					$this->message_collection->add( $message, 'error' );
 					continue;
 				}
 
 				if ( $quantity[ $key ] < wpsc_product_min_cart_quantity( $item->product_id ) ) {
-					$message = __( 'Sorry, but the quantity you just specified is lower than the minimum allowed quantity of %s. You must purchase at least %s at a time.', 'wpsc' );
+					$message = __( 'Sorry, but the quantity you just specified is lower than the minimum allowed quantity of %s. You must purchase at least %s at a time.', 'wp-e-commerce' );
 					$this->message_collection->add( sprintf( $message, $product->post_title, number_format_i18n( wpsc_product_min_cart_quantity( $item->product_id ) ) ), 'error' );
 					$has_errors = true;
 					continue;
@@ -159,21 +159,21 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 					$product = WPSC_Product::get_instance( $item->product_id );
 
 					if ( ! $product->has_stock ) {
-						$message = __( "Sorry, all the remaining stock of %s has been claimed. You can only checkout with the current quantity in your cart.", 'wpsc' );
+						$message = __( "Sorry, all the remaining stock of %s has been claimed. You can only checkout with the current quantity in your cart.", 'wp-e-commerce' );
 						$this->message_collection->add( sprintf( $message, $product->post->post_title ), 'error' );
 						$has_errors = true;
 						continue;
 					}
 
 					if ( $product->has_limited_stock && $product->stock < $item->quantity ) {
-						$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current number of that product in your cart, you can only add %d more.', 'wpsc' );
+						$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current number of that product in your cart, you can only add %d more.', 'wp-e-commerce' );
 						$this->message_collection->add( sprintf( $message, $product->post->post_title, $product->stock ), 'error' );
 						$has_errors = true;
 						continue;
 					}
 
 					if ( $quantity[ $key ] > wpsc_product_max_cart_quantity( $item->product_id ) ) {
-						$message = __( 'Sorry, but the quantity you just specified is larger than the maximum allowed quantity of %s. You may only purchase %s at a time.', 'wpsc' );
+						$message = __( 'Sorry, but the quantity you just specified is larger than the maximum allowed quantity of %s. You may only purchase %s at a time.', 'wp-e-commerce' );
 						$this->message_collection->add( sprintf( $message, $product->post->post_title, number_format_i18n( wpsc_product_max_cart_quantity( $item->product_id ) ) ), 'error' );
 						$has_errors = true;
 						continue;
@@ -194,7 +194,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		}
 
 		if ( $changed ) {
-			$message = _n( 'You just successfully updated the quantity for %d item.', 'You just successfully updated the quantity for %d items.', $changed, 'wpsc' );
+			$message = _n( 'You just successfully updated the quantity for %d item.', 'You just successfully updated the quantity for %d items.', $changed, 'wp-e-commerce' );
 			$this->message_collection->add( sprintf( $message, $changed ), 'success' );
 		}
 	}
@@ -222,9 +222,9 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		}
 
 		if ( $wpsc_coupons->errormsg || empty( $_POST['coupon_code'] ) ) {
-			$this->message_collection->add( __( 'Coupon not applied.', 'wpsc' ), 'error', 'main', 'flash' );
+			$this->message_collection->add( __( 'Coupon not applied.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
 		} else {
-			$this->message_collection->add( __( 'Coupon applied.', 'wpsc' ), 'success', 'main', 'flash' );
+			$this->message_collection->add( __( 'Coupon applied.', 'wp-e-commerce' ), 'success', 'main', 'flash' );
 		}
 
 		wp_safe_redirect( wp_get_referer() );
@@ -236,22 +236,22 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		global $wpsc_cart;
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], 'wpsc-clear-cart' ) ) {
-			wp_die( __( 'Request expired. Please go back and try clearing the cart again.', 'wpsc' ) );
+			wp_die( __( 'Request expired. Please go back and try clearing the cart again.', 'wp-e-commerce' ) );
 		}
 
 		$wpsc_cart->empty_cart();
-		$this->message_collection->add( __( 'Shopping cart emptied.', 'wpsc' ) );
+		$this->message_collection->add( __( 'Shopping cart emptied.', 'wp-e-commerce' ) );
 	}
 
 	public function remove( $key ) {
 		global $wpsc_cart;
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-remove-cart-item-{$key}" ) ) {
-			wp_die( __( 'Request expired. Please go back and try removing the cart item again.', 'wpsc' ) );
+			wp_die( __( 'Request expired. Please go back and try removing the cart item again.', 'wp-e-commerce' ) );
 		}
 
 		$wpsc_cart->remove_item( $key );
-		$this->message_collection->add( __( 'Item removed.', 'wpsc' ), 'success', 'main', 'flash' );
+		$this->message_collection->add( __( 'Item removed.', 'wp-e-commerce' ), 'success', 'main', 'flash' );
 
 		wp_safe_redirect( wp_get_referer() );
 		exit;

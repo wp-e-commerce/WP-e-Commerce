@@ -16,10 +16,10 @@ class WP_Widget_Donations extends WP_Widget {
 
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_donations',
-			'description' => __( 'Donations Widget', 'wpsc' )
+			'description' => __( 'Donations Widget', 'wp-e-commerce' )
 		);
 
-		parent::__construct( 'wpsc_donations', __( '(WPEC) Product Donations', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_donations', __( '(WPEC) Product Donations', 'wp-e-commerce' ), $widget_ops );
 
 	}
 
@@ -46,7 +46,7 @@ class WP_Widget_Donations extends WP_Widget {
 
 		if ( $donation_count > 0 ) {
 			echo $before_widget;
-			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Donations', 'wpsc'  ) : $instance['title'] );
+			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Donations', 'wp-e-commerce'  ) : $instance['title'] );
 			if ( $title ) {
 				echo $before_title . $title . $after_title;
 			}
@@ -84,7 +84,7 @@ class WP_Widget_Donations extends WP_Widget {
 
 		// Defaults
 		$instance = wp_parse_args( (array)$instance, array(
-			'title' => __( 'Product Donations', 'wpsc' )
+			'title' => __( 'Product Donations', 'wp-e-commerce' )
 		) );
 
 		// Values
@@ -92,7 +92,7 @@ class WP_Widget_Donations extends WP_Widget {
 
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc'  ); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wp-e-commerce'  ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<?php
@@ -161,8 +161,8 @@ function wpsc_donations( $args = null ) {
 			$output .= "<input type='hidden' name='product_id' value='" . $product['ID'] . "'/>";
 			$output .= "<input type='hidden' name='item' value='" . $product['ID'] . "' />";
 			$output .= "<input type='hidden' name='wpsc_ajax_action' value='add_to_cart' />";
-			$output .= "<label for='donation_widget_price_" . $product['ID'] . "'>" . __( 'Donation', 'wpsc' ) . ":</label> $currency_symbol<input type='text' id='donation_widget_price_" . $product['ID'] . "' name='donation_price' value='" . esc_attr( number_format( $price, 2 ) ) . "' size='6' /><br />";
-			$output .= "<input type='submit' id='donation_widget_" . $product['ID'] . "_submit_button' name='Buy' class='wpsc_buy_button' value='" . __( 'Add To Cart', 'wpsc' ) . "' />";
+			$output .= "<label for='donation_widget_price_" . $product['ID'] . "'>" . __( 'Donation', 'wp-e-commerce' ) . ":</label> $currency_symbol<input type='text' id='donation_widget_price_" . $product['ID'] . "' name='donation_price' value='" . esc_attr( number_format( $price, 2 ) ) . "' size='6' /><br />";
+			$output .= "<input type='submit' id='donation_widget_" . $product['ID'] . "_submit_button' name='Buy' class='wpsc_buy_button' value='" . __( 'Add To Cart', 'wp-e-commerce' ) . "' />";
 			$output .= "</form>";
 			$output .= "</div>";
 		}

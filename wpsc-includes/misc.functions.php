@@ -102,22 +102,22 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 
 	// Check the username
 	if ( $user_login == '' ) {
-		$errors->add( 'empty_username', __( '<strong>ERROR</strong>: Please enter a username.', 'wpsc' ) );
+		$errors->add( 'empty_username', __( '<strong>ERROR</strong>: Please enter a username.', 'wp-e-commerce' ) );
 	} elseif ( !validate_username( $user_login ) ) {
-		$errors->add( 'invalid_username', __( '<strong>ERROR</strong>: This username is invalid.  Please enter a valid username.', 'wpsc' ) );
+		$errors->add( 'invalid_username', __( '<strong>ERROR</strong>: This username is invalid.  Please enter a valid username.', 'wp-e-commerce' ) );
 		$user_login = '';
 	} elseif ( username_exists( $user_login ) ) {
-		$errors->add( 'username_exists', __( '<strong>ERROR</strong>: This username is already registered, please choose another one.', 'wpsc' ) );
+		$errors->add( 'username_exists', __( '<strong>ERROR</strong>: This username is already registered, please choose another one.', 'wp-e-commerce' ) );
 	}
 
 	// Check the e-mail address
 	if ( $user_email == '' ) {
-		$errors->add( 'empty_email', __( '<strong>ERROR</strong>: Please type your e-mail address.', 'wpsc' ) );
+		$errors->add( 'empty_email', __( '<strong>ERROR</strong>: Please type your e-mail address.', 'wp-e-commerce' ) );
 	} elseif ( !is_email( $user_email ) ) {
-		$errors->add( 'invalid_email', __( '<strong>ERROR</strong>: The email address isn&#8217;t correct.', 'wpsc' ) );
+		$errors->add( 'invalid_email', __( '<strong>ERROR</strong>: The email address isn&#8217;t correct.', 'wp-e-commerce' ) );
 		$user_email = '';
 	} elseif ( email_exists( $user_email ) ) {
-		$errors->add( 'email_exists', __( '<strong>ERROR</strong>: This email is already registered, please choose another one.', 'wpsc' ) );
+		$errors->add( 'email_exists', __( '<strong>ERROR</strong>: This email is already registered, please choose another one.', 'wp-e-commerce' ) );
 	}
 
 	if ( $errors->get_error_code() ) {
@@ -125,7 +125,7 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 	}
 	$user_id = wp_create_user( $user_login, $user_pass, $user_email );
 	if ( !$user_id ) {
-		$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'wpsc' ), get_option( 'admin_email' ) ) );
+		$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'wp-e-commerce' ), get_option( 'admin_email' ) ) );
 		return $errors;
 	}
 
@@ -634,7 +634,7 @@ function wpsc_check_memory_limit() {
 		foreach ( $sizes as $size ) {
 			// very, very rough estimation
 			if ( $freeMemory < round( $size['width'] * $size['height'] * 5.09 ) ) {
-				$result = sprintf( __( 'Please refrain from uploading images larger than <strong>%d x %d</strong> pixels', 'wpsc' ), $size['width'], $size['height'] );
+				$result = sprintf( __( 'Please refrain from uploading images larger than <strong>%d x %d</strong> pixels', 'wp-e-commerce' ), $size['width'], $size['height'] );
 				return $result;
 			}
 		}
@@ -721,7 +721,7 @@ function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
 	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_function_trigger_error', true ) ) {
 		if ( ! is_null( $replacement ) )
 			trigger_error(
-				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s! Use %3$s instead.', 'wpsc' ),
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s! Use %3$s instead.', 'wp-e-commerce' ),
 					$function,
 					$version,
 					$replacement
@@ -729,7 +729,7 @@ function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
 			);
 		else
 			trigger_error(
-				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wpsc' ),
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wp-e-commerce' ),
 					$function,
 					$version
 				)
@@ -770,7 +770,7 @@ function _wpsc_deprecated_file( $file, $version, $replacement = null, $message =
 		$message = empty( $message ) ? '' : ' ' . $message;
 		if ( ! is_null( $replacement ) )
 			trigger_error(
-				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s! Use %3$s instead.', 'wpsc' ),
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s! Use %3$s instead.', 'wp-e-commerce' ),
 					$file,
 					$version,
 					$replacement
@@ -778,7 +778,7 @@ function _wpsc_deprecated_file( $file, $version, $replacement = null, $message =
 			);
 		else
 			trigger_error(
-				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wpsc' ),
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wp-e-commerce' ),
 					$file,
 					$version
 				) . $message
@@ -826,7 +826,7 @@ function _wpsc_deprecated_argument( $function, $version, $message = null ) {
 		if ( ! is_null( $message ) )
 			trigger_error(
 				sprintf(
-					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP eCommerce version %2$s! %3$s', 'wpsc' ),
+					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP eCommerce version %2$s! %3$s', 'wp-e-commerce' ),
 					$function,
 					$version,
 					$message
@@ -835,7 +835,7 @@ function _wpsc_deprecated_argument( $function, $version, $message = null ) {
 		else
 			trigger_error(
 				sprintf(
-					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wpsc' ),
+					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wp-e-commerce' ),
 					$function,
 					$version
 				)
@@ -871,11 +871,11 @@ function _wpsc_doing_it_wrong( $function, $message, $version ) {
 	if ( WP_DEBUG && apply_filters( 'wpsc_doing_it_wrong_trigger_error', true ) ) {
 		$version =   is_null( $version )
 		           ? ''
-		           : sprintf( __( '(This message was added in WP eCommerce version %s.)', 'wpsc' ), $version );
-		$message .= ' ' . __( 'Please see <a href="http://codex.wordpress.org/Debugging_in_WordPress">Debugging in WordPress</a> for more information.', 'wpsc' );
+		           : sprintf( __( '(This message was added in WP eCommerce version %s.)', 'wp-e-commerce' ), $version );
+		$message .= ' ' . __( 'Please see <a href="http://codex.wordpress.org/Debugging_in_WordPress">Debugging in WordPress</a> for more information.', 'wp-e-commerce' );
 		trigger_error(
 			sprintf(
-				__( '%1$s was called <strong>incorrectly</strong>. %2$s %3$s', 'wpsc' ),
+				__( '%1$s was called <strong>incorrectly</strong>. %2$s %3$s', 'wp-e-commerce' ),
 				$function,
 				$message,
 				$version

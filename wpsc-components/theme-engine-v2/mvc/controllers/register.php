@@ -20,7 +20,7 @@ class WPSC_Controller_Register extends WPSC_Controller {
 	}
 
 	public function filter_fields_dont_match_message() {
-		return __( 'The password fields do not match.', 'wpsc' );
+		return __( 'The password fields do not match.', 'wp-e-commerce' );
 	}
 
 	private function callback_register() {

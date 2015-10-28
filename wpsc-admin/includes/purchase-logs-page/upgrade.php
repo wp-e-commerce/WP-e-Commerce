@@ -1,13 +1,13 @@
 <div class='wrap'>
 
-<h2><?php esc_html_e( 'Sales Upgrade Fix', 'wpsc' ); ?> </h2>
+<h2><?php esc_html_e( 'Sales Upgrade Fix', 'wp-e-commerce' ); ?> </h2>
 
 <?php if ( $numChanged != 0 && $numQueries != 0 ): ?>
 	<div class="updated">
-		<p><?php printf( __( 'Your purchase logs have been updated! <a href="%s">Click here</a> to return.' , 'wpsc' ), esc_url( remove_query_arg( 'c' ) ) ); ?></p>
+		<p><?php printf( __( 'Your purchase logs have been updated! <a href="%s">Click here</a> to return.' , 'wp-e-commerce' ), esc_url( remove_query_arg( 'c' ) ) ); ?></p>
 	</div>
 <?php else: ?>
-	<p><?php _e( 'Upgrading to WP eCommerce 3.7 and later requires you to run this fix once. The following boxes correspond to the form fields in your current checkout page.  All you have to do is select from the drop-down menu box what each of the following fields represent. Sorry for any inconvenience caused, but we\'re sure you\'ll agree that the new purchase logs are worth this minor hassle.', 'wpsc' ); ?> </p>
+	<p><?php _e( 'Upgrading to WP eCommerce 3.7 and later requires you to run this fix once. The following boxes correspond to the form fields in your current checkout page.  All you have to do is select from the drop-down menu box what each of the following fields represent. Sorry for any inconvenience caused, but we\'re sure you\'ll agree that the new purchase logs are worth this minor hassle.', 'wp-e-commerce' ); ?> </p>
 
 	<div class="metabox-holder" style="width:700px">
 	<form action='' method='post'>
@@ -38,7 +38,7 @@
 
 		}
 		?>
-		<input type='submit' value='<?php _e( 'Apply', 'wpsc' ); ?>' class='button-secondary action' />
+		<input type='submit' value='<?php _e( 'Apply', 'wp-e-commerce' ); ?>' class='button-secondary action' />
 	</form>
 	</div>
 <?php endif; ?>

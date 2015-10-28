@@ -5,7 +5,7 @@ class WPSC_Widget_On_Sale extends WP_Widget {
 
 	public function __construct() {
 		$this->defaults = array(
-			'title'             => __( 'Products On Sale', 'wpsc' ),
+			'title'             => __( 'Products On Sale', 'wp-e-commerce' ),
 			'width'             => 45,
 			'height'            => 45,
 			'show_name'         => true,
@@ -19,9 +19,9 @@ class WPSC_Widget_On_Sale extends WP_Widget {
 
 		parent::__construct(
 			'wpsc_widget_on_sale',
-			__( '(WPEC) Products On Sale', 'wpsc' ),
+			__( '(WPEC) Products On Sale', 'wp-e-commerce' ),
 			array(
-				'description' => __( 'WP eCommerce Product On Sale Widget', 'wpsc' )
+				'description' => __( 'WP eCommerce Product On Sale Widget', 'wp-e-commerce' )
 			)
 		);
 	}

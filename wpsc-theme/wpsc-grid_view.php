@@ -71,12 +71,12 @@ $image_height = get_option('product_image_height');
 				<?php else: ?>
 					<div class="item_no_image">
 									<a href="<?php echo wpsc_the_product_permalink(); ?>">
-									<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php esc_attr_e( 'No Image', 'wpsc' ); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/noimage.png" width="<?php echo get_option('product_image_width'); ?>" height="<?php echo get_option('product_image_height'); ?>" />
+									<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php esc_attr_e( 'No Image', 'wp-e-commerce' ); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/noimage.png" width="<?php echo get_option('product_image_width'); ?>" height="<?php echo get_option('product_image_height'); ?>" />
 									</a>
 					</div><!--close item_no_image-->
 				<?php endif; ?>
 
-				<?php if(wpsc_product_on_special()) : ?><span class="sale"><?php _e('Sale', 'wpsc'); ?></span><?php endif; ?>
+				<?php if(wpsc_product_on_special()) : ?><span class="sale"><?php _e('Sale', 'wp-e-commerce'); ?></span><?php endif; ?>
 				<?php if(get_option('show_images_only') != 1): ?>
 					<div class="grid_product_info">
 							<h2 class="prodtitle"><a href="<?php echo wpsc_the_product_permalink(); ?>" title="<?php echo wpsc_the_product_title(); ?>"><?php echo wpsc_the_product_title(); ?></a></h2>
@@ -87,11 +87,11 @@ $image_height = get_option('product_image_height');
                         	<div class="price_container">
                         		<?php wpsc_the_product_price_display( array( 'output_you_save' => false ) ); ?>
 								<?php if(wpsc_show_pnp()) : ?>
-									<p class="pricedisplay"><?php _e('Shipping:', 'wpsc'); ?> <span class="pp_price"><?php echo wpsc_product_postage_and_packaging(); ?></span></p>
+									<p class="pricedisplay"><?php _e('Shipping:', 'wp-e-commerce'); ?> <span class="pp_price"><?php echo wpsc_product_postage_and_packaging(); ?></span></p>
 								<?php endif; ?>
 							</div><!--close price_container-->
 						<?php if(get_option('display_moredetails') == 1) : ?>
-							<a href="<?php echo wpsc_the_product_permalink(); ?>" class="more_details"><?php esc_html_e( 'More Details', 'wpsc' ); ?></a>
+							<a href="<?php echo wpsc_the_product_permalink(); ?>" class="more_details"><?php esc_html_e( 'More Details', 'wp-e-commerce' ); ?></a>
 						<?php endif; ?>
 					</div><!--close grid_product_info-->
 					<div class="grid_more_info">
@@ -104,7 +104,7 @@ $image_height = get_option('product_image_height');
 							<?php if(get_option('display_variations') == 1) : ?>
 								<?php /** the variation group HTML and loop */ ?>
                                 <?php if (wpsc_have_variation_groups()) : ?>
-                         <fieldset><legend><?php _e('Product Options', 'wpsc'); ?></legend>
+                         <fieldset><legend><?php _e('Product Options', 'wp-e-commerce'); ?></legend>
 						<div class="wpsc_variation_forms">
                         	<table>
 							<?php while (wpsc_have_variation_groups()) : wpsc_the_variation_group(); ?>
@@ -117,7 +117,7 @@ $image_height = get_option('product_image_height');
 								</select></td></tr>
 							<?php endwhile; ?>
                             </table>
-   							<div id="variation_display_<?php echo wpsc_the_product_id(); ?>" class="is_variation"><?php _e('Combination of product variants is not available', 'wpsc'); ?></div>
+   							<div id="variation_display_<?php echo wpsc_the_product_id(); ?>" class="is_variation"><?php _e('Combination of product variants is not available', 'wp-e-commerce'); ?></div>
 						</div><!--close wpsc_variation_forms-->
                         </fieldset>
 								<?php /** the variation group HTML and loop ends here */?>
@@ -127,23 +127,23 @@ $image_height = get_option('product_image_height');
 								<?php if(wpsc_product_has_stock()) : ?>
 									<?php if(wpsc_has_multi_adding()): ?>
 		                            <div class="quantity_container">
-										<label class="wpsc_quantity_update" for="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>"><?php _e('Quantity:', 'wpsc'); ?></label>
+										<label class="wpsc_quantity_update" for="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>"><?php _e('Quantity:', 'wp-e-commerce'); ?></label>
 										<input type="text" id="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>" name="wpsc_quantity_update" size="2" value="1" />
 										<input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>"/>
 										<input type="hidden" name="wpsc_update_quantity" value="true" />
 										<input type='hidden' name='wpsc_ajax_action' value='wpsc_update_quantity' />
 									</div><!--close quantity_container-->
 									<?php endif ;?>
-									<input type="submit" value="<?php _e('Add To Cart', 'wpsc'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button"/>
+									<input type="submit" value="<?php _e('Add To Cart', 'wp-e-commerce'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button"/>
 								<?php else : ?>
-									<p class="soldout"><?php _e('Sorry, sold out!', 'wpsc'); ?></p>
+									<p class="soldout"><?php _e('Sorry, sold out!', 'wp-e-commerce'); ?></p>
 								<?php endif ; ?>
 							<?php endif; ?>
 
 
 										<div class="wpsc_loading_animation">
-											<img title="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
-											<?php _e('Updating cart...', 'wpsc'); ?>
+											<img title="<?php esc_attr_e( 'Loading', 'wp-e-commerce' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wp-e-commerce' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
+											<?php _e('Updating cart...', 'wp-e-commerce'); ?>
 										</div><!--close wpsc_loading_animation-->
 						<?php do_action ( 'wpsc_product_form_fields_end' ); ?>
                     </form>
@@ -164,7 +164,7 @@ $image_height = get_option('product_image_height');
 		<?php endwhile; ?>
 
 		<?php if(wpsc_product_count() == 0):?>
-			<p><?php  _e('There are no products in this group.', 'wpsc'); ?></p>
+			<p><?php  _e('There are no products in this group.', 'wp-e-commerce'); ?></p>
 		<?php endif ; ?>
 
 

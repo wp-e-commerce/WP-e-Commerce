@@ -95,7 +95,7 @@ class WPSC_Country {
 		switch ( $property_name ) {
 			case 'region_label':
 				if ( empty( $property_value ) ) {
-					$property_value = __( 'State/Province', 'wpsc' );
+					$property_value = __( 'State/Province', 'wp-e-commerce' );
 				}
 
 				break;
@@ -329,7 +329,7 @@ class WPSC_Country {
 
 			if ( property_exists( $this, $property_name ) ) {
 				$value = $this->$property_name;
-				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Using set to change a well-known WPSC_Country property is deprecated as of version 3.8.14.  Use the class constructor and specify all properties together to perform and insert or an update.', 'wpsc' ), '3.8.14' );
+				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Using set to change a well-known WPSC_Country property is deprecated as of version 3.8.14.  Use the class constructor and specify all properties together to perform and insert or an update.', 'wp-e-commerce' ), '3.8.14' );
 				if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
 					$country_array = $this->as_array();
 					$country_array[$key] = $value;
@@ -719,7 +719,7 @@ class WPSC_Country {
 	*/
 	public function save() {
 		if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'As of version 3.8.14 calling WPSC_Country class method "save" is not required. Changes to WPSC_Country properties are saved automatically.', 'wpsc' ), '3.8.14'  );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'As of version 3.8.14 calling WPSC_Country class method "save" is not required. Changes to WPSC_Country properties are saved automatically.', 'wp-e-commerce' ), '3.8.14'  );
 		}
 	}
 
@@ -738,7 +738,7 @@ class WPSC_Country {
 
 	private static function _function_not_available_message( $function = 'called', $replacement = '' ) {
 		$message = sprintf(
-							__( 'As of version 3.8.14 the function "%s" is no longer available in class %s. Use %s instead', 'wpsc' ),
+							__( 'As of version 3.8.14 the function "%s" is no longer available in class %s. Use %s instead', 'wp-e-commerce' ),
 							$function,
 							__CLASS__,
 							$replacement
@@ -749,7 +749,7 @@ class WPSC_Country {
 
 	private static function _parameter_no_longer_used_message( $parameter, $function = 'called' ) {
 		$message = sprintf(
-				__( 'As of version 3.8.14 the parameter "%s" for function %s is no longer used in class %s.', 'wpsc' ),
+				__( 'As of version 3.8.14 the parameter "%s" for function %s is no longer used in class %s.', 'wp-e-commerce' ),
 				$parameter,
 				$function,
 				__CLASS__

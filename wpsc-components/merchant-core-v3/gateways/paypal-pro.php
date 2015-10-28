@@ -18,7 +18,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	public function __construct( $options ) {
 		parent::__construct();
 
-		$this->title = __( 'PayPal Pro Hosted', 'wpsc' );
+		$this->title = __( 'PayPal Pro Hosted', 'wp-e-commerce' );
 
 		require_once( 'php-merchant/gateways/paypal-pro.php' );
 
@@ -82,7 +82,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		if ( wpsc_is_checkout() ) {
 			$pro_loc = array(
 				'spinner_url' => wpsc_get_ajax_spinner(),
-				'loading'     => __( 'Loading...', 'wpsc' ),
+				'loading'     => __( 'Loading...', 'wp-e-commerce' ),
 			);
 			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
 			wp_enqueue_style( 'pro-style-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
@@ -342,7 +342,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		ob_start();
 ?>
 		<p>
-			<?php _e( 'Sorry, your transaction could not be processed by PayPal. Please contact the site administrator. The following errors are returned:' , 'wpsc' ); ?>
+			<?php _e( 'Sorry, your transaction could not be processed by PayPal. Please contact the site administrator. The following errors are returned:' , 'wp-e-commerce' ); ?>
 		</p>
 		<ul>
 			<?php foreach ( $errors as $error ): ?>
@@ -363,8 +363,8 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	public function filter_generic_error_page() {
 		ob_start();
 ?>
-			<p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' , 'wpsc' ); ?></p>
-			<p><a href="<?php echo esc_attr( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.', 'wpsc' ) ?></a></p>
+			<p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' , 'wp-e-commerce' ); ?></p>
+			<p><a href="<?php echo esc_attr( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.', 'wp-e-commerce' ) ?></a></p>
 <?php
 		$output = apply_filters( 'wpsc_paypal_pro_generic_error_message', ob_get_clean() );
 		return $output;
@@ -382,12 +382,12 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		<!-- Account Credentials -->
 		<tr>
 			<td colspan="2">
-				<h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
+				<h4><?php _e( 'Account Credentials', 'wp-e-commerce' ); ?></h4>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-paypal-pro-vendor-id"><?php _e( 'Vendor ID', 'wpsc' ); ?></label>
+				<label for="wpsc-paypal-pro-vendor-id"><?php _e( 'Vendor ID', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'vendor_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'vendor_id' ) ); ?>" id="wpsc-paypal-pro-vendor-id" />
@@ -395,7 +395,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-paypal-pro-api-username"><?php _e( 'API Username', 'wpsc' ); ?></label>
+				<label for="wpsc-paypal-pro-api-username"><?php _e( 'API Username', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_username' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_username' ) ); ?>" id="wpsc-paypal-pro-api-username" />
@@ -403,7 +403,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-paypal-pro-api-password"><?php _e( 'API Password', 'wpsc' ); ?></label>
+				<label for="wpsc-paypal-pro-api-password"><?php _e( 'API Password', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_password' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_password' ) ); ?>" id="wpsc-paypal-pro-api-password" />
@@ -411,7 +411,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-paypal-pro-api-signature"><?php _e( 'API Signature', 'wpsc' ); ?></label>
+				<label for="wpsc-paypal-pro-api-signature"><?php _e( 'API Signature', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_signature' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_signature' ) ); ?>" id="wpsc-paypal-pro-api-signature" />
@@ -419,20 +419,20 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		</tr>
 		<tr>
 			<td>
-				<label><?php _e( 'Sandbox Mode', 'wpsc' ); ?></label>
+				<label><?php _e( 'Sandbox Mode', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label><?php _e( 'IPN', 'wpsc' ); ?></label>
+				<label><?php _e( 'IPN', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'ipn' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'ipn' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'ipn' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'ipn' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
 		</tr>
 
@@ -440,17 +440,17 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		<?php if ( ! $this->is_currency_supported() ): ?>
 			<tr>
 				<td colspan="2">
-					<h4><?php _e( 'Currency Conversion', 'wpsc' ); ?></h4>
+					<h4><?php _e( 'Currency Conversion', 'wp-e-commerce' ); ?></h4>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
-					<p><?php _e( 'Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to PayPal, WP eCommerce has to convert the amounts into one of PayPal supported currencies. Please select your preferred currency below.', 'wpsc' ); ?></p>
+					<p><?php _e( 'Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to PayPal, WP eCommerce has to convert the amounts into one of PayPal supported currencies. Please select your preferred currency below.', 'wp-e-commerce' ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<label for "wpsc-paypal-pro-currency"><?php _e( 'PayPal Currency', 'wpsc' ); ?></label>
+					<label for "wpsc-paypal-pro-currency"><?php _e( 'PayPal Currency', 'wp-e-commerce' ); ?></label>
 				</td>
 				<td>
 					<select name="<?php echo esc_attr( $this->setting->get_field_name( 'currency' ) ); ?>" id="wpsc-paypal-pro-currency">
@@ -465,16 +465,16 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		<!-- Error Logging -->
 		<tr>
 			<td colspan="2">
-				<h4><?php _e( 'Error Logging', 'wpsc' ); ?></h4>
+				<h4><?php _e( 'Error Logging', 'wp-e-commerce' ); ?></h4>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label><?php _e( 'Enable Debugging', 'wpsc' ); ?></label>
+				<label><?php _e( 'Enable Debugging', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
 		</tr>
 <?php

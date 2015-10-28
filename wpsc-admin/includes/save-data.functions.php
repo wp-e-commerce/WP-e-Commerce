@@ -73,7 +73,7 @@ function wpsc_custom_category_columns( $columns ) {
 
 	$custom_array = array(
 		'cb' => '<input type="checkbox" />',
-		'image' => __( 'Image', 'wpsc' )
+		'image' => __( 'Image', 'wp-e-commerce' )
 	);
 
 	$columns = array_merge( $custom_array, $columns );
@@ -155,29 +155,29 @@ function wpsc_admin_category_forms_add() {
 	$display_type = isset( $category['display_type'] ) ? $category['display_type'] : '';
 	?>
 
-	<h3><?php esc_html_e('Advanced Store Settings', 'wpsc'); ?></h3>
-	<h4><?php esc_html_e('Presentation Settings', 'wpsc'); ?></h4>
-	<p class='description'><?php esc_html_e( 'These settings override the general presentation settings found in Settings &gt; Store &gt; Presentation.', 'wpsc' ); ?></p>
+	<h3><?php esc_html_e('Advanced Store Settings', 'wp-e-commerce'); ?></h3>
+	<h4><?php esc_html_e('Presentation Settings', 'wp-e-commerce'); ?></h4>
+	<p class='description'><?php esc_html_e( 'These settings override the general presentation settings found in Settings &gt; Store &gt; Presentation.', 'wp-e-commerce' ); ?></p>
 	<div style="margin: 15px 0 15px 0">
-		<label for='image'><?php esc_html_e( 'Category Image' , 'wpsc' ); ?></label>
+		<label for='image'><?php esc_html_e( 'Category Image' , 'wp-e-commerce' ); ?></label>
 		<input type='file' name='image' value='' />
 	</div>
 	<div class="form-field">
-		<label for='display_type'><?php esc_html_e( 'Product Display', 'wpsc' ); ?></label>
+		<label for='display_type'><?php esc_html_e( 'Product Display', 'wp-e-commerce' ); ?></label>
 		<select name='display_type'>
-			<option value='default'<?php checked( $display_type, 'default' ); ?>><?php esc_html_e('Default View', 'wpsc'); ?></option>
-			<option value='list'<?php disabled( _wpsc_is_display_type_supported( 'list' ), false ); ?><?php checked( $display_type, 'list' ); ?>><?php esc_html_e('List View', 'wpsc'); ?></option>
-			<option value='grid'<?php disabled( _wpsc_is_display_type_supported( 'grid' ), false ); ?><?php checked( $display_type, 'grid' ); ?>><?php esc_html_e('Grid View', 'wpsc'); ?></option>
+			<option value='default'<?php checked( $display_type, 'default' ); ?>><?php esc_html_e('Default View', 'wp-e-commerce'); ?></option>
+			<option value='list'<?php disabled( _wpsc_is_display_type_supported( 'list' ), false ); ?><?php checked( $display_type, 'list' ); ?>><?php esc_html_e('List View', 'wp-e-commerce'); ?></option>
+			<option value='grid'<?php disabled( _wpsc_is_display_type_supported( 'grid' ), false ); ?><?php checked( $display_type, 'grid' ); ?>><?php esc_html_e('Grid View', 'wp-e-commerce'); ?></option>
 		</select>
 	</div>
 	<?php if ( function_exists( "getimagesize" ) ) : ?>
 		<div class="form-field">
-			<?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?>
+			<?php esc_html_e( 'Thumbnail Size', 'wp-e-commerce' ); ?>
 			<fieldset class="wpsc-width-height-fields">
-				<legend class="screen-reader-text"><span><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></span></legend>
-				<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+				<legend class="screen-reader-text"><span><?php esc_html_e( 'Thumbnail Size', 'wp-e-commerce' ); ?></span></legend>
+				<label for="image_width"><?php esc_html_e( 'Width', 'wp-e-commerce' ); ?></label>
 				<input name="image_width" type="number" step="1" min="0" id="image_width" value="<?php if ( isset( $category['image_width'] ) ) echo esc_attr( $category['image_width'] ); ?>" class="small-text" style="width: 70px">
-				<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+				<label for="large_size_h"><?php esc_html_e( 'Height', 'wp-e-commerce' ); ?></label>
 				<input name="image_height" type="number" step="1" min="0" id="image_height" value="<?php if ( isset( $category['image_height'] ) ) echo esc_attr( $category['image_height'] ); ?>" class="small-text" style="width: 70px">
 			</fieldset>
 		</div>
@@ -195,13 +195,13 @@ function wpsc_admin_category_forms_add() {
 		$countrylist       = WPSC_Countries::get_countries_array( true, true );
 		$selectedCountries = wpsc_get_meta( $category_id, 'target_market', 'wpsc_category' );
 	?>
-	<h4><?php esc_html_e( 'Restrict to Target Markets', 'wpsc' )?></h4>
+	<h4><?php esc_html_e( 'Restrict to Target Markets', 'wp-e-commerce' )?></h4>
 	<div class='form-field'>
 		<?php if ( wpsc_is_suhosin_enabled() ) : ?>
-			<em><?php esc_html_e( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.", 'wpsc' ); ?></em>
+			<em><?php esc_html_e( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.", 'wp-e-commerce' ); ?></em>
 		<?php else: ?>
 			<div class='multiple-select-container'>
-				<span><?php esc_html_e( 'Select', 'wpsc' ); ?> <a href='' class='wpsc_select_all'><?php esc_html_e( 'All', 'wpsc' ); ?></a>&nbsp; <a href='' class='wpsc_select_none'><?php esc_html_e( 'None', 'wpsc' ); ?></a></span><br />
+				<span><?php esc_html_e( 'Select', 'wp-e-commerce' ); ?> <a href='' class='wpsc_select_all'><?php esc_html_e( 'All', 'wp-e-commerce' ); ?></a>&nbsp; <a href='' class='wpsc_select_none'><?php esc_html_e( 'None', 'wp-e-commerce' ); ?></a></span><br />
 				<div id='resizeable' class='ui-widget-content multiple-select'>
 					<?php foreach( $countrylist as $country ): ?>
 						<?php if ( in_array( $country['id'], (array)$selectedCountries ) ): ?>
@@ -214,21 +214,21 @@ function wpsc_admin_category_forms_add() {
 					<?php endforeach; ?>
 				</div>
 			</div>
-			<span class='wpscsmall description'><?php esc_html_e( 'Select the markets you are selling this category to.', 'wpsc' ); ?><span>
+			<span class='wpscsmall description'><?php esc_html_e( 'Select the markets you are selling this category to.', 'wp-e-commerce' ); ?><span>
 		<?php endif; ?>
 	</div>
 
 	<!-- Checkout settings -->
-	<h4><?php esc_html_e( 'Checkout Settings', 'wpsc' ); ?></h4>
+	<h4><?php esc_html_e( 'Checkout Settings', 'wp-e-commerce' ); ?></h4>
 
 	<?php
 		if ( ! isset( $category['term_id'] ) ) $category['term_id'] = '';
 			$used_additonal_form_set = wpsc_get_categorymeta( $category['term_id'], 'use_additional_form_set' );
 	?>
 	<div class='form-field'>
-		<label for="use_additional_form_set"><?php esc_html_e( 'Category requires additional checkout form fields', 'wpsc' ); ?></label>
+		<label for="use_additional_form_set"><?php esc_html_e( 'Category requires additional checkout form fields', 'wp-e-commerce' ); ?></label>
 		<select name='use_additional_form_set'>
-			<option value=''><?php esc_html_e( 'None', 'wpsc' ); ?></option>
+			<option value=''><?php esc_html_e( 'None', 'wp-e-commerce' ); ?></option>
 			<?php
 				$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
 				unset( $checkout_sets[0] );
@@ -247,10 +247,10 @@ function wpsc_admin_category_forms_add() {
 
 	<?php $uses_billing_address = (bool)wpsc_get_categorymeta( $category['term_id'], 'uses_billing_address' ); ?>
 	<div>
-		<label><?php esc_html_e( 'Address to calculate shipping with', 'wpsc' ); ?></label>
-		<label><input type="radio" value="0" name="uses_billing_address" <?php checked( $uses_billing_address, 0 ); ?> /> <?php esc_html_e( 'Shipping Address (default)', 'wpsc' ); ?></label>
-		<label><input type="radio" value="1" name="uses_billing_address" <?php checked( $uses_billing_address, 1 ); ?> /> <?php esc_html_e( 'Billing Address', 'wpsc' ); ?></label>
-		<p class='description'><?php esc_html_e( 'Products in this category will use the address specified to calculate shipping costs.', 'wpsc' ); ?></p>
+		<label><?php esc_html_e( 'Address to calculate shipping with', 'wp-e-commerce' ); ?></label>
+		<label><input type="radio" value="0" name="uses_billing_address" <?php checked( $uses_billing_address, 0 ); ?> /> <?php esc_html_e( 'Shipping Address (default)', 'wp-e-commerce' ); ?></label>
+		<label><input type="radio" value="1" name="uses_billing_address" <?php checked( $uses_billing_address, 1 ); ?> /> <?php esc_html_e( 'Billing Address', 'wp-e-commerce' ); ?></label>
+		<p class='description'><?php esc_html_e( 'Products in this category will use the address specified to calculate shipping costs.', 'wp-e-commerce' ); ?></p>
 	</div>
 
 	<table class="category_forms">
@@ -298,31 +298,31 @@ function wpsc_admin_category_forms_edit() {
 
 	<tr>
 		<td colspan="2">
-			<h3><?php esc_html_e( 'Advanced Store Settings', 'wpsc' ); ?></h3>
-			<h4><?php esc_html_e( 'Shortcodes and Template Tags', 'wpsc' ); ?></h4>
-			<p class='description'><?php esc_html_e( 'These settings override the general presentation settings found in Settings &gt; Store &gt; Presentation.', 'wpsc' ); ?></p>
+			<h3><?php esc_html_e( 'Advanced Store Settings', 'wp-e-commerce' ); ?></h3>
+			<h4><?php esc_html_e( 'Shortcodes and Template Tags', 'wp-e-commerce' ); ?></h4>
+			<p class='description'><?php esc_html_e( 'These settings override the general presentation settings found in Settings &gt; Store &gt; Presentation.', 'wp-e-commerce' ); ?></p>
 		</td>
 	</tr>
 
 
 	<tr class="form-field">
 		<th scope="row" valign="top">
-			<label for="display_type"><?php esc_html_e( 'Catalog View', 'wpsc' ); ?></label>
+			<label for="display_type"><?php esc_html_e( 'Catalog View', 'wp-e-commerce' ); ?></label>
 		</th>
 		<td>
 			<?php
 				$display_type = isset( $category['display_type'] ) ? $category['display_type'] : '';
 			?>
 			<select name='display_type'>
-				<option value='default'<?php selected( $display_type, 'default' ); ?>><?php esc_html_e( 'Default View', 'wpsc' ); ?></option>
-				<option value='list'<?php disabled( _wpsc_is_display_type_supported( 'list' ), false ); ?><?php selected( $display_type, 'list' ); ?>><?php esc_html_e('List View', 'wpsc'); ?></option>
-				<option value='grid' <?php disabled( _wpsc_is_display_type_supported( 'grid' ), false ); ?><?php selected( $display_type, 'grid' ); ?>><?php esc_html_e( 'Grid View', 'wpsc' ); ?></option>
+				<option value='default'<?php selected( $display_type, 'default' ); ?>><?php esc_html_e( 'Default View', 'wp-e-commerce' ); ?></option>
+				<option value='list'<?php disabled( _wpsc_is_display_type_supported( 'list' ), false ); ?><?php selected( $display_type, 'list' ); ?>><?php esc_html_e('List View', 'wp-e-commerce'); ?></option>
+				<option value='grid' <?php disabled( _wpsc_is_display_type_supported( 'grid' ), false ); ?><?php selected( $display_type, 'grid' ); ?>><?php esc_html_e( 'Grid View', 'wp-e-commerce' ); ?></option>
 			</select><br />
 		</td>
 	</tr>
 		<tr class="form-field">
 			<th scope="row" valign="top">
-				<label for="image"><?php esc_html_e( 'Category Image', 'wpsc' ); ?></label>
+				<label for="image"><?php esc_html_e( 'Category Image', 'wp-e-commerce' ); ?></label>
 			</th>
 			<td>
 				<?php
@@ -331,21 +331,21 @@ function wpsc_admin_category_forms_edit() {
 					echo '<p><img src=' . esc_url( $category_image ) . ' alt="' . esc_attr( $category['name'] ) . '" title="' . esc_attr( $category['name'] ) . '" class="wpsc_category_image" /></p>';
 				?>
 				<input type='file' name='image' value='' /><br />
-				<label><input type='checkbox' name='deleteimage' class="wpsc_cat_box" value='1' /><?php esc_html_e( 'Delete Image', 'wpsc' ); ?></label><br/>
-				<span class="description"><?php esc_html_e( 'You can set an image for the category here.  If one exists, check the box to delete.', 'wpsc' ); ?></span>
+				<label><input type='checkbox' name='deleteimage' class="wpsc_cat_box" value='1' /><?php esc_html_e( 'Delete Image', 'wp-e-commerce' ); ?></label><br/>
+				<span class="description"><?php esc_html_e( 'You can set an image for the category here.  If one exists, check the box to delete.', 'wp-e-commerce' ); ?></span>
 			</td>
 	</tr>
 	<?php if ( function_exists( "getimagesize" ) ) : ?>
 		<tr class="form-field">
 			<th scope="row" valign="top">
-				<label for="image"><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></label>
+				<label for="image"><?php esc_html_e( 'Thumbnail Size', 'wp-e-commerce' ); ?></label>
 			</th>
 			<td>
 				<fieldset class="wpsc-width-height-fields">
-					<legend class="screen-reader-text"><span><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></span></legend>
-					<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+					<legend class="screen-reader-text"><span><?php esc_html_e( 'Thumbnail Size', 'wp-e-commerce' ); ?></span></legend>
+					<label for="image_width"><?php esc_html_e( 'Width', 'wp-e-commerce' ); ?></label>
 					<input name="image_width" type="number" step="1" min="0" id="image_width" value="<?php if ( isset( $category['image_width'] ) ) echo esc_attr( $category['image_width'] ); ?>" class="small-text">
-					<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+					<label for="large_size_h"><?php esc_html_e( 'Height', 'wp-e-commerce' ); ?></label>
 					<input name="image_height" type="number" step="1" min="0" id="image_height" value="<?php if ( isset( $category['image_height'] ) ) echo esc_attr( $category['image_height'] ); ?>" class="small-text">
 				</fieldset>
 			</td>
@@ -354,25 +354,25 @@ function wpsc_admin_category_forms_edit() {
 
 
 	<tr>
-		<td colspan="2"><h4><?php esc_html_e( 'Shortcodes and Template Tags', 'wpsc' ); ?></h4></td>
+		<td colspan="2"><h4><?php esc_html_e( 'Shortcodes and Template Tags', 'wp-e-commerce' ); ?></h4></td>
 	</tr>
 
 	<tr class="form-field">
 		<th scope="row" valign="top">
-			<label for="image"><?php esc_html_e( 'Display Category Shortcode', 'wpsc' ); ?></label>
+			<label for="image"><?php esc_html_e( 'Display Category Shortcode', 'wp-e-commerce' ); ?></label>
 		</th>
 		<td>
 			<code>[wpsc_products category_url_name='<?php echo $category["slug"]; ?>']</code><br />
-			<span class="description"><?php esc_html_e( 'Shortcodes are used to display a particular category or group within any WordPress page or post.', 'wpsc' ); ?></span>
+			<span class="description"><?php esc_html_e( 'Shortcodes are used to display a particular category or group within any WordPress page or post.', 'wp-e-commerce' ); ?></span>
 		</td>
 	</tr>
 	<tr class="form-field">
 		<th scope="row" valign="top">
-			<label for="image"><?php esc_html_e( 'Display Category Template Tag', 'wpsc' ); ?></label>
+			<label for="image"><?php esc_html_e( 'Display Category Template Tag', 'wp-e-commerce' ); ?></label>
 		</th>
 		<td>
 			<code>&lt;?php echo wpsc_display_products_page( array( 'category_url_name' => '<?php echo $category["slug"]; ?>' ) ); ?&gt;</code><br />
-			<span class="description"><?php esc_html_e( 'Template tags are used to display a particular category or group within your theme / template.', 'wpsc' ); ?></span>
+			<span class="description"><?php esc_html_e( 'Template tags are used to display a particular category or group within your theme / template.', 'wp-e-commerce' ); ?></span>
 		</td>
 	</tr>
 
@@ -380,7 +380,7 @@ function wpsc_admin_category_forms_edit() {
 
 	<tr>
 		<td colspan="2">
-			<h4><?php esc_html_e( 'Target Market Restrictions', 'wpsc' ); ?></h4>
+			<h4><?php esc_html_e( 'Target Market Restrictions', 'wp-e-commerce' ); ?></h4>
 		</td>
 	</tr>
 	<?php
@@ -389,13 +389,13 @@ function wpsc_admin_category_forms_edit() {
 	?>
 	<tr>
 		<th scope="row" valign="top">
-			<label for="image"><?php esc_html_e( 'Target Markets', 'wpsc' ); ?></label>
+			<label for="image"><?php esc_html_e( 'Target Markets', 'wp-e-commerce' ); ?></label>
 		</th>
 		<td>
 			<?php if ( wpsc_is_suhosin_enabled() ) : ?>
-				<em><?php esc_html_e( 'The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature, then disable the suhosin extension. If you can not do this, you will need to contact your hosting provider.','wpsc' ); ?></em>
+				<em><?php esc_html_e( 'The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature, then disable the suhosin extension. If you can not do this, you will need to contact your hosting provider.','wp-e-commerce' ); ?></em>
 			<?php else : ?>
-				<span><?php esc_html_e( 'Select', 'wpsc' ); ?>: <a href='' class='wpsc_select_all'><?php esc_html_e( 'All', 'wpsc' ); ?></a>&nbsp; <a href='' class='wpsc_select_none'><?php esc_html_e( 'None', 'wpsc' ); ?></a></span><br />
+				<span><?php esc_html_e( 'Select', 'wp-e-commerce' ); ?>: <a href='' class='wpsc_select_all'><?php esc_html_e( 'All', 'wp-e-commerce' ); ?></a>&nbsp; <a href='' class='wpsc_select_none'><?php esc_html_e( 'None', 'wp-e-commerce' ); ?></a></span><br />
 				<div id='resizeable' class='ui-widget-content multiple-select'>
 					<?php foreach( $countrylist as $country ) {
 						if ( in_array( $country['id'], (array)$selectedCountries ) ) {
@@ -412,7 +412,7 @@ function wpsc_admin_category_forms_edit() {
 					} ?>
 				</div>
 			<?php endif; ?><br />
-			<span class="description"><?php esc_html_e( 'Select the markets you are selling this category to.', 'wpsc' ); ?></span>
+			<span class="description"><?php esc_html_e( 'Select the markets you are selling this category to.', 'wp-e-commerce' ); ?></span>
 		</td>
 	</tr>
 
@@ -420,7 +420,7 @@ function wpsc_admin_category_forms_edit() {
 
 	<tr>
 		<td colspan="2">
-			<h4><?php esc_html_e( 'Checkout Settings', 'wpsc' ); ?></h4>
+			<h4><?php esc_html_e( 'Checkout Settings', 'wp-e-commerce' ); ?></h4>
 		</td>
 	</tr>
 	<?php
@@ -434,11 +434,11 @@ function wpsc_admin_category_forms_edit() {
 	?>
 	<tr class="form-field">
 		<th scope="row" valign="top">
-			<label for="image"><?php esc_html_e( 'Category requires additional checkout form fields', 'wpsc' ); ?></label>
+			<label for="image"><?php esc_html_e( 'Category requires additional checkout form fields', 'wp-e-commerce' ); ?></label>
 		</th>
 		<td>
 			<select name='use_additional_form_set'>
-				<option value=''><?php esc_html_e( 'None', 'wpsc' ); ?></option>
+				<option value=''><?php esc_html_e( 'None', 'wp-e-commerce' ); ?></option>
 				<?php
 					foreach( (array) $checkout_sets as $key => $value ) {
 						$selected_state = "";
@@ -455,12 +455,12 @@ function wpsc_admin_category_forms_edit() {
 
 	<tr class="form-field">
 		<th scope="row" valign="top">
-			<label><?php esc_html_e( 'Address to calculate shipping with', 'wpsc' ); ?></label>
+			<label><?php esc_html_e( 'Address to calculate shipping with', 'wp-e-commerce' ); ?></label>
 		</th>
 		<td>
-			<label><input type="radio" class="wpsc_cat_box" value="0" name="uses_billing_address" <?php echo ( ( $uses_billing_address != true ) ? 'checked="checked"' : '' ); ?> /> <?php esc_html_e( 'Shipping Address (default)', 'wpsc' ); ?></label><br />
-			<label><input type="radio" class="wpsc_cat_box" value="1" name="uses_billing_address" <?php echo ( ( $uses_billing_address == true ) ? 'checked="checked"' : '' ); ?> /> <?php esc_html_e( 'Billing Address', 'wpsc' ); ?></label>
-			<p class='description'><?php esc_html_e( 'Products in this category will use the address specified to calculate shipping costs.', 'wpsc' ); ?></p>
+			<label><input type="radio" class="wpsc_cat_box" value="0" name="uses_billing_address" <?php echo ( ( $uses_billing_address != true ) ? 'checked="checked"' : '' ); ?> /> <?php esc_html_e( 'Shipping Address (default)', 'wp-e-commerce' ); ?></label><br />
+			<label><input type="radio" class="wpsc_cat_box" value="1" name="uses_billing_address" <?php echo ( ( $uses_billing_address == true ) ? 'checked="checked"' : '' ); ?> /> <?php esc_html_e( 'Billing Address', 'wp-e-commerce' ); ?></label>
+			<p class='description'><?php esc_html_e( 'Products in this category will use the address specified to calculate shipping costs.', 'wp-e-commerce' ); ?></p>
 		</td>
 	</tr>
 

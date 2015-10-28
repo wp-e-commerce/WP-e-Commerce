@@ -19,22 +19,22 @@ class Sputnik_List_Install extends WP_List_Table {
 
 		// These are the tabs which are shown on the page
 		$tabs = array();
-		$tabs['dashboard'] = __( 'Search', 'wpsc' );
+		$tabs['dashboard'] = __( 'Search', 'wp-e-commerce' );
 
 		if ( Sputnik::account_is_linked() ) {
-			$tabs['purchased'] = __( 'Purchased Plugins', 'wpsc' );
+			$tabs['purchased'] = __( 'Purchased Plugins', 'wp-e-commerce' );
 		} elseif ( $tab == 'purchased' ) {
 			wp_redirect( Sputnik_Admin::build_url() );
 			exit;
 		}
 
 		if ( 'search' == $tab )
-			$tabs['search']	= __( 'Search Results', 'wpsc' );
-		$tabs['featured'] = _x( 'Featured', 'Plugin Installer', 'wpsc' );
-		$tabs['popular']  = _x( 'Popular', 'Plugin Installer', 'wpsc' );
-		$tabs['new']      = _x( 'Newest', 'Plugin Installer', 'wpsc' );
-		$tabs['updated']  = _x( 'Recently Updated', 'Plugin Installer', 'wpsc' );
-		$tabs['price']    = _x( 'Lowest Priced', 'Plugin Installer', 'wpsc' );
+			$tabs['search']	= __( 'Search Results', 'wp-e-commerce' );
+		$tabs['featured'] = _x( 'Featured', 'Plugin Installer', 'wp-e-commerce' );
+		$tabs['popular']  = _x( 'Popular', 'Plugin Installer', 'wp-e-commerce' );
+		$tabs['new']      = _x( 'Newest', 'Plugin Installer', 'wp-e-commerce' );
+		$tabs['updated']  = _x( 'Recently Updated', 'Plugin Installer', 'wp-e-commerce' );
+		$tabs['price']    = _x( 'Lowest Priced', 'Plugin Installer', 'wp-e-commerce' );
 
 		$nonmenu_tabs = array( 'account' ); //Valid actions to perform which do not have a Menu item.
 
@@ -106,9 +106,9 @@ class Sputnik_List_Install extends WP_List_Table {
 
 		echo '<p>';
 		if ( $tab == 'purchased' )
-			printf( __( "You haven't purchased any extensions yet. <a href='%s'>Browse our extensions marketplace.</a>", 'wpsc' ), Sputnik_Admin::build_url() );
+			printf( __( "You haven't purchased any extensions yet. <a href='%s'>Browse our extensions marketplace.</a>", 'wp-e-commerce' ), Sputnik_Admin::build_url() );
 		else
-			_e( 'No plugins match your request.', 'wpsc' );
+			_e( 'No plugins match your request.', 'wp-e-commerce' );
 		echo '</p>';
 	}
 
@@ -186,11 +186,11 @@ class Sputnik_List_Install extends WP_List_Table {
 			switch ($this->view) {
 				case 'list':
 					$view = 'grid';
-					$name = __('Grid', 'wpsc' );
+					$name = __('Grid', 'wp-e-commerce' );
 					break;
 				case 'grid':
 					$view = 'list';
-					$name = __('List', 'wpsc' );
+					$name = __('List', 'wp-e-commerce' );
 					break;
 			}
 ?>
@@ -220,11 +220,11 @@ class Sputnik_List_Install extends WP_List_Table {
 
 	public function get_columns() {
 		return array(
-			'name'        => _x( 'Name', 'plugin name', 'wpsc' ),
-			'version'     => __( 'Version', 'wpsc' ),
-			'price'       => __( 'Action', 'wpsc' ),
-			'rating'      => __( 'Rating', 'wpsc' ),
-			'description' => __( 'Description', 'wpsc' ),
+			'name'        => _x( 'Name', 'plugin name', 'wp-e-commerce' ),
+			'version'     => __( 'Version', 'wp-e-commerce' ),
+			'price'       => __( 'Action', 'wp-e-commerce' ),
+			'rating'      => __( 'Rating', 'wp-e-commerce' ),
+			'description' => __( 'Description', 'wp-e-commerce' ),
 		);
 	}
 
@@ -263,11 +263,11 @@ class Sputnik_List_Install extends WP_List_Table {
 			$plugin->version = wp_kses( $plugin->version, $plugins_allowedtags );
 			$plugin->price = sprintf('$%.2f', $plugin->price);
 			if ($plugin->price === '$0.00') {
-				$plugin->price = _x( 'Free', 'plugin price', 'wpsc' );
+				$plugin->price = _x( 'Free', 'plugin price', 'wp-e-commerce' );
 			}
 
 			if ( ! empty( $plugin->author ) ) {
-				$plugin->author = ' <cite>' . sprintf( __( 'By %s', 'wpsc' ), $plugin->author ) . '.</cite>';
+				$plugin->author = ' <cite>' . sprintf( __( 'By %s', 'wp-e-commerce' ), $plugin->author ) . '.</cite>';
 			}
 
 			$plugin->author = wp_kses( $plugin->author, $plugins_allowedtags );
@@ -288,7 +288,7 @@ class Sputnik_List_Install extends WP_List_Table {
 		$action_links = array();
 		$action_links[] = '<a href="' . Sputnik_Admin::build_url(array('info' => $plugin->slug, 'TB_iframe' => true))
 							. '" class="thickbox info" title="' .
-							esc_attr( sprintf( __( 'More information about %s', 'wpsc' ), $name ) ) . '">' . __( 'Details' ) . '</a>';
+							esc_attr( sprintf( __( 'More information about %s', 'wp-e-commerce' ), $name ) ) . '">' . __( 'Details' ) . '</a>';
 
 		$purchase_link = $plugin->price;
 
@@ -299,35 +299,35 @@ class Sputnik_List_Install extends WP_List_Table {
 				case 'purchase':
 					if ( $status['url'] ) {
 						$purchase_link = '<a id="' . $plugin->slug . '" class="button-primary buy" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Buy %s', 'wpsc' ), $name)) . '">' . sprintf(__('<span>%s</span> Buy Now</a>', 'wpsc' ), $plugin->price);
+							. esc_attr(sprintf(__( 'Buy %s', 'wp-e-commerce' ), $name)) . '">' . sprintf(__('<span>%s</span> Buy Now</a>', 'wp-e-commerce' ), $plugin->price);
 					}
 					break;
 				case 'install':
 					if ( $status['url'] ) {
 						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Install %s', 'wpsc' ), $name)) . '">' . __('Install', 'wpsc' ) . '</a>';
+							. esc_attr(sprintf(__( 'Install %s', 'wp-e-commerce' ), $name)) . '">' . __('Install', 'wp-e-commerce' ) . '</a>';
 					}
 					else {
-						$purchase_link = '<span title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wpsc' ) . '">'
-							. __('Install', 'wpsc' ) . '</span>';
+						$purchase_link = '<span title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wp-e-commerce' ) . '">'
+							. __('Install', 'wp-e-commerce' ) . '</span>';
 					}
 					break;
 				case 'update_available':
 					if ( $status['url'] ) {
 						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Update to version %s', 'wpsc' ), $status['version'])) . '">' . __('Update', 'wpsc' ) . '</a>';
+							. esc_attr(sprintf(__( 'Update to version %s', 'wp-e-commerce' ), $status['version'])) . '">' . __('Update', 'wp-e-commerce' ) . '</a>';
 					}
 					else {
-						$purchase_link = '<span title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wpsc' ) . '">'
-							. __('Update', 'wpsc' ) . '</span>';
+						$purchase_link = '<span title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wp-e-commerce' ) . '">'
+							. __('Update', 'wp-e-commerce' ) . '</span>';
 					}
 					break;
 				case 'latest_installed':
 				case 'newer_installed':
-					$purchase_link = '<span title="' . esc_attr__('This plugin is already installed and is up to date', 'wpsc' ) . ' ">'
-						. __('Installed', 'wpsc' ) . '</span>';
+					$purchase_link = '<span title="' . esc_attr__('This plugin is already installed and is up to date', 'wp-e-commerce' ) . ' ">'
+						. __('Installed', 'wp-e-commerce' ) . '</span>';
 					break;
 			}
 		}
@@ -341,7 +341,7 @@ class Sputnik_List_Install extends WP_List_Table {
 			<td class="vers column-version"<?php echo $style['version']; ?>><?php echo $plugin->version; ?></td>
 			<td class="vers column-price"<?php echo $style['price']; ?>><?php echo $purchase_link; ?></td>
 			<td style="display:none" class="vers column-rating"<?php echo $style['rating']; ?>>
-				<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wpsc' ), number_format_i18n( $plugin->rating->count ) ) ?>">
+				<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wp-e-commerce' ), number_format_i18n( $plugin->rating->count ) ) ?>">
 					<div class="star star-rating" style="width: <?php echo (int) (20 * $plugin->rating->average) ?>px"></div>
 					<?php
 						$color = get_user_option('admin_color');
@@ -368,7 +368,7 @@ class Sputnik_List_Install extends WP_List_Table {
 		$action_links = array();
 		$action_links[] = '<a href="' . Sputnik_Admin::build_url(array('info' => $plugin->slug, 'TB_iframe' => true))
 							. '" class="thickbox button info" title="' .
-							esc_attr( sprintf( __( 'More information about %s', 'wpsc' ), $name ) ) . '">' . __( 'Details', 'wpsc' ) . '</a>';
+							esc_attr( sprintf( __( 'More information about %s', 'wp-e-commerce' ), $name ) ) . '">' . __( 'Details', 'wp-e-commerce' ) . '</a>';
 
 		$purchase_link = $plugin->price;
 
@@ -379,35 +379,35 @@ class Sputnik_List_Install extends WP_List_Table {
 				case 'purchase':
 					if ( $status['url'] ) {
 						$purchase_link = '<a id="' . $plugin->slug . '" class="button-primary buy status" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Buy %s', 'wpsc' ), $name)) . '">' . __('Buy Now', 'wpsc' ) . '</a>';
+							. esc_attr(sprintf(__( 'Buy %s', 'wp-e-commerce' ), $name)) . '">' . __('Buy Now', 'wp-e-commerce' ) . '</a>';
 					}
 					break;
 				case 'install':
 					if ( $status['url'] ) {
 						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install status" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Install %s', 'wpsc' ), $name)) . '">' . __('Install', 'wpsc' ) . '</a>';
+							. esc_attr(sprintf(__( 'Install %s', 'wp-e-commerce' ), $name)) . '">' . __('Install', 'wp-e-commerce' ) . '</a>';
 					}
 					else {
-						$purchase_link = '<span class="status" title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wpsc' ) . '">'
-							. __('Install', 'wpsc' ) . '</span>';
+						$purchase_link = '<span class="status" title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wp-e-commerce' ) . '">'
+							. __('Install', 'wp-e-commerce' ) . '</span>';
 					}
 					break;
 				case 'update_available':
 					if ( $status['url'] ) {
 						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Update to version %s', 'wpsc' ), $status['version'])) . '">' . __('Update', 'wpsc' ) . '</a>';
+							. esc_attr(sprintf(__( 'Update to version %s', 'wp-e-commerce' ), $status['version'])) . '">' . __('Update', 'wp-e-commerce' ) . '</a>';
 					}
 					else {
-						$purchase_link = '<span class="status" title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wpsc' ) . '">'
-							. __('Update', 'wpsc' ) . '</span>';
+						$purchase_link = '<span class="status" title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wp-e-commerce' ) . '">'
+							. __('Update', 'wp-e-commerce' ) . '</span>';
 					}
 					break;
 				case 'latest_installed':
 				case 'newer_installed':
-					$purchase_link = '<span class="status" title="' . esc_attr__('This plugin is already installed and is up to date', 'wpsc' ) . ' ">'
-						. __('Installed', 'wpsc' ) . '</span>';
+					$purchase_link = '<span class="status" title="' . esc_attr__('This plugin is already installed and is up to date', 'wp-e-commerce' ) . ' ">'
+						. __('Installed', 'wp-e-commerce' ) . '</span>';
 					break;
 			}
 		}
@@ -440,7 +440,7 @@ class Sputnik_List_Install extends WP_List_Table {
 					<p><?php echo $plugin->description; ?></p>
 					<?php if ( isset( $plugin->rating ) && isset( $plugin->rating->count ) ): ?>
 						<div class="footer" style="display:none">
-							<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wpsc' ), number_format_i18n( $plugin->rating->count ) ) ?>">
+							<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wp-e-commerce' ), number_format_i18n( $plugin->rating->count ) ) ?>">
 								<div class="star star-rating" style="width: <?php echo (int) (20 * $plugin->rating->average) ?>px"></div>
 								<?php
 									$color = get_user_option('admin_color');

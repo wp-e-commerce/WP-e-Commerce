@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php printf( esc_html__( 'Packing Slip for Order #%s', 'wpsc' ), $this->log_id ); ?></title>
+	<title><?php printf( esc_html__( 'Packing Slip for Order #%s', 'wp-e-commerce' ), $this->log_id ); ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<style type="text/css">
 		body {
@@ -76,12 +76,12 @@
 		<div id="header">
 			<h1>
 				<?php bloginfo( 'name' ); ?><br />
-				<span><?php printf( esc_html__( 'Packing Slip for Order #%s', 'wpsc' ), $this->log_id ); ?></span>
+				<span><?php printf( esc_html__( 'Packing Slip for Order #%s', 'wp-e-commerce' ), $this->log_id ); ?></span>
 			</h1>
 		</div>
 		<div id="customer">
 			<div class="shipping">
-				<h2><?php echo esc_html_x( 'Ship To:', 'packing slip', 'wpsc' ); ?></h2>
+				<h2><?php echo esc_html_x( 'Ship To:', 'packing slip', 'wp-e-commerce' ); ?></h2>
 				<strong><?php echo wpsc_display_purchlog_shipping_name(); ?></strong><br />
 				<?php echo wpsc_display_purchlog_shipping_address(); ?><br />
 				<?php echo wpsc_display_purchlog_shipping_city(); ?><br />
@@ -89,7 +89,7 @@
 				<?php echo wpsc_display_purchlog_shipping_country(); ?><br />
 			</div>
 			<div class="billing">
-				<h2><?php echo esc_html_x( 'Bill To:', 'packing slip', 'wpsc' ); ?></h2>
+				<h2><?php echo esc_html_x( 'Bill To:', 'packing slip', 'wp-e-commerce' ); ?></h2>
 				<strong><?php echo wpsc_display_purchlog_buyers_name(); ?></strong><br />
 				<?php echo wpsc_display_purchlog_buyers_address(); ?><br />
 				<?php echo wpsc_display_purchlog_buyers_city(); ?><br />
@@ -100,10 +100,10 @@
 		<table id="order">
 			<thead>
 				<tr>
-					<th><?php echo esc_html_x( 'Order Date', 'packing slip', 'wpsc' ); ?></th>
-					<th><?php echo esc_html_x( 'Order ID', 'packing slip', 'wpsc' ); ?></th>
-					<th><?php echo esc_html_x( 'Shipping Method', 'packing slip', 'wpsc' ); ?></th>
-					<th><?php echo esc_html_x( 'Payment Method', 'packing slip', 'wpsc' ); ?></th>
+					<th><?php echo esc_html_x( 'Order Date', 'packing slip', 'wp-e-commerce' ); ?></th>
+					<th><?php echo esc_html_x( 'Order ID', 'packing slip', 'wp-e-commerce' ); ?></th>
+					<th><?php echo esc_html_x( 'Shipping Method', 'packing slip', 'wp-e-commerce' ); ?></th>
+					<th><?php echo esc_html_x( 'Payment Method', 'packing slip', 'wp-e-commerce' ); ?></th>
 					<?php wpsc_purchaselog_order_summary_headers(); ?>
 				</tr>
 			</thead>
@@ -130,29 +130,29 @@
 				<tr class="wpsc_purchaselog_start_totals">
 					<td colspan="<?php echo $cols; ?>">
 						<?php if ( wpsc_purchlog_has_discount_data() ): ?>
-							<?php esc_html_e( 'Coupon Code', 'wpsc' ); ?>: <?php echo wpsc_display_purchlog_discount_data(); ?>
+							<?php esc_html_e( 'Coupon Code', 'wp-e-commerce' ); ?>: <?php echo wpsc_display_purchlog_discount_data(); ?>
 						<?php endif; ?>
 					</td>
-					<th><?php esc_html_e( 'Discount', 'wpsc' ); ?> </th>
+					<th><?php esc_html_e( 'Discount', 'wp-e-commerce' ); ?> </th>
 					<td class="amount"><?php echo wpsc_display_purchlog_discount(); ?></td>
 				</tr>
 
 				<?php if( ! wpec_display_product_tax() ): ?>
 					<tr>
 						<td colspan='<?php echo $cols; ?>'></td>
-						<th><?php esc_html_e( 'Taxes', 'wpsc' ); ?> </th>
+						<th><?php esc_html_e( 'Taxes', 'wp-e-commerce' ); ?> </th>
 						<td class="amount"><?php echo wpsc_display_purchlog_taxes(); ?></td>
 					</tr>
 				<?php endif; ?>
 
 				<tr>
 					<td colspan='<?php echo $cols; ?>'></td>
-					<th><?php esc_html_e( 'Shipping', 'wpsc' ); ?> </th>
+					<th><?php esc_html_e( 'Shipping', 'wp-e-commerce' ); ?> </th>
 					<td class="amount"><?php echo wpsc_display_purchlog_shipping(); ?></td>
 				</tr>
 				<tr>
 					<td colspan='<?php echo $cols; ?>'></td>
-					<th><?php esc_html_e( 'Total', 'wpsc' ); ?> </th>
+					<th><?php esc_html_e( 'Total', 'wp-e-commerce' ); ?> </th>
 					<td class="amount"><?php echo wpsc_display_purchlog_totalprice(); ?></td>
 				</tr>
 			</tbody>

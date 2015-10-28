@@ -67,7 +67,7 @@ function wpsc_gateway_image_url(){
 
 /**
  * Return the current gateway's name.
- * 
+ *
  * @return  string  The current gateway's name.
  *
  * @uses  $wpsc_gateway              Global array of gateways.
@@ -89,7 +89,7 @@ function wpsc_gateway_name() {
 
 	// If no display name or image, use default
 	if ( $display_name == '' && ! wpsc_show_gateway_image() ) {
-		$display_name = __( 'Credit Card', 'wpsc' );
+		$display_name = __( 'Credit Card', 'wp-e-commerce' );
 	}
 
 	return $display_name;
@@ -112,16 +112,16 @@ function _wpsc_gateway_name_filter( $display_name, $gateway ) {
 			case 'paypal':
 			case 'paypal_pro':
 			case 'wpsc_merchant_paypal_pro';
-				$display_name = __( 'PayPal', 'wpsc' );
+				$display_name = __( 'PayPal', 'wp-e-commerce' );
 				break;
 
 			case 'manual_payment':
-				$display_name =  __( 'Manual Payment', 'wpsc' );
+				$display_name =  __( 'Manual Payment', 'wp-e-commerce' );
 				break;
 
 			case 'credit_card':
 			default:
-				$display_name = __( 'Credit Card', 'wpsc' );
+				$display_name = __( 'Credit Card', 'wp-e-commerce' );
 				break;
 		}
 	}
@@ -303,14 +303,14 @@ function _wpsc_action_merchant_v2_validate_payment_method( $valid, $controller )
 					if ( $card_number_error )
 						continue;
 
-					$messages['card_number'] = __( 'Please enter a valid credit card number', 'wpsc' );
+					$messages['card_number'] = __( 'Please enter a valid credit card number', 'wp-e-commerce' );
 					$card_number_error = true;
 					break;
 				case 'card_code':
-					$messages[$field] = __( 'Please enter a valid CVV', 'wpsc' );
+					$messages[$field] = __( 'Please enter a valid CVV', 'wp-e-commerce' );
 					break;
 				case 'cctype':
-					$messages[$field] = __( 'Please select a valid credit card type', 'wpsc' );
+					$messages[$field] = __( 'Please select a valid credit card type', 'wp-e-commerce' );
 					break;
 			}
 		}
@@ -322,7 +322,7 @@ function _wpsc_action_merchant_v2_validate_payment_method( $valid, $controller )
 				   empty( $extra['expiry'][$element] )
 				|| ! is_numeric( $extra['expiry'][$element] )
 			) {
-				$messages['expdate'] = __( 'Please specify a valid expiration date.', 'wpsc' );
+				$messages['expdate'] = __( 'Please specify a valid expiration date.', 'wp-e-commerce' );
 				break;
 			}
 		}

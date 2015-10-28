@@ -75,7 +75,7 @@ function wpsc_get_breadcrumb( $args = '' ) {
 
 		// Default to 'Home'
 		} else {
-			$pre_front_text = __( 'Home', 'wpsc' );
+			$pre_front_text = __( 'Home', 'wp-e-commerce' );
 		}
 	}
 
@@ -130,13 +130,13 @@ function wpsc_get_breadcrumb( $args = '' ) {
 			$pre_current_text = $c->order_id;
 			$parent = array(
 				array(
-					'title' => __( 'Your Account', 'wpsc' ),
+					'title' => __( 'Your Account', 'wp-e-commerce' ),
 					'url'   => wpsc_get_customer_account_url()
 				),
 			);
 		} else {
 			// otherwise, set the "current_text" argument to "Your Account"
-			$pre_current_text = __( 'Your Account', 'wpsc' );
+			$pre_current_text = __( 'Your Account', 'wp-e-commerce' );
 		}
 	}
 
@@ -294,7 +294,7 @@ function wpsc_get_keep_shopping_button() {
 
 	$title = apply_filters(
 		'wpsc_keep_shopping_button_title',
-		__( 'Keep Shopping', 'wpsc' )
+		__( 'Keep Shopping', 'wp-e-commerce' )
 	);
 
 	$button = sprintf(
@@ -392,9 +392,9 @@ function wpsc_get_customer_account_tabs() {
 	$active_tab = _wpsc_get_current_controller_slug();
 
 	$tabs = apply_filters( 'wpsc_customer_account_tabs', array(
-		'orders'          => _x( 'Orders'          , 'customer account tab', 'wpsc' ),
-		'digital-content' => _x( 'Digital Contents', 'customer account tab', 'wpsc' ),
-		'settings'        => _x( 'Settings'        , 'customer account tab', 'wpsc' )
+		'orders'          => _x( 'Orders'          , 'customer account tab', 'wp-e-commerce' ),
+		'digital-content' => _x( 'Digital Contents', 'customer account tab', 'wp-e-commerce' ),
+		'settings'        => _x( 'Settings'        , 'customer account tab', 'wp-e-commerce' )
 	), $active_tab );
 
 	$output = sprintf( '<ul class="wpsc-tabs wpsc-customer-account-tabs">' );;
@@ -448,7 +448,7 @@ function wpsc_get_customer_orders_statuses() {
 			continue;
 
 		$text = sprintf(
-			translate_nooped_plural( $view_labels[ $status ], $count, 'wpsc' ),
+			translate_nooped_plural( $view_labels[ $status ], $count, 'wp-e-commerce' ),
 			number_format_i18n( $count )
 		);
 
@@ -513,8 +513,8 @@ function wpsc_get_customer_orders_pagination_links( $args = array() ) {
 		'format'    => $format,
 		'total'     => $controller->total_pages,
 		'current'   => $controller->current_page,
-		'prev_text' => is_rtl() ? __( '&rarr;', 'wpsc' ) : __( '&larr;', 'wpsc' ),
-		'next_text' => is_rtl() ? __( '&larr;', 'wpsc' ) : __( '&rarr;', 'wpsc' ),
+		'prev_text' => is_rtl() ? __( '&rarr;', 'wp-e-commerce' ) : __( '&larr;', 'wp-e-commerce' ),
+		'next_text' => is_rtl() ? __( '&larr;', 'wp-e-commerce' ) : __( '&rarr;', 'wp-e-commerce' ),
 		'end_size'  => 3,
 		'mid_size'  => 2,
 	);
@@ -540,14 +540,14 @@ function wpsc_customer_orders_pagination_count() {
 
 	if ( $controller->total_items > 1 ) {
 		if ( $from == $to ) {
-			$output = sprintf( __( 'Viewing product %1$s (of %2$s total)', 'wpsc' ), $from, $controller->total_items );
+			$output = sprintf( __( 'Viewing product %1$s (of %2$s total)', 'wp-e-commerce' ), $from, $controller->total_items );
 		} elseif ( $controller->total_pages === 1 ) {
-			$output = sprintf( __( 'Viewing %1$s products', 'wpsc' ), $controller->total_items );
+			$output = sprintf( __( 'Viewing %1$s products', 'wp-e-commerce' ), $controller->total_items );
 		} else {
-			$output = sprintf( __( 'Viewing %1$s products - %2$s through %3$s (of %4$s total)', 'wpsc' ), $controller->count_items, $from, $to, $controller->total_items );
+			$output = sprintf( __( 'Viewing %1$s products - %2$s through %3$s (of %4$s total)', 'wp-e-commerce' ), $controller->count_items, $from, $to, $controller->total_items );
 		}
 	} else {
-		$output = sprintf( __( 'Viewing %1$s product', 'wpsc' ), $controller->total_items );
+		$output = sprintf( __( 'Viewing %1$s product', 'wp-e-commerce' ), $controller->total_items );
 	}
 
 	// Filter and return
@@ -656,8 +656,8 @@ function wpsc_create_account_checkbox( $args ) {
 	ob_start();
 ?>
 	<div class="wpsc-form-actions">
-		<p><strong class="wpsc-large"><?php _e( 'Create an Account?', 'wpsc' ); ?></strong></p>
-		<label><input type="checkbox" name="wpsc_create_account" /> <?php _e( 'Creating an account keeps your order history, user profile, and more all in one place. We’ll email you account information right away.', 'wpsc' ); ?></label>
+		<p><strong class="wpsc-large"><?php _e( 'Create an Account?', 'wp-e-commerce' ); ?></strong></p>
+		<label><input type="checkbox" name="wpsc_create_account" /> <?php _e( 'Creating an account keeps your order history, user profile, and more all in one place. We’ll email you account information right away.', 'wp-e-commerce' ); ?></label>
 	</div>
 <?php
 	$output = ob_get_clean();

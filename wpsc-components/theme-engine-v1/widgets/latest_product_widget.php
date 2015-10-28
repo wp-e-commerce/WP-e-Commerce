@@ -12,8 +12,8 @@ class WP_Widget_Latest_Products extends WP_Widget {
 	 * Widget Constuctor
 	 */
 	function __construct() {
-		$widget_ops = array( 'classname' => 'widget_wpsc_latest_products','description' => __( 'Latest Products Widget', 'wpsc' ) );
-		parent::__construct( 'wpsc_latest_products', __( '(WPEC) Latest Products', 'wpsc' ), $widget_ops );
+		$widget_ops = array( 'classname' => 'widget_wpsc_latest_products','description' => __( 'Latest Products Widget', 'wp-e-commerce' ) );
+		parent::__construct( 'wpsc_latest_products', __( '(WPEC) Latest Products', 'wp-e-commerce' ), $widget_ops );
 	}
 
 	/**
@@ -28,7 +28,7 @@ class WP_Widget_Latest_Products extends WP_Widget {
 
 		extract( $args );
 
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Latest Products', 'wpsc' ) : $instance['title'] );
+		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Latest Products', 'wp-e-commerce' ) : $instance['title'] );
 
 		echo $before_widget;
 
@@ -85,25 +85,25 @@ class WP_Widget_Latest_Products extends WP_Widget {
 		$height   = (int) $instance['height']; ?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wp-e-commerce' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of products to show:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of products to show:', 'wp-e-commerce' ); ?></label>
 			<input type="text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" value="<?php echo $number; ?>" size="3" />
 		</p>
 
 		<p>
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'image' ); ?>" name="<?php echo $this->get_field_name( 'image' ); ?>"<?php checked($image); ?> onclick="jQuery('.wpsc_latest_image').toggle()">
-			<label for="<?php echo $this->get_field_id( 'image' ); ?>"><?php _e( 'Show Thumbnails', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'image' ); ?>"><?php _e( 'Show Thumbnails', 'wp-e-commerce' ); ?></label>
 		</p>
 
 		<div class="wpsc_latest_image"<?php if( !checked( $image ) ) { echo ' style="display:none;"'; } ?>>
 			<p>
-				<label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width:', 'wpsc'); ?></label>
+				<label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width:', 'wp-e-commerce'); ?></label>
 				<input type="text" id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" value="<?php echo $width ; ?>" size="3" />
-				<label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height:', 'wpsc'); ?></label>
+				<label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height:', 'wp-e-commerce'); ?></label>
 				<input type="text" id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" value="<?php echo $height ; ?>" size="3" />
 			</p>
 		</div>
@@ -149,7 +149,7 @@ function wpsc_latest_product( $args = null, $instance ) {
 				if ( $thumbnail )
 					$output .= '<img src="' . esc_url( $thumbnail ) . '" title="' . apply_filters( 'the_title', $latest_product->post_title ) . '" alt="' . apply_filters( 'the_title', $latest_product->post_title ) . '" />';
 				else
-					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="' . esc_attr__( 'No Image', 'wpsc' ) . '" title="'.wpsc_the_product_title().'" src="' . WPSC_CORE_THEME_PATH . '/wpsc-images/noimage.png" width="' . $width . '" height="' . $height . '" />';
+					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="' . esc_attr__( 'No Image', 'wp-e-commerce' ) . '" title="'.wpsc_the_product_title().'" src="' . WPSC_CORE_THEME_PATH . '/wpsc-images/noimage.png" width="' . $width . '" height="' . $height . '" />';
 
 				$output .= '</a>';
 				$output .= '</div>';

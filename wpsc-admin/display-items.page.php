@@ -23,16 +23,16 @@ function wpsc_additional_column_names( $columns ){
 
 	$columns['cb']            = '<input type="checkbox" />';
 	$columns['image']         = '';
-	$columns['title']         = __('Name', 'wpsc');
-	$columns['stock']         = __('Stock', 'wpsc');
-	$columns['price']         = __('Price', 'wpsc');
-	$columns['sale_price']    = __('Sale', 'wpsc');
-	$columns['SKU']           = __('SKU', 'wpsc');
-	$columns['weight']        = __('Weight', 'wpsc');
-	$columns['cats']          = __('Categories', 'wpsc');
-	$columns['featured']      = '<img src="' . WPSC_CORE_IMAGES_URL . '/black-star.png" alt="' . __( 'Featured', 'wpsc' ) . '" title="' . __( 'Featured', 'wpsc' ) . '">';
+	$columns['title']         = __('Name', 'wp-e-commerce');
+	$columns['stock']         = __('Stock', 'wp-e-commerce');
+	$columns['price']         = __('Price', 'wp-e-commerce');
+	$columns['sale_price']    = __('Sale', 'wp-e-commerce');
+	$columns['SKU']           = __('SKU', 'wp-e-commerce');
+	$columns['weight']        = __('Weight', 'wp-e-commerce');
+	$columns['cats']          = __('Categories', 'wp-e-commerce');
+	$columns['featured']      = '<img src="' . WPSC_CORE_IMAGES_URL . '/black-star.png" alt="' . __( 'Featured', 'wp-e-commerce' ) . '" title="' . __( 'Featured', 'wp-e-commerce' ) . '">';
 	$columns['hidden_alerts'] = '';
-	$columns['date']          = __('Date', 'wpsc');
+	$columns['date']          = __('Date', 'wp-e-commerce');
 
 	return $columns;
 }
@@ -92,7 +92,7 @@ add_action( 'wpsc_manage_products_column_image', '_wpsc_manage_products_column_i
  */
 function _wpsc_manage_products_column_weight( $post, $post_id, $has_variations ) {
 	if( $has_variations ) {
-		esc_html_e( 'N/A', 'wpsc' );
+		esc_html_e( 'N/A', 'wp-e-commerce' );
 		return;
 	}
 	$product_data = array();
@@ -139,7 +139,7 @@ function _wpsc_manage_products_column_stock( $post, $post_id, $has_variations ) 
 	$stock = get_post_meta( $post->ID, '_wpsc_stock', true );
 
 	if( $stock == '' )
-		$stock = __('N/A', 'wpsc');
+		$stock = __('N/A', 'wp-e-commerce');
 
 	if ( $has_variations ) {
 		echo '~ ' . wpsc_variations_stock_remaining( $post->ID );
@@ -222,7 +222,7 @@ add_action( 'wpsc_manage_products_column_sale_price', '_wpsc_manage_products_col
 function _wpsc_manage_products_column_sku( $post, $post_id ) {
 	$sku = get_post_meta( $post->ID, '_wpsc_sku', true );
 	if( $sku == '' )
-		$sku = __('N/A', 'wpsc');
+		$sku = __('N/A', 'wp-e-commerce');
 
 	echo $sku;
 	echo '<div id="inline_' . $post->ID . '_sku" class="hidden">' . esc_html( $sku ) . '</div>';
@@ -250,7 +250,7 @@ function _wpsc_manage_products_column_cats( $post, $post_id ) {
 			$out[] = "<a href='?post_type=wpsc-product&amp;wpsc_product_category={$c->slug}'> " . esc_html( sanitize_term_field( 'name', $c->name, $c->term_id, 'category', 'display' ) ) . "</a>";
 			echo join( ', ', $out );
 		} else {
-		_e('Uncategorized', 'wpsc');
+		_e('Uncategorized', 'wp-e-commerce');
 	}
 }
 add_action( 'wpsc_manage_products_column_cats', '_wpsc_manage_products_column_cats', 10, 2 );
@@ -271,10 +271,10 @@ function _wpsc_manage_products_column_featured( $post, $post_id ) {
 	$featured_product_url = wp_nonce_url( "index.php?wpsc_admin_action=update_featured_product&amp;product_id=$post->ID", 'feature_product_' . $post->ID);
 	if ( in_array( $post->ID, (array) get_option( 'sticky_products' ) ) ) {
 		$class = 'gold-star';
-		$title = __( 'Unmark as Featured', 'wpsc' );
+		$title = __( 'Unmark as Featured', 'wp-e-commerce' );
 	} else {
 		$class = 'grey-star';
-		$title = __( 'Mark as Featured', 'wpsc' );
+		$title = __( 'Mark as Featured', 'wp-e-commerce' );
 	}
 	?>
 	<a class="wpsc_featured_product_toggle featured_toggle_<?php echo $post->ID; ?> <?php echo esc_attr( $class ); ?>" href='<?php echo $featured_product_url; ?>' title="<?php echo esc_attr( $title ); ?>" ></a>
@@ -405,7 +405,7 @@ function wpsc_cats_restrict_manage_posts() {
             // retrieve array of term objects per taxonomy
             // output html for taxonomy dropdown filter
             echo "<select name='$tax_slug' id='$tax_slug' class='postform'>";
-            echo "<option value=''>" . esc_html( sprintf( _x( 'Show All %s', 'Show all [category name]', 'wpsc' ), $tax_name ) ) . "</option>";
+            echo "<option value=''>" . esc_html( sprintf( _x( 'Show All %s', 'Show all [category name]', 'wp-e-commerce' ), $tax_name ) ) . "</option>";
             wpsc_cats_restrict_manage_posts_print_terms($tax_slug);
             echo "</select>";
         }
@@ -544,7 +544,7 @@ function wpsc_update_featured_products() {
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		$json_response = array(
-			'text'       => $new_status ? esc_attr__( 'Unmark as Featured', 'wpsc' ) : esc_attr__( 'Mark as Featured', 'wpsc' ),
+			'text'       => $new_status ? esc_attr__( 'Unmark as Featured', 'wp-e-commerce' ) : esc_attr__( 'Mark as Featured', 'wp-e-commerce' ),
 			'product_id' => $product_id,
 			'color'      => $new_status ? 'gold-star' : 'grey-star',
 			'image'      => $new_status ? WPSC_CORE_IMAGES_URL . '/gold-star.png' : WPSC_CORE_IMAGES_URL . '/grey-star.png'
@@ -578,7 +578,7 @@ function wpsc_action_row( $actions, $post ) {
 	$url = admin_url( 'edit.php' );
 	$url = add_query_arg( array( 'wpsc_admin_action' => 'duplicate_product', 'product' => $post->ID ), $url );
 
-    $actions['duplicate'] = '<a href="'.esc_url( $url ).'">' . esc_html_x( 'Duplicate', 'row-actions', 'wpsc' ) . '</a>';
+    $actions['duplicate'] = '<a href="'.esc_url( $url ).'">' . esc_html_x( 'Duplicate', 'row-actions', 'wp-e-commerce' ) . '</a>';
 	return $actions;
 }
 

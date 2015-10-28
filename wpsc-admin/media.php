@@ -18,8 +18,8 @@ function _wpsc_action_enqueue_media_scripts() {
 		wp_enqueue_script( 'wpsc-media', WPSC_URL . '/wpsc-admin/js/media.js', array( 'media-editor', 'wp-e-commerce-admin', 'jquery-ui-sortable', 'post' ), WPSC_VERSION );
 		wp_localize_script( 'wpsc-media', 'WPSC_Media', array(
 			'l10n' => array(
-				'productMediaTitle' => __( 'Add Images to Product Gallery', 'wpsc' ),
-				'saveGallery'       => __( 'Set Product Images', 'wpsc' ),
+				'productMediaTitle' => __( 'Add Images to Product Gallery', 'wp-e-commerce' ),
+				'saveGallery'       => __( 'Set Product Images', 'wp-e-commerce' ),
 			),
 			'gallery' => $gallery,
 			'updateGalleryNonce' => wp_create_nonce( 'wpsc_ajax_update_gallery_' . $id ),
@@ -39,8 +39,8 @@ function _wpsc_action_print_media_templates() {
 	?>
 	<script type="text/html" id="tmpl-wpsc-featured-image">
 		<div class="wpsc-media-featured-image">
-			<span class="title"><?php _e( 'Featured image', 'wpsc' ); ?></span>
-			<a class="edit-selection" href="#"><?php _ex( 'Edit', 'edit featured image', 'wpsc' ); ?></a>
+			<span class="title"><?php _e( 'Featured image', 'wp-e-commerce' ); ?></span>
+			<a class="edit-selection" href="#"><?php _ex( 'Edit', 'edit featured image', 'wp-e-commerce' ); ?></a>
 		</div>
 		<div class="wpsc-selection-view"></div>
 	</script>
@@ -64,9 +64,9 @@ function _wpsc_ajax_get_variation_gallery() {
 
 /**
  * Verifies the save product gallery AJAX nonce.
- * 
+ *
  * @return WP_Error|boolean True if nonce is valid. WP_Error if otherwise.
- */ 
+ */
 function _wpsc_ajax_verify_save_product_gallery() {
 	return _wpsc_ajax_verify_nonce( 'update_gallery_' . absint( $_REQUEST['postId'] ) );
 }

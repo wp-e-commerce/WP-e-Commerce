@@ -34,23 +34,23 @@ class Sputnik_View_Install_Skin extends WP_Upgrader_Skin {
 		// One-Click flow
 		if (!empty($_GET['also']) && $_GET['also'] == 'activate') {
 			if (!$this->result || is_wp_error($this->result)) {
-				show_message(__('Cannot activate plugin.', 'wpsc'));
+				show_message(__('Cannot activate plugin.', 'wp-e-commerce'));
 			}
 			else {
-				show_message(__('Activating the plugin&#8230;', 'wpsc'));
+				show_message(__('Activating the plugin&#8230;', 'wp-e-commerce'));
 				echo '<iframe style="border:0;overflow:hidden" width="100%" height="170px" src="' . wp_nonce_url('update.php?action=activate-plugin&networkwide=0&plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file) .'"></iframe>';
 			}
 		}
 		else {
-			$install_actions['activate_plugin'] = '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file) . '" title="' . esc_attr__('Activate this plugin', 'wpsc') . '" target="_parent">' . __('Activate Plugin', 'wpsc') . '</a>';
+			$install_actions['activate_plugin'] = '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file) . '" title="' . esc_attr__('Activate this plugin', 'wp-e-commerce') . '" target="_parent">' . __('Activate Plugin', 'wp-e-commerce') . '</a>';
 
 			if ( is_multisite() && current_user_can( 'manage_network_plugins' ) ) {
-				$install_actions['network_activate'] = '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;networkwide=1&amp;plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file) . '" title="' . esc_attr__('Activate this plugin for all sites in this network', 'wpsc') . '" target="_parent">' . __('Network Activate', 'wpsc') . '</a>';
+				$install_actions['network_activate'] = '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;networkwide=1&amp;plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file) . '" title="' . esc_attr__('Activate this plugin for all sites in this network', 'wp-e-commerce') . '" target="_parent">' . __('Network Activate', 'wp-e-commerce') . '</a>';
 				unset( $install_actions['activate_plugin'] );
 			}
 		}
 
-		$install_actions['store'] = '<a href="' . Sputnik_Admin::build_url() . '" title="' . esc_attr__('Return to Store', 'wpsc') . '" target="_parent" class="close">' . __('Return to Store', 'wpsc') . '</a>';
+		$install_actions['store'] = '<a href="' . Sputnik_Admin::build_url() . '" title="' . esc_attr__('Return to Store', 'wp-e-commerce') . '" target="_parent" class="close">' . __('Return to Store', 'wp-e-commerce') . '</a>';
 
 
 		if (!$this->result || is_wp_error($this->result)) {

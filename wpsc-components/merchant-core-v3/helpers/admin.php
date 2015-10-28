@@ -30,7 +30,7 @@ function _wpsc_filter_merchant_v3_gateway_form( $form, $gateway_id ) {
 
 	$payment_gateway_names = get_option('payment_gateway_names');
 	$form                  = array();
-	$output                = array( 'name' => '&nbsp;', 'form_fields' => __( 'To configure a payment module select one on the left.', 'wpsc' ), 'has_submit_button' => 0 );
+	$output                = array( 'name' => '&nbsp;', 'form_fields' => __( 'To configure a payment module select one on the left.', 'wp-e-commerce' ), 'has_submit_button' => 0 );
 	$gateway               = wpsc_get_payment_gateway( $gateway_id );
 	$display_name          = empty( $payment_gateway_names[$gateway_id] ) ? $gateway->get_title() : $payment_gateway_names[$gateway_id];
 	ob_start();
@@ -38,11 +38,11 @@ function _wpsc_filter_merchant_v3_gateway_form( $form, $gateway_id ) {
 	?>
 	<tr>
 		<td style='border-top: none;'>
-			<?php _e( 'Display Name', 'wpsc' ); ?>
+			<?php _e( 'Display Name', 'wp-e-commerce' ); ?>
 		</td>
 		<td style='border-top: none;'>
 			<input type='text' name='user_defined_name[<?php echo esc_attr( $gateway_id ); ?>]' value='<?php echo esc_attr( $display_name ); ?>' /><br />
-			<span class='small description'><?php _e('The text that people see when making a purchase', 'wpsc'); ?></span>
+			<span class='small description'><?php _e('The text that people see when making a purchase', 'wp-e-commerce'); ?></span>
 		</td>
 	</tr>
 	<?php

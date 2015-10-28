@@ -33,7 +33,7 @@ class australiapost {
 	 */
 	function __construct () {
 		$this->internal_name   = 'australiapost';
-		$this->name            = __( 'Australia Post', 'wpsc' );
+		$this->name            = __( 'Australia Post', 'wp-e-commerce' );
 		$this->is_external     = true;
 		$this->requires_weight = true;
 		$this->needs_zipcode   = true;
@@ -42,14 +42,14 @@ class australiapost {
 		// Initialise the list of available postage services
 
 		// DOMESTIC (Australia only)
-		$this->services['STANDARD'] = __('Standard Parcel Post', 'wpsc');
-		$this->services['EXPRESS']  = __('Express Post', 'wpsc');
+		$this->services['STANDARD'] = __('Standard Parcel Post', 'wp-e-commerce');
+		$this->services['EXPRESS']  = __('Express Post', 'wp-e-commerce');
 
 		// INTERNATIONAL
-		$this->services['AIR']   = __('Air Mail', 'wpsc');
-		$this->services['SEA']   = __('Sea Mail', 'wpsc');
-		$this->services['ECI_M'] = __('Express Courier International', 'wpsc'); // Express Courier International Merchandise
-		$this->services['EPI']   = __('Express Post International', 'wpsc');
+		$this->services['AIR']   = __('Air Mail', 'wp-e-commerce');
+		$this->services['SEA']   = __('Sea Mail', 'wp-e-commerce');
+		$this->services['ECI_M'] = __('Express Courier International', 'wp-e-commerce'); // Express Courier International Merchandise
+		$this->services['EPI']   = __('Express Post International', 'wp-e-commerce');
 
 		// Attempt to load the existing settings
 		$this->settings = get_option("wpsc_australiapost_settings");
@@ -87,15 +87,15 @@ class australiapost {
 		$output = '';
 		// Only for Australian merchants
 		if ($this->base_country != 'AU') {
-			return "<tr><td colspan='2'>" . __('This shipping module only works if the base country in settings, region is set to Australia.', 'wpsc') . "</td></tr>";
+			return "<tr><td colspan='2'>" . __('This shipping module only works if the base country in settings, region is set to Australia.', 'wp-e-commerce') . "</td></tr>";
 		}
 
 		// Base postcode must be set
 		if (strlen($this->base_zipcode) != 4) {
-			return "<tr><td colspan='2'>" .__('You must set your base postcode above before this shipping module will work.', 'wpsc') . "</td></tr>";
+			return "<tr><td colspan='2'>" .__('You must set your base postcode above before this shipping module will work.', 'wp-e-commerce') . "</td></tr>";
 		}
 
-		$output .= "<tr><td>" . __('Select the Australia Post services that you want to offer during checkout:', 'wpsc') . "</td></tr>";
+		$output .= "<tr><td>" . __('Select the Australia Post services that you want to offer during checkout:', 'wp-e-commerce') . "</td></tr>";
 		$output .= "<tr><td>";
 		foreach ($this->services as $code => $value) {
 			$checked = $this->settings['services'][$code] ? "checked='checked'" : '';
@@ -106,12 +106,12 @@ class australiapost {
 		}
 		$output .= "<input type='hidden' name='{$this->internal_name}_updateoptions' value='true'>";
 		$output .= "</td></tr>";
-		$output .= "<tr><td><h4>" . __('Notes:', 'wpsc') . "</h4>";
-		$output .= __('1. The actual services quoted to the customer during checkout will depend on the destination country. Not all methods are available to all destinations.', 'wpsc') . "<br />";
-		$output .= __('2. Each product must have a valid weight configured. When editing a product, use the weight field.', 'wpsc') . "<br />";
-		$output .= __('3. To ensure accurate quotes, each product must valid dimensions configured. When editing a product, use the height, width and length fields.', 'wpsc') . "<br />";
-		$output .= __('4. The combined dimensions are estimated by calculating the volume of each item, and then calculating the cubed root of the overall order volume which becomes width, length and height.', 'wpsc') . "<br />";
-		$output .= __('5. If no product dimensions are defined, then default package dimensions of 100mm x 100mm x 100mm will be used.', 'wpsc') . "<br />";
+		$output .= "<tr><td><h4>" . __('Notes:', 'wp-e-commerce') . "</h4>";
+		$output .= __('1. The actual services quoted to the customer during checkout will depend on the destination country. Not all methods are available to all destinations.', 'wp-e-commerce') . "<br />";
+		$output .= __('2. Each product must have a valid weight configured. When editing a product, use the weight field.', 'wp-e-commerce') . "<br />";
+		$output .= __('3. To ensure accurate quotes, each product must valid dimensions configured. When editing a product, use the height, width and length fields.', 'wp-e-commerce') . "<br />";
+		$output .= __('4. The combined dimensions are estimated by calculating the volume of each item, and then calculating the cubed root of the overall order volume which becomes width, length and height.', 'wp-e-commerce') . "<br />";
+		$output .= __('5. If no product dimensions are defined, then default package dimensions of 100mm x 100mm x 100mm will be used.', 'wp-e-commerce') . "<br />";
 		$output .= "</tr></td>";
 		return $output;
 	}
@@ -380,7 +380,7 @@ class australiapost {
 
 			if ($data['days']) {
 				// If the estimated number of days is specified, so include it in the quote
-				$text = sprintf(_n('%1$s (estimated delivery time: %2$d business day)', '%1$s (estimated delivery time: %2$d business days)', $data['days'], 'wpsc'), $data['name'], $data['days']);
+				$text = sprintf(_n('%1$s (estimated delivery time: %2$d business day)', '%1$s (estimated delivery time: %2$d business days)', $data['days'], 'wp-e-commerce'), $data['name'], $data['days']);
 			} else {
 				// No time estimate
 				$text = $data['name'];

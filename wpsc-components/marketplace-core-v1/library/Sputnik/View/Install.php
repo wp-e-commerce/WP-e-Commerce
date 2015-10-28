@@ -22,9 +22,9 @@ class Sputnik_View_Install extends Sputnik_View_Mini {
 	protected $api = null;
 
 	public function __construct() {
-		parent::__construct(__('Plugin Install', 'wpsc'));
+		parent::__construct(__('Plugin Install', 'wp-e-commerce'));
 		$this->id = $_GET['install'];
-		$this->title = __('Installing Plugin: %s', 'wpsc');
+		$this->title = __('Installing Plugin: %s', 'wp-e-commerce');
 	}
 
 	protected function prepare() {
@@ -48,7 +48,7 @@ class Sputnik_View_Install extends Sputnik_View_Mini {
 		}
 
 		if ( ! current_user_can('install_plugins') )
-			wp_die(__('You do not have sufficient permissions to install plugins for this site.', 'wpsc'));
+			wp_die(__('You do not have sufficient permissions to install plugins for this site.', 'wp-e-commerce'));
 
 		check_admin_referer($this->nonce_prefix . $this->api->slug);
 

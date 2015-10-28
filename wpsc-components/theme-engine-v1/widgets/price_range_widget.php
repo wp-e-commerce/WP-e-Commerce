@@ -16,10 +16,10 @@ class WP_Widget_Price_Range extends WP_Widget {
 
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_price_range',
-			'description' => __( 'Price Range Widget', 'wpsc' )
+			'description' => __( 'Price Range Widget', 'wp-e-commerce' )
 		);
 
-		parent::__construct( 'wpsc_price_range', __( '(WPEC) Price Range', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_price_range', __( '(WPEC) Price Range', 'wp-e-commerce' ), $widget_ops );
 
 	}
 
@@ -38,7 +38,7 @@ class WP_Widget_Price_Range extends WP_Widget {
 		extract( $args );
 
 		echo $before_widget;
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Price Range', 'wpsc' ) : $instance['title'] );
+		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Price Range', 'wp-e-commerce' ) : $instance['title'] );
 		if ( $title ) {
 			echo $before_title . $title . $after_title;
 		}
@@ -81,7 +81,7 @@ class WP_Widget_Price_Range extends WP_Widget {
 
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wp-e-commerce' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<?php
@@ -125,14 +125,14 @@ function wpsc_price_range( $args = null ) {
 		for ( $i = 0; $i < $final_count; $i++ ) {
 			$j = $i;
 			if ( $i == $final_count - 1 ) {
-				echo "<li><a href='" . esc_url(add_query_arg( 'range', $ranges[$i] . '-', $product_page )) . "'>" . esc_html_x( 'Over ', 'price range widget', 'wpsc' ) . wpsc_currency_display( $ranges[$i] ). "</a></li>";
+				echo "<li><a href='" . esc_url(add_query_arg( 'range', $ranges[$i] . '-', $product_page )) . "'>" . esc_html_x( 'Over ', 'price range widget', 'wp-e-commerce' ) . wpsc_currency_display( $ranges[$i] ). "</a></li>";
 			} else if ( $ranges[$i] == 0 ) {
-				echo "<li><a href='" . esc_url(add_query_arg( 'range', '-' . ($ranges[$i+1]-1), $product_page )) . "'>" . esc_html_x( 'Under ', 'price range widget', 'wpsc' ) . wpsc_currency_display( $ranges[$i + 1] ). "</a></li>";
+				echo "<li><a href='" . esc_url(add_query_arg( 'range', '-' . ($ranges[$i+1]-1), $product_page )) . "'>" . esc_html_x( 'Under ', 'price range widget', 'wp-e-commerce' ) . wpsc_currency_display( $ranges[$i + 1] ). "</a></li>";
 			} else {
 				echo "<li><a href='" . esc_url(add_query_arg( 'range', $ranges[$i] . "-" . ($ranges[$i + 1]-1), $product_page )) . "'>" . wpsc_currency_display( $ranges[$i] ) . " - " . wpsc_currency_display(  ($ranges[$i + 1]-1) ) . "</a></li>";
 			}
 		}
-		echo "<li><a href='" . esc_url(add_query_arg( 'range', 'all', get_option( 'product_list_url' )) ) . "'>" . _x( 'Show All', 'price range widget', 'wpsc' ) . "</a></li>";
+		echo "<li><a href='" . esc_url(add_query_arg( 'range', 'all', get_option( 'product_list_url' )) ) . "'>" . _x( 'Show All', 'price range widget', 'wp-e-commerce' ) . "</a></li>";
 		echo '</ul>';
 	}
 

@@ -396,12 +396,12 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
-			'id'       => __( 'Order ID', 'wpsc' ),
-			'customer' => __( 'Customer', 'wpsc' ),
-			'amount'   => __( 'Amount', 'wpsc' ),
-			'status'   => _x( 'Status', 'sales log list table column', 'wpsc' ),
-			'date'     => __( 'Date', 'wpsc' ),
-			'tracking' => _x( 'Tracking ID', 'purchase log', 'wpsc' ),
+			'id'       => __( 'Order ID', 'wp-e-commerce' ),
+			'customer' => __( 'Customer', 'wp-e-commerce' ),
+			'amount'   => __( 'Amount', 'wp-e-commerce' ),
+			'status'   => _x( 'Status', 'sales log list table column', 'wp-e-commerce' ),
+			'date'     => __( 'Date', 'wp-e-commerce' ),
+			'tracking' => _x( 'Tracking ID', 'purchase log', 'wp-e-commerce' ),
 		) ;
 	}
 
@@ -466,7 +466,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 					'%s <span class="count">(%d)</span>',
 					'%s <span class="count">(%d)</span>',
 					'Purchase log view links for custom status with no explicit translation.',
-					'wpsc'
+					'wp-e-commerce'
 				);
 				$view_labels[$status['order']]['label'] = $status['label'];
 			}
@@ -512,7 +512,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$statuses    = $this->get_per_status_counts();
 
 		$all_text = sprintf(
-			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $statuses['all'], 'purchase logs', 'wpsc' ),
+			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $statuses['all'], 'purchase logs', 'wp-e-commerce' ),
 			number_format_i18n( $statuses['all'] )
 		);
 
@@ -544,13 +544,13 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			if ( empty( $view_labels[$status]['label'] ) ) {
 				// This translation needs only the quantity dropping in.
 				$text = sprintf(
-					translate_nooped_plural( $view_labels[$status]['view_label'], $count, 'wpsc' ),
+					translate_nooped_plural( $view_labels[$status]['view_label'], $count, 'wp-e-commerce' ),
 					number_format_i18n( $count )
 				);
 			} else {
 				// This translation needs the status label, and quantity dropping in.
 				$text = sprintf(
-					translate_nooped_plural( $view_labels[$status]['view_label'], $count, 'wpsc' ),
+					translate_nooped_plural( $view_labels[$status]['view_label'], $count, 'wp-e-commerce' ),
 					$view_labels[$status]['label'],
 					number_format_i18n( $count )
 				);
@@ -611,7 +611,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				?>
 			</select>
 			<?php
-			submit_button( _x( 'Filter', 'extra navigation in purchase log page', 'wpsc' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) );
+			submit_button( _x( 'Filter', 'extra navigation in purchase log page', 'wp-e-commerce' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) );
 
 		}
 	}
@@ -637,16 +637,16 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		 * @param array array() The periods currently defined.
 		 */
 		$periods = apply_filters( 'wpsc_purchase_log_special_periods', array(
-			1 => _x('Today', 'time period for the current day', 'wpsc'),
-			2 => _x('Yesterday', 'time period for the previous day', 'wpsc'),
-			3 => _x('This Week', 'time period for the current week', 'wpsc'),
-			4 => _x('Last Week', 'time period for the prior week', 'wpsc'),
-			5 => _x('This Month', 'time period for the current month to date', 'wpsc'),
-			6 => _x('Last Month', 'time period for the prior month', 'wpsc'),
-			7 => _x('This Quarter', 'time period for the prior two months plus this month-to-date', 'wpsc'),
-			8 => _x('Prior 3 Months', 'time period for the three months prior to the current month', 'wpsc'),
-			9 => _x('This Year', 'time period for the current year to date', 'wpsc'),
-			10 => _x('Last Year', 'time period for the prior year', 'wpsc'),
+			1 => _x('Today', 'time period for the current day', 'wp-e-commerce'),
+			2 => _x('Yesterday', 'time period for the previous day', 'wp-e-commerce'),
+			3 => _x('This Week', 'time period for the current week', 'wp-e-commerce'),
+			4 => _x('Last Week', 'time period for the prior week', 'wp-e-commerce'),
+			5 => _x('This Month', 'time period for the current month to date', 'wp-e-commerce'),
+			6 => _x('Last Month', 'time period for the prior month', 'wp-e-commerce'),
+			7 => _x('This Quarter', 'time period for the prior two months plus this month-to-date', 'wp-e-commerce'),
+			8 => _x('Prior 3 Months', 'time period for the three months prior to the current month', 'wp-e-commerce'),
+			9 => _x('This Year', 'time period for the current year to date', 'wp-e-commerce'),
+			10 => _x('Last Year', 'time period for the prior year', 'wp-e-commerce'),
 		) );
 
 		echo '<option disabled="disabled">---------</option>';
@@ -675,9 +675,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		parent::pagination( $which );
 		$output = ob_get_clean();
 		if ( $this->status == 'all' )
-			$string = _x( 'Total (excluding Incomplete and Declined): %s', 'sales log page total', 'wpsc' );
+			$string = _x( 'Total (excluding Incomplete and Declined): %s', 'sales log page total', 'wp-e-commerce' );
 		else
-			$string = _x( 'Total: %s', 'sales log page total', 'wpsc' );
+			$string = _x( 'Total: %s', 'sales log page total', 'wp-e-commerce' );
 		$total_amount = ' - ' . sprintf( $string, wpsc_currency_display( $this->total_amount ) );
 		$total_amount = str_replace( '$', '\$', $total_amount );
 		$output = preg_replace( '/(<span class="displaying-num">)([^<]+)(<\/span>)/', '${1}${2}' . ' ' . $total_amount . '${3}', $output );
@@ -725,13 +725,13 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$name = trim( $name );
 
 		if ( empty( $name ) ) {
-			$name = apply_filters( 'wpsc_purchase_log_list_no_name', __( 'No name provided', 'wpsc' ), $item );
+			$name = apply_filters( 'wpsc_purchase_log_list_no_name', __( 'No name provided', 'wp-e-commerce' ), $item );
 		}
 
 
 	?>
 		<strong>
-			<a class="row-title" href="<?php echo esc_url( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $name ); ?></a>
+			<a class="row-title" href="<?php echo esc_url( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wp-e-commerce' ) ?>"><?php echo esc_html( $name ); ?></a>
 		</strong><br />
 
 		<?php if ( isset( $item->email ) ) : ?>
@@ -757,10 +757,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 	public function column_id( $item ) {
 		?>
-		<a href="<?php echo esc_url( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->id ); ?></a>
+		<a href="<?php echo esc_url( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wp-e-commerce' ) ?>"><?php echo esc_html( $item->id ); ?></a>
 		<?php if ( ! $this->current_action() == 'delete' ): ?>
 			<br />
-			<small><a class="delete" href="<?php echo esc_url( $this->delete_url( $item ) ); ?>"><?php echo esc_html_x( 'Delete', 'Sales log page', 'wpsc' ); ?></a></small>
+			<small><a class="delete" href="<?php echo esc_url( $this->delete_url( $item ) ); ?>"><?php echo esc_html_x( 'Delete', 'Sales log page', 'wp-e-commerce' ); ?></a></small>
 		<?php endif ?>
 		<?php
 	}
@@ -779,9 +779,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	}
 
 	public function column_amount( $item ) {
-		echo '<a href="' . esc_attr( $this->item_url( $item ) ) . '" title="' . esc_attr__( 'View order details', 'wpsc' ) . '">';
+		echo '<a href="' . esc_attr( $this->item_url( $item ) ) . '" title="' . esc_attr__( 'View order details', 'wp-e-commerce' ) . '">';
 		echo wpsc_currency_display( $item->amount ) . "<br />";
-		echo '<small>' . sprintf( _n( '1 item', '%s items', $item->item_count, 'wpsc' ), number_format_i18n( $item->item_count ) ) . '</small>';
+		echo '<small>' . sprintf( _n( '1 item', '%s items', $item->item_count, 'wp-e-commerce' ), number_format_i18n( $item->item_count ) ) . '</small>';
 		echo '</a>';
 	}
 
@@ -816,11 +816,11 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$empty = empty( $item->track_id );
 		?>
 			<div data-log-id="<?php echo esc_attr( $item->id ); ?>" <?php echo $empty ? ' class="empty"' : ''; ?>>
-				<a class="add" href="#"><?php echo esc_html_x( 'Add Tracking ID', 'add purchase log tracking id', 'wpsc' ); ?></a>
+				<a class="add" href="#"><?php echo esc_html_x( 'Add Tracking ID', 'add purchase log tracking id', 'wp-e-commerce' ); ?></a>
 				<input type="text" class="wpsc-purchase-log-tracking-id" value="<?php echo esc_attr( $item->track_id ); ?>" />
-				<a class="button save" href="#"><?php echo esc_html_x( 'Save', 'save sales log tracking id', 'wpsc' ); ?></a>
+				<a class="button save" href="#"><?php echo esc_html_x( 'Save', 'save sales log tracking id', 'wp-e-commerce' ); ?></a>
 				<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
-				<small class="send-email"><a href="#"><?php echo esc_html_x( 'Send Email', 'sales log', 'wpsc' ); ?></a></small>
+				<small class="send-email"><a href="#"><?php echo esc_html_x( 'Send Email', 'sales log', 'wp-e-commerce' ); ?></a></small>
 			</div>
 		<?php
 	}
@@ -844,7 +844,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 		// Standard actions.
 		$actions = array(
-			'delete' => _x( 'Delete', 'bulk action', 'wpsc' ),
+			'delete' => _x( 'Delete', 'bulk action', 'wp-e-commerce' ),
 		);
 
 		// Loop through all statuses and register bulk actions for them.

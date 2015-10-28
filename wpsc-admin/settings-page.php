@@ -202,14 +202,14 @@ final class WPSC_Settings_Page {
 	 */
 	public static function init() {
 		self::$default_tabs = array(
-			'general'      => _x( 'General'     , 'General settings tab in Settings->Store page'     , 'wpsc' ),
-			'admin'        => _x( 'Admin'       , 'Admin settings tab in Settings->Store page'       , 'wpsc' ),
-			'taxes'        => _x( 'Taxes'       , 'Taxes settings tab in Settings->Store page'       , 'wpsc' ),
-			'shipping'     => _x( 'Shipping'    , 'Shipping settings tab in Settings->Store page'    , 'wpsc' ),
-			'gateway'      => _x( 'Payments'    , 'Payments settings tab in Settings->Store page'    , 'wpsc' ),
-			'checkout'     => _x( 'Checkout'    , 'Checkout settings tab in Settings->Store page'    , 'wpsc' ),
-			'marketing'    => _x( 'Marketing'   , 'Marketing settings tab in Settings->Store page'   , 'wpsc' ),
-			'import'       => _x( 'Import'      , 'Import settings tab in Settings->Store page'      , 'wpsc' )
+			'general'      => _x( 'General'     , 'General settings tab in Settings->Store page'     , 'wp-e-commerce' ),
+			'admin'        => _x( 'Admin'       , 'Admin settings tab in Settings->Store page'       , 'wp-e-commerce' ),
+			'taxes'        => _x( 'Taxes'       , 'Taxes settings tab in Settings->Store page'       , 'wp-e-commerce' ),
+			'shipping'     => _x( 'Shipping'    , 'Shipping settings tab in Settings->Store page'    , 'wp-e-commerce' ),
+			'gateway'      => _x( 'Payments'    , 'Payments settings tab in Settings->Store page'    , 'wp-e-commerce' ),
+			'checkout'     => _x( 'Checkout'    , 'Checkout settings tab in Settings->Store page'    , 'wp-e-commerce' ),
+			'marketing'    => _x( 'Marketing'   , 'Marketing settings tab in Settings->Store page'   , 'wp-e-commerce' ),
+			'import'       => _x( 'Import'      , 'Import settings tab in Settings->Store page'      , 'wp-e-commerce' )
 		);
 
 		add_action( 'wpsc_register_settings_tabs' , array( 'WPSC_Settings_Page', 'register_default_tabs'  ), 1 );
@@ -510,7 +510,7 @@ final class WPSC_Settings_Page {
 			<div id="wpsc_options" class="wrap">
 				<div id="icon_card" class="icon32"></div>
 				<h2 id="wpsc-settings-page-title">
-					<?php esc_html_e( 'Store Settings', 'wpsc' ); ?>
+					<?php esc_html_e( 'Store Settings', 'wp-e-commerce' ); ?>
 					<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
 				</h2>
 				<?php $this->output_tabs(); ?>

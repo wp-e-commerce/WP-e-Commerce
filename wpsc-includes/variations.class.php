@@ -48,7 +48,7 @@ class wpsc_variations {
 			array_unshift(
 				$this->all_associated_variations[$variation_set], (object) array(
 				'term_id' => 0,
-				'name'    => __( '-- Please Select --', 'wpsc' ),
+				'name'    => __( '-- Please Select --', 'wp-e-commerce' ),
 				)
 			);
 		}
@@ -194,7 +194,7 @@ function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc
 
 	foreach ( $taxonomies as $taxonomy ) {
 		if ( ! taxonomy_exists( $taxonomy ) )
-			return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wpsc' ) );
+			return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wp-e-commerce' ) );
 	}
 
 	$defaults = array(
@@ -260,10 +260,10 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
 	foreach ( ( array ) $taxonomies as $taxonomy ) {
 		if ( $current_version_number < 3.8 ) {
 			if ( ! taxonomy_exists( $taxonomy ) )
-				return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wpsc' ) );
+				return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wp-e-commerce' ) );
 		} else {
 			if ( !taxonomy_exists( $taxonomy ) )
-				return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wpsc' ) );
+				return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wp-e-commerce' ) );
 		}
 	}
 

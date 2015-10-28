@@ -26,8 +26,8 @@ class Sputnik_Pointers {
 
 	public static function print_footer_scripts() {
    		$content  = '<h3>' . __( 'New Feature: WPeC Extensions' ) . '</h3>';
-		$content .= '<p>' .  __( 'Ever wanted to be able to find an extension for your WP eCommerce store and purchase, install and activate it right from WordPress? Now you can!', 'wpsc' ) . '</p>';
-		$content .= '<p>' .  __( 'Find the latest and greatest free and premium plugins from the WP eCommerce community in our <a href="' . Sputnik_Admin::build_url() . '">Extensions Marketplace</a>.', 'wpsc' ) . '</p>';
+		$content .= '<p>' .  __( 'Ever wanted to be able to find an extension for your WP eCommerce store and purchase, install and activate it right from WordPress? Now you can!', 'wp-e-commerce' ) . '</p>';
+		$content .= '<p>' .  __( 'Find the latest and greatest free and premium plugins from the WP eCommerce community in our <a href="' . Sputnik_Admin::build_url() . '">Extensions Marketplace</a>.', 'wp-e-commerce' ) . '</p>';
 	?>
 	<script type="text/javascript">// <![CDATA[
 	jQuery(document).ready(function($) {

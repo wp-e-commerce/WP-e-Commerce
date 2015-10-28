@@ -527,7 +527,7 @@ function wpsc_display_tracking_id(){
    if(!empty($value))
 	  return $value;
    else
-	  return __('Add New','wpsc');
+	  return __('Add New','wp-e-commerce');
 }
 
 /**
@@ -558,7 +558,7 @@ function wpsc_the_purch_item_name() {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    if ( wpsc_purchlogs_has_customfields( wpsc_the_purch_item_id() ) ) {
-      return $purchlogs->the_purch_item_name() . '<img src="' . WPSC_CORE_IMAGES_URL . '/info_icon.jpg" title="' . esc_attr__( 'This Purchase has custom user content', 'wpsc' ) . '" alt="' . esc_attr__( 'exclamation icon', 'wpsc' ) . '" />';
+      return $purchlogs->the_purch_item_name() . '<img src="' . WPSC_CORE_IMAGES_URL . '/info_icon.jpg" title="' . esc_attr__( 'This Purchase has custom user content', 'wp-e-commerce' ) . '" alt="' . esc_attr__( 'exclamation icon', 'wp-e-commerce' ) . '" />';
    } else {
 	  return $purchlogs->the_purch_item_name();
    }
@@ -804,7 +804,7 @@ function wpsc_admin_product_listing( $parent_product = null, $args = array() ) {
 	?>
 	<tr>
 		<td colspan="8">
-			<?php _e( 'You have no Variations added.', 'wpsc' ); ?>
+			<?php _e( 'You have no Variations added.', 'wp-e-commerce' ); ?>
 		</td>
 	</tr>
 	<?php
@@ -860,7 +860,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 	}
 
 	if ( empty( $title ) )
-		$title = __( '(no title)', 'wpsc' );
+		$title = __( '(no title)', 'wp-e-commerce' );
 
 	?>
 
@@ -869,7 +869,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 	$posts_columns = get_column_headers( 'wpsc-product_variants' );
 
 	if(empty($posts_columns))
-		$posts_columns = array('image' => '', 'title' => __('Name', 'wpsc') , 'weight' => __('Weight', 'wpsc'), 'stock' => __('Stock', 'wpsc'), 'price' => __('Price', 'wpsc'), 'sale_price' => __('Sale Price', 'wpsc'), 'SKU' => __('SKU', 'wpsc'), 'hidden_alerts' => '');
+		$posts_columns = array('image' => '', 'title' => __('Name', 'wp-e-commerce') , 'weight' => __('Weight', 'wp-e-commerce'), 'stock' => __('Stock', 'wp-e-commerce'), 'price' => __('Price', 'wp-e-commerce'), 'sale_price' => __('Sale Price', 'wp-e-commerce'), 'SKU' => __('SKU', 'wp-e-commerce'), 'hidden_alerts' => '');
 
 	foreach ( $posts_columns as $column_name=>$column_display_name ) {
 		$attributes = "class=\"$column_name column-$column_name\"";
@@ -878,19 +878,19 @@ function wpsc_product_row(&$product, $parent_product = null) {
 
                     case 'date': /* !date case */
 			if ( '0000-00-00 00:00:00' == $product->post_date && 'date' == $column_name ) {
-				$t_time = $h_time = __( 'Unpublished', 'wpsc' );
+				$t_time = $h_time = __( 'Unpublished', 'wp-e-commerce' );
 				$time_diff = 0;
 			} else {
-				$t_time = get_the_time( __( 'Y/m/d g:i:s A', 'wpsc' ) );
+				$t_time = get_the_time( __( 'Y/m/d g:i:s A', 'wp-e-commerce' ) );
 				$m_time = $product->post_date;
 				$time = get_post_time('G', true, $post);
 
 				$time_diff = time() - $time;
 
 				if ( $time_diff > 0 && $time_diff < 24*60*60 )
-					$h_time = sprintf( __( '%s ago', 'wpsc' ), human_time_diff( $time ) );
+					$h_time = sprintf( __( '%s ago', 'wp-e-commerce' ), human_time_diff( $time ) );
 				else
-					$h_time = mysql2date(__( 'Y/m/d', 'wpsc' ), $m_time);
+					$h_time = mysql2date(__( 'Y/m/d', 'wp-e-commerce' ), $m_time);
 			}
 
 			echo '<td ' . $attributes . '>';
@@ -900,14 +900,14 @@ function wpsc_product_row(&$product, $parent_product = null) {
 				echo '<abbr title="' . $t_time . '">' . apply_filters('post_date_column_time', $h_time, $post, $column_name, $mode) . '</abbr>';
 			echo '<br />';
 			if ( 'publish' == $product->post_status ) {
-				_e( 'Published', 'wpsc' );
+				_e( 'Published', 'wp-e-commerce' );
 			} elseif ( 'future' == $product->post_status ) {
 				if ( $time_diff > 0 )
-					echo '<strong class="attention">' . __( 'Missed schedule', 'wpsc' ) . '</strong>';
+					echo '<strong class="attention">' . __( 'Missed schedule', 'wp-e-commerce' ) . '</strong>';
 				else
-					_e( 'Scheduled', 'wpsc' );
+					_e( 'Scheduled', 'wp-e-commerce' );
 			} else {
-				_e( 'Last Modified', 'wpsc' );
+				_e( 'Last Modified', 'wp-e-commerce' );
 			}
 			echo '</td>';
 		break;
@@ -920,9 +920,9 @@ function wpsc_product_row(&$product, $parent_product = null) {
 		<td <?php echo $attributes ?>>
 			<strong>
 			<?php if ( $current_user_can_edit_this_product && $product->post_status != 'trash' ) { ?>
-				<span><a class="row-title" href="<?php echo esc_url( $edit_link ); ?>" title="<?php echo esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;', 'wpsc' ), $title ) ); ?>"><?php echo esc_html( $title ) ?></a></span>
+				<span><a class="row-title" href="<?php echo esc_url( $edit_link ); ?>" title="<?php echo esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;', 'wp-e-commerce' ), $title ) ); ?>"><?php echo esc_html( $title ) ?></a></span>
 				<?php if($parent_product): ?>
-					<a href="<?php echo esc_url( $edit_link ); ?>" title="<?php echo esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;', 'wpsc' ), $title ) ); ?>"><?php echo esc_html( $title ) ?></a>
+					<a href="<?php echo esc_url( $edit_link ); ?>" title="<?php echo esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;', 'wp-e-commerce' ), $title ) ); ?>"><?php echo esc_html( $title ) ?></a>
 
 				<?php endif; ?>
 			<?php } else {
@@ -954,9 +954,9 @@ function wpsc_product_row(&$product, $parent_product = null) {
  				$has_var = 'wpsc_has_variation';
 			$actions = array();
 			if ( $current_user_can_edit_this_product && 'trash' != $product->post_status ) {
-				$actions['edit'] = '<a class="edit-product" href="'.$edit_link.'" title="' . esc_attr__( 'Edit this product', 'wpsc' ) . '">'. __( 'Edit', 'wpsc' ) . '</a>';
+				$actions['edit'] = '<a class="edit-product" href="'.$edit_link.'" title="' . esc_attr__( 'Edit this product', 'wp-e-commerce' ) . '">'. __( 'Edit', 'wp-e-commerce' ) . '</a>';
 				//commenting this out for now as we are trying new variation ui quick edit boxes are open by default so we dont need this link.
-				//$actions['quick_edit'] = "<a class='wpsc_editinline ".$has_var."' title='".esc_attr(__('Quick Edit', 'wpsc'))."' href='#'>".__('Quick Edit', 'wpsc')."</a>";
+				//$actions['quick_edit'] = "<a class='wpsc_editinline ".$has_var."' title='".esc_attr(__('Quick Edit', 'wp-e-commerce'))."' href='#'>".__('Quick Edit', 'wp-e-commerce')."</a>";
 			}
 
 			$actions = apply_filters('post_row_actions', $actions, $product);
@@ -994,7 +994,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 		     } else {
 		      	$image_url = WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif";
 				?>
-					<img title='<?php esc_attr_e( 'Drag to a new position', 'wpsc' ); ?>' src='<?php echo esc_url( $image_url ); ?>' alt='<?php echo esc_attr( $title ); ?>' width='38' height='38' />
+					<img title='<?php esc_attr_e( 'Drag to a new position', 'wp-e-commerce' ); ?>' src='<?php echo esc_url( $image_url ); ?>' alt='<?php echo esc_attr( $title ); ?>' width='38' height='38' />
 			<?php
 	    		  }
 			?>
@@ -1009,7 +1009,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 				<td  <?php echo $attributes ?>>
 					<?php echo wpsc_currency_display( $price ); ?>
 					<input type="text" class="wpsc_ie_field wpsc_ie_price" value="<?php echo esc_attr( $price ); ?>">
-					<a href="<?php echo $edit_link?>/#wpsc_downloads"><?php esc_html_e( 'Variant Download Files', 'wpsc' ); ?></a>
+					<a href="<?php echo $edit_link?>/#wpsc_downloads"><?php esc_html_e( 'Variant Download Files', 'wp-e-commerce' ); ?></a>
 				</td>
 			<?php
 		break;
@@ -1034,7 +1034,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 				<td  <?php echo $attributes ?>>
 					<span><?php echo esc_html( $weight ); ?></span>
 					<input type="text" class="wpsc_ie_field wpsc_ie_weight" value="<?php echo esc_attr( $weight ); ?>">
-					<a href="<?php echo $edit_link?>/#wpsc_tax"><?php esc_html_e( 'Set Variant Tax', 'wpsc' ); ?></a>
+					<a href="<?php echo $edit_link?>/#wpsc_tax"><?php esc_html_e( 'Set Variant Tax', 'wp-e-commerce' ); ?></a>
 				</td>
 			<?php
 
@@ -1044,9 +1044,9 @@ function wpsc_product_row(&$product, $parent_product = null) {
 			$stock = get_post_meta($product->ID, '_wpsc_stock', true);
 			?>
 				<td  <?php echo $attributes ?>>
-					<span><?php echo $stock ? $stock : __( 'N/A', 'wpsc' ) ; ?></span>
+					<span><?php echo $stock ? $stock : __( 'N/A', 'wp-e-commerce' ) ; ?></span>
 					<input type="text" class="wpsc_ie_field wpsc_ie_stock" value="<?php echo esc_attr( $stock ); ?>">
-					<a href="<?php echo $edit_link?>/#wpsc_shipping"><?php esc_html_e( 'Set Variant Shipping', 'wpsc' ); ?></a>
+					<a href="<?php echo $edit_link?>/#wpsc_shipping"><?php esc_html_e( 'Set Variant Shipping', 'wp-e-commerce' ); ?></a>
 				</td>
 	<?php
 		break;
@@ -1061,7 +1061,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 					$out[] = "<a href='admin.php?page=wpsc-edit-products&amp;category={$c->slug}'> " . esc_html(sanitize_term_field('name', $c->name, $c->term_id, 'category', 'display')) . "</a>";
 					echo join( ', ', $out );
 			} else {
-				esc_html_e( 'Uncategorized', 'wpsc' );
+				esc_html_e( 'Uncategorized', 'wp-e-commerce' );
 			}
 		?></td>
 		<?php
@@ -1077,7 +1077,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 					$out[] = "<a href='edit.php?tag=$c->slug'> " . esc_html(sanitize_term_field('name', $c->name, $c->term_id, 'post_tag', 'display')) . "</a>";
 				echo join( ', ', $out );
 			} else {
-				esc_html_e( 'No Tags', 'wpsc' );
+				esc_html_e( 'No Tags', 'wp-e-commerce' );
 			}
 		?></td>
 		<?php
@@ -1086,7 +1086,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 			$sku = get_post_meta($product->ID, '_wpsc_sku', true);
 			?>
 				<td  <?php echo $attributes ?>>
-					<span><?php echo $sku ? $sku : esc_html__( 'N/A', 'wpsc' ); ?></span>
+					<span><?php echo $sku ? $sku : esc_html__( 'N/A', 'wp-e-commerce' ); ?></span>
 					<input type="text" class="wpsc_ie_field wpsc_ie_sku" value="<?php echo esc_attr( $sku ); ?>">
 										<input type="hidden" class="wpsc_ie_id wpsc_ie_field" value="<?php echo $product->ID ?>">
 					<div class="wpsc_inline_actions"><input type="button" class="button-primary wpsc_ie_save" value="Save"><img src="<?php echo admin_url( 'images/wpspin_light.gif' ) ?>" class="loading_indicator"><br/></div>
@@ -1109,10 +1109,10 @@ function wpsc_product_row(&$product, $parent_product = null) {
 		?>
 		<td <?php echo $attributes ?>><div class="post-com-count-wrapper">
 		<?php
-			$pending_phrase = sprintf( __( '%s pending', 'wpsc' ), number_format( $pending_comments ) );
+			$pending_phrase = sprintf( __( '%s pending', 'wp-e-commerce' ), number_format( $pending_comments ) );
 			if ( $pending_comments )
 				echo '<strong>';
-				comments_number("<a href='edit-comments.php?p=$product->ID' title='$pending_phrase' class='post-com-count'><span class='comment-count'>" . /* translators: comment count link */ _x( '0', 'comment count', 'wpsc' ) . '</span></a>', "<a href='edit-comments.php?p=$product->ID' title='$pending_phrase' class='post-com-count'><span class='comment-count'>" . /* translators: comment count link */ _x('1', 'comment count', 'wpsc') . '</span></a>', "<a href='edit-comments.php?p=$product->ID' title='$pending_phrase' class='post-com-count'><span class='comment-count'>" . /* translators: comment count link: % will be substituted by comment count */ _x('%', 'comment count', 'wpsc') . '</span></a>');
+				comments_number("<a href='edit-comments.php?p=$product->ID' title='$pending_phrase' class='post-com-count'><span class='comment-count'>" . /* translators: comment count link */ _x( '0', 'comment count', 'wp-e-commerce' ) . '</span></a>', "<a href='edit-comments.php?p=$product->ID' title='$pending_phrase' class='post-com-count'><span class='comment-count'>" . /* translators: comment count link */ _x('1', 'comment count', 'wp-e-commerce') . '</span></a>', "<a href='edit-comments.php?p=$product->ID' title='$pending_phrase' class='post-com-count'><span class='comment-count'>" . /* translators: comment count link: % will be substituted by comment count */ _x('%', 'comment count', 'wp-e-commerce') . '</span></a>');
 				if ( $pending_comments )
 				echo '</strong>';
 		?>
@@ -1128,19 +1128,19 @@ function wpsc_product_row(&$product, $parent_product = null) {
 
 		case 'control_view':  /* !control view case */
 		?>
-		<td><a href="<?php the_permalink(); ?>" rel="permalink" class="view"><?php esc_html_e( 'View', 'wpsc' ); ?></a></td>
+		<td><a href="<?php the_permalink(); ?>" rel="permalink" class="view"><?php esc_html_e( 'View', 'wp-e-commerce' ); ?></a></td>
 		<?php
 		break;
 
 		case 'control_edit':  /* !control edit case */
 		?>
-		<td><?php if ( $current_user_can_edit_this_product ) { echo "<a href='$edit_link' class='edit'>" . esc_html__( 'Edit', 'wpsc' ) . "</a>"; } ?></td>
+		<td><?php if ( $current_user_can_edit_this_product ) { echo "<a href='$edit_link' class='edit'>" . esc_html__( 'Edit', 'wp-e-commerce' ) . "</a>"; } ?></td>
 		<?php
 		break;
 
 		case 'control_delete':  /* !control delete case */
 		?>
-		<td><?php if ( $current_user_can_edit_this_product ) { echo "<a href='" . wp_nonce_url("post.php?action=delete&amp;post=$id", 'delete-post_' . $product->ID) . "' class='delete'>" . __( 'Delete', 'wpsc' ) . "</a>"; } ?></td>
+		<td><?php if ( $current_user_can_edit_this_product ) { echo "<a href='" . wp_nonce_url("post.php?action=delete&amp;post=$id", 'delete-post_' . $product->ID) . "' class='delete'>" . __( 'Delete', 'wp-e-commerce' ) . "</a>"; } ?></td>
 		<?php
 		break;
 
@@ -1346,7 +1346,7 @@ function wpsc_product_image_forms() {
 
 ?>
 
-    <p><strong <?php if ( isset( $display ) ) echo $display; ?>><a href="media-upload.php?parent_page=wpsc-edit-products&amp;post_id=<?php echo $post->ID; ?>&amp;type=image&amp;tab=gallery&amp;TB_iframe=1&amp;width=640&amp;height=566" class="thickbox" title="<?php esc_attr_e( 'Manage Product Images', 'wpsc' ); ?>"><?php esc_html_e( 'Manage Product Images', 'wpsc' ); ?></a></strong></p>
+    <p><strong <?php if ( isset( $display ) ) echo $display; ?>><a href="media-upload.php?parent_page=wpsc-edit-products&amp;post_id=<?php echo $post->ID; ?>&amp;type=image&amp;tab=gallery&amp;TB_iframe=1&amp;width=640&amp;height=566" class="thickbox" title="<?php esc_attr_e( 'Manage Product Images', 'wp-e-commerce' ); ?>"><?php esc_html_e( 'Manage Product Images', 'wp-e-commerce' ); ?></a></strong></p>
 <?php
 }
 
@@ -1385,7 +1385,7 @@ function wpsc_media_upload_tab_gallery( $tabs ) {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
 
 	unset( $tabs['gallery'] );
-	$tabs['gallery'] = __( 'Product Image Gallery', 'wpsc' );
+	$tabs['gallery'] = __( 'Product Image Gallery', 'wp-e-commerce' );
 
 	return $tabs;
 }
@@ -1432,7 +1432,7 @@ function wpsc_gallery_css_mods() {
 		jQuery("a.wp-post-thumbnail").each(function(){
 			var product_image = jQuery(this).text();
 			if (product_image == "' . __( 'Use as featured image' ) . '") {
-				jQuery(this).text("' . __( 'Use as Product Thumbnail', 'wpsc' ) . '");
+				jQuery(this).text("' . __( 'Use as Product Thumbnail', 'wp-e-commerce' ) . '");
 			}
 		});
 	});
@@ -1467,9 +1467,9 @@ function wpsc_filter_feature_image_text( $translation, $text, $domain ) {
 		$post = get_post( $_REQUEST['post_id'] );
 		if ( $post->post_type != 'wpsc-product' ) return $translation;
 		$translations = &get_translations_for_domain( $domain );
-		return $translations->translate( 'Use as Product Thumbnail', 'wpsc' );
+		return $translations->translate( 'Use as Product Thumbnail', 'wp-e-commerce' );
 		//this will never happen, this is here only for gettexr to pick up the translation
-		return __( 'Use as Product Thumbnail', 'wpsc' );
+		return __( 'Use as Product Thumbnail', 'wp-e-commerce' );
 	}
 
 	return $translation;
@@ -1491,7 +1491,7 @@ function wpsc_display_invoice() {
 
 function wpsc_packing_slip( $purchase_id ) {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
-	echo "<!DOCTYPE html><html><meta http-equiv=\"content-type\" content=\"text-html; charset=utf-8\"><head><title>" . __( 'Packing Slip', 'wpsc' ) . "</title></head><body id='wpsc-packing-slip'>";
+	echo "<!DOCTYPE html><html><meta http-equiv=\"content-type\" content=\"text-html; charset=utf-8\"><head><title>" . __( 'Packing Slip', 'wp-e-commerce' ) . "</title></head><body id='wpsc-packing-slip'>";
 	global $wpdb;
 	$purch_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `id`=%d", $purchase_id );
 	$purch_data = $wpdb->get_row( $purch_sql, ARRAY_A ) ;
@@ -1502,8 +1502,8 @@ function wpsc_packing_slip( $purchase_id ) {
 
 	if($cart_log != null) {
 		echo "<div class='packing_slip'>\n\r";
-		echo apply_filters( 'wpsc_packing_slip_header', '<h2>' . esc_html__( 'Packing Slip', 'wpsc' ) . "</h2>\n\r" );
-		echo "<strong>". esc_html__( 'Order', 'wpsc' )." #</strong> ".$purchase_id."<br /><br />\n\r";
+		echo apply_filters( 'wpsc_packing_slip_header', '<h2>' . esc_html__( 'Packing Slip', 'wp-e-commerce' ) . "</h2>\n\r" );
+		echo "<strong>". esc_html__( 'Order', 'wp-e-commerce' )." #</strong> ".$purchase_id."<br /><br />\n\r";
 
 		echo "<table>\n\r";
 
@@ -1526,7 +1526,7 @@ function wpsc_packing_slip( $purchase_id ) {
 						$delivery_region_count = $wpdb->get_var( $region_count_sql );
 
 						if(is_numeric($purch_data['billing_region']) && ($delivery_region_count > 0))
-							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['billing_region'])."</td></tr>\n\r";
+							echo "	<tr><td>".esc_html__('State', 'wp-e-commerce').":</td><td>".wpsc_get_region($purch_data['billing_region'])."</td></tr>\n\r";
 
 						 echo "	<tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html(  $rekeyed_input[$form_field['id']]['value'] ) . "</td></tr>\n\r";
 					break;
@@ -1534,7 +1534,7 @@ function wpsc_packing_slip( $purchase_id ) {
 					case 'delivery_country':
 
 						if(is_numeric($purch_data['shipping_region']) && ($delivery_region_count > 0))
-							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
+							echo "	<tr><td>".esc_html__('State', 'wp-e-commerce').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
 
 						 echo "	<tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html( $rekeyed_input[ $form_field['id']]['value'] ) . "</td></tr>\n\r";
 					break;
@@ -1559,10 +1559,10 @@ function wpsc_packing_slip( $purchase_id ) {
 
 			}
 		} else {
-			echo "	<tr><td>".esc_html__('Name', 'wpsc').":</td><td>".$purch_data['firstname']." ".$purch_data['lastname']."</td></tr>\n\r";
-			echo "	<tr><td>".esc_html__('Address', 'wpsc').":</td><td>".$purch_data['address']."</td></tr>\n\r";
-			echo "	<tr><td>".esc_html__('Phone', 'wpsc').":</td><td>".$purch_data['phone']."</td></tr>\n\r";
-			echo "	<tr><td>".esc_html__('Email', 'wpsc').":</td><td>".$purch_data['email']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Name', 'wp-e-commerce').":</td><td>".$purch_data['firstname']." ".$purch_data['lastname']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Address', 'wp-e-commerce').":</td><td>".$purch_data['address']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Phone', 'wp-e-commerce').":</td><td>".$purch_data['phone']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Email', 'wp-e-commerce').":</td><td>".$purch_data['email']."</td></tr>\n\r";
 		}
 
 		if ( 2 == get_option( 'payment_method' ) ) {
@@ -1575,7 +1575,7 @@ function wpsc_packing_slip( $purchase_id ) {
 						$gateway_name = $gateway['name'];
 					}
 				} else {
-					$gateway_name = esc_html__('Manual Payment', 'wpsc');
+					$gateway_name = esc_html__('Manual Payment', 'wp-e-commerce');
 				}
 			}
 		}
@@ -1589,15 +1589,15 @@ function wpsc_packing_slip( $purchase_id ) {
 		echo "<table class='packing_slip'>";
 
 		echo "<tr>";
-		echo " <th>".esc_html__('Quantity', 'wpsc')." </th>";
+		echo " <th>".esc_html__('Quantity', 'wp-e-commerce')." </th>";
 
-		echo " <th>".esc_html__('Name', 'wpsc')."</th>";
+		echo " <th>".esc_html__('Name', 'wp-e-commerce')."</th>";
 
 
-		echo " <th>".esc_html__('Price', 'wpsc')." </th>";
+		echo " <th>".esc_html__('Price', 'wp-e-commerce')." </th>";
 
-		echo " <th>".esc_html__('Shipping', 'wpsc')." </th>";
-		echo '<th>' . esc_html__('Tax', 'wpsc') . '</th>';
+		echo " <th>".esc_html__('Shipping', 'wp-e-commerce')." </th>";
+		echo '<th>' . esc_html__('Tax', 'wp-e-commerce') . '</th>';
 		echo '</tr>';
 		$endtotal = 0;
 		$all_donations = true;
@@ -1666,21 +1666,21 @@ function wpsc_packing_slip( $purchase_id ) {
 		echo "</table>";
 		echo '<table class="packing-slip-totals">';
 		if ( floatval( $purch_data['discount_value'] ) )
-			echo '<tr><th>'.esc_html__('Discount', 'wpsc').'</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
+			echo '<tr><th>'.esc_html__('Discount', 'wp-e-commerce').'</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
 
-		echo '<tr><th>'.esc_html__('Base Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
-		echo '<tr><th>'.esc_html__('Total Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
+		echo '<tr><th>'.esc_html__('Base Shipping','wp-e-commerce').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
+		echo '<tr><th>'.esc_html__('Total Shipping','wp-e-commerce').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
         //wpec_taxes
         if($purch_data['wpec_taxes_total'] != 0.00)
         {
-           echo '<tr><th>'.esc_html__('Taxes','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
+           echo '<tr><th>'.esc_html__('Taxes','wp-e-commerce').'</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
         }
-		echo '<tr><th>'.esc_html__('Total Price','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
+		echo '<tr><th>'.esc_html__('Total Price','wp-e-commerce').'</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
 		echo '</table>';
 
 		echo "</div>\n\r";
 	} else {
-		echo "<br />".esc_html__('This users cart was empty', 'wpsc');
+		echo "<br />".esc_html__('This users cart was empty', 'wp-e-commerce');
 	}
 }
 
@@ -1940,7 +1940,7 @@ if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['
 }
 
 if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
-	_wpsc_doing_it_wrong( 'wpsc_ajax_actions', __( 'wpsc_ajax_actions is not the proper parameter to pass AJAX handlers to WPeC.  Use wpsc_ajax_action instead.', 'wpsc' ) );
+	_wpsc_doing_it_wrong( 'wpsc_ajax_actions', __( 'wpsc_ajax_actions is not the proper parameter to pass AJAX handlers to WPeC.  Use wpsc_ajax_action instead.', 'wp-e-commerce' ) );
 	add_action( 'init', 'wpsc_update_location' );
 }
 
@@ -1972,7 +1972,7 @@ function _wpsc_display_permalink_refresh_notice() {
 	?>
 	<div id="notice" class="error fade">
 		<p>
-			<?php printf( __( 'Due to <a href="%1$s">a bug in WordPress prior to version 3.3</a>, you might run into 404 errors when viewing your products. To work around this, <a href="%2$s">upgrade to WordPress 3.3 or later</a>, or simply click "Save Changes" below a second time.' , 'wpsc' ), 'http://core.trac.wordpress.org/ticket/16736', 'http://codex.wordpress.org/Updating_WordPress' ); ?>
+			<?php printf( __( 'Due to <a href="%1$s">a bug in WordPress prior to version 3.3</a>, you might run into 404 errors when viewing your products. To work around this, <a href="%2$s">upgrade to WordPress 3.3 or later</a>, or simply click "Save Changes" below a second time.' , 'wp-e-commerce' ), 'http://core.trac.wordpress.org/ticket/16736', 'http://codex.wordpress.org/Updating_WordPress' ); ?>
 		</p>
 	</div>
 	<?php
@@ -1990,7 +1990,7 @@ if ( ! function_exists( 'change_context' ) )  {
 
 		if ( $current_screen->id != 'wpsc-product' )
 			return $context;
-		return __( 'Upload Image%s', 'wpsc' );
+		return __( 'Upload Image%s', 'wp-e-commerce' );
 
 	}
 }
@@ -2157,7 +2157,7 @@ function nzshpcrt_region_list( $selected_country = null, $selected_region = null
 			$output .= "<option value='" . $region['id'] . "' $selected>" . $region['name'] . "</option>\r\n";
 		}
 	} else {
-		$output .= "<option value=''>" . esc_html__( 'None', 'wpsc' ) . "</option>\r\n";
+		$output .= "<option value=''>" . esc_html__( 'None', 'wp-e-commerce' ) . "</option>\r\n";
 	}
 
 	return $output;
@@ -2173,7 +2173,7 @@ function nzshpcrt_region_list( $selected_country = null, $selected_region = null
  */
 function nzshpcrt_form_field_list( $selected_field = null ) {
 	global $wpdb;
-	$output = "<option value=''>" . esc_html__( 'Please choose', 'wpsc' ) . "</option>";
+	$output = "<option value=''>" . esc_html__( 'Please choose', 'wp-e-commerce' ) . "</option>";
 	$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1';";
 	$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
 
@@ -2281,7 +2281,7 @@ function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $du
  *
  * When a product is duplicated, the featured image ID is copied when the post
  * meta is duplicated.
- * 
+ *
  * When the featured image is attached to the duplicated product, if the image
  * is duplicated the featured image ID is updated to the duplicated image ID
  * otherwise the featured image ID is removed.
@@ -2316,9 +2316,9 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
  *
  * @param   int    $old_parent_id  Post id for old parent.
  * @param   int    $new_parenc_id  Post id for the new parent.
- * @return  array                  Array mapping old child IDs to duplicated child IDs. 
+ * @return  array                  Array mapping old child IDs to duplicated child IDs.
  *
- * @deprecated  since 4.0                   
+ * @deprecated  since 4.0
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 

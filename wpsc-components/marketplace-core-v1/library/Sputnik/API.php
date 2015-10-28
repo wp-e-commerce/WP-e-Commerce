@@ -121,7 +121,7 @@ class Sputnik_API {
 		// Close the authentication popup ?>
 <!DOCTYPE html><html>
 	<head>
-		<title><?php _e( 'Redirecting ...', 'wpsc' ); ?></title>
+		<title><?php _e( 'Redirecting ...', 'wp-e-commerce' ); ?></title>
 		<script type="text/javascript">
 			parent.location = '<?php echo wp_validate_redirect( $return_url ); ?>';
 			window.close();

@@ -91,7 +91,7 @@ function wpsc_duplicate_product() {
 		wp_redirect( esc_url_raw( $sendback ) );
 		exit();
 	} else {
-		wp_die( __( 'Sorry, for some reason, we couldn\'t duplicate this product because it could not be found in the database, check there for this ID: ', 'wpsc' ) . $id );
+		wp_die( __( 'Sorry, for some reason, we couldn\'t duplicate this product because it could not be found in the database, check there for this ID: ', 'wp-e-commerce' ) . $id );
 	}
 }
 
@@ -116,7 +116,7 @@ function wpsc_purchase_log_csv() {
 			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
 			/* translators: %1$s is "start" date, %2$s is "to" date */
-			$csv_name = _x( 'Purchase Log %1$s to %2$s.csv', 'exported purchase log csv file name', 'wpsc' );
+			$csv_name = _x( 'Purchase Log %1$s to %2$s.csv', 'exported purchase log csv file name', 'wp-e-commerce' );
 			$csv_name = sprintf( $csv_name, date( "M-d-Y", $start_timestamp ), date( "M-d-Y", $end_timestamp ) );
 		} elseif ( isset( $_REQUEST['m'] ) ) {
 			$year = (int) substr( $_REQUEST['m'], 0, 4);
@@ -130,25 +130,25 @@ function wpsc_purchase_log_csv() {
 			$month_year_sql = apply_filters( 'wpsc_purchase_log_month_year_csv', $month_year_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $month_year_sql, $year, $month ), ARRAY_A );
 			/* translators: %1$s is month, %2$s is year */
-			$csv_name = _x( 'Purchase Log %1$s/%2$s.csv', 'exported purchase log csv file name', 'wpsc' );
+			$csv_name = _x( 'Purchase Log %1$s/%2$s.csv', 'exported purchase log csv file name', 'wp-e-commerce' );
 			$csv_name = sprintf( $csv_name, $month, $year );
 		} else {
 			$sql = apply_filters( 'wpsc_purchase_log_month_year_csv', "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " ORDER BY `id` DESC" );
 			$data = $wpdb->get_results( $sql, ARRAY_A );
-			$csv_name = _x( "All Purchase Logs.csv", 'exported purchase log csv file name', 'wpsc' );
+			$csv_name = _x( "All Purchase Logs.csv", 'exported purchase log csv file name', 'wp-e-commerce' );
 		}
 
 		$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `type` != 'heading' ORDER BY `checkout_order` DESC;";
 		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
 
 		$headers_array = array(
-			_x( 'Purchase ID'   , 'purchase log csv headers', 'wpsc' ),
-			_x( 'Purchase Total', 'purchase log csv headers', 'wpsc' ),
+			_x( 'Purchase ID'   , 'purchase log csv headers', 'wp-e-commerce' ),
+			_x( 'Purchase Total', 'purchase log csv headers', 'wp-e-commerce' ),
 		);
 		$headers2_array = array(
-			_x( 'Payment Gateway', 'purchase log csv headers', 'wpsc' ),
-			_x( 'Payment Status' , 'purchase log csv headers', 'wpsc' ),
-			_x( 'Purchase Date'  , 'purchase log csv headers', 'wpsc' ),
+			_x( 'Payment Gateway', 'purchase log csv headers', 'wp-e-commerce' ),
+			_x( 'Payment Status' , 'purchase log csv headers', 'wp-e-commerce' ),
+			_x( 'Purchase Date'  , 'purchase log csv headers', 'wp-e-commerce' ),
 		);
 		$form_headers_array = array();
 
@@ -158,7 +158,7 @@ function wpsc_purchase_log_csv() {
 			if ( empty ( $form_field['unique_name'] ) ) {
 				$form_headers_array[] = $form_field['name'];
 			} else {
-				$prefix = false === strstr( $form_field['unique_name'], 'billing' ) ? _x( 'Shipping ', 'purchase log csv header field prefix', 'wpsc' ) : _x( 'Billing ', 'purchase log csv header field prefix', 'wpsc' );
+				$prefix = false === strstr( $form_field['unique_name'], 'billing' ) ? _x( 'Shipping ', 'purchase log csv header field prefix', 'wp-e-commerce' ) : _x( 'Billing ', 'purchase log csv header field prefix', 'wp-e-commerce' );
 				$form_headers_array[] = $prefix . $form_field['name'];
 			}
 		}
@@ -202,7 +202,7 @@ function wpsc_purchase_log_csv() {
 			foreach ( (array) $cart as $item ) {
 				$skuvalue = get_product_meta( $item['prodid'], 'sku', true );
 				if( empty( $skuvalue ) )
-				    $skuvalue = __( 'N/A', 'wpsc' );
+				    $skuvalue = __( 'N/A', 'wp-e-commerce' );
 				$output .= "\"" . $item['quantity'] . "\",";
 				$output .= "\"" . str_replace( '"', '\"', $item['name'] ) . "\",";
 
@@ -221,9 +221,9 @@ function wpsc_purchase_log_csv() {
 		// Get the most number of products and create a header for them
 		$headers3 = array();
 		for( $i = 0; $i < $count; $i++ ){
-			$headers3[] = _x( 'Quantity', 'purchase log csv headers', 'wpsc' );
-			$headers3[] = _x( 'Product Name', 'purchase log csv headers', 'wpsc' );
-			$headers3[] = _x( 'SKU', 'purchase log csv headers', 'wpsc' );
+			$headers3[] = _x( 'Quantity', 'purchase log csv headers', 'wp-e-commerce' );
+			$headers3[] = _x( 'Product Name', 'purchase log csv headers', 'wp-e-commerce' );
+			$headers3[] = _x( 'SKU', 'purchase log csv headers', 'wp-e-commerce' );
 		}
 
 		$headers      = '"' . implode( '","', $headers_array ) . '",';
@@ -269,19 +269,19 @@ function wpsc_admin_sale_rss() {
 		$output .= "<?xml version='1.0'?>\n\r";
 		$output .= "<rss version='2.0'>\n\r";
 		$output .= "  <channel>\n\r";
-		$output .= "    <title>" . _x( 'WP eCommerce Product Log', 'admin rss product feed', 'wpsc' ) . "</title>\n\r";
+		$output .= "    <title>" . _x( 'WP eCommerce Product Log', 'admin rss product feed', 'wp-e-commerce' ) . "</title>\n\r";
 		$output .= "    <link>" . admin_url( 'admin.php?page=' . WPSC_DIR_NAME . '/display-log.php' ) . "</link>\n\r";
-		$output .= "    <description>" . _x( 'This is the WP eCommerce Product Log RSS feed', 'admin rss product feed', 'wpsc' ) . "</description>\n\r";
-		$output .= "    <generator>" . _x( 'WP eCommerce Plugin', 'admin rss product feed', 'wpsc' ) . "</generator>\n\r";
+		$output .= "    <description>" . _x( 'This is the WP eCommerce Product Log RSS feed', 'admin rss product feed', 'wp-e-commerce' ) . "</description>\n\r";
+		$output .= "    <generator>" . _x( 'WP eCommerce Plugin', 'admin rss product feed', 'wp-e-commerce' ) . "</generator>\n\r";
 
 		foreach ( (array)$purchase_log as $purchase ) {
 			$purchase_link = admin_url( 'admin.php?page=' . WPSC_DIR_NAME . '/display-log.php' ) . "&amp;purchaseid=" . $purchase['id'];
-			$purchase_title = _x( 'Purchase # %d', 'admin rss product feed', 'wpsc' );
+			$purchase_title = _x( 'Purchase # %d', 'admin rss product feed', 'wp-e-commerce' );
 			$purchase_title = sprintf( $purchase_title, $purchase['id'] );
 			$output .= "    <item>\n\r";
 			$output .= "      <title>{$purchase_title}</title>\n\r";
 			$output .= "      <link>$purchase_link</link>\n\r";
-			$output .= "      <description>" . _x( 'This is an entry in the purchase log', 'admin rss product feed', 'wpsc' ) . ".</description>\n\r";
+			$output .= "      <description>" . _x( 'This is an entry in the purchase log', 'admin rss product feed', 'wp-e-commerce' ) . ".</description>\n\r";
 			$output .= "      <pubDate>" . date( "r", $purchase['date'] ) . "</pubDate>\n\r";
 			$output .= "      <guid>$purchase_link</guid>\n\r";
 			$output .= "    </item>\n\r";
@@ -411,7 +411,7 @@ function wpsc_purchlog_resend_email( $log_id = '' ) {
 
 	// Deprecate empty purchase log ID parameter.
 	if ( $log_id == '' ) {
-		_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.0' );
+		_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( '$log_id parameter requires a numeric purchase log ID.', 'wp-e-commerce' ), '3.9.0' );
 
 		// Support redirect for legacy purposes for the moment
 		$sendback = esc_url_raw( add_query_arg( 'sent', 0, wp_get_referer() ) );
@@ -439,7 +439,7 @@ function wpsc_purchlog_resend_email( $log_id = '' ) {
 
 // Deprecate resending purchase log email receipt via URL query
 if ( isset( $_REQUEST['email_buyer_id'] ) && is_numeric( $_REQUEST['email_buyer_id'] ) ) {
-	_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( 'Do not trigger resend purchase log email action via email_buyer_id URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.0' );
+	_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( 'Do not trigger resend purchase log email action via email_buyer_id URL query. Instead use the Purchase Log Action Links API.', 'wp-e-commerce' ), '3.9.0' );
 }
 
 /**
@@ -458,7 +458,7 @@ function wpsc_purchlog_clear_download_items( $log_id = '' ) {
 
 	// Deprecate empty purchase log ID parameter.
 	if ( $log_id == '' ) {
-		_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.0' );
+		_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( '$log_id parameter requires a numeric purchase log ID.', 'wp-e-commerce' ), '3.9.0' );
 		return false;
 	}
 
@@ -477,7 +477,7 @@ function wpsc_purchlog_clear_download_items( $log_id = '' ) {
 			$download_links .= add_query_arg( 'downloadid', $downloadable_item['uniqueid'], home_url() )  . "\n";
 		}
 
-		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wpsc' ), str_replace( "[download_links]", $download_links, __( 'Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom.', 'wpsc' ) ), "From: " . get_option( 'return_email' )  );
+		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wp-e-commerce' ), str_replace( "[download_links]", $download_links, __( 'Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom.', 'wp-e-commerce' ) ), "From: " . get_option( 'return_email' )  );
 
 		return true;
 
@@ -489,7 +489,7 @@ function wpsc_purchlog_clear_download_items( $log_id = '' ) {
 
 // Deprecate clearing purchase log download locks via URL query
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clear_locks') ) {
-	_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( 'Do not trigger clear purchase log download locks action via wpsc_admin_action = clear_locks URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.0' );
+	_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( 'Do not trigger clear purchase log download locks action via wpsc_admin_action = clear_locks URL query. Instead use the Purchase Log Action Links API.', 'wp-e-commerce' ), '3.9.0' );
 }
 
 //bulk actions for purchase log
@@ -576,7 +576,7 @@ function wpsc_delete_purchlog( $purchlog_id = '' ) {
 
 	// Deprecate empty purchase log ID parameter.
 	if ( $purchlog_id == '' ) {
-		_wpsc_doing_it_wrong( 'wpsc_delete_purchlog', __( '$purchlog_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.0' );
+		_wpsc_doing_it_wrong( 'wpsc_delete_purchlog', __( '$purchlog_id parameter requires a numeric purchase log ID.', 'wp-e-commerce' ), '3.9.0' );
 		return false;
 	}
 
@@ -588,7 +588,7 @@ function wpsc_delete_purchlog( $purchlog_id = '' ) {
 
 // Deprecate deleting purchase log via URL query
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'delete_purchlog' ) ) {
-	_wpsc_doing_it_wrong( 'wpsc_delete_purchlog', __( 'Do not trigger delete purchase log action via wpsc_admin_action = delete_purchlog URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.0' );
+	_wpsc_doing_it_wrong( 'wpsc_delete_purchlog', __( 'Do not trigger delete purchase log action via wpsc_admin_action = delete_purchlog URL query. Instead use the Purchase Log Action Links API.', 'wp-e-commerce' ), '3.9.0' );
 }
 
 function _wpsc_action_flush_rewrite_rules() {
@@ -604,7 +604,7 @@ add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_opti
 function _wpsc_action_sanitize_option_grid_number_per_row( $value, $option ) {
 	$value = (int) $value;
 	if ( $value === 0 ) {
-		add_settings_error( $option, 'invalid_grid_number_per_row', __( 'You just set the number of item per row for the grid view to 0. This means the column width will fall back to using whatever CSS you have for it. This could break your theme layout, so please make sure you have adjusted your theme\'s CSS accordingly.', 'wpsc' ) );
+		add_settings_error( $option, 'invalid_grid_number_per_row', __( 'You just set the number of item per row for the grid view to 0. This means the column width will fall back to using whatever CSS you have for it. This could break your theme layout, so please make sure you have adjusted your theme\'s CSS accordingly.', 'wp-e-commerce' ) );
 	}
 
 	return $value;
@@ -622,7 +622,7 @@ add_filter( 'sanitize_option_grid_number_per_row', '_wpsc_action_sanitize_option
 function _wpsc_action_update_option_require_register( $old_value, $new_value ) {
 	if ( $new_value == 1 && ! get_option( 'users_can_register' ) ) {
 		update_option( 'users_can_register', 1 );
-		$message = __( 'You wanted to require your customers to log in before checking out. However, the WordPress setting <a href="%s">"Anyone can register"</a> was disabled. WP eCommerce has enabled that setting for you automatically.', 'wpsc' );
+		$message = __( 'You wanted to require your customers to log in before checking out. However, the WordPress setting <a href="%s">"Anyone can register"</a> was disabled. WP eCommerce has enabled that setting for you automatically.', 'wp-e-commerce' );
 		$message = sprintf( $message, admin_url( 'options-general.php' ) );
 		add_settings_error( 'require_register', 'users_can_register_turned_on', $message, 'updated' );
 	}
@@ -640,7 +640,7 @@ add_action( 'update_option_require_register', '_wpsc_action_update_option_requir
 function _wpsc_action_update_option_users_can_register( $old_value, $new_value ) {
 	if ( ! $new_value && get_option( 'require_register' ) ) {
 		update_option( 'require_register', 0 );
-		$message = __( 'You just disabled the "Anyone can register" setting. As a result, the <a href="%s">"Require registration before checking out"</a> setting has been disabled.', 'wpsc' );
+		$message = __( 'You just disabled the "Anyone can register" setting. As a result, the <a href="%s">"Require registration before checking out"</a> setting has been disabled.', 'wp-e-commerce' );
 		$message = sprintf( $message, admin_url( 'options-general.php?page=wpsc-settings&tab=checkout' ) );
 		add_settings_error( 'users_can_register', 'require_register_turned_off', $message, 'updated' );
 	}
@@ -738,7 +738,7 @@ function wpsc_product_files_existing() {
 		$attached_files_by_file[$attached_file->post_title] = & $attached_files[$key];
 	}
 
-	$output = "<span class='admin_product_notes select_product_note '>" . esc_html__( 'Choose a downloadable file for this product:', 'wpsc' ) . "</span><br>";
+	$output = "<span class='admin_product_notes select_product_note '>" . esc_html__( 'Choose a downloadable file for this product:', 'wp-e-commerce' ) . "</span><br>";
 	$output .= "<form method='post' class='product_upload'>";
 	$output .= '<div class="ui-widget-content multiple-select select_product_file" style="width:100%">';
 	$num = 0;
@@ -757,7 +757,7 @@ function wpsc_product_files_existing() {
 
 	$output .= "</div>";
 	$output .= "<input type='hidden' id='hidden_id' value='$product_id' />";
-	$output .= "<input data-nonce='" . _wpsc_create_ajax_nonce( 'upload_product_file' ) . "' type='submit' name='save' name='product_files_submit' class='button-primary prdfil' value='" . esc_html__( 'Save Product Files', 'wpsc' ) . "' />";
+	$output .= "<input data-nonce='" . _wpsc_create_ajax_nonce( 'upload_product_file' ) . "' type='submit' name='save' name='product_files_submit' class='button-primary prdfil' value='" . esc_html__( 'Save Product Files', 'wp-e-commerce' ) . "' />";
 	$output .= "</form>";
 	$output .= "<div class='" . ((is_numeric( $product_id )) ? "edit_" : "") . "select_product_handle'><div></div></div>";
 	$output .= "<script type='text/javascript'>\n\r";

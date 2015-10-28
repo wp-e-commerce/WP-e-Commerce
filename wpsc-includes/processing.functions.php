@@ -147,7 +147,7 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 							}
 						}
 
-						$email_message = sprintf( __( 'The product "%s" is out of stock.', 'wpsc' ), $product->post_title );
+						$email_message = sprintf( __( 'The product "%s" is out of stock.', 'wp-e-commerce' ), $product->post_title );
 
 						if ( ! empty( $product_meta["unpublish_when_none_left"] ) ) {
 							$result = wp_update_post( array(
@@ -156,11 +156,11 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 							) );
 
 							if ( $result )
-								$email_message = sprintf( __( 'The product "%s" is out of stock and has been unpublished.', 'wpsc' ), $product->post_title );
+								$email_message = sprintf( __( 'The product "%s" is out of stock and has been unpublished.', 'wp-e-commerce' ), $product->post_title );
 						}
 
 						if ( $product_meta["notify_when_none_left"] == 1 )
-							wp_mail(get_option('purch_log_email'), sprintf(__('%s is out of stock', 'wpsc'), $product->post_title), $email_message );
+							wp_mail(get_option('purch_log_email'), sprintf(__('%s is out of stock', 'wp-e-commerce'), $product->post_title), $email_message );
 					}
 				}
 			case 6:
@@ -359,7 +359,7 @@ function wpsc_check_stock($state, $product) {
 
 		if( $out_of_stock === true ) {
 			$state['state'] = true;
-			$state['messages'][] = __( 'This product has no available stock', 'wpsc' );
+			$state['messages'][] = __( 'This product has no available stock', 'wp-e-commerce' );
 		}
 	}else{
 		$no_stock = $wpdb->get_col('
@@ -383,7 +383,7 @@ function wpsc_check_stock($state, $product) {
 
 		if ( ! empty( $no_stock ) ) {
 			$state['state']      = true;
-			$state['messages'][] = __( 'One or more of this products variations are out of stock.', 'wpsc' );
+			$state['messages'][] = __( 'One or more of this products variations are out of stock.', 'wp-e-commerce' );
 		}
 	}
 
@@ -416,7 +416,7 @@ function wpsc_check_weight($state, $product) {
 
 		if( $has_no_weight === true ) {
 			$state['state'] = true;
-			$state['messages'][] = implode( ',',$shipping_modules ). __(' does not support products without a weight set. Please either disable shipping for this product or give it a weight', 'wpsc' );
+			$state['messages'][] = implode( ',',$shipping_modules ). __(' does not support products without a weight set. Please either disable shipping for this product or give it a weight', 'wp-e-commerce' );
 		}
 	}
 	return array( 'state' => $state['state'], 'messages' => $state['messages'] );

@@ -80,8 +80,8 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 		parent::__construct();
 
 		$this->columns = array(
-			'product'  => _x( 'Product', 'customer account - digital contents - table header', 'wpsc' ),
-			'contents' => _x( 'Digital Contents', 'customer account - digital contents - table header', 'wpsc' ),
+			'product'  => _x( 'Product', 'customer account - digital contents - table header', 'wp-e-commerce' ),
+			'contents' => _x( 'Digital Contents', 'customer account - digital contents - table header', 'wp-e-commerce' ),
 		);
 	}
 
@@ -112,7 +112,7 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 			echo '<li>';
 			$post = get_post( $file->fileid );
 			if ( ! $post ) {
-				echo '<em class="deleted">' . sprintf( __( 'File ID #%s has been removed.', 'wpsc' ), $file->id ) . '</em>';
+				echo '<em class="deleted">' . sprintf( __( 'File ID #%s has been removed.', 'wp-e-commerce' ), $file->id ) . '</em>';
 				continue;
 			}
 

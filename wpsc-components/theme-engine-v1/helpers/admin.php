@@ -4,7 +4,7 @@ add_action( 'wpsc_register_settings_tabs', '_wpsc_te_v1_register_settings_tabs',
 add_action( 'wpsc_load_settings_tab_class', '_wpsc_te_v1_load_settings_tab_class', 10, 1 );
 
 function _wpsc_te_v1_register_settings_tabs( $page_instance ) {
-	$page_instance->register_tab( 'presentation', _x( 'Presentation', 'Presentation settings tab in Settings->Store page', 'wpsc' ) );
+	$page_instance->register_tab( 'presentation', _x( 'Presentation', 'Presentation settings tab in Settings->Store page', 'wp-e-commerce' ) );
 }
 
 function _wpsc_te_v1_load_settings_tab_class( $page_instance ) {

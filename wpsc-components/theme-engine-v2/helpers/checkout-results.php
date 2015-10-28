@@ -120,7 +120,7 @@ function wpsc_transaction_theme() {
 			$cart_log_id = $wpdb->get_var( $wpdb->prepare( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $sessionid ) );
 			echo transaction_results( $sessionid, true );
 		}else
-		printf( __( 'Sorry your transaction was not accepted.<br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wpsc' ), wpsc_get_checkout_url() );
+		printf( __( 'Sorry your transaction was not accepted.<br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wp-e-commerce' ), wpsc_get_checkout_url() );
 	}
 }
 

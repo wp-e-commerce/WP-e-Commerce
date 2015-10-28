@@ -224,7 +224,7 @@ class WPSC_Region {
 
 			if ( property_exists( $this, $property_name ) ) {
 				$value = $this->$property_name;
-				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Using set to change a well-known WPSC_Region property is deprecated as of version 3.8.14.  Use the class constructor and specify all properties together to perform and insert or an update.', 'wpsc' ), '3.8.14' );
+				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Using set to change a well-known WPSC_Region property is deprecated as of version 3.8.14.  Use the class constructor and specify all properties together to perform and insert or an update.', 'wp-e-commerce' ), '3.8.14' );
 				if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
 					$country_array         = $this->as_array();
 					$country_array[ $key ] = $value;
@@ -270,7 +270,7 @@ class WPSC_Region {
 		 *  a row in the table, nor could we insrt a row that could reliably be updated.
 		 */
 		if ( empty( $country_id ) || empty( $region_code ) || empty( $region_name ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Creating a new region requires country id, region code and region name.', 'wpsc' ), '3.8.11' );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Creating a new region requires country id, region code and region name.', 'wp-e-commerce' ), '3.8.11' );
 			return $region_id_from_db;
 		}
 

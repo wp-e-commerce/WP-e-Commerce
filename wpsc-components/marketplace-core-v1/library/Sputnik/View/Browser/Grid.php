@@ -70,8 +70,8 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 
 	public function view_switcher() {
 		$modes = array(
-			'list' => __('List View', 'wpsc'),
-			'grid' => __('Grid View', 'wpsc')
+			'list' => __('List View', 'wp-e-commerce'),
+			'grid' => __('Grid View', 'wp-e-commerce')
 		);
 		$current_mode = $this->parent->view_type;
 ?>
@@ -135,7 +135,7 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 		if ( 'top' ==  $which ) { ?>
 			<div class="tablenav top">
 				<div class="alignright account">
-					<?php printf(__('Logged in as %s', 'wpsc'), '<a href="' . menu_page_url( 'sputnik-account', false ) . '" class="account-link">' . $account->name . '</a>') ?>
+					<?php printf(__('Logged in as %s', 'wp-e-commerce'), '<a href="' . menu_page_url( 'sputnik-account', false ) . '" class="account-link">' . $account->name . '</a>') ?>
 <?php
 			if ($tab === 'search') {
 ?>
@@ -168,11 +168,11 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 
 	public function get_columns() {
 		return array(
-			'name'        => _x( 'Name', 'plugin name', 'wpsc' ),
-			'version'     => __( 'Version', 'wpsc' ),
-			'price'       => __( 'Action', 'wpsc' ),
-			'rating'      => __( 'Rating', 'wpsc' ),
-			'description' => __( 'Description', 'wpsc' ),
+			'name'        => _x( 'Name', 'plugin name', 'wp-e-commerce' ),
+			'version'     => __( 'Version', 'wp-e-commerce' ),
+			'price'       => __( 'Action', 'wp-e-commerce' ),
+			'rating'      => __( 'Rating', 'wp-e-commerce' ),
+			'description' => __( 'Description', 'wp-e-commerce' ),
 		);
 	}
 
@@ -208,11 +208,11 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 			$plugin->version = wp_kses( $plugin->version, $plugins_allowedtags );
 			$plugin->price = sprintf('$%.2f', $plugin->price);
 			if ($plugin->price === '$0.00') {
-				$plugin->price = _x('Free', 'plugin price', 'wpsc');
+				$plugin->price = _x('Free', 'plugin price', 'wp-e-commerce');
 			}
 
 			if (!empty($plugin->author))
-				$plugin->author = ' <cite>' . sprintf( __( 'By %s', 'wpsc' ), $plugin->author ) . '.</cite>';
+				$plugin->author = ' <cite>' . sprintf( __( 'By %s', 'wp-e-commerce' ), $plugin->author ) . '.</cite>';
 
 			$plugin->author = wp_kses( $plugin->author, $plugins_allowedtags );
 
@@ -225,7 +225,7 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 		$action_links = array();
 		$action_links[] = '<a href="' . Sputnik_Admin::build_url(array('info' => $plugin->slug, 'TB_iframe' => true))
 							. '" class="thickbox button info" title="' .
-							esc_attr( sprintf( __( 'More information about %s', 'wpsc' ), $name ) ) . '">' . __( 'Details', 'wpsc' ) . '</a>';
+							esc_attr( sprintf( __( 'More information about %s', 'wp-e-commerce' ), $name ) ) . '">' . __( 'Details', 'wp-e-commerce' ) . '</a>';
 
 		$purchase_link = $plugin->price;
 
@@ -233,8 +233,8 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 			$status = 'addown';
 			$name = $plugin->name;
 			$action_links = array();
-			$action_links[] = '<a href="http://developer.renku.me/" class="thickbox button info">' . __( 'Documentation', 'wpsc' ) . '</a>';
-			$purchase_link = '<a class="button-primary addown status" href="' . Sputnik::SITE_BASE . '/plugins/add/">' . esc_html__('Add Now', 'wpsc') . '</a>';
+			$action_links[] = '<a href="http://developer.renku.me/" class="thickbox button info">' . __( 'Documentation', 'wp-e-commerce' ) . '</a>';
+			$purchase_link = '<a class="button-primary addown status" href="' . Sputnik::SITE_BASE . '/plugins/add/">' . esc_html__('Add Now', 'wp-e-commerce') . '</a>';
 		}
 		elseif ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) {
 			$status = Sputnik_Admin::install_status( $plugin );
@@ -243,35 +243,35 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 				case 'purchase':
 					if ( $status['url'] ) {
 						$purchase_link = '<a id="' . $plugin->slug .'" class="button-primary buy status" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Buy %s', 'wpsc'), $name)) . '">' . __('Buy Now', 'wpsc') . '</a>';
+							. esc_attr(sprintf(__( 'Buy %s', 'wp-e-commerce'), $name)) . '">' . __('Buy Now', 'wp-e-commerce') . '</a>';
 					}
 					break;
 				case 'install':
 					if ( $status['url'] ) {
 						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600 ), $status['url']);
 						$purchase_link = '<a class="button install status" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Install %s', 'wpsc'), $name)) . '">' . __('Install', 'wpsc') . '</a>';
+							. esc_attr(sprintf(__( 'Install %s', 'wp-e-commerce'), $name)) . '">' . __('Install', 'wp-e-commerce') . '</a>';
 					}
 					else {
-						$purchase_link = '<span class="status" title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wpsc') . '">'
-							. __('Install', 'wpsc') . '</span>';
+						$purchase_link = '<span class="status" title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wp-e-commerce') . '">'
+							. __('Install', 'wp-e-commerce') . '</span>';
 					}
 					break;
 				case 'update_available':
 					if ( $status['url'] ) {
 						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install" href="' . esc_url( $status['url'] ) . '" title="'
-							. esc_attr(sprintf(__( 'Update to version %s', 'wpsc'), $status['version'])) . '">' . __('Update', 'wpsc') . '</a>';
+							. esc_attr(sprintf(__( 'Update to version %s', 'wp-e-commerce'), $status['version'])) . '">' . __('Update', 'wp-e-commerce') . '</a>';
 					}
 					else {
-						$purchase_link = '<span class="status" title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wpsc') . '">'
-							. __('Update', 'wpsc') . '</span>';
+						$purchase_link = '<span class="status" title="' . esc_attr__('Cannot auto-install, report this as a bug', 'wp-e-commerce') . '">'
+							. __('Update', 'wp-e-commerce') . '</span>';
 					}
 					break;
 				case 'latest_installed':
 				case 'newer_installed':
-					$purchase_link = '<span class="status" title="' . esc_attr__('This plugin is already installed and is up to date', 'wpsc') . ' ">'
-						. __('Installed', 'wpsc') . '</span>';
+					$purchase_link = '<span class="status" title="' . esc_attr__('This plugin is already installed and is up to date', 'wp-e-commerce') . ' ">'
+						. __('Installed', 'wp-e-commerce') . '</span>';
 					break;
 			}
 		}
@@ -301,7 +301,7 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 					<p><?php echo $plugin->description; ?></p>
 					<?php if ( isset( $plugin->rating ) && isset( $plugin->rating->count ) ): ?>
 						<div class="footer" style="display:none">
-							<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wpsc' ), number_format_i18n( $plugin->rating->count ) ) ?>">
+							<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wp-e-commerce' ), number_format_i18n( $plugin->rating->count ) ) ?>">
 								<div class="star star-rating" style="width: <?php echo (int) (20 * $plugin->rating->average) ?>px"></div>
 								<?php
 									$star_url = admin_url( 'images/stars.png?v=20110615' );

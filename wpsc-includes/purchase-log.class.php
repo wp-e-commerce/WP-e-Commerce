@@ -455,7 +455,7 @@ class WPSC_Purchase_Log {
 		global $wpdb;
 
 		if ( ! ( isset( $this ) && get_class( $this ) == __CLASS__ ) ) {
-			_wpsc_doing_it_wrong( 'WPSC_Purchase_Log::delete', __( 'WPSC_Purchase_Log::delete() is no longer a static method and should not be called statically.', 'wpsc' ), '3.9.0' );
+			_wpsc_doing_it_wrong( 'WPSC_Purchase_Log::delete', __( 'WPSC_Purchase_Log::delete() is no longer a static method and should not be called statically.', 'wp-e-commerce' ), '3.9.0' );
 		}
 
 		if ( false !== $log_id ) {
@@ -577,7 +577,7 @@ class WPSC_Purchase_Log {
 		$gateway_name = $gateway;
 
 		if( 'wpsc_merchant_testmode' == $gateway )
-			$gateway_name = __( 'Manual Payment', 'wpsc' );
+			$gateway_name = __( 'Manual Payment', 'wp-e-commerce' );
 		elseif ( isset( $wpsc_gateways[$gateway] ) )
 			$gateway_name = $wpsc_gateways[$gateway]['name'];
 

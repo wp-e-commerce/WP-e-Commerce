@@ -118,12 +118,12 @@ class WPSC_Update_Progress {
 
 	private function print_eta() {
 		echo '<div class="eta">';
-		_e( 'Estimated time left:', 'wpsc' );
+		_e( 'Estimated time left:', 'wp-e-commerce' );
 		echo ' ';
 		if ( $this->eta == 0 )
-			_e( 'Under a minute', 'wpsc' );
+			_e( 'Under a minute', 'wp-e-commerce' );
 		else
-			printf( _n( '%d minute', '%d minutes', $this->eta, 'wpsc' ), $this->eta );
+			printf( _n( '%d minute', '%d minutes', $this->eta, 'wp-e-commerce' ), $this->eta );
 		echo '</div>';
 	}
 
@@ -151,7 +151,7 @@ class WPSC_Update_Progress {
 
 		if ( $percent == 100 ) {
 			remove_filter( 'wpsc_update_terminate_location', array( $this, 'filter_terminate_location' ) );
-			echo '<div class="eta">' . _x( 'Done!', 'Update routine completed', 'wpsc' ) . '</div>';
+			echo '<div class="eta">' . _x( 'Done!', 'Update routine completed', 'wp-e-commerce' ) . '</div>';
 			echo '</div>';
 		}
 	}
@@ -183,12 +183,12 @@ function wpsc_update_step( $i, $total ) {
 		$processed = $i - $count + 1;
 		$eta = floor( ( $total - $i ) * ( $now - $start ) / ( $processed * 60 ) );
 		echo '<div class="eta">';
-		_e( 'Estimated time left:', 'wpsc' );
+		_e( 'Estimated time left:', 'wp-e-commerce' );
 		echo ' ';
 		if ( $eta == 0 )
-			_e( 'Under a minute', 'wpsc' );
+			_e( 'Under a minute', 'wp-e-commerce' );
 		else
-			printf( _n( '%d minute', '%d minutes', $eta, 'wpsc' ), $eta );
+			printf( _n( '%d minute', '%d minutes', $eta, 'wp-e-commerce' ), $eta );
 		echo '</div>';
 		$milestone = $now;
 	}

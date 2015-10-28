@@ -5,14 +5,14 @@ class WPSC_Widget_Tag_Cloud extends WP_Widget {
 
 	public function __construct() {
 		$this->defaults = array(
-			'title' => __( 'Product Tag Cloud', 'wpsc' ),
+			'title' => __( 'Product Tag Cloud', 'wp-e-commerce' ),
 		);
 
 		parent::__construct(
 			'wpsc_tag_cloud_widget',
-			__( '(WPEC) Product Tag Cloud', 'wpsc' ),
+			__( '(WPEC) Product Tag Cloud', 'wp-e-commerce' ),
 			array(
-				'description' => __( 'WP eCommerce Tag Cloud Widget', 'wpsc' )
+				'description' => __( 'WP eCommerce Tag Cloud Widget', 'wp-e-commerce' )
 			)
 		);
 	}
@@ -50,7 +50,7 @@ class WPSC_Widget_Tag_Cloud extends WP_Widget {
 ?>
 <p>
 	<?php wpsc_form_label(
-		__( 'Title:', 'wpsc' ),
+		__( 'Title:', 'wp-e-commerce' ),
 		$this->get_field_id( 'title' )
 	); ?><br />
 	<?php wpsc_form_input(

@@ -27,7 +27,7 @@ function validate_form_data() {
 	if ( ! empty($_POST['collected_data']) ) {
 
 		if( ! wp_verify_nonce( $_POST['_wpsc_user_profile'], 'wpsc_user_profile') )
-			die( __( 'It would appear either you are trying to hack into this account, or your session has expired.  Hoping for the latter.', 'wpsc' ) );
+			die( __( 'It would appear either you are trying to hack into this account, or your session has expired.  Hoping for the latter.', 'wp-e-commerce' ) );
 
 		foreach ( (array)$_POST['collected_data'] as $value_id => $value ) {
 			$form_sql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `id` = %d LIMIT 1", $value_id );
@@ -56,37 +56,37 @@ function validate_form_data() {
 				if ( $bad_input === true ) {
 
 					switch ( $form_data['name'] ) {
-						case __( 'First Name', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid name', 'wpsc' ) . "";
+						case __( 'First Name', 'wp-e-commerce' ):
+							$bad_input_message .= __( 'Please enter a valid name', 'wp-e-commerce' ) . "";
 							break;
 
-						case __( 'Last Name', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid surname', 'wpsc' ) . "";
+						case __( 'Last Name', 'wp-e-commerce' ):
+							$bad_input_message .= __( 'Please enter a valid surname', 'wp-e-commerce' ) . "";
 							break;
 
-						case __( 'Email', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid email address', 'wpsc' ) . "";
+						case __( 'Email', 'wp-e-commerce' ):
+							$bad_input_message .= __( 'Please enter a valid email address', 'wp-e-commerce' ) . "";
 							break;
 
-						case __( 'Address 1', 'wpsc' ):
-						case __( 'Address 2', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid address', 'wpsc' ) . "";
+						case __( 'Address 1', 'wp-e-commerce' ):
+						case __( 'Address 2', 'wp-e-commerce' ):
+							$bad_input_message .= __( 'Please enter a valid address', 'wp-e-commerce' ) . "";
 							break;
 
-						case __( 'City', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter your town or city.', 'wpsc' ) . "";
+						case __( 'City', 'wp-e-commerce' ):
+							$bad_input_message .= __( 'Please enter your town or city.', 'wp-e-commerce' ) . "";
 							break;
 
-						case __( 'Phone', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid phone number', 'wpsc' ) . "";
+						case __( 'Phone', 'wp-e-commerce' ):
+							$bad_input_message .= __( 'Please enter a valid phone number', 'wp-e-commerce' ) . "";
 							break;
 
-						case __( 'Country', 'wpsc' ):
-							$bad_input_message .= __( 'Please select your country from the list.', 'wpsc' ) . "";
+						case __( 'Country', 'wp-e-commerce' ):
+							$bad_input_message .= __( 'Please select your country from the list.', 'wp-e-commerce' ) . "";
 							break;
 
 						default:
-							$bad_input_message .= sprintf(__( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), esc_html($form_data['name']) );
+							$bad_input_message .= sprintf(__( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wp-e-commerce' ), esc_html($form_data['name']) );
 							break;
 					}
 					$bad_input_message .= "<br />";
@@ -101,7 +101,7 @@ function validate_form_data() {
 		wpsc_update_customer_meta( 'checkout_details', $meta_data );
 	}
 	if ( $changes_saved ) {
-		$message = __( 'Thanks, your changes have been saved.', 'wpsc' );
+		$message = __( 'Thanks, your changes have been saved.', 'wp-e-commerce' );
 	} else {
 		$message = $bad_input_message;
 	}
@@ -240,7 +240,7 @@ function wpsc_display_form_fields() {
 
 					?>
 						<select name='collected_data[<?php echo esc_attr( $form_field['id'] ); ?>]'>
-							<option value="-1"><?php _ex( 'Select an Option', 'Dropdown default on user log page', 'wpsc' ); ?></option>
+							<option value="-1"><?php _ex( 'Select an Option', 'Dropdown default on user log page', 'wp-e-commerce' ); ?></option>
 							<?php foreach ( $options as $label => $value ): ?>
 								<option <?php selected( $value, $selected ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
 							<?php endforeach ?>
@@ -385,9 +385,9 @@ function wpsc_user_profile_links( $args = array() ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	$profile_tabs = apply_filters( 'wpsc_user_profile_tabs', array(
-		'purchase_history' => __( 'Purchase History', 'wpsc' ),
-		'edit_profile'     => __( 'Your Details', 'wpsc' ),
-		'downloads'        => __( 'Your Downloads', 'wpsc' )
+		'purchase_history' => __( 'Purchase History', 'wp-e-commerce' ),
+		'edit_profile'     => __( 'Your Details', 'wp-e-commerce' ),
+		'downloads'        => __( 'Your Downloads', 'wp-e-commerce' )
 	) );
 
 	echo $args['before_link_list'];
@@ -441,7 +441,7 @@ function wpsc_user_purchases() {
 
 		echo "<img class=\"log_expander_icon\" id=\"log_expander_icon_" . $purchase['id'] . "\" src=\"" . WPSC_CORE_IMAGES_URL . "/icon_window_$status_state.gif\" alt=\"\" title=\"\" />";
 
-		echo "<span id='form_group_" . $purchase['id'] . "_text'>" . __( 'Details', 'wpsc' ) . "</span>";
+		echo "<span id='form_group_" . $purchase['id'] . "_text'>" . __( 'Details', 'wp-e-commerce' ) . "</span>";
 		echo "</a>";
 		echo " </td>\n\r";
 
@@ -474,7 +474,7 @@ function wpsc_user_purchases() {
 						$gateway_name = $gateway['name'];
 					}
 				} else {
-					$gateway_name = __( "Manual Payment", 'wpsc' );
+					$gateway_name = __( "Manual Payment", 'wp-e-commerce' );
 				}
 			}
 			echo $gateway_name;
@@ -490,7 +490,7 @@ function wpsc_user_purchases() {
 		//order status code lies here
 		//check what $purchase['processed'] reflects in the $wpsc_purchlog_statuses array
 		$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
-		echo "  <strong class='form_group'>" . __( 'Order Status', 'wpsc' ) . ":</strong>\n\r";
+		echo "  <strong class='form_group'>" . __( 'Order Status', 'wp-e-commerce' ) . ":</strong>\n\r";
 		echo $status_name . "<br /><br />";
 
                 do_action( 'wpsc_user_log_after_order_status', $purchase );
@@ -512,7 +512,7 @@ function wpsc_user_purchases() {
 			$parsed = $parsed[0]['children'][0]['children'];
 			if ( $purchase['track_id'] != null ) {
 				echo "<br /><br />";
-				echo " <strong class='form_group'>" . __( 'Shipping Address', 'wpsc' ) . "</strong>\n\r";
+				echo " <strong class='form_group'>" . __( 'Shipping Address', 'wp-e-commerce' ) . "</strong>\n\r";
 				echo "<table>";
 				foreach ( (array)$parsed as $parse ) {
 					if ( $parse['name'] == "TRACKSUMMARY" )
@@ -529,7 +529,7 @@ function wpsc_user_purchases() {
 		}
 		//end of written by allen
 		//cart contents display starts here;
-		echo "  <strong class='form_group'>" . __( 'Order Details', 'wpsc' ) . ":</strong>\n\r";
+		echo "  <strong class='form_group'>" . __( 'Order Details', 'wp-e-commerce' ) . ":</strong>\n\r";
 		$cartsql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`= %d", $purchase['id'] );
 		$cart_log = $wpdb->get_results( $cartsql, ARRAY_A );
 		$j = 0;
@@ -539,27 +539,27 @@ function wpsc_user_purchases() {
 			echo "<tr class='toprow2'>";
 
 			echo " <th class='details_name'>";
-			_e( 'Name', 'wpsc' );
+			_e( 'Name', 'wp-e-commerce' );
 			echo " </th>";
 
 			echo " <th class='details_quantity'>";
-			_e( 'Quantity', 'wpsc' );
+			_e( 'Quantity', 'wp-e-commerce' );
 			echo " </th>";
 
 			echo " <th class='details_price'>";
-			_e( 'Price', 'wpsc' );
+			_e( 'Price', 'wp-e-commerce' );
 			echo " </th>";
 
 			echo " <th class='details_tax'>";
-			_e( 'GST', 'wpsc' );
+			_e( 'GST', 'wp-e-commerce' );
 			echo " </th>";
 
 			echo " <th class='details_shipping'>";
-			_e( 'Shipping', 'wpsc' );
+			_e( 'Shipping', 'wp-e-commerce' );
 			echo " </th>";
 
 			echo " <th class='details_total'>";
-			_e( 'Total', 'wpsc' );
+			_e( 'Total', 'wp-e-commerce' );
 			echo " </th>";
 
 			echo "</tr>";
@@ -628,9 +628,9 @@ function wpsc_user_purchases() {
 			echo " </td>";
 
 			echo " <td class='details_totals_labels'>";
-			echo "<strong>" . __( 'Total Shipping', 'wpsc' ) . ":</strong><br />";
-			echo "<strong>" . __( 'Total Tax', 'wpsc' ) . ":</strong><br />";
-			echo "<strong>" . __( 'Final Total', 'wpsc' ) . ":</strong>";
+			echo "<strong>" . __( 'Total Shipping', 'wp-e-commerce' ) . ":</strong><br />";
+			echo "<strong>" . __( 'Total Tax', 'wp-e-commerce' ) . ":</strong><br />";
+			echo "<strong>" . __( 'Final Total', 'wp-e-commerce' ) . ":</strong>";
 			echo " </td>";
 
 			echo " <td class='details_totals_labels'>";
@@ -651,7 +651,7 @@ function wpsc_user_purchases() {
 			echo "</table>";
 			echo "<br />";
 
-			echo "<strong>" . __( 'Customer Details', 'wpsc' ) . ":</strong>";
+			echo "<strong>" . __( 'Customer Details', 'wp-e-commerce' ) . ":</strong>";
 			echo "<table class='customer_details'>";
 
 
@@ -711,10 +711,10 @@ function wpsc_user_purchases() {
 				}
 			}
 
-			echo "  <tr><td>" . __( 'Payment Method', 'wpsc' ) . ":</td><td>" . $display_name . "</td></tr>";
-			echo "  <tr><td>" . __( 'Purchase #', 'wpsc' ) . ":</td><td>" . $purchase['id'] . "</td></tr>";
+			echo "  <tr><td>" . __( 'Payment Method', 'wp-e-commerce' ) . ":</td><td>" . $display_name . "</td></tr>";
+			echo "  <tr><td>" . __( 'Purchase #', 'wp-e-commerce' ) . ":</td><td>" . $purchase['id'] . "</td></tr>";
 			if ( $purchase['transactid'] != '' ) {
-				echo "  <tr><td>" . __( 'Transaction Id', 'wpsc' ) . ":</td><td>" . $purchase['transactid'] . "</td></tr>";
+				echo "  <tr><td>" . __( 'Transaction Id', 'wp-e-commerce' ) . ":</td><td>" . $purchase['transactid'] . "</td></tr>";
 			}
 			echo "</table>";
 		}

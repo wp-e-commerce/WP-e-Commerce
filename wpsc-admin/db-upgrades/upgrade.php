@@ -40,7 +40,7 @@ function _wpsc_maybe_upgrade() {
 }
 
 function _wpsc_upgrade_display_backup_warning() {
-	$message = __( '<strong>Important:</strong> Before proceeding with the database upgrade, <a href="%1$s">please backup your database and files</a>.<br>We recommend using <a href="%2$s">VaultPress</a> or <a href="%3$s">BackupBuddy</a> to regularly backup your WordPress installation.', 'wpsc' );
+	$message = __( '<strong>Important:</strong> Before proceeding with the database upgrade, <a href="%1$s">please backup your database and files</a>.<br>We recommend using <a href="%2$s">VaultPress</a> or <a href="%3$s">BackupBuddy</a> to regularly backup your WordPress installation.', 'wp-e-commerce' );
 	$message = sprintf(
 		$message,
 		'http://codex.wordpress.org/WordPress_Backups',
@@ -65,7 +65,7 @@ function _wpsc_upgrade_display_prompt() {
 }
 
 function _wpsc_upgrade_display_successful() {
-	$message = __( 'WP eCommerce has been successfully updated to %s. Enjoy!', 'wpsc' );
+	$message = __( 'WP eCommerce has been successfully updated to %s. Enjoy!', 'wp-e-commerce' );
 	$message = sprintf( $message, WPSC_VERSION );
 	?>
 		<div id="wpsc-upgrade-warning" class="updated">
@@ -131,7 +131,7 @@ function _wpsc_is_db_upgrade_page() {
 
 function _wpsc_action_admin_menu_db_upgrade() {
 	if ( _wpsc_needs_upgrade() ) {
-		$page_hook = add_submenu_page( 'index.php', __( 'Database Upgrade', 'wpsc' ), __( 'Database Upgrade', 'wpsc' ), 'update_plugins', 'wpsc-db-upgrade', '_wpsc_callback_display_db_upgrade_page' );
+		$page_hook = add_submenu_page( 'index.php', __( 'Database Upgrade', 'wp-e-commerce' ), __( 'Database Upgrade', 'wp-e-commerce' ), 'update_plugins', 'wpsc-db-upgrade', '_wpsc_callback_display_db_upgrade_page' );
 		add_action( 'load-' . $page_hook, '_wpsc_action_load_db_upgrade' );
 	}
 }
@@ -150,6 +150,6 @@ function _wpsc_action_load_db_upgrade() {
 }
 
 function _wpsc_callback_display_db_upgrade_page() {
-	$update_title = sprintf( __( 'Your database needs to be upgraded before you can use WP eCommerce %s', 'wpsc' ), WPSC_VERSION );
+	$update_title = sprintf( __( 'Your database needs to be upgraded before you can use WP eCommerce %s', 'wp-e-commerce' ), WPSC_VERSION );
 	include( 'views/main.php' );
 }

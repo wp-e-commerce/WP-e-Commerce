@@ -54,23 +54,23 @@ class WPSC_Purchase_Log_Page {
 	private function purchase_logs_fix_options( $id ) {
 		?>
 		<select name='<?php echo $id; ?>'>
-			<option value='-1'><?php echo esc_html_x( 'Select an Option', 'Dropdown default when called in uniquename dropdown', 'wpsc' ); ?></option>
-			<option value='billingfirstname'><?php esc_html_e( 'Billing First Name', 'wpsc' ); ?></option>
-			<option value='billinglastname'><?php esc_html_e( 'Billing Last Name', 'wpsc' ); ?></option>
-			<option value='billingaddress'><?php esc_html_e( 'Billing Address', 'wpsc' ); ?></option>
-			<option value='billingcity'><?php esc_html_e( 'Billing City', 'wpsc' ); ?></option>
-			<option value='billingstate'><?php esc_html_e( 'Billing State', 'wpsc' ); ?></option>
-			<option value='billingcountry'><?php esc_html_e( 'Billing Country', 'wpsc' ); ?></option>
-			<option value='billingemail'><?php esc_html_e( 'Billing Email', 'wpsc' ); ?></option>
-			<option value='billingphone'><?php esc_html_e( 'Billing Phone', 'wpsc' ); ?></option>
-			<option value='billingpostcode'><?php esc_html_e( 'Billing Post Code', 'wpsc' ); ?></option>
-			<option value='shippingfirstname'><?php esc_html_e( 'Shipping First Name', 'wpsc' ); ?></option>
-			<option value='shippinglastname'><?php esc_html_e( 'Shipping Last Name', 'wpsc' ); ?></option>
-			<option value='shippingaddress'><?php esc_html_e( 'Shipping Address', 'wpsc' ); ?></option>
-			<option value='shippingcity'><?php esc_html_e( 'Shipping City', 'wpsc' ); ?></option>
-			<option value='shippingstate'><?php esc_html_e( 'Shipping State', 'wpsc' ); ?></option>
-			<option value='shippingcountry'><?php esc_html_e( 'Shipping Country', 'wpsc' ); ?></option>
-			<option value='shippingpostcode'><?php esc_html_e( 'Shipping Post Code', 'wpsc' ); ?></option>
+			<option value='-1'><?php echo esc_html_x( 'Select an Option', 'Dropdown default when called in uniquename dropdown', 'wp-e-commerce' ); ?></option>
+			<option value='billingfirstname'><?php esc_html_e( 'Billing First Name', 'wp-e-commerce' ); ?></option>
+			<option value='billinglastname'><?php esc_html_e( 'Billing Last Name', 'wp-e-commerce' ); ?></option>
+			<option value='billingaddress'><?php esc_html_e( 'Billing Address', 'wp-e-commerce' ); ?></option>
+			<option value='billingcity'><?php esc_html_e( 'Billing City', 'wp-e-commerce' ); ?></option>
+			<option value='billingstate'><?php esc_html_e( 'Billing State', 'wp-e-commerce' ); ?></option>
+			<option value='billingcountry'><?php esc_html_e( 'Billing Country', 'wp-e-commerce' ); ?></option>
+			<option value='billingemail'><?php esc_html_e( 'Billing Email', 'wp-e-commerce' ); ?></option>
+			<option value='billingphone'><?php esc_html_e( 'Billing Phone', 'wp-e-commerce' ); ?></option>
+			<option value='billingpostcode'><?php esc_html_e( 'Billing Post Code', 'wp-e-commerce' ); ?></option>
+			<option value='shippingfirstname'><?php esc_html_e( 'Shipping First Name', 'wp-e-commerce' ); ?></option>
+			<option value='shippinglastname'><?php esc_html_e( 'Shipping Last Name', 'wp-e-commerce' ); ?></option>
+			<option value='shippingaddress'><?php esc_html_e( 'Shipping Address', 'wp-e-commerce' ); ?></option>
+			<option value='shippingcity'><?php esc_html_e( 'Shipping City', 'wp-e-commerce' ); ?></option>
+			<option value='shippingstate'><?php esc_html_e( 'Shipping State', 'wp-e-commerce' ); ?></option>
+			<option value='shippingcountry'><?php esc_html_e( 'Shipping Country', 'wp-e-commerce' ); ?></option>
+			<option value='shippingpostcode'><?php esc_html_e( 'Shipping Post Code', 'wp-e-commerce' ); ?></option>
 		</select>
 		<?php
 	}
@@ -120,9 +120,9 @@ class WPSC_Purchase_Log_Page {
 	public function display_upgrade_purchase_logs_3_8() {
 		?>
 			<div class="wrap">
-				<h2><?php echo esc_html( __('Sales', 'wpsc') ); ?> </h2>
+				<h2><?php echo esc_html( __('Sales', 'wp-e-commerce') ); ?> </h2>
 				<div class="updated">
-					<p><?php printf( __( 'Your purchase logs have been updated! <a href="%s">Click here</a> to return.' , 'wpsc' ), esc_url( remove_query_arg( 'c' ) ) ); ?></p>
+					<p><?php printf( __( 'Your purchase logs have been updated! <a href="%s">Click here</a> to return.' , 'wp-e-commerce' ), esc_url( remove_query_arg( 'c' ) ) ); ?></p>
 				</div>
 			</div>
 		<?php
@@ -147,7 +147,7 @@ class WPSC_Purchase_Log_Page {
 				$disabled = '';
 			}
 			?>
-			<a href='<?php esc_attr_e( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wpsc' ); ?></a>
+			<a href='<?php esc_attr_e( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
 			<?php
 
 			$max_purchase_id = wpsc_max_purchase_id();
@@ -158,7 +158,7 @@ class WPSC_Purchase_Log_Page {
 				$disabled = '';
 			}
 			?>
-			<a href='<?php esc_attr_e( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wpsc' ); ?> &rsaquo;</a>
+			<a href='<?php esc_attr_e( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
 
 		</span></span></span>
 		<?php
@@ -171,7 +171,7 @@ class WPSC_Purchase_Log_Page {
 		?>
 			<div class="metabox-holder">
 				<div id="custom_checkout_fields" class="postbox">
-					<h3 class='hndle'><?php esc_html_e( 'Additional Checkout Fields' , 'wpsc' ); ?></h3>
+					<h3 class='hndle'><?php esc_html_e( 'Additional Checkout Fields' , 'wp-e-commerce' ); ?></h3>
 					<div class='inside'>
 						<?php
 						foreach( (array) $purchlogitem->additional_fields as $value ) {
@@ -183,7 +183,7 @@ class WPSC_Purchase_Log_Page {
 							} else {
 								$thevalue = esc_html( stripslashes( $value['value'] ));
 								if ( empty( $thevalue ) ) {
-									$thevalue = __( '<em>blank</em>', 'wpsc' );
+									$thevalue = __( '<em>blank</em>', 'wp-e-commerce' );
 								}
 								?>
 									<p><strong><?php echo $value['name']; ?> :</strong> <?php echo $thevalue; ?></p>
@@ -202,19 +202,19 @@ class WPSC_Purchase_Log_Page {
 		if( wpsc_purchlogs_has_customfields() ){?>
 			<div class='metabox-holder'>
 				<div id='purchlogs_customfields' class='postbox'>
-					<h3 class='hndle'><?php esc_html_e( 'Users Custom Fields' , 'wpsc' ); ?></h3>
+					<h3 class='hndle'><?php esc_html_e( 'Users Custom Fields' , 'wp-e-commerce' ); ?></h3>
 					<div class='inside'>
 						<?php $messages = wpsc_purchlogs_custommessages(); ?>
 						<?php $files = wpsc_purchlogs_customfiles(); ?>
 						<?php if(count($files) > 0){ ?>
-							<h4><?php esc_html_e( 'Cart Items with Custom Files' , 'wpsc' ); ?>:</h4>
+							<h4><?php esc_html_e( 'Cart Items with Custom Files' , 'wp-e-commerce' ); ?>:</h4>
 							<?php
 							foreach($files as $file){
 								echo $file;
 							}
 						}?>
 						<?php if(count($messages) > 0){ ?>
-							<h4><?php esc_html_e( 'Cart Items with Custom Messages' , 'wpsc' ); ?>:</h4>
+							<h4><?php esc_html_e( 'Cart Items with Custom Messages' , 'wp-e-commerce' ); ?>:</h4>
 							<?php
 							foreach($messages as $message){
 								echo esc_html( $message['title'] ) . ':<br />' . nl2br( esc_html( $message['message'] ) );
@@ -254,7 +254,7 @@ class WPSC_Purchase_Log_Page {
 	public function controller_item_details() {
 
 		if ( ! isset( $_REQUEST['id'] ) || ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) ) ) {
-			wp_die( __( 'Invalid sales log ID', 'wpsc'  ) );
+			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
 		global $purchlogitem;
@@ -263,18 +263,18 @@ class WPSC_Purchase_Log_Page {
 		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
 
 		$columns = array(
-			'title'    => __( 'Name', 'wpsc' ),
-			'sku'      => __( 'SKU', 'wpsc' ),
-			'quantity' => __( 'Quantity','wpsc' ),
-			'price'    => __( 'Price', 'wpsc' ),
-			'shipping' => __( 'Item Shipping', 'wpsc'),
+			'title'    => __( 'Name', 'wp-e-commerce' ),
+			'sku'      => __( 'SKU', 'wp-e-commerce' ),
+			'quantity' => __( 'Quantity','wp-e-commerce' ),
+			'price'    => __( 'Price', 'wp-e-commerce' ),
+			'shipping' => __( 'Item Shipping', 'wp-e-commerce'),
 		);
 
 		if ( wpec_display_product_tax() ) {
-			$columns['tax'] = __( 'Item Tax', 'wpsc' );
+			$columns['tax'] = __( 'Item Tax', 'wp-e-commerce' );
 		}
 
-		$columns['total'] = __( 'Item Total','wpsc' );
+		$columns['total'] = __( 'Item Total','wp-e-commerce' );
 
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
@@ -285,7 +285,7 @@ class WPSC_Purchase_Log_Page {
 	public function controller_packing_slip() {
 
 		if ( ! isset( $_REQUEST['id'] ) || ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) ) ) {
-			wp_die( __( 'Invalid sales log ID', 'wpsc'  ) );
+			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
 		global $purchlogitem;
@@ -293,18 +293,18 @@ class WPSC_Purchase_Log_Page {
 		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
 
 		$columns = array(
-			'title'    => __( 'Item Name', 'wpsc' ),
-			'sku'      => __( 'SKU', 'wpsc' ),
-			'quantity' => __( 'Quantity', 'wpsc' ),
-			'price'    => __( 'Price', 'wpsc' ),
-			'shipping' => __( 'Item Shipping','wpsc' ),
+			'title'    => __( 'Item Name', 'wp-e-commerce' ),
+			'sku'      => __( 'SKU', 'wp-e-commerce' ),
+			'quantity' => __( 'Quantity', 'wp-e-commerce' ),
+			'price'    => __( 'Price', 'wp-e-commerce' ),
+			'shipping' => __( 'Item Shipping','wp-e-commerce' ),
 		);
 
 		if ( wpec_display_product_tax() ) {
-			$columns['tax'] = __( 'Item Tax', 'wpsc' );
+			$columns['tax'] = __( 'Item Tax', 'wp-e-commerce' );
 		}
 
-		$columns['total'] = __( 'Item Total','wpsc' );
+		$columns['total'] = __( 'Item Total','wp-e-commerce' );
 
 		$cols = count( $columns ) - 2;
 

@@ -95,7 +95,7 @@ class Sputnik_Admin {
 			return;
 		}
 ?>
-	<div class="error"><p><?php _e('The following plugins are disabled:', 'wpsc') ?></p>
+	<div class="error"><p><?php _e('The following plugins are disabled:', 'wp-e-commerce') ?></p>
 	<ul>
 <?php
 		foreach ($invalid as $plugin) {
@@ -104,10 +104,10 @@ class Sputnik_Admin {
 			}
 			switch ($plugin['sputnik_error']) {
 				case 'not_purchased':
-					$error = __('Not purchased', 'wpsc');
+					$error = __('Not purchased', 'wp-e-commerce');
 					break;
 				default:
-					$error = __('Unknown error', 'wpsc');
+					$error = __('Unknown error', 'wp-e-commerce');
 					break;
 			}
 ?>
@@ -127,7 +127,7 @@ class Sputnik_Admin {
 		if (empty($data['Sputnik ID'])) {
 			return $meta;
 		}
-		echo '<a class="sputnik-plugin-row-note" href="' . self::build_url() . '"><span class="powered">' . __( 'Powered by WPEConomy', 'wpsc' ) . '</span><span class="corner"></span></a>';
+		echo '<a class="sputnik-plugin-row-note" href="' . self::build_url() . '"><span class="powered">' . __( 'Powered by WPEConomy', 'wp-e-commerce' ) . '</span><span class="corner"></span></a>';
 		return $meta;
 	}
 
@@ -190,17 +190,17 @@ class Sputnik_Admin {
 ?>
 			<div class="sputnik-message updated">
 				<p>
-					<?php _e( '<strong>WPEConomy is now installed!</strong> &#8211; Get started by linking with your account!', 'wpsc' ); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-					<?php _e( "If you haven't created an account yet, don't worry, you will be prompted to do so.", 'wpsc') ?>
+					<?php _e( '<strong>WPEConomy is now installed!</strong> &#8211; Get started by linking with your account!', 'wp-e-commerce' ); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+					<?php _e( "If you haven't created an account yet, don't worry, you will be prompted to do so.", 'wp-e-commerce') ?>
 				</p>
-				<a href="<?php echo esc_html( $oauth_url ); ?>" class="thickbox button button-primary thickbox`"><?php _e( 'Link your account now', 'wpsc' ); ?></a>
+				<a href="<?php echo esc_html( $oauth_url ); ?>" class="thickbox button button-primary thickbox`"><?php _e( 'Link your account now', 'wp-e-commerce' ); ?></a>
 			</div>
 <?php
 	}
 
 	public static function admin_notices() {
 		if ( isset( $_GET['payment_cancelled'] ) ) {
-			self::print_message( __( 'Payment cancelled.', 'wpsc' ) );
+			self::print_message( __( 'Payment cancelled.', 'wp-e-commerce' ) );
 		}
 	}
 
@@ -227,7 +227,7 @@ class Sputnik_Admin {
 	}
 
 	public static function menu() {
-		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x( 'Extensions', 'page title', 'wpsc' ), _x( '<span id="wpsc-extensions-menu-link">Extensions</span>', 'menu title', 'wpsc' ), 'install_plugins', 'sputnik', array( __CLASS__, 'page' ) );
+		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x( 'Extensions', 'page title', 'wp-e-commerce' ), _x( '<span id="wpsc-extensions-menu-link">Extensions</span>', 'menu title', 'wp-e-commerce' ), 'install_plugins', 'sputnik', array( __CLASS__, 'page' ) );
 		$hooks[] = 'plugin-install.php';
 
 		foreach ( $hooks as $hook ) {
@@ -282,8 +282,8 @@ class Sputnik_Admin {
 		wp_enqueue_script( 'wpsc-marketplace-js', plugins_url( 'static/admin.js', Sputnik::$path . '/wpsc-marketplace' ), array( 'jquery', 'jquery-masonry', 'thickbox', 'paypal' ), '20141109' );
 
 		$l10n = array(
-			'plugin_information' => __( 'Plugin Information:', 'wpsc' ),
-			'ays'                => __( 'Are you sure you want to install this plugin?', 'wpsc' )
+			'plugin_information' => __( 'Plugin Information:', 'wp-e-commerce' ),
+			'ays'                => __( 'Are you sure you want to install this plugin?', 'wp-e-commerce' )
 		);
 
 		if ( ! empty( $_REQUEST['oauth_buy'] ) ) {
@@ -344,7 +344,7 @@ class Sputnik_Admin {
 			}
 		} catch (Exception $e) {
 			status_header(500);
-			iframe_header( __('Plugin Install', 'wpsc') );
+			iframe_header( __('Plugin Install', 'wp-e-commerce') );
 			echo $e->getMessage();
 			iframe_footer();
 			die();
@@ -358,12 +358,12 @@ class Sputnik_Admin {
 									'img' => array('src' => array(), 'class' => array(), 'alt' => array()));
 
 		$plugins_section_titles = array(
-			'description'  => _x('Description',  'Plugin installer section title', 'wpsc'),
-			'installation' => _x('Installation', 'Plugin installer section title', 'wpsc'),
-			'faq'          => _x('FAQ',          'Plugin installer section title', 'wpsc'),
-			'screenshots'  => _x('Screenshots',  'Plugin installer section title', 'wpsc'),
-			'changelog'    => _x('Changelog',    'Plugin installer section title', 'wpsc'),
-			'other_notes'  => _x('Other Notes',  'Plugin installer section title', 'wpsc')
+			'description'  => _x('Description',  'Plugin installer section title', 'wp-e-commerce'),
+			'installation' => _x('Installation', 'Plugin installer section title', 'wp-e-commerce'),
+			'faq'          => _x('FAQ',          'Plugin installer section title', 'wp-e-commerce'),
+			'screenshots'  => _x('Screenshots',  'Plugin installer section title', 'wp-e-commerce'),
+			'changelog'    => _x('Changelog',    'Plugin installer section title', 'wp-e-commerce'),
+			'other_notes'  => _x('Other Notes',  'Plugin installer section title', 'wp-e-commerce')
 		);
 
 		//Sanitize HTML
@@ -394,7 +394,7 @@ class Sputnik_Admin {
 
 		global $body_id;
 		$body_id = 'sputnik-plugin-information';
-		iframe_header( __('Plugin Install', 'wpsc') );
+		iframe_header( __('Plugin Install', 'wp-e-commerce') );
 ?>
 		<div class="alignleft fyi">
 			<h1><?php echo $api->name ?></h1>
@@ -407,21 +407,21 @@ class Sputnik_Admin {
 				case 'purchase':
 				default:
 					if ( $status['url'] )
-						echo '<a href="' . $status['url'] . '" target="_parent" id="' . $plugin . '" class="button-primary buy">' . sprintf(__('<span>$%.2f</span> Buy &amp; Install', 'wpsc'), $api->price) . '</a>';
+						echo '<a href="' . $status['url'] . '" target="_parent" id="' . $plugin . '" class="button-primary buy">' . sprintf(__('<span>$%.2f</span> Buy &amp; Install', 'wp-e-commerce'), $api->price) . '</a>';
 					break;
 				case 'install':
 					if ( $status['url'] )
-						echo '<a href="' . $status['url'] . '" class="button-primary install" title="' . __('You have already purchased, install now', 'wpsc') . '">' . __('Install Now', 'wpsc') . '</a>';
+						echo '<a href="' . $status['url'] . '" class="button-primary install" title="' . __('You have already purchased, install now', 'wp-e-commerce') . '">' . __('Install Now', 'wp-e-commerce') . '</a>';
 					break;
 				case 'update_available':
 					if ( $status['url'] )
-						echo '<a href="' . $status['url'] . '" class="button-primary install">' . __('Install Update Now', 'wpsc') .'</a>';
+						echo '<a href="' . $status['url'] . '" class="button-primary install">' . __('Install Update Now', 'wp-e-commerce') .'</a>';
 					break;
 				case 'newer_installed':
-					echo '<a>' . sprintf(__('Newer Version (%s) Installed', 'wpsc'), $status['version']) . '</a>';
+					echo '<a>' . sprintf(__('Newer Version (%s) Installed', 'wp-e-commerce'), $status['version']) . '</a>';
 					break;
 				case 'latest_installed':
-					echo '<a>' . __('Latest Version Installed', 'wpsc') . '</a>';
+					echo '<a>' . __('Latest Version Installed', 'wp-e-commerce') . '</a>';
 					break;
 			}
 ?>
@@ -453,43 +453,43 @@ class Sputnik_Admin {
 		echo "</ul>\n";
 		echo "</div>\n";
 ?>
-			<h2 class="mainheader"><?php /* translators: For Your Information */ _e('FYI', 'wpsc') ?></h2>
+			<h2 class="mainheader"><?php /* translators: For Your Information */ _e('FYI', 'wp-e-commerce') ?></h2>
 			<ul>
 	<?php if ( ! empty($api->version) ) : ?>
-				<li><strong><?php _e('Version:', 'wpsc') ?></strong> <?php echo $api->version ?></li>
+				<li><strong><?php _e('Version:', 'wp-e-commerce') ?></strong> <?php echo $api->version ?></li>
 	<?php endif; if ( ! empty($api->author) ) : ?>
-				<li><strong><?php _e('Author:', 'wpsc') ?></strong> <?php echo $api->author ?></li>
+				<li><strong><?php _e('Author:', 'wp-e-commerce') ?></strong> <?php echo $api->author ?></li>
 	<?php endif; if ( ! empty($api->last_updated) ) : ?>
-				<li><strong><?php _e('Last Updated:', 'wpsc') ?></strong> <span title="<?php echo $api->last_updated ?>"><?php
-								printf( __('%s ago', 'wpsc'), human_time_diff(strtotime($api->last_updated)) ) ?></span></li>
+				<li><strong><?php _e('Last Updated:', 'wp-e-commerce') ?></strong> <span title="<?php echo $api->last_updated ?>"><?php
+								printf( __('%s ago', 'wp-e-commerce'), human_time_diff(strtotime($api->last_updated)) ) ?></span></li>
 	<?php endif; if ( ! empty($api->requires) ) : ?>
-				<li><strong><?php _e('Requires WordPress Version:', 'wpsc') ?></strong> <?php printf(__('%s or higher', 'wpsc'), $api->requires) ?></li>
+				<li><strong><?php _e('Requires WordPress Version:', 'wp-e-commerce') ?></strong> <?php printf(__('%s or higher', 'wp-e-commerce'), $api->requires) ?></li>
 	<?php endif; if ( ! empty($api->tested) ) : ?>
-				<li><strong><?php _e('Compatible up to:', 'wpsc') ?></strong> <?php echo $api->tested ?></li>
+				<li><strong><?php _e('Compatible up to:', 'wp-e-commerce') ?></strong> <?php echo $api->tested ?></li>
 	<?php endif; if ( ! empty($api->requires_wpec) ) : ?>
-				<li><strong><?php _e('Requires WPeC Version:', 'wpsc') ?></strong> <?php printf(__('%s or higher', 'wpsc'), $api->requires_wpec) ?></li>
+				<li><strong><?php _e('Requires WPeC Version:', 'wp-e-commerce') ?></strong> <?php printf(__('%s or higher', 'wp-e-commerce'), $api->requires_wpec) ?></li>
 	<?php endif; if ( ! empty($api->tested_wpec) ) : ?>
-				<li><strong><?php _e('Compatible up to WPEC Version:', 'wpsc') ?></strong> <?php echo $api->tested_wpec ?></li>
+				<li><strong><?php _e('Compatible up to WPEC Version:', 'wp-e-commerce') ?></strong> <?php echo $api->tested_wpec ?></li>
 	<?php endif; if ( ! empty($api->downloaded) ) : ?>
-				<li><strong><?php _e('Downloaded:', 'wpsc') ?></strong> <?php printf(_n('%s time', '%s times', $api->downloaded, 'wpsc'), number_format_i18n($api->downloaded)) ?></li>
+				<li><strong><?php _e('Downloaded:', 'wp-e-commerce') ?></strong> <?php printf(_n('%s time', '%s times', $api->downloaded, 'wp-e-commerce'), number_format_i18n($api->downloaded)) ?></li>
 	<?php endif; if ( ! empty($api->homepage) ) : ?>
-				<li><a target="_blank" href="<?php echo $api->homepage ?>"><?php _e('Plugin Homepage  &#187;', 'wpsc') ?></a></li>
+				<li><a target="_blank" href="<?php echo $api->homepage ?>"><?php _e('Plugin Homepage  &#187;', 'wp-e-commerce') ?></a></li>
 	<?php endif; ?>
 			</ul>
 		</div>
 		<div id="section-holder" class="wrap">
 		<?php
 			if ( !empty($api->tested) && version_compare( substr($GLOBALS['wp_version'], 0, strlen($api->tested)), $api->tested, '>') )
-				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your current version of WordPress.', 'wpsc') . '</p></div>';
+				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your current version of WordPress.', 'wp-e-commerce') . '</p></div>';
 
 			else if ( !empty($api->requires) && version_compare( substr($GLOBALS['wp_version'], 0, strlen($api->requires)), $api->requires, '<') )
-				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WordPress.', 'wpsc') . '</p></div>';
+				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WordPress.', 'wp-e-commerce') . '</p></div>';
 
 			else if ( !empty($api->requires_wpec) && version_compare( substr( WPSC_VERSION, 0, strlen($api->requires_wpec)), $api->requires_wpec, '<') )
-				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WP eCommerce.', 'wpsc') . '</p></div>';
+				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WP eCommerce.', 'wp-e-commerce') . '</p></div>';
 
 			else if ( !empty($api->tested_wpec) && version_compare( substr( WPSC_VERSION, 0, strlen($api->tested_wpec)), $api->tested_wpec, '<') )
-				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your version of WP eCommerce.', 'wpsc') . '</p></div>';
+				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your version of WP eCommerce.', 'wp-e-commerce') . '</p></div>';
 
 			foreach ( $api->sections as $section_name => $content ) {
 				if ( isset( $plugins_section_titles[ $section_name ] ) )
@@ -626,8 +626,8 @@ class Sputnik_Admin {
 	protected static function header( $account ) {
 		if ($account !== false) {
 			$tabs = array(
-				'dash' => __('Store', 'wpsc'),
-				'account' => __('Your Account', 'wpsc'),
+				'dash' => __('Store', 'wp-e-commerce'),
+				'account' => __('Your Account', 'wp-e-commerce'),
 			);
 			$hrefs = array(
 				'dash' => self::build_url(),
@@ -638,7 +638,7 @@ class Sputnik_Admin {
 		}
 ?>
 		<div class="wrap" id="sputnik-page">
-			<h2><?php _e( 'Marketplace', 'wpsc' ); ?></h2>
+			<h2><?php _e( 'Marketplace', 'wp-e-commerce' ); ?></h2>
 <?php
 		do_action('sputnik_messages');
 	}
@@ -656,7 +656,7 @@ class Sputnik_Admin {
 				delete_option('sputnik_oauth_request');
 			}
 			elseif ( $e->getCode() !== 1 ) {
-				echo '<p>' . sprintf(__('Problem: %s', 'wpsc'), $e->getMessage() ). '</p>';
+				echo '<p>' . sprintf(__('Problem: %s', 'wp-e-commerce'), $e->getMessage() ). '</p>';
 			}
 		}
 
@@ -670,14 +670,14 @@ class Sputnik_Admin {
 					<?php echo get_avatar($account->email) ?>
 					<p class="lead-in">Logged in as</p>
 					<h3><?php echo esc_html($account->name) ?></h3>
-					<p><?php printf(__('<a href="%s">Log out</a> of your account', 'wpsc'), self::build_url(array('oauth' => 'reset'))) ?></p>
+					<p><?php printf(__('<a href="%s">Log out</a> of your account', 'wp-e-commerce'), self::build_url(array('oauth' => 'reset'))) ?></p>
 				</div>
 				<div class="block">
 					<p>Email: <code><?php echo $account->email ?></code></p>
 					<?php if ( $tab != 'purchased' ): ?>
-						<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you can install right now">Available</abbr>', 'wpsc'), count( self::$list_table->items )) ?></p>
+						<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you can install right now">Available</abbr>', 'wp-e-commerce'), count( self::$list_table->items )) ?></p>
 					<?php endif; ?>
-					<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you have bought from the store">Purchased</abbr>', 'wpsc'), count( $account->purchased ) ) ?></p>
+					<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you have bought from the store">Purchased</abbr>', 'wp-e-commerce'), count( $account->purchased ) ) ?></p>
 				</div>
 			</div>
 			<?php
@@ -690,14 +690,14 @@ class Sputnik_Admin {
 	 * Output the main landing page for the Sputnik administration screen.
 	 */
 	protected static function dashboard() { ?>
-		<p><?php _e('Some text about WPEconomy goes here! This will eventually be replaced with a dashboard-like interface, including latest news, etc.', 'wpsc'); ?></p>
+		<p><?php _e('Some text about WPEconomy goes here! This will eventually be replaced with a dashboard-like interface, including latest news, etc.', 'wp-e-commerce'); ?></p>
 
-		<h4><?php _e('Search', 'wpsc') ?></h4>
-		<p class="install-help"><?php _e('Search for plugins by keyword.', 'wpsc') ?></p>
+		<h4><?php _e('Search', 'wp-e-commerce') ?></h4>
+		<p class="install-help"><?php _e('Search for plugins by keyword.', 'wp-e-commerce') ?></p>
 		<?php Sputnik_Admin::search_form(); ?>
 
 		<h4><?php _e('Popular tags') ?></h4>
-		<p class="install-help"><?php _e('You may also browse based on the most popular tags on the store:', 'wpsc') ?></p>
+		<p class="install-help"><?php _e('You may also browse based on the most popular tags on the store:', 'wp-e-commerce') ?></p>
 <?php
 		echo '<p class="popular-tags">';
 
@@ -714,7 +714,7 @@ class Sputnik_Admin {
 					'count' => $tag->count
 				);
 			}
-			echo wp_generate_tag_cloud($tags, array( 'single_text' => __('%s plugin', 'wpsc'), 'multiple_text' => __('%s plugins', 'wpsc') ) );
+			echo wp_generate_tag_cloud($tags, array( 'single_text' => __('%s plugin', 'wp-e-commerce'), 'multiple_text' => __('%s plugins', 'wp-e-commerce') ) );
 		}
 		catch (Exception $e) {
 			echo $e->getMessage();
@@ -742,7 +742,7 @@ class Sputnik_Admin {
 			}
 			else {
 				self::header('Account', $account);
-				echo '<p>' . sprintf(__('Problem: %s', 'wpsc'), $e->getMessage()) . '</p>';
+				echo '<p>' . sprintf(__('Problem: %s', 'wp-e-commerce'), $e->getMessage()) . '</p>';
 
 				return;
 			}
@@ -755,12 +755,12 @@ class Sputnik_Admin {
 				<?php echo get_avatar($account->email) ?>
 				<p class="lead-in">Logged in as</p>
 				<h3><?php echo esc_html($account->name) ?></h3>
-				<p><?php printf(__('<a href="%s">Log out</a> of your account', 'wpsc'), self::build_url(array('oauth' => 'reset'))) ?></p>
+				<p><?php printf(__('<a href="%s">Log out</a> of your account', 'wp-e-commerce'), self::build_url(array('oauth' => 'reset'))) ?></p>
 			</div>
 			<div class="block">
 				<p>Email: <code><?php echo $account->email ?></code></p>
-				<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you can install right now">Available</abbr>', 'wpsc'), count($account->purchased)) ?></p>
-				<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you have bought from the store">Purchased</abbr>', 'wpsc'), count(self::$list_table->items)) ?></p>
+				<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you can install right now">Available</abbr>', 'wp-e-commerce'), count($account->purchased)) ?></p>
+				<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you have bought from the store">Purchased</abbr>', 'wp-e-commerce'), count(self::$list_table->items)) ?></p>
 			</div>
 		</div>
 
@@ -773,7 +773,7 @@ class Sputnik_Admin {
 		$oauth_url    = self::build_url(array('oauth' => 'request', 'TB_iframe' => true));
 
 		if ( isset( $_GET['auth'] ) && $_GET['auth'] == 'denied' ) {
-			self::print_message( __( 'Authorization cancelled.', 'wpsc' ) );
+			self::print_message( __( 'Authorization cancelled.', 'wp-e-commerce' ) );
 		}
 	}
 
@@ -817,7 +817,7 @@ class Sputnik_Admin {
 		$install_url = add_query_arg('_wpnonce', wp_create_nonce('sputnik_install-plugin_' . $product_slug), $install_url);
 		$install_url = add_query_arg( array( 'TB_iframe' => true ), $install_url );
 
-		self::iframe_closer( self::build_url( array('run-installer' => urlencode( $install_url ) ) ), __( 'Installing ... ', 'wpsc' ) );
+		self::iframe_closer( self::build_url( array('run-installer' => urlencode( $install_url ) ) ), __( 'Installing ... ', 'wp-e-commerce' ) );
 	}
 
 	/**
@@ -830,7 +830,7 @@ class Sputnik_Admin {
 
 		$cancelled_url = self::build_url( array( 'payment_cancelled' => true ) );
 
-		self::iframe_closer( $cancelled_url, __( 'Payment Cancelled', 'wpsc' ) );
+		self::iframe_closer( $cancelled_url, __( 'Payment Cancelled', 'wp-e-commerce' ) );
 	}
 
 	protected static function install($id) {
@@ -842,7 +842,7 @@ class Sputnik_Admin {
 		}
 		catch (Exception $e) {
 			status_header(500);
-			iframe_header( __('Plugin Install', 'wpsc') );
+			iframe_header( __('Plugin Install', 'wp-e-commerce') );
 			echo $e->getMessage();
 			iframe_footer();
 			die();
@@ -854,7 +854,7 @@ class Sputnik_Admin {
 		}
 
 		if ( ! current_user_can('install_plugins') )
-			wp_die(__('You do not have sufficient permissions to install plugins for this site.', 'wpsc'));
+			wp_die(__('You do not have sufficient permissions to install plugins for this site.', 'wp-e-commerce'));
 
 		include_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 
@@ -862,9 +862,9 @@ class Sputnik_Admin {
 
 		global $body_id;
 		$body_id = 'sputnik-install';
-		iframe_header( __('Plugin Install', 'wpsc') );
+		iframe_header( __('Plugin Install', 'wp-e-commerce') );
 
-		$title = sprintf( __('Installing Plugin: %s', 'wpsc'), $api->name . ' ' . $api->version );
+		$title = sprintf( __('Installing Plugin: %s', 'wp-e-commerce'), $api->name . ' ' . $api->version );
 		$nonce = 'sputnik_install-plugin_' . $id;
 		$url = 'update.php?action=install-plugin&plugin=' . $id;
 		if ( isset($_GET['from']) )
@@ -890,14 +890,14 @@ class Sputnik_Admin {
 		try {
 			$data = Sputnik::get_from_file($file);
 			if ($data === null) {
-				throw new Exception(__('Plugin not found', 'wpsc'));
+				throw new Exception(__('Plugin not found', 'wp-e-commerce'));
 			}
 			$id = $data['Sputnik ID'];
 			$api = Sputnik::get_plugin($id);
 		}
 		catch (Exception $e) {
 			status_header(500);
-			iframe_header( __('Update Plugin', 'wpsc') );
+			iframe_header( __('Update Plugin', 'wp-e-commerce') );
 			echo $e->getMessage();
 			iframe_footer();
 			die();
@@ -909,7 +909,7 @@ class Sputnik_Admin {
 		}
 
 		if ( ! current_user_can('install_plugins') )
-			wp_die(__('You do not have sufficient permissions to install plugins for this site.', 'wpsc'));
+			wp_die(__('You do not have sufficient permissions to install plugins for this site.', 'wp-e-commerce'));
 
 		include_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 
@@ -917,9 +917,9 @@ class Sputnik_Admin {
 
 		global $body_id;
 		$body_id = 'sputnik-upgrade';
-		iframe_header( __('Update Plugin', 'wpsc') );
+		iframe_header( __('Update Plugin', 'wp-e-commerce') );
 
-		$title = sprintf( __('Updating Plugin: %s', 'wpsc'), $api->name . ' ' . $api->version );
+		$title = sprintf( __('Updating Plugin: %s', 'wp-e-commerce'), $api->name . ' ' . $api->version );
 		$nonce = 'sputnik_upgrade-plugin_' . $id;
 		$url = 'update.php?action=upgrade-plugin&plugin=' . $id;
 		if ( isset($_GET['from']) )
@@ -961,7 +961,7 @@ class Sputnik_Admin {
 	 */
 	public static function iframe_closer( $redirect_url, $title = null ) {
 		if (empty($title)) {
-			$title = __('Redirecting...', 'wpsc');
+			$title = __('Redirecting...', 'wp-e-commerce');
 		}
 ?>
 <!DOCTYPE html><html>

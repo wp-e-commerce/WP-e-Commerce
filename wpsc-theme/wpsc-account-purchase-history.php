@@ -16,13 +16,13 @@ global $col_count; ?>
 	<?php if ( wpsc_has_purchases_this_month() ) : ?>
 
 			<tr class="toprow">
-				<th class="status"><?php _e( 'Status', 'wpsc' ); ?></th>
-				<th class="date"><?php _e( 'Date', 'wpsc' ); ?></th>
-				<th class="price"><?php _e( 'Price', 'wpsc' ); ?></th>
+				<th class="status"><?php _e( 'Status', 'wp-e-commerce' ); ?></th>
+				<th class="date"><?php _e( 'Date', 'wp-e-commerce' ); ?></th>
+				<th class="price"><?php _e( 'Price', 'wp-e-commerce' ); ?></th>
 
 				<?php if ( get_option( 'payment_method' ) == 2 ) : ?>
 
-					<th class="payment_method"><?php _e( 'Payment Method', 'wpsc' ); ?></th>
+					<th class="payment_method"><?php _e( 'Payment Method', 'wp-e-commerce' ); ?></th>
 
 				<?php endif; ?>
 
@@ -35,7 +35,7 @@ global $col_count; ?>
 			<tr>
 				<td colspan="<?php echo $col_count; ?>">
 
-					<?php _e( 'No transactions for this month.', 'wpsc' ); ?>
+					<?php _e( 'No transactions for this month.', 'wp-e-commerce' ); ?>
 
 				</td>
 			</tr>
@@ -48,7 +48,7 @@ global $col_count; ?>
 
 	<table>
 		<tr>
-			<td><?php _e( 'There have not been any purchases yet.', 'wpsc' ); ?></td>
+			<td><?php _e( 'There have not been any purchases yet.', 'wp-e-commerce' ); ?></td>
 		</tr>
 	</table>
 

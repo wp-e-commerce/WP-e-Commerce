@@ -126,17 +126,17 @@ class ash_usps {
 			// "Online Only *"=>"ONLINE",
 			// "All Services"=>"ALL",
 			// "Library Mail"=>"LIBRARY",
-			__( "First Class", 'wpsc' ) => "FIRST CLASS",
-			__( "Standard Post *", 'wpsc' ) => "STANDARD POST",
+			__( "First Class", 'wp-e-commerce' ) => "FIRST CLASS",
+			__( "Standard Post *", 'wp-e-commerce' ) => "STANDARD POST",
 			// "First Class Metered"=>"FIRST CLASS METERED",
 			// "First Class Commercial"=>"FIRST CLASS COMMERCIAL",
 			// "First Class Hold For Pickup Commercial"=>"FIRST CLASS HFP COMMERCIAL",
-			__( "Priority Mail *", 'wpsc' ) => "PRIORITY",
+			__( "Priority Mail *", 'wp-e-commerce' ) => "PRIORITY",
 			// "Priority Commercial"=>"PRIORITY COMMERCIAL",
 			// "Priority CPP"=>"PRIORITY CPP",
 			// "Priority Hold For Pickup Commercial"=>"PRIORITY HFP COMMERCIAL",
 			// "Priority Hold For Pickup CPP"=>"PRIORITY HFP CPP",
-			__( "Priority Express", 'wpsc' ) => "PRIORITY EXPRESS",
+			__( "Priority Express", 'wp-e-commerce' ) => "PRIORITY EXPRESS",
 			// "Priority Express Commerical"=>"PRIORITY EXPRESS COMMERCIAL",
 			// "Priority Express CPP"=>"PRIORITY EXPRESS CPP",
 			// "Priority Express SH"=>"PRIORITY EXPRESS SH",
@@ -144,7 +144,7 @@ class ash_usps {
 			// "Priority Express Hold for Pickup"=> "PRIORITY EXPRESS HFP",
 			// "Priority Express Hold for Pickup Commercial"=>"PRIORITY EXPRESS HFP COMMERCIAL"
 			// "Priority Express Hold for Pickup CPP"=>"PRIORITY EXPRESS HFP CPP"
-			__( "Media Mail **", 'wpsc' ) => "MEDIA" ,
+			__( "Media Mail **", 'wp-e-commerce' ) => "MEDIA" ,
 		);
 		$this->services = $services;
 
@@ -199,34 +199,34 @@ class ash_usps {
 		ob_start();
 		?>
 		<tr>
-			<td><?php _e( 'USPS ID', 'wpsc' ); ?></td>
+			<td><?php _e( 'USPS ID', 'wp-e-commerce' ); ?></td>
 			<td>
 				<input type='text' name='wpec_usps[id]' value='<?php esc_attr_e( $settings["id"] ); ?>' />
-				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wpsc' ), 'https://registration.shippingapis.com/' ); ?></p>
-				<p class='description'><?php _e( "Make sure your account has been activated with USPS - if you're unsure if this applies to you then please check with USPS", 'wpsc' ); ?></p>
-				<p class='description'><?php printf( __("Once you've completed integration, <a href='%s' target='_blank'>you'll need to submit a request to promote tools to production</a>.", 'wpsc' ), 'https://www.usps.com/business/web-tools-apis/developers-center.htm#learn-more--1-1' ); ?></p>
+				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wp-e-commerce' ), 'https://registration.shippingapis.com/' ); ?></p>
+				<p class='description'><?php _e( "Make sure your account has been activated with USPS - if you're unsure if this applies to you then please check with USPS", 'wp-e-commerce' ); ?></p>
+				<p class='description'><?php printf( __("Once you've completed integration, <a href='%s' target='_blank'>you'll need to submit a request to promote tools to production</a>.", 'wp-e-commerce' ), 'https://www.usps.com/business/web-tools-apis/developers-center.htm#learn-more--1-1' ); ?></p>
 			</td>
 		</tr>
 
 		<tr>
-			<td><?php _e( 'Shipping Settings', 'wpsc' ); ?></td>
+			<td><?php _e( 'Shipping Settings', 'wp-e-commerce' ); ?></td>
 			<td>
 				<label>
 					<input type='checkbox' <?php checked( isset( $settings['test_server'] ) && (bool) $settings['test_server'], 1 ); ?> name='wpec_usps[test_server]' value='1' />
-					<?php _e( 'Use Test Server', 'wpsc' ); ?>
+					<?php _e( 'Use Test Server', 'wp-e-commerce' ); ?>
 				</label>
 				<br />
 
 				<label>
 					<input type='checkbox' <?php checked( isset( $settings['adv_rate'] ) && (bool) $settings['adv_rate'], 1 ); ?> name='wpec_usps[adv_rate]' value='1' />
-					<?php _e( 'Advanced Rates', 'wpsc' ); ?>
+					<?php _e( 'Advanced Rates', 'wp-e-commerce' ); ?>
 				</label>
-				<p class='description'><?php _e( 'This setting will provide rates based on the dimensions from each item in your cart', 'wpsc' ); ?></p>
+				<p class='description'><?php _e( 'This setting will provide rates based on the dimensions from each item in your cart', 'wp-e-commerce' ); ?></p>
 				<label>
 					<input type='checkbox' <?php checked( isset( $settings['intl_rate'] ) && (bool) $settings['intl_rate'], 1 ); ?> name='wpec_usps[intl_rate]' value='1' />
-					<?php _e( 'Disable International Shipping', 'wpsc' ); ?>
+					<?php _e( 'Disable International Shipping', 'wp-e-commerce' ); ?>
 				</label>
-				<p class='description'><?php _e( 'No shipping rates will be displayed if the shipment destination country is different than your base country/region.', 'wpsc' ); ?></p>
+				<p class='description'><?php _e( 'No shipping rates will be displayed if the shipment destination country is different than your base country/region.', 'wp-e-commerce' ); ?></p>
 			</td>
 		</tr>
 
@@ -234,7 +234,7 @@ class ash_usps {
 			$wpec_usps_services = $settings["services"];
 		?>
 		<tr>
-			<td><?php _e( 'Select Services', 'wpsc' ); ?></td>
+			<td><?php _e( 'Select Services', 'wp-e-commerce' ); ?></td>
 			<td>
 				<div class="ui-widget-content multiple-select">
 					<?php foreach ( $this->services as $label => $service ): ?>
@@ -243,23 +243,23 @@ class ash_usps {
 				 		<br />
 					<?php endforeach; ?>
 				</div>
-				<p class='description'><?php _e( "* Standard Post should never be used as the sole USPS mail service provided. It's only available for destinations located far from your base zipcode. In this case, and to provide shipping coverage for locations closer to your base zipcode, the Priority Mail service must be selected too.", 'wpsc' ); ?></p>
-				<p class='description'><?php printf( __("** Media Mail must only be used for books, printed material and sound or video recordings (CDs, DVDs, Blu-rays and other, excluding games). It may be subjected to postal inspection to enforce this. For more information, please consult the <a href='%s' target='_blank'>Media Mail's Rules & Restrictions web page.</a>", 'wpsc' ), 'https://www.usps.com/ship/media-mail.htm' ); ?></p>
+				<p class='description'><?php _e( "* Standard Post should never be used as the sole USPS mail service provided. It's only available for destinations located far from your base zipcode. In this case, and to provide shipping coverage for locations closer to your base zipcode, the Priority Mail service must be selected too.", 'wp-e-commerce' ); ?></p>
+				<p class='description'><?php printf( __("** Media Mail must only be used for books, printed material and sound or video recordings (CDs, DVDs, Blu-rays and other, excluding games). It may be subjected to postal inspection to enforce this. For more information, please consult the <a href='%s' target='_blank'>Media Mail's Rules & Restrictions web page.</a>", 'wp-e-commerce' ), 'https://www.usps.com/ship/media-mail.htm' ); ?></p>
 			</td>
 		</tr>
 
 		<?php
 			$mt_array = array(
-				__( "Package", 'wpsc' ),
-				__( "Envelope", 'wpsc' ),
-				__( "Postcards or aerogrammes", 'wpsc' ),
-				__( "Matter for the Blind", 'wpsc' )
+				__( "Package", 'wp-e-commerce' ),
+				__( "Envelope", 'wp-e-commerce' ),
+				__( "Postcards or aerogrammes", 'wp-e-commerce' ),
+				__( "Matter for the Blind", 'wp-e-commerce' )
 			);
 
-			$mt_selected = ( array_key_exists( "intl_pkg", $settings ) ) ? $settings["intl_pkg"] : __( "Package", 'wpsc' );
+			$mt_selected = ( array_key_exists( "intl_pkg", $settings ) ) ? $settings["intl_pkg"] : __( "Package", 'wp-e-commerce' );
 		?>
 		<tr>
-			<td><?php _e( "International Package Type", "wpsc" ); ?></td>
+			<td><?php _e( "International Package Type", 'wp-e-commerce' ); ?></td>
 			<td>
 				<select id="wpec_usps_intl_pkg" name="wpec_usps[intl_pkg]">
 					<?php foreach ( $mt_array as $mt ): ?>
@@ -273,15 +273,15 @@ class ash_usps {
 			// If First Class, Online or All is selected then we need to know what Kind of First class
 			// will be used.
 			$fcl_types = array(
-				__( "Parcel", 'wpsc' )   => "PARCEL",
-				__( "Letter", 'wpsc' )   => "LETTER",
-				__( "Flat", 'wpsc' )     => "FLAT",
-				__( "Postcard", 'wpsc' ) => "POSTCARD"
+				__( "Parcel", 'wp-e-commerce' )   => "PARCEL",
+				__( "Letter", 'wp-e-commerce' )   => "LETTER",
+				__( "Flat", 'wp-e-commerce' )     => "FLAT",
+				__( "Postcard", 'wp-e-commerce' ) => "POSTCARD"
 			);
 			$type_selected = ( array_key_exists( "fcl_type", $settings ) ) ? $settings["fcl_type"] : $fcl_types["Parcel"];
 		?>
 		<tr>
-			<td><?php _e( "First Class Mail Type", "wpsc" ); ?></td>
+			<td><?php _e( "First Class Mail Type", 'wp-e-commerce' ); ?></td>
 			<td>
 				<select id="first_cls_type" name="wpec_usps[fcl_type]">
 					<?php foreach ( $fcl_types as $label => $value ): ?>
@@ -289,7 +289,7 @@ class ash_usps {
 					<?php endforeach; ?>
 				</select>
 				<br />
-				<p class='description'><?php _e( "Note: Only used for First Class service rates if selected", "wpsc" ); ?></p>
+				<p class='description'><?php _e( "Note: Only used for First Class service rates if selected", 'wp-e-commerce' ); ?></p>
 			</td>
 		</tr>
 		<?php
@@ -1063,7 +1063,7 @@ class ash_usps {
 		if ( $data["weight"] > 70 && ! (boolean) $data["adv_rate"] ) { //USPS has a weight limit: https://www.usps.com/send/can-you-mail-it.htm?#3.
 			$over_weight_txt = apply_filters( 'wpsc_shipment_over_weight',
 												__( 'Your order exceeds the standard shipping weight limit.
-													Please contact us to quote other shipping alternatives.', 'wpsc' ),
+													Please contact us to quote other shipping alternatives.', 'wp-e-commerce' ),
 												$data );
 			$shipping_quotes[$over_weight_txt] = 0; // yes, a constant.
 			$wpec_ash->cache_results( $this->internal_name, array($shipping_quotes), $this->shipment );

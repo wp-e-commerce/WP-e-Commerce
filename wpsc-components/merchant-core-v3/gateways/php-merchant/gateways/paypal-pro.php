@@ -109,7 +109,7 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 
 			// Add the Discount as an Item
 			$this->options['items'][] = array(
-				'name' => __( 'Discount', 'wpsc' ),
+				'name' => __( 'Discount', 'wp-e-commerce' ),
 				'amount' => - $discount,
 				'quantity' => '1',
 			);

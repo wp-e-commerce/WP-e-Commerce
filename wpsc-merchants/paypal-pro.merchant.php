@@ -1,12 +1,12 @@
 <?php
 
 $nzshpcrt_gateways[$num] = array(
-	'name'                   => __( 'PayPal Pro 2.0', 'wpsc' ),
+	'name'                   => __( 'PayPal Pro 2.0', 'wp-e-commerce' ),
 	'api_version'            => 2.0,
 	'class_name'             => 'wpsc_merchant_paypal_pro',
 	'has_recurring_billing'  => true,
 	'wp_admin_cannot_cancel' => true,
-	'display_name'			 => __( 'PayPal Pro', 'wpsc' ),
+	'display_name'			 => __( 'PayPal Pro', 'wp-e-commerce' ),
 	'image' => WPSC_URL . '/images/cc.gif',
 	'requirements'           => array(
 		'php_version'        => 4.3,    // so that you can restrict merchant modules to PHP 5, if you use PHP 5 features
@@ -43,7 +43,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 	public $rate                 = '';
 
 	function __construct( $purchase_id = null, $is_receiving = false ) {
-		$this->name = __( 'PayPal Pro 2.0', 'wpsc' );
+		$this->name = __( 'PayPal Pro 2.0', 'wp-e-commerce' );
 		parent::__construct( $purchase_id, $is_receiving );
 	}
 
@@ -163,7 +163,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 				$shipping_total -= 0.01;
 			}
 
-			$data["L_NAME{$i}"] = _x( 'Coupon / Discount', 'PayPal Pro Item Name for Discounts', 'wpsc' );
+			$data["L_NAME{$i}"] = _x( 'Coupon / Discount', 'PayPal Pro Item Name for Discounts', 'wp-e-commerce' );
 			$data["L_AMT{$i}"] = - $discount_value;
 			$data["L_NUMBER{$i}"] = $i;
 			$data["L_QTY{$i}"] = 1;
@@ -207,7 +207,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 		if ( is_wp_error( $response ) ) {
 			$error_data[0]['error_code'] = null;
-			$error_data[0]['error_message'] = __( 'There was a problem connecting to the payment gateway.', 'wpsc' );
+			$error_data[0]['error_message'] = __( 'There was a problem connecting to the payment gateway.', 'wp-e-commerce' );
 		} else {
 			parse_str( $response['body'], $parsed_response );
 		}
@@ -223,7 +223,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 					case 'ERRORCODE':
 						$error_data[$error_number]['error_code'] = $response_value;
 						if ( in_array( $response_value, $paypal_error_codes ) ) {
-							$error_data[$error_number]['error_message'] = __( 'There is a problem with your PayPal account configuration, please contact PayPal for further information.', 'wpsc' ) . $response_value;
+							$error_data[$error_number]['error_message'] = __( 'There is a problem with your PayPal account configuration, please contact PayPal for further information.', 'wp-e-commerce' ) . $response_value;
 
 							break 2;
 						}
@@ -422,7 +422,7 @@ function form_paypal_pro() {
 	$output = '
 	<tr>
 		<td>
-			<label for="paypal_pro_username">' . __( 'API Username:', 'wpsc' ) . '</label>
+			<label for="paypal_pro_username">' . __( 'API Username:', 'wp-e-commerce' ) . '</label>
 		</td>
 		<td>
 			<input type="text" name="PayPalPro[username]" id="paypal_pro_username" value="' . get_option( "paypal_pro_username" ) . '" size="30" />
@@ -430,7 +430,7 @@ function form_paypal_pro() {
 	</tr>
 	<tr>
 		<td>
-			<label for="paypal_pro_password">' . __( 'API Password:', 'wpsc' ) . '</label>
+			<label for="paypal_pro_password">' . __( 'API Password:', 'wp-e-commerce' ) . '</label>
 		</td>
 		<td>
 			<input type="password" name="PayPalPro[password]" id="paypal_pro_password" value="' . get_option( 'paypal_pro_password' ) . '" size="16" />
@@ -438,7 +438,7 @@ function form_paypal_pro() {
 	</tr>
 	<tr>
 		<td>
-			<label for="paypal_pro_signature">' . __( 'API Signature:', 'wpsc' ) . '</label>
+			<label for="paypal_pro_signature">' . __( 'API Signature:', 'wp-e-commerce' ) . '</label>
 		</td>
 		<td>
 			<input type="text" name="PayPalPro[signature]" id="paypal_pro_signature" value="' . get_option( 'paypal_pro_signature' ) . '" size="48" />
@@ -446,13 +446,13 @@ function form_paypal_pro() {
 	</tr>
 	<tr>
 		<td>
-			<label for="paypal_pro_testmode">' . __( 'Test Mode Enabled:', 'wpsc' ) . '</label>
+			<label for="paypal_pro_testmode">' . __( 'Test Mode Enabled:', 'wp-e-commerce' ) . '</label>
 		</td>
 		<td>
 			<input type="hidden" name="PayPalPro[testmode]" value="off" />
-			<label for="paypal_pro_testmode"><input type="checkbox" name="PayPalPro[testmode]" id="paypal_pro_testmode" value="on" ' . $selected . ' /> ' . __( 'Test Mode Enabled', 'wpsc') . '</label>
+			<label for="paypal_pro_testmode"><input type="checkbox" name="PayPalPro[testmode]" id="paypal_pro_testmode" value="on" ' . $selected . ' /> ' . __( 'Test Mode Enabled', 'wp-e-commerce') . '</label>
 			<p class=" description">
-  				' . sprintf( __( "Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href='%s'>here</a>", 'wpsc' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . '
+  				' . sprintf( __( "Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href='%s'>here</a>", 'wp-e-commerce' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . '
   			</p>
   		</td>
   	</tr>';
@@ -465,13 +465,13 @@ function form_paypal_pro() {
 		$current_currency = $store_currency_code;
 	}
 	if($current_currency != $store_currency_code) {
-		$output .= "<tr> <td colspan='2'><strong class='form_group'>" . __( 'Currency Converter', 'wpsc' ) . "</td> </tr>
+		$output .= "<tr> <td colspan='2'><strong class='form_group'>" . __( 'Currency Converter', 'wp-e-commerce' ) . "</td> </tr>
 		<tr>
-			<td colspan='2'>".__('Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wpsc')."</td>
+			<td colspan='2'>".__('Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wp-e-commerce')."</td>
 		</tr>
 
 		<tr>
-			<td>" . __('Convert to', 'wpsc' ) . " </td>
+			<td>" . __('Convert to', 'wp-e-commerce' ) . " </td>
 			<td>
 				<select name='paypal_curcode'>\n";
 
@@ -503,7 +503,7 @@ function form_paypal_pro() {
 	<tr>
 		<td colspan='2'>
 			<p class='description'>
-				" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-pro/' ) ) . "
+				" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wp-e-commerce' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-pro/' ) ) . "
 				</p>
 		</td>
 	</tr>";
@@ -524,13 +524,13 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 
 	$output = "
 	<tr>
-		<td class='wpsc_CC_details'>" . __( 'Credit Card Number <span class="asterix">*</span>', 'wpsc' ) . "</td>
+		<td class='wpsc_CC_details'>" . __( 'Credit Card Number <span class="asterix">*</span>', 'wp-e-commerce' ) . "</td>
 		<td>
 			<input type='text' value='' name='card_number' />
 		</td>
 	</tr>
 	<tr>
-		<td class='wpsc_CC_details'>" . __( 'Credit Card Expiry <span class="asterix">*</span>', 'wpsc' ) . "</td>
+		<td class='wpsc_CC_details'>" . __( 'Credit Card Expiry <span class="asterix">*</span>', 'wp-e-commerce' ) . "</td>
 		<td>
 			<select class='wpsc_ccBox' name='expiry[month]'>
 			" . $months . "
@@ -553,20 +553,20 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 		</td>
 	</tr>
 	<tr>
-		<td class='wpsc_CC_details'>" . __( 'CVV <span class="asterix">*</span>', 'wpsc' ) . "</td>
+		<td class='wpsc_CC_details'>" . __( 'CVV <span class="asterix">*</span>', 'wp-e-commerce' ) . "</td>
 		<td><input type='text' size='4' value='' maxlength='4' name='card_code' />
 		</td>
 	</tr>
 	<tr>
-		<td class='wpsc_CC_details'>" . __( 'Card Type <span class="asterix">*</span>', 'wpsc' ) . "</td>
+		<td class='wpsc_CC_details'>" . __( 'Card Type <span class="asterix">*</span>', 'wp-e-commerce' ) . "</td>
 		<td>
 		<select class='wpsc_ccBox' name='cctype'>";
 
 	$card_types = array(
-		'Visa' => __( 'Visa', 'wpsc' ),
-		'Mastercard' => __( 'MasterCard', 'wpsc' ),
-		'Discover' => __( 'Discover', 'wpsc' ),
-		'Amex' => __( 'Amex', 'wpsc' ),
+		'Visa' => __( 'Visa', 'wp-e-commerce' ),
+		'Mastercard' => __( 'MasterCard', 'wp-e-commerce' ),
+		'Discover' => __( 'Discover', 'wp-e-commerce' ),
+		'Amex' => __( 'Amex', 'wp-e-commerce' ),
 	);
 	$card_types = apply_filters( 'wpsc_paypal_pro_accepted_card_types', $card_types );
 	foreach ( $card_types as $type => $title ) {

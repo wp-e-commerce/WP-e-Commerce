@@ -56,14 +56,14 @@ class Sputnik_View_Browser extends Sputnik_View {
 
 		global $tab;
 		$tabs = array();
-		$tabs['dashboard'] = __( 'Search', 'wpsc' );
+		$tabs['dashboard'] = __( 'Search', 'wp-e-commerce' );
 		if ( 'search' == $tab )
-			$tabs['search']	= __( 'Search Results', 'wpsc' );
-		$tabs['featured'] = _x( 'Featured', 'Plugin Installer', 'wpsc' );
-		$tabs['popular']  = _x( 'Popular', 'Plugin Installer', 'wpsc' );
-		$tabs['new']      = _x( 'Newest', 'Plugin Installer', 'wpsc' );
-		$tabs['updated']  = _x( 'Recently Updated', 'Plugin Installer', 'wpsc' );
-		$tabs['price']    = _x( 'Lowest Priced', 'Plugin Installer', 'wpsc' );
+			$tabs['search']	= __( 'Search Results', 'wp-e-commerce' );
+		$tabs['featured'] = _x( 'Featured', 'Plugin Installer', 'wp-e-commerce' );
+		$tabs['popular']  = _x( 'Popular', 'Plugin Installer', 'wp-e-commerce' );
+		$tabs['new']      = _x( 'Newest', 'Plugin Installer', 'wp-e-commerce' );
+		$tabs['updated']  = _x( 'Recently Updated', 'Plugin Installer', 'wp-e-commerce' );
+		$tabs['price']    = _x( 'Lowest Priced', 'Plugin Installer', 'wp-e-commerce' );
 		return $tabs;
 	}
 
@@ -99,7 +99,7 @@ class Sputnik_View_Browser extends Sputnik_View {
 	}
 
 	public function no_items() {
-		echo '<p>' . __( 'No plugins match your request.', 'wpsc' ) . '</p>';
+		echo '<p>' . __( 'No plugins match your request.', 'wp-e-commerce' ) . '</p>';
 	}
 
 	public function footer() {

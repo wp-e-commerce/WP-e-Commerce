@@ -65,7 +65,7 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 		$remove_url = add_query_arg( '_wp_nonce', wp_create_nonce( "wpsc-remove-cart-item-{$key}" ), wpsc_get_cart_url( 'remove/' . absint( $key ) ) );
 		?>
 		<div class="wpsc-cart-item-row-actions">
-			<a alt="<?php esc_attr_e( 'Remove from cart', 'wpsc' ); ?>" class="wpsc-button wpsc-button-mini" href="<?php echo esc_url( $remove_url ); ?>"><i class="wpsc-icon-trash"></i> <?php esc_html_e( 'Remove', 'wpsc' ); ?></a>
+			<a alt="<?php esc_attr_e( 'Remove from cart', 'wp-e-commerce' ); ?>" class="wpsc-button wpsc-button-mini" href="<?php echo esc_url( $remove_url ); ?>"><i class="wpsc-icon-trash"></i> <?php esc_html_e( 'Remove', 'wp-e-commerce' ); ?></a>
 		</div>
 		<?php
 		parent::cart_item_description( $item, $key );

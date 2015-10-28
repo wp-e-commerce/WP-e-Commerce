@@ -83,20 +83,20 @@ function _wpsc_filter_merchant_v2_gateway_form( $form, $selected_gateway ) {
 		} else {
 			switch($selected_gateway_data['payment_type']) {
 				case "paypal";
-					$display_name = __( 'PayPal', 'wpsc' );
+					$display_name = __( 'PayPal', 'wp-e-commerce' );
 					break;
 
 				case "manual_payment":
-					$display_name = __( 'Manual Payment', 'wpsc' );
+					$display_name = __( 'Manual Payment', 'wp-e-commerce' );
 					break;
 
 				case "google_checkout":
-					$display_name = __( 'Google Checkout', 'wpsc' );
+					$display_name = __( 'Google Checkout', 'wp-e-commerce' );
 					break;
 
 				case "credit_card":
 				default:
-					$display_name = __( 'Credit Card', 'wpsc' );
+					$display_name = __( 'Credit Card', 'wp-e-commerce' );
 					break;
 			}
 		}
@@ -104,10 +104,10 @@ function _wpsc_filter_merchant_v2_gateway_form( $form, $selected_gateway ) {
 		ob_start();
 		?>
 			<tr>
-				<td width="150"><?php esc_html_e( 'Display Name', 'wpsc' ); ?></td>
+				<td width="150"><?php esc_html_e( 'Display Name', 'wp-e-commerce' ); ?></td>
 				<td>
 					<input type="text" name="user_defined_name[<?php echo esc_attr( $selected_gateway ); ?>]" value="<?php echo esc_html( $display_name ); ?>" />
-					<p class="description"><?php esc_html_e( 'The text that people see when making a purchase.', 'wpsc' ); ?></p>
+					<p class="description"><?php esc_html_e( 'The text that people see when making a purchase.', 'wp-e-commerce' ); ?></p>
 				</td>
 			</tr>
 		<?php

@@ -62,7 +62,7 @@ class WPSC_Duplicate_Product {
 			$post_content          = $post->post_content;
 			$post_content_filtered = $post->post_content_filtered;
 			$post_excerpt          = $post->post_excerpt;
-			$post_title            = sprintf( __( '%s (Duplicate)', 'wpsc' ), $post->post_title );
+			$post_title            = sprintf( __( '%s (Duplicate)', 'wp-e-commerce' ), $post->post_title );
 			$post_name             = $post->post_name;
 			$comment_status        = $post->comment_status;
 			$ping_status           = $post->ping_status;

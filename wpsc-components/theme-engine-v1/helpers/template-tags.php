@@ -120,7 +120,7 @@ function wpsc_the_product_id() {
 function wpsc_edit_the_product_link( $link = null, $before = '', $after = '', $id = 0 ) {
 	global $wpsc_query, $current_user, $table_prefix, $wp_query;
 	if ( $link == null )
-		$link = __( 'Edit', 'wpsc' );
+		$link = __( 'Edit', 'wp-e-commerce' );
 
 	$product_id = $wp_query->post->ID;
 	if ( $id > 0 )
@@ -149,7 +149,7 @@ function wpsc_the_product_title( $post = 0 ) {
  * @return string - the product description
  */
 function wpsc_the_product_description() {
-	$content = get_the_content( __( 'Read the rest of this entry &raquo;', 'wpsc' ) );
+	$content = get_the_content( __( 'Read the rest of this entry &raquo;', 'wp-e-commerce' ) );
 	return do_shortcode( wpautop( $content,1 ) );
 }
 
@@ -203,7 +203,7 @@ function wpsc_product_external_link_text( $id = null, $default = null ) {
 	else
 		$id = get_the_ID();
 
-	$external_link_text = __( 'Buy Now', 'wpsc' );
+	$external_link_text = __( 'Buy Now', 'wp-e-commerce' );
 	if ( $default != null ) {
 		$external_link_text = $default;
 	}
@@ -384,19 +384,19 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 	if($totalpages == 1)
 		return;
 	// Pagination Prefix
-	$output = __('Pages: ','wpsc');
+	$output = __('Pages: ','wp-e-commerce');
 	if(get_option('permalink_structure')){
 		// Should we show the FIRST PAGE link?
 		if($current_page > 1)
-			$output .= "<a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . __('First Page', 'wpsc') . "\">" . __('&laquo; First', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . __('First Page', 'wp-e-commerce') . "\">" . __('&laquo; First', 'wp-e-commerce') . "</a>";
 
 		// Should we show the PREVIOUS PAGE link?
 		if($current_page > 1) {
 			$previous_page = $current_page - 1;
 			if( $previous_page == 1 )
-				$output .= " <a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				$output .= " <a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . __('Previous Page', 'wp-e-commerce') . "\">" . __('&lt; Previous', 'wp-e-commerce') . "</a>";
 			else
-				$output .= " <a href=\"". esc_url( $page_link .$separator. $previous_page . $additional_links ) . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				$output .= " <a href=\"". esc_url( $page_link .$separator. $previous_page . $additional_links ) . "\" title=\"" . __('Previous Page', 'wp-e-commerce') . "\">" . __('&lt; Previous', 'wp-e-commerce') . "</a>";
 		}
 		$i =$current_page - $num_paged_links;
 		$count = 1;
@@ -404,9 +404,9 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 		while($i < $current_page){
 			if($count <= $num_paged_links){
 				if($count == 1)
-					$output .= " <a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wp-e-commerce'), $i ) . " \">".$i."</a>";
 				else
-					$output .= " <a href=\"". esc_url( $page_link .$separator. $i . '/' . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( $page_link .$separator. $i . '/' . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wp-e-commerce'), $i ) . " \">".$i."</a>";
 			}
 			$i++;
 			$count++;
@@ -423,7 +423,7 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 			while(($i) > $current_page){
 
 				if ( $count < ( $num_paged_links + 1 ) && ( $count + $current_page ) <= $totalpages ) {
-						$output .= " <a href=\"". esc_url( $page_link . $separator . ( $count + $current_page ) . '/' . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
+						$output .= " <a href=\"". esc_url( $page_link . $separator . ( $count + $current_page ) . '/' . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wp-e-commerce'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
 				$i++;
 				}else{
 				break;
@@ -434,24 +434,24 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 
 		if($current_page < $totalpages) {
 			$next_page = $current_page + 1;
-			$output .= "<a href=\"". esc_url( $page_link  .$separator. $next_page . '/' . $additional_links ) . "\" title=\"" . __('Next Page', 'wpsc') . "\">" . __('Next &gt;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( $page_link  .$separator. $next_page . '/' . $additional_links ) . "\" title=\"" . __('Next Page', 'wp-e-commerce') . "\">" . __('Next &gt;', 'wp-e-commerce') . "</a>";
 		}
 		// Should we show the LAST PAGE link?
 		if($current_page < $totalpages) {
-			$output .= "<a href=\"". esc_url( $page_link  .$separator. $totalpages . '/' . $additional_links ) . "\" title=\"" . __('Last Page', 'wpsc') . "\">" . __('Last &raquo;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( $page_link  .$separator. $totalpages . '/' . $additional_links ) . "\" title=\"" . __('Last Page', 'wp-e-commerce') . "\">" . __('Last &raquo;', 'wp-e-commerce') . "</a>";
 		}
 	} else {
 		// Should we show the FIRST PAGE link?
 		if($current_page > 1)
-			$output .= "<a href=\"". esc_url( remove_query_arg('paged' ) ) . "\" title=\"" . __('First Page', 'wpsc') . "\">" . __('&laquo; First', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( remove_query_arg('paged' ) ) . "\" title=\"" . __('First Page', 'wp-e-commerce') . "\">" . __('&laquo; First', 'wp-e-commerce') . "</a>";
 
 		// Should we show the PREVIOUS PAGE link?
 		if($current_page > 1) {
 			$previous_page = $current_page - 1;
 			if( $previous_page == 1 )
-				$output .= " <a href=\"". esc_url( remove_query_arg( 'paged' ) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				$output .= " <a href=\"". esc_url( remove_query_arg( 'paged' ) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wp-e-commerce') . "\">" . __('&lt; Previous', 'wp-e-commerce') . "</a>";
 			else
-				$output .= " <a href=\"". esc_url( add_query_arg( 'paged', ($current_page - 1) ) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				$output .= " <a href=\"". esc_url( add_query_arg( 'paged', ($current_page - 1) ) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wp-e-commerce') . "\">" . __('&lt; Previous', 'wp-e-commerce') . "</a>";
 		}
 		$i =$current_page - $num_paged_links;
 		$count = 1;
@@ -459,9 +459,9 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 		while($i < $current_page){
 			if($count <= $num_paged_links){
 				if($i == 1)
-					$output .= " <a href=\"". esc_url( remove_query_arg('paged' ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( remove_query_arg('paged' ) ) . "\" title=\"" . sprintf( __('Page %s', 'wp-e-commerce'), $i ) . " \">".$i."</a>";
 				else
-					$output .= " <a href=\"". esc_url( add_query_arg('paged', $i ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( add_query_arg('paged', $i ) ) . "\" title=\"" . sprintf( __('Page %s', 'wp-e-commerce'), $i ) . " \">".$i."</a>";
 			}
 			$i++;
 			$count++;
@@ -478,7 +478,7 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 			while(($i) > $current_page){
 
 				if($count < $num_paged_links && ($count+$current_page) <= $totalpages){
-						$output .= " <a href=\"". esc_url( add_query_arg( 'paged', ($count+$current_page) ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
+						$output .= " <a href=\"". esc_url( add_query_arg( 'paged', ($count+$current_page) ) ) . "\" title=\"" . sprintf( __('Page %s', 'wp-e-commerce'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
 				$i++;
 				}else{
 				break;
@@ -489,11 +489,11 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 
 		if($current_page < $totalpages) {
 			$next_page = $current_page + 1;
-			$output .= "<a href=\"". esc_url( add_query_arg( 'paged', $next_page ) ) . "\" title=\"" . __('Next Page', 'wpsc') . "\">" . __('Next &gt;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( add_query_arg( 'paged', $next_page ) ) . "\" title=\"" . __('Next Page', 'wp-e-commerce') . "\">" . __('Next &gt;', 'wp-e-commerce') . "</a>";
 		}
 		// Should we show the LAST PAGE link?
 		if($current_page < $totalpages) {
-			$output .= "<a href=\"". esc_url( add_query_arg( 'paged', $totalpages ) ) . "\" title=\"" . __('Last Page', 'wpsc') . "\">" . __('Last &raquo;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( add_query_arg( 'paged', $totalpages ) ) . "\" title=\"" . __('Last Page', 'wp-e-commerce') . "\">" . __('Last &raquo;', 'wp-e-commerce') . "</a>";
 		}
 	}
 	// Return the output.
@@ -611,7 +611,7 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 		$product_id = get_the_ID();
 
 	if ( wpsc_product_has_variations( $product_id ) ) {
-		$from_text = __( ' from %s', 'wpsc' );
+		$from_text = __( ' from %s', 'wp-e-commerce' );
 		$from_text = apply_filters( 'wpsc_product_variation_text', $from_text );
 		$output = wpsc_product_variation_price_from( $product_id, array(
 			'from_text'         => $from_text,
@@ -1372,14 +1372,14 @@ function wpsc_product_rater() {
 		$output .= "<div class='product_footer'>";
 
 		$output .= "<div class='product_average_vote'>";
-		$output .= "<strong>" . __( 'Avg. Customer Rating', 'wpsc' ) . ":</strong>";
+		$output .= "<strong>" . __( 'Avg. Customer Rating', 'wp-e-commerce' ) . ":</strong>";
 		$output .= wpsc_product_existing_rating( $product_id );
 		$output .= "</div>";
 
 		$output .= "<div class='product_user_vote'>";
 
-		$output .= "<strong><span id='rating_" . $product_id . "_text'>" . __( 'Your Rating', 'wpsc' ) . ":</span>";
-		$output .= "<span class='rating_saved' id='saved_" . $product_id . "_text'> " . __( 'Saved', 'wpsc' ) . "</span>";
+		$output .= "<strong><span id='rating_" . $product_id . "_text'>" . __( 'Your Rating', 'wp-e-commerce' ) . ":</span>";
+		$output .= "<span class='rating_saved' id='saved_" . $product_id . "_text'> " . __( 'Saved', 'wp-e-commerce' ) . "</span>";
 		$output .= "</strong>";
 
 		$output .= wpsc_product_new_rating( $product_id );
@@ -1434,7 +1434,7 @@ function wpsc_product_new_rating( $product_id ) {
 	$output .= "					<option " . (($previous_vote == '4') ? "selected='selected'" : '') . " value='4'>4</option>\n";
 	$output .= "					<option " . (($previous_vote == '5') ? "selected='selected'" : '') . " value='5'>5</option>\n";
 	$output .= "			</select>\n";
-	$output .= "			<input type='submit' value='" . __( 'Save', 'wpsc' ) . "'>";
+	$output .= "			<input type='submit' value='" . __( 'Save', 'wp-e-commerce' ) . "'>";
 	$output .= "	</form>";
 	return $output;
 }
@@ -1629,10 +1629,10 @@ function wpsc_the_product_price_display( $args = array() ) {
 
 	$defaults = array(
 		'id' => $id,
-		'old_price_text'   => __( 'Old Price: %s', 'wpsc' ),
-		'price_text'       => __( 'Price: %s', 'wpsc' ),
+		'old_price_text'   => __( 'Old Price: %s', 'wp-e-commerce' ),
+		'price_text'       => __( 'Price: %s', 'wp-e-commerce' ),
 		/* translators     : %1$s is the saved amount text, %2$s is the saved percentage text, %% is the percentage sign */
-		'you_save_text'    => __( 'You save: %s', 'wpsc' ),
+		'you_save_text'    => __( 'You save: %s', 'wp-e-commerce' ),
 		'old_price_class'  => 'pricedisplay wpsc-product-old-price ' . $id,
 		'old_price_before' => '<p %s>',
 		'old_price_after'  => '</p>',

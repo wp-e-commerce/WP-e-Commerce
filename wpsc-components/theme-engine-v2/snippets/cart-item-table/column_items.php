@@ -17,7 +17,7 @@
 	</div>
 	<div class="wpsc-cart-item-details">
 <?php 	if ( ! empty( $item->sku ) ): ?>
-		<span class="wpsc-cart-item-sku"><span><?php esc_html_e( 'SKU', 'wpsc' ); ?>:</span> <?php echo esc_html( $item->sku ); ?></span>
+		<span class="wpsc-cart-item-sku"><span><?php esc_html_e( 'SKU', 'wp-e-commerce' ); ?>:</span> <?php echo esc_html( $item->sku ); ?></span>
 <?php 	endif ?>
 
 <?php 	if ( $separator ): ?>

@@ -1,7 +1,7 @@
 <div class="wrap">
 	<div id="icon-users" class="icon32"><br/></div>
 	<h2>
-		<?php esc_html_e( 'Sales Log', 'wpsc' ); ?>
+		<?php esc_html_e( 'Sales Log', 'wp-e-commerce' ); ?>
 
 		<?php
 			if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
@@ -24,16 +24,16 @@
 	<?php endif ?>
 
 	<?php if( get_option( 'wpsc_purchaselogs_fixed' ) == false || ( wpsc_check_uniquenames() ) ): ?>
-        <div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __( 'When upgrading the WP eCommerce Plugin from 3.6.* to 3.7, it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href="%s">click here</a>', 'wpsc' ), esc_url( add_query_arg( 'c', 'upgrade_purchase_logs_3_7' ) ) ); ?></span></div>
+        <div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __( 'When upgrading the WP eCommerce Plugin from 3.6.* to 3.7, it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href="%s">click here</a>', 'wp-e-commerce' ), esc_url( add_query_arg( 'c', 'upgrade_purchase_logs_3_7' ) ) ); ?></span></div>
    <?php  endif; ?>
 
 	<?php if ( $this->needs_update() ): ?>
-		<div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __( 'It has been detected that some of your purchase logs were not updated properly when you upgrade to WP eCommerce %s. Please <a href="%s">click here</a> to fix this problem.', 'wpsc' ), WPSC_VERSION, esc_url( add_query_arg( 'c', 'upgrade_purchase_logs_3_8' ) ) ); ?></span></div>
+		<div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __( 'It has been detected that some of your purchase logs were not updated properly when you upgrade to WP eCommerce %s. Please <a href="%s">click here</a> to fix this problem.', 'wp-e-commerce' ), WPSC_VERSION, esc_url( add_query_arg( 'c', 'upgrade_purchase_logs_3_8' ) ) ); ?></span></div>
 	<?php endif; ?>
 
 	<form id="purchase-logs-search" method-"get" action="">
 		<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
-		<?php $this->list_table->search_box( __( 'Search Sales Logs', 'wpsc' ), 'post' ); ?>
+		<?php $this->list_table->search_box( __( 'Search Sales Logs', 'wp-e-commerce' ), 'post' ); ?>
 		<?php if ( ! empty( $_REQUEST['status'] ) ): ?>
 			<input type="hidden" name="status" value="<?php echo esc_attr( $_REQUEST['status'] ); ?>" />
 		<?php endif ?>
@@ -77,7 +77,7 @@
 	<p>
 		<a class='admin_download' href='<?php echo esc_url( add_query_arg( 'action', 'download_csv' ) ); ?>' >
 			<img class='wpsc_pushdown_img' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/download.gif' alt='' title='' />
-			<span><?php _e( 'Download CSV', 'wpsc' ); ?></span>
+			<span><?php _e( 'Download CSV', 'wp-e-commerce' ); ?></span>
 		</a>
 	</p>
 </div>

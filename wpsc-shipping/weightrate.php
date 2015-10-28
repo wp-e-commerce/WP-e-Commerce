@@ -16,7 +16,7 @@ class weightrate {
 	 */
 	function __construct() {
 		$this->internal_name = 'weightrate';
-		$this->name          = __( 'Weight Rate', 'wpsc' );
+		$this->name          = __( 'Weight Rate', 'wp-e-commerce' );
 		$this->is_external   = false;
 		return true;
 	}
@@ -51,7 +51,7 @@ class weightrate {
 				<td<?php echo $class; ?>>
 					<div class="cell-wrapper">
 						<input type="text" name="wpsc_shipping_weightrate_layer[]" value="<?php echo esc_attr( $key ); ?>" size="4" />
-						<small><?php _e( ' lbs and above', 'wpsc' ); ?></small>
+						<small><?php _e( ' lbs and above', 'wp-e-commerce' ); ?></small>
 					</div>
 				</td>
 				<td<?php echo $class; ?>>
@@ -59,8 +59,8 @@ class weightrate {
 						<small><?php echo esc_html( $currency ); ?></small>
 						<input type="text" name="wpsc_shipping_weightrate_shipping[]" value="<?php echo esc_attr( $shipping ); ?>" size="4" />
 						<span class="actions">
-							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
-							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
+							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
+							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
 						</span>
 					</div>
 				</td>
@@ -84,16 +84,16 @@ class weightrate {
 				<table>
 					<thead>
 						<tr>
-							<th class="total-weight" title="<?php _e( 'You must enter the weight here in pounds, regardless of what you used on your products', 'wpsc' ); ?>">
-								<?php _e( 'Total Weight', 'wpsc' ); ?><br /><small><?php _e( 'in pounds', 'wpsc' ); ?></small>
+							<th class="total-weight" title="<?php _e( 'You must enter the weight here in pounds, regardless of what you used on your products', 'wp-e-commerce' ); ?>">
+								<?php _e( 'Total Weight', 'wp-e-commerce' ); ?><br /><small><?php _e( 'in pounds', 'wp-e-commerce' ); ?></small>
 							</th>
-							<th class="shipping"><?php _e( 'Shipping Price', 'wpsc' ); ?></th>
+							<th class="shipping"><?php _e( 'Shipping Price', 'wp-e-commerce' ); ?></th>
 						</tr>
 					</thead>
 					<tbody class="table-rate">
 						<tr class="js-warning">
 							<td colspan="2">
-								<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wpsc'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
+								<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wp-e-commerce'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
 							</td>
 						</tr>
 						<?php if ( ! empty( $layers ) ): ?>
@@ -167,9 +167,9 @@ class weightrate {
 						// Shipping should be a % of the cart total
 						$shipping = str_replace('%', '', $shipping);
 						$shipping_amount = $cart_total * ( $shipping / 100 );
-						return array( __( "Weight Rate", 'wpsc' ) => (float)$shipping_amount );
+						return array( __( "Weight Rate", 'wp-e-commerce' ) => (float)$shipping_amount );
 					} else {
-						return array( __( "Weight Rate", 'wpsc' ) => $shipping );
+						return array( __( "Weight Rate", 'wp-e-commerce' ) => $shipping );
 					}
 				}
 			}
@@ -180,7 +180,7 @@ class weightrate {
 			} else {
 				$shipping_amount = $shipping;
 			}
-			return array( __( "Weight Rate", 'wpsc' ) => (float) $shipping_amount );
+			return array( __( "Weight Rate", 'wp-e-commerce' ) => (float) $shipping_amount );
 		}
 	}
 

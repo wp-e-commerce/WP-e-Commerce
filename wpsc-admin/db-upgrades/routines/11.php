@@ -37,12 +37,12 @@ function _wpsc_fix_united_kingdom() {
 
 	$wpsc_country = new WPSC_Country(
 		array(
-				'country'     => __( 'United Kingdom', 'wpsc' ),
+				'country'     => __( 'United Kingdom', 'wp-e-commerce' ),
 				'isocode'     => 'GB',
-				'currency'    => __( 'Pound Sterling', 'wpsc' ),
-				'symbol'      => __( '£', 'wpsc' ),
-				'symbol_html' => __( '&#163;', 'wpsc' ),
-				'code'        => __( 'GBP', 'wpsc' ),
+				'currency'    => __( 'Pound Sterling', 'wp-e-commerce' ),
+				'symbol'      => __( '£', 'wp-e-commerce' ),
+				'symbol_html' => __( '&#163;', 'wp-e-commerce' ),
+				'code'        => __( 'GBP', 'wp-e-commerce' ),
 				'continent'   => 'europe',
 				'visible'     =>  $legacy_ok_country_was_visible ? '0' : '1',
 				'has_regions' => '0',

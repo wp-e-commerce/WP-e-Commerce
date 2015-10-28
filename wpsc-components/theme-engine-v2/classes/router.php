@@ -297,7 +297,7 @@ class WPSC_Router {
 
 		// If method/path not found, show the 404 page
 		if ( ! is_callable( array( $this->controller, $method ) ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', 'wpsc' ), '4.0' );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', 'wp-e-commerce' ), '4.0' );
 			return $this->not_found();
 		}
 

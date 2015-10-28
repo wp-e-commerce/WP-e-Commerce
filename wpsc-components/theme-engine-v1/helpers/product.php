@@ -168,7 +168,7 @@ function wpsc_parent_category_image($show_thumbnails , $category_image , $width,
 	?>
 	<span class='wpsc_category_image item_no_image ' style='width:<?php echo $width; ?>px; height: <?php echo $height; ?>px;'>
 		<span class='link_substitute' >
-			<span><?php _e('N/A', 'wpsc'); ?></span>
+			<span><?php _e('N/A', 'wp-e-commerce'); ?></span>
 		</span>
 	</span>
 	<?php
@@ -454,7 +454,7 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 			} elseif( isset( $query['show_name'] ) && 1 == $query['show_name']) {
 				$category_image_html .= "<span class='wpsc_category_image item_no_image ' style='width: {$width}px; height: {$height}px;'>\n\r";
 				$category_image_html .= "	<span class='link_substitute' >\n\r";
-				$category_image_html .= "		<span>".__('N/A','wpsc')."</span>\n\r";
+				$category_image_html .= "		<span>".__('N/A','wp-e-commerce')."</span>\n\r";
 				$category_image_html .= "	</span>\n\r";
 				$category_image_html .= "</span>\n\r";
 			}
@@ -654,7 +654,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 
 			$has_variants = wpsc_product_has_variations( $product_id ) || ! wpsc_product_has_stock( $product_id );
 
-			$src     = apply_filters( 'wpsc_buy_now_button_src', _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' ) );
+			$src     = apply_filters( 'wpsc_buy_now_button_src', _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wp-e-commerce' ) );
 			$classes = apply_filters( 'wpsc_buy_now_button_class', "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}" );
 
             $classes_array = array_map( 'sanitize_html_class', explode( ' ', $classes ) );
@@ -665,7 +665,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				disabled( $has_variants, true, false ),
 				esc_attr( $product_id ),
 				esc_url( $src ),
-				esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' )
+				esc_attr__( 'PayPal - The safer, easier way to pay online', 'wp-e-commerce' )
 			);
 
 			$button_html = apply_filters( 'wpsc_buy_now_button_html', $button_html, $product_id );
@@ -683,13 +683,13 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				endif; /* END wpsc_product_has_variations */
 ?>
 				<?php if ( get_option( 'multi_add' ) ) : ?>
-					<label for="quantity"><?php esc_html_e( 'Quantity', 'wpsc' ); ?></label>
+					<label for="quantity"><?php esc_html_e( 'Quantity', 'wp-e-commerce' ); ?></label>
 					<input type="text" size="4" id="quantity" class="wpsc-buy-now-quantity" name="quantity" value="" /><br />
 				<?php else: ?>
 					<input type="hidden" name="quantity" class="wpsc-buy-now-quantity" value="1" />
 				<?php endif ?>
 				<?php echo $button_html; ?>
-				<img alt='' border='0' width='1' height='1' src='<?php echo esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel', 'wpsc' ) ); ?>' />
+				<img alt='' border='0' width='1' height='1' src='<?php echo esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel', 'wp-e-commerce' ) ); ?>' />
 			</form>
 			<?php
 		}
@@ -726,7 +726,7 @@ function wpsc_also_bought( $product_id ) {
 	// If above filter returns output then the following is ignore and can be deprecated in future.
 	$also_bought = $wpdb->get_results( $wpdb->prepare( "SELECT `" . $wpdb->posts . "`.* FROM `" . WPSC_TABLE_ALSO_BOUGHT . "`, `" . $wpdb->posts . "` WHERE `selected_product`= %d AND `" . WPSC_TABLE_ALSO_BOUGHT . "`.`associated_product` = `" . $wpdb->posts . "`.`id` AND `" . $wpdb->posts . "`.`post_status` IN('publish','protected') ORDER BY `" . WPSC_TABLE_ALSO_BOUGHT . "`.`quantity` DESC LIMIT $also_bought_limit", $product_id ), ARRAY_A );
 	if ( is_array( $also_bought ) && count( $also_bought ) > 0 ) {
-		$output .= '<h2 class="prodtitles wpsc_also_bought">' . __( 'People who bought this item also bought', 'wpsc' ) . '</h2>';
+		$output .= '<h2 class="prodtitles wpsc_also_bought">' . __( 'People who bought this item also bought', 'wp-e-commerce' ) . '</h2>';
 		$output .= '<div class="wpsc_also_bought">';
 		foreach ( $also_bought as $also_bought_data ) {
 			$output .= '<div class="wpsc_also_bought_item" style="width: ' . $element_widths . 'px;">';
@@ -788,7 +788,7 @@ function wpsc_fancy_notifications( $return = false ) {
 		$output = "";
 		$output .= "<div id='fancy_notification'>\n\r";
 		$output .= "  <div id='loading_animation'>\n\r";
-		$output .= '<img id="fancy_notificationimage" title="' . esc_attr__( 'Loading', 'wpsc' ) . '" alt="' . esc_attr__( 'Loading', 'wpsc' ) . '" src="' . wpsc_loading_animation_url() . '" />' . __( 'Updating', 'wpsc' ) . "...\n\r";
+		$output .= '<img id="fancy_notificationimage" title="' . esc_attr__( 'Loading', 'wp-e-commerce' ) . '" alt="' . esc_attr__( 'Loading', 'wp-e-commerce' ) . '" src="' . wpsc_loading_animation_url() . '" />' . __( 'Updating', 'wp-e-commerce' ) . "...\n\r";
 		$output .= "  </div>\n\r";
 		$output .= "  <div id='fancy_notification_content'>\n\r";
 		$output .= "  </div>\n\r";
@@ -809,8 +809,8 @@ function fancy_notification_content( $cart_messages ) {
 	foreach ( (array)$cart_messages as $cart_message ) {
 		$output .= "<span>" . $cart_message . "</span><br />";
 	}
-	$output .= "<a href='" . get_option( 'shopping_cart_url' ) . "' class='go_to_checkout'>" . __( 'Go to Checkout', 'wpsc' ) . "</a>";
-	$output .= "<a href='#' onclick='jQuery(\"#fancy_notification\").css(\"display\", \"none\"); return false;' class='continue_shopping'>" . __( 'Continue Shopping', 'wpsc' ) . "</a>";
+	$output .= "<a href='" . get_option( 'shopping_cart_url' ) . "' class='go_to_checkout'>" . __( 'Go to Checkout', 'wp-e-commerce' ) . "</a>";
+	$output .= "<a href='#' onclick='jQuery(\"#fancy_notification\").css(\"display\", \"none\"); return false;' class='continue_shopping'>" . __( 'Continue Shopping', 'wp-e-commerce' ) . "</a>";
 	return $output;
 }
 
@@ -834,7 +834,7 @@ function external_link( $product_id ) {
 		$link = 'http://' . $link;
 	}
 	$target = wpsc_product_external_link_target( $product_id );
-	$output .= "<input class='wpsc_buy_button' type='button' value='" . wpsc_product_external_link_text( $product_id, __( 'Buy Now', 'wpsc' ) ) . "' onclick='return gotoexternallink(\"$link\", \"$target\")'>";
+	$output .= "<input class='wpsc_buy_button' type='button' value='" . wpsc_product_external_link_text( $product_id, __( 'Buy Now', 'wp-e-commerce' ) ) . "' onclick='return gotoexternallink(\"$link\", \"$target\")'>";
 	return $output;
 }
 

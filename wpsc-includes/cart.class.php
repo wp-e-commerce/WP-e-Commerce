@@ -26,7 +26,7 @@
  *
  */
 if ( ! function_exists( 'wpsc_cart_need_to_recompute_shipping_quotes' ) ) {
-	_wpsc_doing_it_wrong( 'cart.class.php', __( 'As of WPeC 3.8.14, A check is made to be sure that wpsc-includes\cart.class.php is not loaded directly by outside code. WPeC internals are likely to be re-organized going forward.  When this happens code that directly includes WPeC internal modules may fail.', 'wpsc' ), '3.8.14' );
+	_wpsc_doing_it_wrong( 'cart.class.php', __( 'As of WPeC 3.8.14, A check is made to be sure that wpsc-includes\cart.class.php is not loaded directly by outside code. WPeC internals are likely to be re-organized going forward.  When this happens code that directly includes WPeC internal modules may fail.', 'wp-e-commerce' ), '3.8.14' );
 }
 
 require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-template-api.php' );

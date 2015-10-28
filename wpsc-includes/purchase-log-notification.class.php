@@ -36,13 +36,13 @@ abstract class WPSC_Purchase_Log_Notification {
 			// Legacy tags
 			// These tags are dumb because they force the string to go with the amount, giving no
 			// control to the user. Unfortunately we still have to support those for the next decade.
-			'purchase_id'     => sprintf( __( "Purchase # %s"     , 'wpsc' ), $this->purchase_log->get( 'id' ) ) . "\r\n",
-			'total_tax'       => sprintf( __( 'Total Tax: %s'     , 'wpsc' ), $tax               ) . "\r\n",
-			'total_shipping'  => sprintf( __( 'Total Shipping: %s', 'wpsc' ), $shipping          ) . "\r\n",
-			'total_price'     => sprintf( __( 'Total: %s'         , 'wpsc' ), $total             ) . "\r\n",
+			'purchase_id'     => sprintf( __( "Purchase # %s"     , 'wp-e-commerce' ), $this->purchase_log->get( 'id' ) ) . "\r\n",
+			'total_tax'       => sprintf( __( 'Total Tax: %s'     , 'wp-e-commerce' ), $tax               ) . "\r\n",
+			'total_shipping'  => sprintf( __( 'Total Shipping: %s', 'wp-e-commerce' ), $shipping          ) . "\r\n",
+			'total_price'     => sprintf( __( 'Total: %s'         , 'wp-e-commerce' ), $total             ) . "\r\n",
 			'shop_name'       => get_option( 'blogname' ),
 			'find_us'         => $this->purchase_log->get( 'find_us' ),
-			'discount'        => sprintf( __( 'Discount Amount: %s (%s)', 'wpsc' ), $discount, $this->purchase_log->get( 'discount_data' ) ) . "\r\n",
+			'discount'        => sprintf( __( 'Discount Amount: %s (%s)', 'wp-e-commerce' ), $discount, $this->purchase_log->get( 'discount_data' ) ) . "\r\n",
 
 			// New tags
 			'coupon_code'     => $this->purchase_log->get( 'discount_data'   ),
@@ -67,10 +67,10 @@ abstract class WPSC_Purchase_Log_Notification {
 		$rows     = array();
 
 		$headings = array(
-			_x( 'Name'       , 'purchase log notification table heading', 'wpsc' ) => 'left',
-			_x( 'Price'      , 'purchase log notification table heading', 'wpsc' ) => 'right',
-			_x( 'Quantity'   , 'purchase log notification table heading', 'wpsc' ) => 'right',
-			_x( 'Item Total' , 'purchase log notification table heading', 'wpsc' ) => 'right',
+			_x( 'Name'       , 'purchase log notification table heading', 'wp-e-commerce' ) => 'left',
+			_x( 'Price'      , 'purchase log notification table heading', 'wp-e-commerce' ) => 'right',
+			_x( 'Quantity'   , 'purchase log notification table heading', 'wp-e-commerce' ) => 'right',
+			_x( 'Item Total' , 'purchase log notification table heading', 'wp-e-commerce' ) => 'right',
 		);
 
 		$has_additional_details = false;
@@ -110,7 +110,7 @@ abstract class WPSC_Purchase_Log_Notification {
 
 		// Preserve the 'wpsc_transaction_result_content' filter for backward compat
 		if ( $has_additional_details ) {
-			$headings[] = __( 'Additional Details', 'wpsc' );
+			$headings[] = __( 'Additional Details', 'wp-e-commerce' );
 			foreach ( $rows as $index => $row ) {
 				$rows[] = $additional_details[ $index ];
 			}
@@ -128,7 +128,7 @@ abstract class WPSC_Purchase_Log_Notification {
 			if ( empty( $cart_item->custom_message ) )
 				continue;
 
-			$custom_message_string = apply_filters( 'wpsc_email_product_list_plaintext_custom_message', __( 'Customization for %s', 'wpsc' ) );
+			$custom_message_string = apply_filters( 'wpsc_email_product_list_plaintext_custom_message', __( 'Customization for %s', 'wp-e-commerce' ) );
 			$output .= "\r\n" . '=== ' . sprintf( $custom_message_string, $cart_item->name ) . ' ===' . "\r\n";
 			$output .= $cart_item->custom_message;
 			$output .= "\r\n";
@@ -138,7 +138,7 @@ abstract class WPSC_Purchase_Log_Notification {
 		if ( empty( $links ) )
 			return $output;
 
-		$output .= '==' . __( 'Downloadable items', 'wpsc' ) . "==\r\n";
+		$output .= '==' . __( 'Downloadable items', 'wp-e-commerce' ) . "==\r\n";
 		foreach ( $links as $item_name => $item_links ) {
 			$output .= $item_name . "\r\n";
 			foreach ( $item_links as $link ) {
@@ -160,7 +160,7 @@ abstract class WPSC_Purchase_Log_Notification {
 			if ( empty( $cart_item->custom_message ) )
 				continue;
 
-			$custom_message_string = apply_filters( 'wpsc_email_product_list_html_custom_message', __( 'Customization for %s', 'wpsc' ) );
+			$custom_message_string = apply_filters( 'wpsc_email_product_list_html_custom_message', __( 'Customization for %s', 'wp-e-commerce' ) );
 			$output .= '<hr />';
 			$output .= '<p><strong>' . sprintf( $custom_message_string, esc_html( $cart_item->name ) ) . '</strong></p>';
 			$output .= wpautop( esc_html( $cart_item->custom_message ) );
@@ -170,7 +170,7 @@ abstract class WPSC_Purchase_Log_Notification {
 		if ( empty( $links ) )
 			return $output;
 
-		$output .= '<hr /><p><strong>' . esc_html__( 'Downloadable items', 'wpsc' ) . '</strong></p>';
+		$output .= '<hr /><p><strong>' . esc_html__( 'Downloadable items', 'wp-e-commerce' ) . '</strong></p>';
 		foreach ( $links as $item_name => $item_links ) {
 			$output .= '<p>';
 			$output .= '<em>' . esc_html( $item_name ) . '</em><br />';
@@ -299,7 +299,7 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 		$raw_message = '';
 
 		if ( ! $this->purchase_log->is_transaction_completed() ) {
-			$raw_message = __( 'Thank you, your purchase is pending. You will be sent an email once the order clears.', 'wpsc' ) . "\n\r";
+			$raw_message = __( 'Thank you, your purchase is pending. You will be sent an email once the order clears.', 'wp-e-commerce' ) . "\n\r";
 		}
 
 		$raw_message .= get_option( 'wpsc_email_receipt' );
@@ -312,10 +312,10 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 	}
 
 	public function get_subject() {
-		$subject = __( 'Purchase Receipt', 'wpsc' );
+		$subject = __( 'Purchase Receipt', 'wp-e-commerce' );
 
 		if ( $this->purchase_log->get( 'processed' ) == WPSC_Purchase_Log::ORDER_RECEIVED )
-			$subject = __( 'Order Pending: Payment Required', 'wpsc' );
+			$subject = __( 'Order Pending: Payment Required', 'wp-e-commerce' );
 
 		return apply_filters( 'wpsc_purchase_log_customer_notification_subject', $subject, $this );
 	}
@@ -349,9 +349,9 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 		$args = $this->get_common_args();
 
 		$data = array(
-			'billing'  => array( 'title' => __( 'Billing Details', 'wpsc' ), 'fields' => array() ),
-			'shipping' => array( 'title' => __( 'Shipping Details', 'wpsc' ), 'fields' => array() ),
-			'misc'     => array( 'title' => __( 'Other Details', 'wpsc' ), 'fields' => array() ),
+			'billing'  => array( 'title' => __( 'Billing Details', 'wp-e-commerce' ), 'fields' => array() ),
+			'shipping' => array( 'title' => __( 'Shipping Details', 'wp-e-commerce' ), 'fields' => array() ),
+			'misc'     => array( 'title' => __( 'Other Details', 'wp-e-commerce' ), 'fields' => array() ),
 		);
 
 		foreach ( $raw_data as $field ) {
@@ -365,33 +365,33 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 		}
 
 		// Transaction details
-		$message = '<strong>' . __( 'Transaction Details', 'wpsc' ) . "</strong>\r\n";
-		$message .= __( 'Sale Log ID', 'wpsc' ) . ': %purchase_id%' . "\r\n";
+		$message = '<strong>' . __( 'Transaction Details', 'wp-e-commerce' ) . "</strong>\r\n";
+		$message .= __( 'Sale Log ID', 'wp-e-commerce' ) . ': %purchase_id%' . "\r\n";
 		if ( ! empty( $args['transaction_id'] ) )
-			$message .= __( 'Transaction ID', 'wpsc' ) . ': %transaction_id%' . "\r\n";
+			$message .= __( 'Transaction ID', 'wp-e-commerce' ) . ': %transaction_id%' . "\r\n";
 
 		// Discount
 		if ( ! empty( $args['coupon_code'] ) ) {
-			$message .= __( 'Coupon Code', 'wpsc' ) . ': %coupon_code%' . "\r\n";
-			$message .= __( 'Discount Value', 'wpsc' ) . ': %discount%' . "\r\n";
+			$message .= __( 'Coupon Code', 'wp-e-commerce' ) . ': %coupon_code%' . "\r\n";
+			$message .= __( 'Discount Value', 'wp-e-commerce' ) . ': %discount%' . "\r\n";
 		}
 
 		// Subtotal, tax, shipping, total
-		$message .= __( 'Subtotal' ,'wpsc' ) . ': %subtotal%' . "\r\n";
-		$message .= __( 'Tax', 'wpsc' ) . ': %tax%' . "\r\n";
-		$message .= __( 'Shipping', 'wpsc' ) . ': %shipping%' . "\r\n";
-		$message .= __( 'Total', 'wpsc' ) . ': %total%' . "\r\n";
-		$message .= __( 'Payment Method', 'wpsc' ) . ': %payment_method%' . "\r\n";
+		$message .= __( 'Subtotal' ,'wp-e-commerce' ) . ': %subtotal%' . "\r\n";
+		$message .= __( 'Tax', 'wp-e-commerce' ) . ': %tax%' . "\r\n";
+		$message .= __( 'Shipping', 'wp-e-commerce' ) . ': %shipping%' . "\r\n";
+		$message .= __( 'Total', 'wp-e-commerce' ) . ': %total%' . "\r\n";
+		$message .= __( 'Payment Method', 'wp-e-commerce' ) . ': %payment_method%' . "\r\n";
 
 		if ( ! get_option( 'do_not_use_shipping' ) ) {
-			$message .= __( 'Shipping Method', 'wpsc' ) . ': %shipping_method%' . "\r\n";
-			$message .= __( 'Shipping Option', 'wpsc' ) . ': %shipping_option%' . "\r\n";
+			$message .= __( 'Shipping Method', 'wp-e-commerce' ) . ': %shipping_method%' . "\r\n";
+			$message .= __( 'Shipping Option', 'wp-e-commerce' ) . ': %shipping_option%' . "\r\n";
 		}
 
 		$message .= "\r\n";
 
 		// Items
-		$message .= '<strong>' . __( 'Items', 'wpsc' ) . "</strong>\r\n";
+		$message .= '<strong>' . __( 'Items', 'wp-e-commerce' ) . "</strong>\r\n";
 		$message .= "%product_list%\r\n";
 
 		// Checkout fields
@@ -424,7 +424,7 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 	}
 
 	public function get_subject() {
-		return apply_filters( 'wpsc_purchase_log_admin_notification_subject', __( 'Transaction Report', 'wpsc' ), $this );
+		return apply_filters( 'wpsc_purchase_log_admin_notification_subject', __( 'Transaction Report', 'wp-e-commerce' ), $this );
 	}
 }
 
@@ -432,7 +432,7 @@ class WPSC_Purchase_Log_Customer_HTML_Notification extends WPSC_Purchase_Log_Cus
 	public function get_raw_message() {
 		$raw_message = apply_filters( 'wpsc_pre_transaction_results', '', $this );
 		if ( ! $this->purchase_log->is_transaction_completed() )
-			$raw_message .= __( 'Thank you, your purchase is pending. You will be sent an email once the order clears.', 'wpsc' ) . "\n\r";
+			$raw_message .= __( 'Thank you, your purchase is pending. You will be sent an email once the order clears.', 'wp-e-commerce' ) . "\n\r";
 
 		$raw_message .= get_option( 'wpsc_email_receipt' );
 		$raw_message = $this->maybe_add_discount( $raw_message );

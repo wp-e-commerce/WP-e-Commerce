@@ -11,5 +11,5 @@
 ?>
 
 <div class="wpsc-template-notice">
-	<p><?php esc_html_e( "Apologies, but no products were found. Perhaps searching will help you find what you're looking for.", 'wpsc' ); ?></p>
+	<p><?php esc_html_e( "Apologies, but no products were found. Perhaps searching will help you find what you're looking for.", 'wp-e-commerce' ); ?></p>
 </div>

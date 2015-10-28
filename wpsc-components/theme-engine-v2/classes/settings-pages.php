@@ -40,7 +40,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title' => _x(
 					'Page Slugs',
 					'page locations section title',
-					'wpsc'
+					'wp-e-commerce'
 				),
 				'fields' => array(
 					'store_slug',
@@ -63,7 +63,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title' => _x(
 					'Page Titles',
 					'page titles section title',
-					'wpsc'
+					'wp-e-commerce'
 				),
 				'fields' => array(
 					'store_title',
@@ -79,9 +79,9 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 
 		// Shortcut variables for buttons and messages
 		$view_button  = '<a class="button button-secondary button-view-page" href="%1$s">%2$s</a>';
-		$view_message = _x( 'View', 'view page', 'wpsc' );
-		$view_category_message = _x( 'Sample Category', 'view page', 'wpsc' );
-		$view_product_message  = _x( 'Sample Product', 'view page', 'wpsc' );
+		$view_message = _x( 'View', 'view page', 'wp-e-commerce' );
+		$view_category_message = _x( 'Sample Category', 'view page', 'wp-e-commerce' );
+		$view_product_message  = _x( 'Sample Product', 'view page', 'wp-e-commerce' );
 
 		// generate sample URLs for single product and product category
 		$base_shop_url   = '<small>' . esc_url( wpsc_get_store_url( '/' ) ) . '</small>';
@@ -97,7 +97,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title'   => _x(
 					'Main store',
 					'page slug setting',
-					'wpsc'
+					'wp-e-commerce'
 				),
 				'append' => sprintf(
 					$view_button,
@@ -111,17 +111,17 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			// Whether to display the store as front page
 			'store_as_front_page' => array(
 				'type'    => 'radios',
-				'title'   => _x( 'Display main store on front page', 'page settings', 'wpsc' ),
+				'title'   => _x( 'Display main store on front page', 'page settings', 'wp-e-commerce' ),
 				'options' => array(
-					1 => _x( 'Yes', 'settings', 'wpsc' ),
-					0 => _x( 'No', 'settings', 'wpsc' ),
+					1 => _x( 'Yes', 'settings', 'wp-e-commerce' ),
+					0 => _x( 'No', 'settings', 'wp-e-commerce' ),
 				),
 			),
 
 			// Store title
 			'store_title' => array(
 				'type'       => 'textfield',
-				'title'      => _x( 'Main store title', 'page slug title', 'wpsc' ),
+				'title'      => _x( 'Main store title', 'page slug title', 'wp-e-commerce' ),
 				'validation' => 'required',
 			),
 
@@ -139,7 +139,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title'       => _x(
 					'Product category base slug',
 					'permalinks setting',
-					'wpsc'
+					'wp-e-commerce'
 				),
 				'validation'  => 'required',
 				'class' => 'regular-text',
@@ -159,7 +159,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title'       => _x(
 					'Single product base slug',
 					'permalinks setting',
-					'wpsc'
+					'wp-e-commerce'
 				),
 				'validation'  => 'required',
 				'class' => 'regular-text',
@@ -168,11 +168,11 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			// Whether to include category slug in product permalinks
 			'prefix_product_slug' => array(
 				'type'    => 'checkboxes',
-				'title'   => _x( 'Product prefix', 'permalinks setting', 'wpsc' ),
+				'title'   => _x( 'Product prefix', 'permalinks setting', 'wp-e-commerce' ),
 				'options' => array(
 					1 => __(
 						'Include category slug in product URL.',
-						'wpsc'
+						'wp-e-commerce'
 					)
 				),
 			),
@@ -183,23 +183,23 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title'   => _x(
 					'Hierarchical product category URL',
 					'permalinks setting',
-					'wpsc'
+					'wp-e-commerce'
 				),
 				'options' => array(
 					1 => _x(
 						'Yes',
 						'settings',
-						'wpsc'
+						'wp-e-commerce'
 					),
 					0 => _x(
 						'No',
 						'settings',
-						'wpsc'
+						'wp-e-commerce'
 					),
 				),
 				'description' => __(
 					'When hierarchical product category URL is enabled, parent product categories are also included in the product URL.',
-					'wpsc'
+					'wp-e-commerce'
 				),
 			),
 
@@ -212,7 +212,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 					wpsc_get_cart_url(),
 					$view_message
 				),
-				'title'       => _x( 'Cart page', 'page settings', 'wpsc' ),
+				'title'       => _x( 'Cart page', 'page settings', 'wp-e-commerce' ),
 				'validation'  => 'required',
 				'class' => 'regular-text',
 			),
@@ -220,7 +220,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			// Cart page title
 			'cart_page_title' => array(
 				'type'        => 'textfield',
-				'title'       => _x( 'Cart page', 'page settings', 'wpsc' ),
+				'title'       => _x( 'Cart page', 'page settings', 'wp-e-commerce' ),
 				'validation'  => 'required',
 			),
 
@@ -228,7 +228,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			'checkout_page_slug' => array(
 				'type'        => 'textfield',
 				'prepend'     => $base_shop_url,
-				'title'       => _x( 'Checkout page', 'page setting', 'wpsc' ),
+				'title'       => _x( 'Checkout page', 'page setting', 'wp-e-commerce' ),
 				'validation'  => 'required',
 				'class' => 'regular-text',
 			),
@@ -236,7 +236,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			// Checkout page title
 			'checkout_page_title' => array(
 				'type' => 'textfield',
-				'title' => _x( 'Checkout page', 'page settings', 'wpsc' ),
+				'title' => _x( 'Checkout page', 'page settings', 'wp-e-commerce' ),
 				'validation' => 'required',
 			),
 
@@ -249,7 +249,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 					wpsc_get_customer_account_url(),
 					$view_message
 				),
-				'title'       => _x( 'Customer account page', 'permalinks setting', 'wpsc' ),
+				'title'       => _x( 'Customer account page', 'permalinks setting', 'wp-e-commerce' ),
 				'validation'  => 'required|slug_not_conflicted',
 				'class' => 'regular-text',
 			),
@@ -257,7 +257,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			// Customer account page title
 			'customer_account_page_title' => array(
 				'type' => 'textfield',
-				'title' => _x( 'Customer account page', 'page settings', 'wpsc' ),
+				'title' => _x( 'Customer account page', 'page settings', 'wp-e-commerce' ),
 				'validation' => 'required',
 			),
 
@@ -265,8 +265,8 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			'login_page_slug' => array(
 				'type'        => 'textfield',
 				'prepend'     => $base_shop_url,
-				'title'       => _x( 'Login page', 'permalinks setting', 'wpsc' ),
-				'description' => __( 'Leaving this field blank will disable the page.', 'wpsc' ),
+				'title'       => _x( 'Login page', 'permalinks setting', 'wp-e-commerce' ),
+				'description' => __( 'Leaving this field blank will disable the page.', 'wp-e-commerce' ),
 				'validation'  => 'slug_not_conflicted',
 				'class' => 'regular-text',
 			),
@@ -274,7 +274,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			// Login page title
 			'login_page_title' => array(
 				'type' => 'textfield',
-				'title' => _x( 'Login page', 'page settings', 'wpsc' ),
+				'title' => _x( 'Login page', 'page settings', 'wp-e-commerce' ),
 				'validation' => 'required',
 			),
 
@@ -282,8 +282,8 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			'password_reminder_page_slug' => array(
 				'type'        => 'textfield',
 				'prepend'     => $base_shop_url,
-				'title'       => _x( 'Password reminder page', 'permalinks setting', 'wpsc' ),
-				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
+				'title'       => _x( 'Password reminder page', 'permalinks setting', 'wp-e-commerce' ),
+				'description' => __( "Leaving this field blank will disable the page.", 'wp-e-commerce' ),
 				'validation'  => 'slug_not_conflicted',
 				'class' => 'regular-text',
 			),
@@ -291,7 +291,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			// Title for password reminder page
 			'password_reminder_page_title' => array(
 				'type'       => 'textfield',
-				'title'      => _x( 'Password reminder page', 'page settings', 'wpsc' ),
+				'title'      => _x( 'Password reminder page', 'page settings', 'wp-e-commerce' ),
 				'validation' => 'required',
 			),
 
@@ -299,8 +299,8 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			'register_page_slug' => array(
 				'type'        => 'textfield',
 				'prepend'     => $base_shop_url,
-				'title'       => _x( 'Register page', 'permalinks setting', 'wpsc' ),
-				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
+				'title'       => _x( 'Register page', 'permalinks setting', 'wp-e-commerce' ),
+				'description' => __( "Leaving this field blank will disable the page.", 'wp-e-commerce' ),
 				'validation'  => 'slug_not_conflicted',
 				'class' => 'regular-text',
 			),
@@ -308,7 +308,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 			// Register page title
 			'register_page_title' => array(
 				'type'       => 'textfield',
-				'title'      => _x( 'Register page', 'page settings', 'wpsc' ),
+				'title'      => _x( 'Register page', 'page settings', 'wp-e-commerce' ),
 				'validation' => 'required',
 			),
 		);
@@ -316,7 +316,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 		// display warnings for login, register and password reminder pages when
 		// "Anyone can register" is disabled.
 		if ( ! get_option( 'users_can_register' ) ) {
-			$additional_description = '<br /> ' . __( '<strong>Note:</strong> Enable "Anyone can register" in <a href="%s">Settings -> General</a> first if you want to use this page.', 'wpsc' );
+			$additional_description = '<br /> ' . __( '<strong>Note:</strong> Enable "Anyone can register" in <a href="%s">Settings -> General</a> first if you want to use this page.', 'wp-e-commerce' );
 			$additional_description = sprintf( $additional_description, admin_url( 'options-general.php' ) );
 			$this->form_array['login_page_slug']['description']         .= $additional_description;
 			$this->form_array['password_reminder_page_slug']['description'] .= $additional_description;

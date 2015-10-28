@@ -1,6 +1,6 @@
 <?php
 
-_wpsc_deprecated_file( __FILE__, '4.0', __( 'The mimetype class has been deprecated in favor of core WordPress functionality.', 'wpsc' ) );
+_wpsc_deprecated_file( __FILE__, '4.0', __( 'The mimetype class has been deprecated in favor of core WordPress functionality.', 'wp-e-commerce' ) );
 
 class mimetype {
    function getType($filename) {

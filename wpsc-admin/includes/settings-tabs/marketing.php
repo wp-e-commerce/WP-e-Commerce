@@ -13,7 +13,7 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 		if ( $wpec_tracking ) {
 			?>
 			<div class="error">
-				<p><?php _e( '<strong>You appear to have Google Analytics for WordPress installed.</strong>. <br /> This is not a problem, however, you also appear to have the WPeC tracking enabled.  We highly recommend disabling that setting and using the settings on this page.', 'wpsc' ); ?></p>
+				<p><?php _e( '<strong>You appear to have Google Analytics for WordPress installed.</strong>. <br /> This is not a problem, however, you also appear to have the WPeC tracking enabled.  We highly recommend disabling that setting and using the settings on this page.', 'wp-e-commerce' ); ?></p>
 			</div>
 		<?php
 		}
@@ -53,49 +53,49 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 
 		?>
 
-		<h3><?php esc_html_e( 'Marketing Settings', 'wpsc'); ?></h3>
+		<h3><?php esc_html_e( 'Marketing Settings', 'wp-e-commerce'); ?></h3>
 		<table class='form-table'>
 			<tr>
 				<th>
-					<?php esc_html_e( "'Users who bought this also bought'", 'wpsc' ); ?>
+					<?php esc_html_e( "'Users who bought this also bought'", 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<label>
 						<input <?php echo $wpsc_also_bought1; ?> type='checkbox' name='wpsc_also_bought' />
-						<?php esc_html_e( "Add 'Users who bought this also bought' item to the single products page.", 'wpsc' ); ?>
+						<?php esc_html_e( "Add 'Users who bought this also bought' item to the single products page.", 'wp-e-commerce' ); ?>
 					</label>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php esc_html_e( "'Share This' Social Bookmarks", 'wpsc' ); ?>
+					<?php esc_html_e( "'Share This' Social Bookmarks", 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<label>
 						<input <?php echo $wpsc_share_this1; ?> type='checkbox' name='wpsc_share_this' />
-						<?php esc_html_e( 'Add the \'Share this link\' item to the single products page.', 'wpsc' ); ?>
+						<?php esc_html_e( 'Add the \'Share this link\' item to the single products page.', 'wp-e-commerce' ); ?>
 					</label>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php esc_html_e( "'How Customer Found Us' Survey", 'wpsc' ) ?>
+					<?php esc_html_e( "'How Customer Found Us' Survey", 'wp-e-commerce' ) ?>
 				</th>
 				<td>
 					<label>
 						<input <?php echo $display_find_us1; ?> type='checkbox' name='display_find_us' />
-						<?php esc_html_e( 'Add the \'How did you find out about us\' drop-down option at checkout.', 'wpsc' ); ?>
+						<?php esc_html_e( 'Add the \'How did you find out about us\' drop-down option at checkout.', 'wp-e-commerce' ); ?>
 					</label>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php esc_html_e( "Facebook 'Like' Button", 'wpsc' ) ?>
+					<?php esc_html_e( "Facebook 'Like' Button", 'wp-e-commerce' ) ?>
 				</th>
 				<td>
 					<input type='hidden' value='0' name='wpsc_options[wpsc_facebook_like]' />
 					<input <?php echo $facebook_like1; ?> type='checkbox' name='wpsc_options[wpsc_facebook_like]' />
-					<?php esc_html_e( 'Add the Facebook Like button on your single products page.', 'wpsc' ); ?>
+					<?php esc_html_e( 'Add the Facebook Like button on your single products page.', 'wp-e-commerce' ); ?>
 				</td>
 			</tr>
 		</table>
@@ -104,13 +104,13 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 
 	public function rss_address_settings_form() {
 		?>
-		<h3><?php esc_html_e( 'Product RSS Address', 'wpsc'); ?></h3>
-		<p><?php esc_html_e( 'People can use this RSS feed to keep up to date with your product list.', 'wpsc' ); ?></p>
+		<h3><?php esc_html_e( 'Product RSS Address', 'wp-e-commerce'); ?></h3>
+		<p><?php esc_html_e( 'People can use this RSS feed to keep up to date with your product list.', 'wp-e-commerce' ); ?></p>
 
 		<table class='form-table'>
 			<tr>
 				<th>
-					<?php esc_html_e( 'RSS Feed Address', 'wpsc' ); ?>
+					<?php esc_html_e( 'RSS Feed Address', 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<?php $rss_url = add_query_arg( array( 'rss' => 'true', 'action' => 'product_list' ), home_url( '/' ) ); ?>
@@ -123,13 +123,13 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 
 	public function google_merch_center_settings_form() {
 		?>
-		<h3><?php esc_html_e( 'Google Merchant Centre / Google Product Search', 'wpsc'); ?></h3>
-   		<p><?php printf( __( 'To import your products into <a href="%s" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ), 'http://www.google.com/merchants/' ); ?></p>
+		<h3><?php esc_html_e( 'Google Merchant Centre / Google Product Search', 'wp-e-commerce'); ?></h3>
+   		<p><?php printf( __( 'To import your products into <a href="%s" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wp-e-commerce' ), 'http://www.google.com/merchants/' ); ?></p>
 
 		<table class='form-table'>
 			<tr>
 				<th>
-					<?php esc_html_e( 'Google Product Feed', 'wpsc' ); ?>
+					<?php esc_html_e( 'Google Product Feed', 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<?php $google_feed_url = add_query_arg( array( 'rss' => 'true', 'action' => 'product_list', 'xmlformat' => 'google' ), home_url( '/' ) ); ?>
@@ -142,65 +142,65 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 
 	public function google_analytics_integration_settings_form() {
 		?>
-		<h3><?php esc_html_e( 'Google Analytics E-Commerce Tracking', 'wpsc' ); ?></h3>
-		<p><?php printf( __( 'Track successful transactions and items purchased in <a href="%s">Google Analytics</a>.', 'wpsc' ), 'http://www.google.com/analytics/' ); ?></p>
+		<h3><?php esc_html_e( 'Google Analytics E-Commerce Tracking', 'wp-e-commerce' ); ?></h3>
+		<p><?php printf( __( 'Track successful transactions and items purchased in <a href="%s">Google Analytics</a>.', 'wp-e-commerce' ), 'http://www.google.com/analytics/' ); ?></p>
 		<input type='hidden' name='change-settings' value='true' />
 		<table class='form-table'>
 			<tr>
 				<th>
-					<?php _e( 'Enable', 'wpsc' ); ?>
+					<?php _e( 'Enable', 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<label>
 						<input value='1' type='hidden' name='wpsc_ga_disable_tracking' />
 						<input value='0' <?php checked( '0', get_option( 'wpsc_ga_disable_tracking' ) ); ?> type='checkbox' name='wpsc_ga_disable_tracking' />
-						<?php _e( 'Enable Google Analytics tracking', 'wpsc' ); ?>
+						<?php _e( 'Enable Google Analytics tracking', 'wp-e-commerce' ); ?>
 					</label>
-					<p class='description'><?php _e( 'If, for whatever reason, you decide you do not want any tracking, disable it.', 'wpsc' ); ?></p>
+					<p class='description'><?php _e( 'If, for whatever reason, you decide you do not want any tracking, disable it.', 'wp-e-commerce' ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php _ex( 'Google Analytics Tracking ID', 'google analytics', 'wpsc' ); ?>
+					<?php _ex( 'Google Analytics Tracking ID', 'google analytics', 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<input value="<?php echo esc_attr( get_option( 'wpsc_ga_tracking_id' ) ); ?>" type='text' name='wpsc_ga_tracking_id' />
-					<span class='description'><?php _e( 'e.g. <code>UA-XXXXX-Y</code>', 'wpsc' ); ?></span>
+					<span class='description'><?php _e( 'e.g. <code>UA-XXXXX-Y</code>', 'wp-e-commerce' ); ?></span>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php _e( 'Universal Analytics', 'wpsc' ); ?>
+					<?php _e( 'Universal Analytics', 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<label>
 						<input value="1" <?php checked( '1', get_option( 'wpsc_ga_use_universal' ) ); ?> type="checkbox" name="wpsc_ga_use_universal" />
-						<?php printf( __( 'Use <a%s>Universal Analytics</a> tracking code', 'wpsc' ), ' href="https://support.google.com/analytics/answer/2790010?hl=en-GB&ref_topic=6010376" target="universal_analytics"' ); ?>
+						<?php printf( __( 'Use <a%s>Universal Analytics</a> tracking code', 'wp-e-commerce' ), ' href="https://support.google.com/analytics/answer/2790010?hl=en-GB&ref_topic=6010376" target="universal_analytics"' ); ?>
 					</label>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php _e( 'Tracking Code Present', 'wpsc' ); ?>
+					<?php _e( 'Tracking Code Present', 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<label>
 						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_currently_tracking' ) ); ?> type='checkbox' name='wpsc_ga_currently_tracking' />
-						<?php _e( 'Google Analytics is tracking my site', 'wpsc' ); ?>
+						<?php _e( 'Google Analytics is tracking my site', 'wp-e-commerce' ); ?>
 					</label>
-					<p class='description'><?php printf( __( 'Enable this if the Google Analytics tracking code is already present on your site, e.g. manually placed your in your theme, or managed by another plugin. We will only insert the <a href="%s">E-Commerce tracking events</a> on the transaction results page.', 'wpsc' ), 'https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEcommerce'); ?></p>
+					<p class='description'><?php printf( __( 'Enable this if the Google Analytics tracking code is already present on your site, e.g. manually placed your in your theme, or managed by another plugin. We will only insert the <a href="%s">E-Commerce tracking events</a> on the transaction results page.', 'wp-e-commerce' ), 'https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEcommerce'); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php _e( 'Advanced Mode', 'wpsc' ); ?>
+					<?php _e( 'Advanced Mode', 'wp-e-commerce' ); ?>
 				</th>
 				<td>
 					<label>
 						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_advanced' ) ); ?> type='checkbox' name='wpsc_ga_advanced' />
-						<?php _e( 'Enable Advanced Mode', 'wpsc' ); ?>
+						<?php _e( 'Enable Advanced Mode', 'wp-e-commerce' ); ?>
 					</label>
-					<p class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the enter tracking code from Google Analytics into the header.php file of your theme.', 'wpsc' ); ?></p>
+					<p class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the enter tracking code from Google Analytics into the header.php file of your theme.', 'wp-e-commerce' ); ?></p>
 				</td>
 			</tr>
 		</table>

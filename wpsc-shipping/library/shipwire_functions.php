@@ -611,7 +611,7 @@ class WPSC_Shipwire {
 
 			self::set_posted_properties();
 			if ( ! _wpsc_ajax_verify_nonce( 'shipping_module_settings_form' ) ) {
-				die( __( 'Session expired. Try refreshing your Shipping Settings page.', 'wpsc' ) );
+				die( __( 'Session expired. Try refreshing your Shipping Settings page.', 'wp-e-commerce' ) );
 			}
 
 			// A bit tricky here - as we'd like this method available for all processes, not just AJAX, we have the product_code variable.
@@ -669,8 +669,8 @@ class WPSC_Shipwire {
 		do_action( 'wpsc_shipwire_post_sync', $tracking, $inventory );
 
 		$sync_response = array(
-							'tracking'  => sprintf( _n( 'Shipwire updated %d tracking number.', 'Shipwire updated %d tracking numbers.', $tracking_updates, 'wpsc' ), $tracking_updates ),
-							'inventory' => sprintf( _n( 'Shipwire updated inventory on %d product.', 'Shipwire updated inventory on %d products.', $inventory_updates, 'wpsc' ), $inventory_updates ),
+							'tracking'  => sprintf( _n( 'Shipwire updated %d tracking number.', 'Shipwire updated %d tracking numbers.', $tracking_updates, 'wp-e-commerce' ), $tracking_updates ),
+							'inventory' => sprintf( _n( 'Shipwire updated inventory on %d product.', 'Shipwire updated inventory on %d products.', $inventory_updates, 'wp-e-commerce' ), $inventory_updates ),
 						);
 
 		if ( defined ( 'DOING_AJAX' ) && DOING_AJAX )
@@ -862,28 +862,28 @@ function convert_code_to_service( $service ) {
 
 	switch ( $service ) :
 		case 'GD' :
-			$service = _x( 'Ground', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Ground', 'shipwire shipping method', 'wp-e-commerce' );
 			break;
 		case '1D' :
-			$service = _x( 'One-Day Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'One-Day Shipping', 'shipwire shipping method', 'wp-e-commerce' );
 			break;
 		case '2D' :
-			$service = _x( 'Two-Day Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Two-Day Shipping', 'shipwire shipping method', 'wp-e-commerce' );
 			break;
 		case 'INTL' :
-			$service = _x( 'Standard Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Standard Shipping', 'shipwire shipping method', 'wp-e-commerce' );
 			break;
 		case 'FT' :
-			$service = _x( 'Freight Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Freight Shipping', 'shipwire shipping method', 'wp-e-commerce' );
 			break;
 		case 'E-INTL' :
-			$service = _x( 'Economy Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Economy Shipping', 'shipwire shipping method', 'wp-e-commerce' );
 			break;
 		case 'PL-INTL' :
-			$service = _x( 'Plus Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Plus Shipping', 'shipwire shipping method', 'wp-e-commerce' );
 			break;
 		case 'PM-INTL' :
-			$service = _x( 'Premium Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Premium Shipping', 'shipwire shipping method', 'wp-e-commerce' );
 			break;
 		endswitch;
 
@@ -899,28 +899,28 @@ function convert_code_to_service( $service ) {
 function convert_service_to_code( $service ) {
 
 	switch ( $service ) :
-		case _x( 'Ground', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Ground', 'shipwire shipping method', 'wp-e-commerce' ) :
 			$service = 'GD';
 			break;
-		case _x( 'One-Day Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'One-Day Shipping', 'shipwire shipping method', 'wp-e-commerce' ) :
 			$service = '1D';
 			break;
-		case _x( 'Two-Day Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Two-Day Shipping', 'shipwire shipping method', 'wp-e-commerce' ) :
 			$service = '2D';
 			break;
-		case _x( 'Standard Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Standard Shipping', 'shipwire shipping method', 'wp-e-commerce' ) :
 			$service = 'INTL';
 			break;
-		case _x( 'Freight Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Freight Shipping', 'shipwire shipping method', 'wp-e-commerce' ) :
 			$service = 'FT';
 			break;
-		case _x( 'Economy Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Economy Shipping', 'shipwire shipping method', 'wp-e-commerce' ) :
 			$service = 'E-INTL';
 			break;
-		case _x( 'Plus Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Plus Shipping', 'shipwire shipping method', 'wp-e-commerce' ) :
 			$service = 'PL-INTL';
 			break;
-		case _x( 'Premium Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Premium Shipping', 'shipwire shipping method', 'wp-e-commerce' ) :
 			$service = 'PM-INTL';
 			break;
 		endswitch;

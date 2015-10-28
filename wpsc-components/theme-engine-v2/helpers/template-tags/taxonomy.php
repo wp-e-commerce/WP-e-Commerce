@@ -180,7 +180,7 @@ function wpsc_list_product_categories( $args = '' ) {
 		'after_thumbnail'    => '</div>',
 		'walker'             => new WPSC_Walker_Product_Category(),
 		'show_description'   => false,
-		'show_option_none'   => __( 'No product categories', 'wpsc' ),
+		'show_option_none'   => __( 'No product categories', 'wp-e-commerce' ),
 		'show_thumbnail'     => false,
 		'echo'               => 1,
 	);

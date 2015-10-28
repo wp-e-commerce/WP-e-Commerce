@@ -155,25 +155,25 @@ function wpsc_add_to_cart() {
 	if ( is_object( $cart_item ) ) {
 
 		do_action( 'wpsc_add_to_cart', $product, $cart_item );
-		$cart_messages[] = str_replace( "[product_name]", $cart_item->get_title(), __( 'You just added "[product_name]" to your cart.', 'wpsc' ) );
+		$cart_messages[] = str_replace( "[product_name]", $cart_item->get_title(), __( 'You just added "[product_name]" to your cart.', 'wp-e-commerce' ) );
 
 	} else {
 		if ( $parameters['quantity'] <= 0 ) {
 
-			$cart_messages[] = __( 'Sorry, but you cannot add zero items to your cart', 'wpsc' );
+			$cart_messages[] = __( 'Sorry, but you cannot add zero items to your cart', 'wp-e-commerce' );
 
 		} else if ( wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ) ) {
 
-			$cart_messages[] = apply_filters( 'wpsc_add_to_cart_variation_missing_message', sprintf( __( 'This product has several options to choose from.<br /><br /><a href="%s" style="display:inline; float:none; margin: 0; padding: 0;">Visit the product page</a> to select options.', 'wpsc' ), esc_url( get_permalink( $product_id ) ) ), $product_id );
+			$cart_messages[] = apply_filters( 'wpsc_add_to_cart_variation_missing_message', sprintf( __( 'This product has several options to choose from.<br /><br /><a href="%s" style="display:inline; float:none; margin: 0; padding: 0;">Visit the product page</a> to select options.', 'wp-e-commerce' ), esc_url( get_permalink( $product_id ) ) ), $product_id );
 
 		} else if ( $wpsc_cart->get_remaining_quantity( $product_id, $parameters['variation_values'], $parameters['quantity'] ) > 0 ) {
 
 			$quantity        = $wpsc_cart->get_remaining_quantity( $product_id, $parameters['variation_values'], $parameters['quantity'] );
-			$cart_messages[] = sprintf( _n( 'Sorry, but there is only %s of this item in stock.', 'Sorry, but there are only %s of this item in stock.', $quantity, 'wpsc' ), $quantity );
+			$cart_messages[] = sprintf( _n( 'Sorry, but there is only %s of this item in stock.', 'Sorry, but there are only %s of this item in stock.', $quantity, 'wp-e-commerce' ), $quantity );
 
 		} else {
 
-			$cart_messages[] = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, but this item is out of stock.', 'wpsc' ), $product_id );
+			$cart_messages[] = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, but this item is out of stock.', 'wp-e-commerce' ), $product_id );
 
 		}
 	}
@@ -229,7 +229,7 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 					</div>
 					<input type='hidden' name='wpsc_ajax_action' value='add_to_cart' />
 					<input type='hidden' name='product_id' value='<?php echo $product_id; ?>' />
-					<input type='submit' id='product_<?php echo $product_id; ?>_submit_button' class='wpsc_buy_button' name='Buy' value='<?php echo __( 'Add To Cart', 'wpsc' ); ?>'  />
+					<input type='submit' id='product_<?php echo $product_id; ?>_submit_button' class='wpsc_buy_button' name='Buy' value='<?php echo __( 'Add To Cart', 'wp-e-commerce' ); ?>'  />
 					<?php do_action( 'wpsc_add_to_cart_button_form_end', $product_id ); ?>
 				</form>
 			</div>
@@ -421,13 +421,13 @@ function wpsc_update_product_price() {
 			$response['variation_found'] = true;
 			if ( $stock === 0 ) {
 				$response += array(
-					'product_msg'     =>  __( 'Sorry, but this variation is out of stock.', 'wpsc' ),
-					'variation_msg'   => __( 'Variation not in stock', 'wpsc' ),
+					'product_msg'     =>  __( 'Sorry, but this variation is out of stock.', 'wp-e-commerce' ),
+					'variation_msg'   => __( 'Variation not in stock', 'wp-e-commerce' ),
 					'stock_available' => false,
 				);
 			} else {
 				$response += array(
-					'variation_msg'   => __( 'Product in stock', 'wpsc' ),
+					'variation_msg'   => __( 'Product in stock', 'wp-e-commerce' ),
 					'stock_available' => true,
 				);
 			}
@@ -601,7 +601,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 		extract( $form_validity ); // extracts $is_valid and $error_messages
 
 		if ( wpsc_has_tnc() && ( ! isset( $_POST['agree'] ) || $_POST['agree'] != 'yes' ) ) {
-			$error_messages[] = __( 'Please agree to the terms and conditions, otherwise we cannot process your order.', 'wpsc' );
+			$error_messages[] = __( 'Please agree to the terms and conditions, otherwise we cannot process your order.', 'wp-e-commerce' );
 			$is_valid = false;
 		}
 	} else {
@@ -630,7 +630,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 				}
 
 				if ( ! empty( $countries ) && ! in_array( $country_id, (array) $countries ) ) {
-					$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wpsc' ), $cartitem->get_title(), $country_name );
+					$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wp-e-commerce' ), $cartitem->get_title(), $country_name );
 					wpsc_update_customer_meta( 'category_shipping_conflict', $errormessage );
 					$is_valid = false;
 				}
@@ -668,14 +668,14 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 			if ( ! $has_free_shipping ) {
 				if ( ! $wpsc_cart->shipping_method_selected() || ! $wpsc_cart->shipping_quote_selected() ) {
-					$error_messages[] = __( 'Please select one of the available shipping options, then we can process your order.', 'wpsc' );
+					$error_messages[] = __( 'Please select one of the available shipping options, then we can process your order.', 'wp-e-commerce' );
 					$is_valid = false;
 				}
 			}
 
 			// if we don't have a valid zip code ( the function also checks if we need it ) we have an error
 			if ( ! wpsc_have_valid_shipping_zipcode() ) {
-					wpsc_update_customer_meta( 'category_shipping_conflict', __( 'Please enter a Zipcode and click calculate to proceed', 'wpsc' ) );
+					wpsc_update_customer_meta( 'category_shipping_conflict', __( 'Please enter a Zipcode and click calculate to proceed', 'wp-e-commerce' ) );
 					$is_valid = false;
 			}
 		}
@@ -749,7 +749,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 		//Check to ensure log row was inserted successfully
 		if(is_null($purchase_log_id)) {
-			$error_messages[] = __( 'A database error occured while processing your request.', 'wpsc' );
+			$error_messages[] = __( 'A database error occured while processing your request.', 'wp-e-commerce' );
 			wpsc_update_customer_meta( 'checkout_misc_error_messages', $error_messages );
 			return;
 		}
@@ -951,7 +951,7 @@ function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
 		?>
    <tr class="wpsc_shipping_info">
             <td colspan="5">
-               <?php _e( 'Please choose a country below to calculate your shipping costs', 'wpsc' ); ?>
+               <?php _e( 'Please choose a country below to calculate your shipping costs', 'wp-e-commerce' ); ?>
             </td>
          </tr>
 
@@ -959,13 +959,13 @@ function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
             <?php if ( ! wpsc_have_valid_shipping_zipcode() ) : ?>
                   <tr class='wpsc_update_location'>
                      <td colspan='5' class='shipping_error' >
-                        <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wpsc'); ?>
+                        <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wp-e-commerce'); ?>
                      </td>
                   </tr>
             <?php else: ?>
                <tr class='wpsc_update_location_error'>
                   <td colspan='5' class='shipping_error' >
-                     <?php _e('Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
+                     <?php _e('Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details.', 'wp-e-commerce'); ?>
                   </td>
                </tr>
             <?php endif; ?>
@@ -983,7 +983,7 @@ function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
          <?php if (wpsc_have_morethanone_shipping_quote()) :?>
             <?php while (wpsc_have_shipping_methods()) : wpsc_the_shipping_method(); ?>
                   <?php    if (!wpsc_have_shipping_quotes()) { continue; } // Don't display shipping method if it doesn't have at least one quote ?>
-                  <tr class='wpsc_shipping_header'><td class='shipping_header' colspan='5'><?php echo wpsc_shipping_method_name().__(' - Choose a Shipping Rate', 'wpsc'); ?> </td></tr>
+                  <tr class='wpsc_shipping_header'><td class='shipping_header' colspan='5'><?php echo wpsc_shipping_method_name().__(' - Choose a Shipping Rate', 'wp-e-commerce'); ?> </td></tr>
                   <?php while (wpsc_have_shipping_quotes()) : wpsc_the_shipping_quote();  ?>
                      <tr class='<?php echo wpsc_shipping_quote_html_id(); ?>'>
                         <td class='wpsc_shipping_quote_name wpsc_shipping_quote_name_<?php echo wpsc_shipping_quote_html_id(); ?>' colspan='3'>
@@ -1107,7 +1107,7 @@ function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 		}
 
 		if ( ! empty( $action_output ) ) {
-			_wpsc_doing_it_wrong( 'wpsc_alternate_cart_html', __( 'As of WPeC 3.8.11, it is improper to hook into "wpsc_alternate_cart_html" to output javascript.  We now have a custom javascript event called "wpsc_fancy_notification" you can hook into.', 'wpsc' ), '3.8.11' );
+			_wpsc_doing_it_wrong( 'wpsc_alternate_cart_html', __( 'As of WPeC 3.8.11, it is improper to hook into "wpsc_alternate_cart_html" to output javascript.  We now have a custom javascript event called "wpsc_fancy_notification" you can hook into.', 'wp-e-commerce' ), '3.8.11' );
 			$return['wpsc_alternate_cart_html'] = $action_output;
 		}
 	}

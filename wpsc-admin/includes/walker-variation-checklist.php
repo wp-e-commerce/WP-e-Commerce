@@ -36,7 +36,7 @@ class WPSC_Walker_Variation_Checklist extends Walker_Category_Checklist {
 		?>
 		<li id="<?php echo esc_attr( $taxonomy ); ?>-<?php echo $category->term_id; ?>" class="<?php echo implode( ' ', $li_classes ); ?>">
 			<?php if ( $depth == 0 ): ?>
-				<a href="#" class="expand"><?php echo esc_html_x( 'Expand', 'product variation set', 'wpsc' ); ?></a>
+				<a href="#" class="expand"><?php echo esc_html_x( 'Expand', 'product variation set', 'wp-e-commerce' ); ?></a>
 			<?php endif ?>
 
 			<label class="selectit">

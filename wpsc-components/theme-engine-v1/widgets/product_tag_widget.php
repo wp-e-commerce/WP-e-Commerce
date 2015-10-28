@@ -16,10 +16,10 @@ class WP_Widget_Product_Tags extends WP_Widget {
 
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_product_tags',
-			'description' => __( 'Product Tags Widget', 'wpsc' )
+			'description' => __( 'Product Tags Widget', 'wp-e-commerce' )
 		);
 
-		parent::__construct( 'wpsc_product_tags', __( '(WPEC) Product Tags', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_product_tags', __( '(WPEC) Product Tags', 'wp-e-commerce' ), $widget_ops );
 
 	}
 
@@ -38,7 +38,7 @@ class WP_Widget_Product_Tags extends WP_Widget {
 		extract( $args );
 
 		echo $before_widget;
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Tags', 'wpsc' ) : $instance['title'] );
+		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Tags', 'wp-e-commerce' ) : $instance['title'] );
 		if ( $title ) {
 			echo $before_title . $title . $after_title;
 		}
@@ -81,7 +81,7 @@ class WP_Widget_Product_Tags extends WP_Widget {
 
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wp-e-commerce' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<?php

@@ -140,7 +140,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function get_packing_slip_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'packing_slip', __( 'View Packing Slip', 'wpsc' ), $this->log_id, array(
+		return new WPSC_Purchase_Log_Action_Link( 'packing_slip', __( 'View Packing Slip', 'wp-e-commerce' ), $this->log_id, array(
 			'url'        => esc_url( add_query_arg( array(
 				'c'  => 'packing_slip',
 				'id' => $this->log_id
@@ -163,7 +163,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function get_email_receipt_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'email_receipt', __( 'Resend Receipt to Buyer', 'wpsc' ), $this->log_id, array(
+		return new WPSC_Purchase_Log_Action_Link( 'email_receipt', __( 'Resend Receipt to Buyer', 'wp-e-commerce' ), $this->log_id, array(
 			'ajax'     => true,
 			'dashicon' => 'dashicons-migrate dashicons-email-alt'
 		) );
@@ -180,10 +180,10 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_delete_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'delete', _x( 'Remove this record', 'purchase log action link', 'wpsc' ), $this->log_id, array(
+		return new WPSC_Purchase_Log_Action_Link( 'delete', _x( 'Remove this record', 'purchase log action link', 'wp-e-commerce' ), $this->log_id, array(
 			'dashicon'   => 'dashicons-dismiss',
 			'attributes' => array(
-				'onclick' => "if ( confirm('" . esc_js( sprintf( __( "You are about to delete this log '%s'\n 'Cancel' to stop, 'OK' to delete.", 'wpsc' ), wpsc_purchaselog_details_date() ) ) . "') ) { return true; } return false;"
+				'onclick' => "if ( confirm('" . esc_js( sprintf( __( "You are about to delete this log '%s'\n 'Cancel' to stop, 'OK' to delete.", 'wp-e-commerce' ), wpsc_purchaselog_details_date() ) ) . "') ) { return true; } return false;"
 			)
 		) );
 
@@ -199,7 +199,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_back_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'back', _x( 'Go Back', 'purchase log action link', 'wpsc' ), $this->log_id, array(
+		return new WPSC_Purchase_Log_Action_Link( 'back', _x( 'Go Back', 'purchase log action link', 'wp-e-commerce' ), $this->log_id, array(
 			'url'      => wp_get_referer(),
 			'dashicon' => 'dashicons-arrow-left-alt'
 		) );

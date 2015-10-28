@@ -130,7 +130,7 @@ class WPSC_Product_Variations {
 		if ( 'string' == $return_type ) {
 			$return = wpsc_format_currency( $first );
 			if ( $count > 1 && $first != $last ) {
-				$return = sprintf( esc_html__( 'from %s', 'wpsc' ), $return );
+				$return = sprintf( esc_html__( 'from %s', 'wp-e-commerce' ), $return );
 			}
 		} else {
 			$return = $first;
@@ -151,7 +151,7 @@ class WPSC_Product_Variations {
 			$return = wpsc_format_currency( $first );
 
 			if ( $count  > 1 && $first != $last ) {
-				$return = sprintf( esc_html__( 'from %s', 'wpsc' ), $return );
+				$return = sprintf( esc_html__( 'from %s', 'wp-e-commerce' ), $return );
 			}
 		} else {
 			$return = (float) $first;

@@ -51,7 +51,7 @@ function wpsc_display_coupons_page() {
 			$insert = $new_coupon->save();
 
 			if ( $insert ) {
-				echo '<div class="updated"><p>' . __( 'The coupon has been added.', 'wpsc' ) . '</p></div>';
+				echo '<div class="updated"><p>' . __( 'The coupon has been added.', 'wp-e-commerce' ) . '</p></div>';
 			}
 
 		}
@@ -92,7 +92,7 @@ function wpsc_display_coupons_page() {
 			$update = $update_coupon->save();
 
 			if ( $update ) {
-				echo '<div class="updated"><p>' . __( 'The coupon has been updated.', 'wpsc' ) . '</p></div>';
+				echo '<div class="updated"><p>' . __( 'The coupon has been updated.', 'wp-e-commerce' ) . '</p></div>';
 			}
 
 		}
@@ -115,7 +115,7 @@ function wpsc_display_coupons_page() {
 		$coupons_table = new WPSC_Coupons_List_Table();
 		$coupons_table->prepare_items(); ?>
 		<div class="wrap">
-			<h2><?php _e( 'Coupons', 'wpsc' ); ?><a href="<?php echo esc_url( add_query_arg( 'wpsc-action', 'add_coupon' ) ); ?>" class="add-new-h2"><?php _e( 'Add Coupon', 'wpsc' ); ?></a></h2>
+			<h2><?php _e( 'Coupons', 'wp-e-commerce' ); ?><a href="<?php echo esc_url( add_query_arg( 'wpsc-action', 'add_coupon' ) ); ?>" class="add-new-h2"><?php _e( 'Add Coupon', 'wp-e-commerce' ); ?></a></h2>
 			<?php do_action( 'wpsc_coupons_page_top' ); ?>
 			<form id="wpsc-coupons-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons' ); ?>">
 

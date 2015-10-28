@@ -67,7 +67,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		$response = array( 'request' => $_REQUEST );
 		$response = _wpsc_add_customer_meta_to_response( $response, $meta );
 
-		$response['type'] = __( 'success', 'wpsc' );
+		$response['type'] = __( 'success', 'wp-e-commerce' );
 		$response['error'] = '';
 
 		wp_send_json_success( $response );
@@ -93,7 +93,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		} elseif ( ! empty( $_REQUEST['meta_key'] ) && isset( $_REQUEST['meta_value'] ) ) {
 			$customer_meta = array( $_REQUEST['meta_key'] => $_REQUEST['meta_value'] );
 		} else {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key or meta array', 'wpsc' ), '3.8.14' );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key or meta array', 'wp-e-commerce' ), '3.8.14' );
 			$customer_meta = array();
 		}
 
@@ -118,15 +118,15 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 			}
 
 			if ( $success ) {
-				$response['type']          = __( 'success', 'wpsc' );
+				$response['type']          = __( 'success', 'wp-e-commerce' );
 				$response['error']         = '';
 			} else {
-				$response['type']       = __( 'error', 'wpsc' );
-				$response['error']      = __( 'meta values may not have been updated', 'wpsc' );
+				$response['type']       = __( 'error', 'wp-e-commerce' );
+				$response['error']      = __( 'meta values may not have been updated', 'wp-e-commerce' );
 			}
 		} else {
-				$response['type']       = __( 'error', 'wpsc' );
-				$response['error']      = __( 'invalid parameters, meta array or meta key value pair required', 'wpsc' );
+				$response['type']       = __( 'error', 'wp-e-commerce' );
+				$response['error']      = __( 'invalid parameters, meta array or meta key value pair required', 'wp-e-commerce' );
 		}
 
 		wp_send_json_success( $response );
@@ -147,14 +147,14 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 
 		if ( ! empty( $meta_key ) ) {
 			$response['old_value'] = wpsc_get_customer_meta( $meta_key );
-			$response['type'] = __( 'success', 'wpsc' );
+			$response['type'] = __( 'success', 'wp-e-commerce' );
 			$response['error'] = '';
 			wpsc_delete_customer_meta( $meta_key );
 		} else {
 			$response['old_value'] = '';
-			$response['type']  = __( 'error', 'wpsc' );
-			$response['error'] = __( 'no meta key', 'wpsc' );
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key', 'wpsc' ), '3.8.14' );
+			$response['type']  = __( 'error', 'wp-e-commerce' );
+			$response['error'] = __( 'no meta key', 'wp-e-commerce' );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key', 'wp-e-commerce' ), '3.8.14' );
 		}
 
 		$response = _wpsc_add_customer_meta_to_response( $response );

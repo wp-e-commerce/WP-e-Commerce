@@ -129,15 +129,15 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'         => '<input type="checkbox" />',
-			'title'      => __( 'Title', 'wpsc' ),
-			'sku'        => __( 'SKU', 'wpsc' ),
-			'price'      => __( 'Price', 'wpsc' ),
-			'sale_price' => __( 'Sale Price', 'wpsc' ),
-			'stock'      => __( 'Stock', 'wpsc' ),
+			'title'      => __( 'Title', 'wp-e-commerce' ),
+			'sku'        => __( 'SKU', 'wp-e-commerce' ),
+			'price'      => __( 'Price', 'wp-e-commerce' ),
+			'sale_price' => __( 'Sale Price', 'wp-e-commerce' ),
+			'stock'      => __( 'Stock', 'wp-e-commerce' ),
 		);
 
 		if ( get_option( 'wpec_taxes_enabled' ) )
-			$columns['tax'] = __( 'Taxable Amount', 'wpsc' );
+			$columns['tax'] = __( 'Taxable Amount', 'wp-e-commerce' );
 
 		return apply_filters( 'wpsc_variation_column_headers', $columns );
 	}
@@ -162,9 +162,9 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 
 		$actions = array();
 		if ( apply_filters( 'wpsc_show_product_variations_edit_action', true, $item ) && $can_edit_post && 'trash' != $item->post_status )
-			$actions['edit'] = '<a target="_blank" href="' . get_edit_post_link( $item->ID, true ) . '" title="' . esc_attr( __( 'Edit this item' ), 'wpsc' ) . '">' . __( 'Edit' ) . '</a>';
+			$actions['edit'] = '<a target="_blank" href="' . get_edit_post_link( $item->ID, true ) . '" title="' . esc_attr( __( 'Edit this item' ), 'wp-e-commerce' ) . '">' . __( 'Edit' ) . '</a>';
 
-		$actions['stock hide-if-no-js'] = '<a class="wpsc-variation-stock-editor-link" href="#" title="' . __( 'Show shipping editor', 'wpsc' ) . '">' . __( 'Edit Shipping', 'wpsc' ) . '</a>';
+		$actions['stock hide-if-no-js'] = '<a class="wpsc-variation-stock-editor-link" href="#" title="' . __( 'Show shipping editor', 'wp-e-commerce' ) . '">' . __( 'Edit Shipping', 'wp-e-commerce' ) . '</a>';
 
 		if ( $item->post_status == 'draft' ) {
 			$show_url = add_query_arg( array(
@@ -172,14 +172,14 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 				'post'              => $item->ID,
 				'bulk_action_nonce' => wp_create_nonce( 'wpsc_product_variations_bulk_action' ),
 			) );
-			$actions['show'] = '<a class="wpsc-variation-show-link" href="' . esc_url( $show_url ) . '" title="' . __( 'Show this variation on the front-end', 'wpsc' ) . '">' . __( 'Publish', 'wpsc' ) . '</a>';
+			$actions['show'] = '<a class="wpsc-variation-show-link" href="' . esc_url( $show_url ) . '" title="' . __( 'Show this variation on the front-end', 'wp-e-commerce' ) . '">' . __( 'Publish', 'wp-e-commerce' ) . '</a>';
 		} elseif ( in_array( $item->post_status, array( 'publish', 'inherit' ) ) ) {
 			$hide_url = add_query_arg( array(
 				'bulk_action'       => 'hide',
 				'post'              => $item->ID,
 				'bulk_action_nonce' => wp_create_nonce( 'wpsc_product_variations_bulk_action' ),
 			) );
-			$actions['hide'] = '<a class="wpsc-variation-hide-link" href="' . esc_url( $hide_url ) . '" title="' . __( 'Mark this variation as draft to hide from the front-end', 'wpsc' ) . '">' . __( 'Mark as Draft', 'wpsc' ) . '</a>';
+			$actions['hide'] = '<a class="wpsc-variation-hide-link" href="' . esc_url( $hide_url ) . '" title="' . __( 'Mark this variation as draft to hide from the front-end', 'wp-e-commerce' ) . '">' . __( 'Mark as Draft', 'wp-e-commerce' ) . '</a>';
 		}
 
 		if ( current_user_can( $post_type_object->cap->delete_post, $item->ID ) ) {
@@ -239,7 +239,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 			<div class="wpsc-product-variation-title">
 				<strong class="row-title">
 					<?php if ( $show_edit_link ): ?>
-						<a target="_blank" href="<?php echo esc_url( get_edit_post_link( $item->ID, true ) ); ?>" title="<?php esc_attr_e( __( 'Edit this item' ), 'wpsc' ); ?>">
+						<a target="_blank" href="<?php echo esc_url( get_edit_post_link( $item->ID, true ) ); ?>" title="<?php esc_attr_e( __( 'Edit this item' ), 'wp-e-commerce' ); ?>">
 					<?php endif; ?>
 					<?php echo esc_html( apply_filters( 'wpsc_variation_name', $title, $item ) ); ?>
 					<?php if ( $show_edit_link ): ?>
@@ -336,7 +336,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 		<tr class="wpsc-stock-editor-row inline-edit-row<?php echo $row_class; ?>"<?php echo $style; ?> id="wpsc-stock-editor-row-<?php echo $item->ID; ?>">
 			<td></td>
 			<td colspan="<?php echo $colspan; ?>" class="colspanchange">
-				<h4><?php esc_html_e( 'Variation Shipping Editor', 'wpsc' ); ?></h4>
+				<h4><?php esc_html_e( 'Variation Shipping Editor', 'wp-e-commerce' ); ?></h4>
 				<?php wpsc_product_shipping_forms( $item, $field_name, $bulk ); ?>
 			</td>
 		</tr>
@@ -429,11 +429,11 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 			$actions['untrash'] = __( 'Restore' );
 
 		if ( $this->is_draft )
-			$actions['show'] = __( 'Publish', 'wpsc' );
+			$actions['show'] = __( 'Publish', 'wp-e-commerce' );
 		elseif ( $this->is_all || $this->is_publish )
-			$actions['hide'] = __( 'Mark as Draft', 'wpsc' );
+			$actions['hide'] = __( 'Mark as Draft', 'wp-e-commerce' );
 
-		$actions['edit'] = __( 'Edit', 'wpsc' );
+		$actions['edit'] = __( 'Edit', 'wp-e-commerce' );
 
 		if ( $this->is_trash || !EMPTY_TRASH_DAYS )
 			$actions['delete'] = __( 'Delete Permanently' );
@@ -620,7 +620,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 						<input type="checkbox" name="wpsc_bulk_edit[post][]" checked="checked" value="<?php echo $item->ID; ?>" />
 					</span>
 					<strong>
-						<a class="row-title" href="<?php echo get_edit_post_link( $item->ID ); ?>" title="<?php esc_attr_e( 'Edit this variation', 'wpsc' ) ?>"><?php echo esc_html( $title ); ?></a>
+						<a class="row-title" href="<?php echo get_edit_post_link( $item->ID ); ?>" title="<?php esc_attr_e( 'Edit this variation', 'wp-e-commerce' ) ?>"><?php echo esc_html( $title ); ?></a>
 					</strong>
 				</div>
 			<?php endforeach; ?>

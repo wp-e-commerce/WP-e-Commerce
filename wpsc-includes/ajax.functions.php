@@ -2,10 +2,10 @@
 
 /**
  * The AJAX functions for WP-e-Commerce
- * 
+ *
  * @package wp-e-commerce
  * @since 3.8
- */ 
+ */
 
 function wpsc_gateway_notification() {
 	global $wpsc_gateways;
@@ -88,7 +88,7 @@ function wpsc_scale_image() {
 
 		wp_redirect( set_url_scheme( $intermediate_image_data['url'] ) );
 	} else {
-		_e( 'Invalid Image parameters', 'wpsc' );
+		_e( 'Invalid Image parameters', 'wp-e-commerce' );
 	}
 	exit();
 }
@@ -116,7 +116,7 @@ function wpsc_download_file() {
 				), array( 'id' => $download_data['id'] ) );
 			} else if ( $ip_number != $download_data['ip_number'] ) {
 				// if the IP number is set but does not match, fail here.
-				exit( _e( 'This download is no longer valid, Please contact the site administrator for more information.', 'wpsc' ) );
+				exit( _e( 'This download is no longer valid, Please contact the site administrator for more information.', 'wp-e-commerce' ) );
 			}
 		}
 
@@ -124,7 +124,7 @@ function wpsc_download_file() {
 		$file_data = wpsc_get_downloadable_file($file_id);
 
 		if ( $file_data == null ) {
-			exit( _e( 'This download is no longer valid, Please contact the site administrator for more information.', 'wpsc' ) );
+			exit( _e( 'This download is no longer valid, Please contact the site administrator for more information.', 'wp-e-commerce' ) );
 		}
 
 		if ( $download_data != null ) {
@@ -154,7 +154,7 @@ function wpsc_download_file() {
 
 			_wpsc_force_download_file( $file_id );
 		} else {
-			exit( _e( 'This download is no longer valid, Please contact the site administrator for more information.', 'wpsc' ) );
+			exit( _e( 'This download is no longer valid, Please contact the site administrator for more information.', 'wp-e-commerce' ) );
 		}
 	}
 }
@@ -164,7 +164,7 @@ function _wpsc_force_download_file( $file_id ) {
 	do_action( 'wpsc_alter_download_action', $file_id );
 	$file_data = get_post( $file_id );
 	if ( ! $file_data )
-		wp_die( __( 'Invalid file ID.', 'wpsc' ) );
+		wp_die( __( 'Invalid file ID.', 'wp-e-commerce' ) );
 
 	$file_name = basename( $file_data->post_title );
 	$file_path = WPSC_FILE_DIR . $file_name;
@@ -197,6 +197,6 @@ function _wpsc_force_download_file( $file_id ) {
 		wpsc_readfile_chunked( $file_path );
 		exit();
 	}else{
-		wp_die(__('Sorry something has gone wrong with your download!', 'wpsc'));
+		wp_die(__('Sorry something has gone wrong with your download!', 'wp-e-commerce'));
 	}
 }

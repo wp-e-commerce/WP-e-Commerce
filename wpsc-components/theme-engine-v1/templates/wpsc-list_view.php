@@ -78,9 +78,9 @@ global $wp_query, $wpdb;
 					<?php if(wpsc_show_stock_availability()): ?>
 						<td class="stock">
 						<?php if(wpsc_product_has_stock()) : ?>
-									<div id="stock_display_<?php echo wpsc_the_product_id(); ?>" class="in_stock"><?php _e('Product in stock', 'wpsc'); ?></div>
+									<div id="stock_display_<?php echo wpsc_the_product_id(); ?>" class="in_stock"><?php _e('Product in stock', 'wp-e-commerce'); ?></div>
 							<?php else: ?>
-									<div id="stock_display_<?php echo wpsc_the_product_id(); ?>" class="out_of_stock"><?php _e('Product not in stock', 'wpsc'); ?></div>
+									<div id="stock_display_<?php echo wpsc_the_product_id(); ?>" class="out_of_stock"><?php _e('Product not in stock', 'wp-e-commerce'); ?></div>
 							<?php endif; ?>
 						</td>
 					<?php endif; ?>
@@ -103,7 +103,7 @@ global $wp_query, $wpdb;
 
 							<?php if(wpsc_has_multi_adding()): ?>
                             <div class="quantity_container">
-								<label class="wpsc_quantity_update" for="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>"><?php _e('Quantity:', 'wpsc'); ?></label>
+								<label class="wpsc_quantity_update" for="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>"><?php _e('Quantity:', 'wp-e-commerce'); ?></label>
 								<input type="text" id="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>" name="wpsc_quantity_update" size="2" value="1" />
 								<input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>"/>
 								<input type="hidden" name="wpsc_update_quantity" value="true" />
@@ -119,19 +119,19 @@ global $wp_query, $wpdb;
 
 											<?php if(wpsc_product_external_link(wpsc_the_product_id()) != '') : ?>
 											<?php $action = wpsc_product_external_link( wpsc_the_product_id() ); ?>
-											<input class="wpsc_buy_button" type="button" value="<?php echo wpsc_product_external_link_text( wpsc_the_product_id(), __( 'Buy Now', 'wpsc' ) ); ?>" onclick="return gotoexternallink('<?php echo $action; ?>', '<?php echo wpsc_product_external_link_target( wpsc_the_product_id() ); ?>')">
+											<input class="wpsc_buy_button" type="button" value="<?php echo wpsc_product_external_link_text( wpsc_the_product_id(), __( 'Buy Now', 'wp-e-commerce' ) ); ?>" onclick="return gotoexternallink('<?php echo $action; ?>', '<?php echo wpsc_product_external_link_target( wpsc_the_product_id() ); ?>')">
 											<?php elseif ( wpsc_product_has_variations( wpsc_the_product_id() ) ) : ?>
-											<a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>" class="wpsc_buy_button"><?php _e( 'View Product', 'wpsc' )?></a>
+											<a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>" class="wpsc_buy_button"><?php _e( 'View Product', 'wp-e-commerce' )?></a>
 											<?php else : ?>
-										<input type="submit" value="<?php _e('Add To Cart', 'wpsc'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button" />
+										<input type="submit" value="<?php _e('Add To Cart', 'wp-e-commerce'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button" />
 											<?php endif; ?>
 										<div class="wpsc_loading_animation">
-											<img title="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
-											<?php _e('Updating cart...', 'wpsc'); ?>
+											<img title="<?php esc_attr_e( 'Loading', 'wp-e-commerce' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wp-e-commerce' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
+											<?php _e('Updating cart...', 'wp-e-commerce'); ?>
 										</div><!--close wpsc_loading_animation-->
 									</div><!--close wpsc_buy_button_container-->
 								<?php else : ?>
-									<p class="soldout"><?php _e('This product has sold out.', 'wpsc'); ?></p>
+									<p class="soldout"><?php _e('This product has sold out.', 'wp-e-commerce'); ?></p>
 								<?php endif ; ?>
 							<?php endif ; ?>
 							<?php do_action ( 'wpsc_product_form_fields_end' ); ?>
@@ -144,7 +144,7 @@ global $wp_query, $wpdb;
 
 
 		<?php if(wpsc_product_count() == 0):?>
-			<p><?php  _e('There are no products in this group.', 'wpsc'); ?></p>
+			<p><?php  _e('There are no products in this group.', 'wp-e-commerce'); ?></p>
 		<?php endif ; ?>
 
 	    <?php do_action( 'wpsc_theme_footer' ); ?>

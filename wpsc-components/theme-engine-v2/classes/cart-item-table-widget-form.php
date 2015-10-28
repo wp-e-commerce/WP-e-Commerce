@@ -11,7 +11,7 @@ class WPSC_Cart_Item_Table_Widget_Form extends WPSC_Cart_Item_Table_Form {
 		$this->show_thumbnails   = false;
 		$this->show_coupon_field = false;
 
-		$this->columns['quantity'] = _x( 'Qty', 'quantity abbreviation', 'wpsc' );
+		$this->columns['quantity'] = _x( 'Qty', 'quantity abbreviation', 'wp-e-commerce' );
 		unset( $this->columns['unit_price'] );
 	}
 
@@ -44,7 +44,7 @@ class WPSC_Cart_Item_Table_Widget_Form extends WPSC_Cart_Item_Table_Form {
 		<tr class="wpsc-cart-item-table-actions">
 			<td></td>
 			<td colspan="<?php echo count( $this->columns ) - 1; ?>">
-				<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo esc_url( $clear_cart_url ); ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
+				<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo esc_url( $clear_cart_url ); ?>"><?php esc_html_e( 'Clear Cart', 'wp-e-commerce' ); ?></a>
 				<input type="hidden" name="action" value="update_quantity" />
 				<input type="hidden" name="prev" value="<?php echo $prev; ?>">
 			</td>

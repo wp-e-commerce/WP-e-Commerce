@@ -16,7 +16,7 @@ class wpsc_products_by_category {
 	 */
 	function wpsc_products_by_category( $query ) {
 
-		_wpsc_doing_it_wrong( 'wpsc_products_by_category', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wpsc' ), '4.0' );
+		_wpsc_doing_it_wrong( 'wpsc_products_by_category', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wp-e-commerce' ), '4.0' );
 
 	}
 
@@ -70,7 +70,7 @@ class wpsc_products_by_category {
 	 */
 	function _wpsc_doing_it_wrong( $method ) {
 
-		_wpsc_doing_it_wrong( 'wpsc_products_by_category->' . $method . '()', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wpsc' ), '4.0' );
+		_wpsc_doing_it_wrong( 'wpsc_products_by_category->' . $method . '()', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wp-e-commerce' ), '4.0' );
 
 	}
 

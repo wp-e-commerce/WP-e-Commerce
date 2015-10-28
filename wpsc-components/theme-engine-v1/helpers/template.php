@@ -142,7 +142,7 @@ function wpsc_body_class( $classes ) {
 		// If on a product or category page...
 		if ( get_option( 'product_list_url' ) == $page_url || get_post_type( $post_id ) === 'wpsc-product' ) {
 
-			$classes[] = 'wpsc';
+			$classes[] = 'wp-e-commerce';
 
 			if ( ! is_array( $wpsc_query->query ) ) {
 				$classes[] = 'wpsc-home';
@@ -171,19 +171,19 @@ function wpsc_body_class( $classes ) {
 
 		// If viewing the shopping cart...
 		if ( get_option( 'shopping_cart_url' ) == $page_url ) {
-			$classes[] = 'wpsc';
+			$classes[] = 'wp-e-commerce';
 			$classes[] = 'wpsc-shopping-cart';
 		}
 
 		// If viewing the transaction...
 		if ( get_option( 'transact_url' ) == $page_url ) {
-			$classes[] = 'wpsc';
+			$classes[] = 'wp-e-commerce';
 			$classes[] = 'wpsc-transaction-details';
 		}
 
 		// If viewing your account...
 		if ( get_option( 'user_account_url' ) == $page_url ) {
-			$classes[] = 'wpsc';
+			$classes[] = 'wp-e-commerce';
 			$classes[] = 'wpsc-user-account';
 		}
 	}

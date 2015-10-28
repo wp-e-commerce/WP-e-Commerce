@@ -75,18 +75,18 @@ function wpsc_select_product_file( $product_id = null ) {
 	$output = '<table id="wpsc_digital_download_table" class="wp-list-table widefat posts select_product_file">';
 		$output .= '<thead>';
 			$output .= '<tr>';
-				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wp-e-commerce' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</thead>';
 		$output .= '<tfoot>';
 			$output .= '<tr>';
-				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wp-e-commerce' ) . '</th>';
+				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wp-e-commerce' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</tfoot>';
 
@@ -97,7 +97,7 @@ function wpsc_select_product_file( $product_id = null ) {
 	foreach ( (array)$attached_files as $file ) {
 
 		$file_dir = WPSC_FILE_DIR . $file->post_title;
-		$file_size = ( 'http://s3file' == $file->guid ) ? __( 'Remote file sizes cannot be calculated', 'wpsc' ) : wpsc_convert_byte( filesize( $file_dir ) );
+		$file_size = ( 'http://s3file' == $file->guid ) ? __( 'Remote file sizes cannot be calculated', 'wp-e-commerce' ) : wpsc_convert_byte( filesize( $file_dir ) );
 
 		$file_url = add_query_arg(
 			array(
@@ -117,7 +117,7 @@ function wpsc_select_product_file( $product_id = null ) {
 		$output .= '<td style="padding-right: 30px;"><img src="'. $icon_url .'"><span>' . $file->post_title . '</span></td>';
 		$output .= '<td>' . $file_size .'</td>';
 		$output .= '<td>' . $file_type . '</td>';
-		$output .= '<td><a href="' . esc_url( $file_url ) .'">' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a><a data-file-name="' . esc_attr( $file->post_title ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-nonce="' . esc_attr( $delete_nonce ) . '" class="file_delete_button" href="' .$deletion_url. '" >' . _x( "Delete", "Digital download row UI", "wpsc" ) . '</a></td>';
+		$output .= '<td><a href="' . esc_url( $file_url ) .'">' . _x( 'Download', 'Digital download row UI', 'wp-e-commerce' ) . '</a><a data-file-name="' . esc_attr( $file->post_title ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-nonce="' . esc_attr( $delete_nonce ) . '" class="file_delete_button" href="' .$deletion_url. '" >' . _x( "Delete", "Digital download row UI", 'wp-e-commerce' ) . '</a></td>';
 
 		$output .= '</tr>';
 
@@ -128,7 +128,7 @@ function wpsc_select_product_file( $product_id = null ) {
 	$output .= '</table>';
 
 	if( empty( $attached_files ) )
-		$output .= "<p class='no-item'>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wpsc' ) . "</p>";
+		$output .= "<p class='no-item'>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wp-e-commerce' ) . "</p>";
 	$output .= "<div class='" . ( ( is_numeric( $product_id ) ) ? 'edit_' : '') . "select_product_handle'></div>";
 	$output .= "<script type='text/javascript'>\r\n";
 	$output .= "var select_min_height = " . ( 25 * 3 ) . ";\r\n";
@@ -161,13 +161,13 @@ function wpsc_select_variation_file( $file_id, $variation_ids, $variation_combin
 	$unique_id_component = ((int)$variation_combination_id) . "_" . str_replace( ",", "_", $variation_ids );
 
 	$output = "<div class='variation_settings_contents'>\r\n";
-	$output .= "<span class='admin_product_notes select_product_note '>" . __( 'Choose a downloadable file for this variation', 'wpsc' ) . "</span>\r\n";
+	$output .= "<span class='admin_product_notes select_product_note '>" . __( 'Choose a downloadable file for this variation', 'wp-e-commerce' ) . "</span>\r\n";
 	$output .= "<div class='select_variation_file'>\r\n";
 
 	$num = 0;
 	$output .= "  <p>\r\n";
 	$output .= "    <input type='radio' name='variation_priceandstock[{$variation_ids}][file]' value='0' id='select_variation_file{$unique_id_component}_{$num}' " . ((!is_numeric( $file_id ) || ($file_id < 1)) ? "checked='checked'" : "") . " />\r\n";
-	$output .= "    <label for='select_variation_file{$unique_id_component}_{$num}'>" . __( 'No Product', 'wpsc' ) . "</label>\r\n";
+	$output .= "    <label for='select_variation_file{$unique_id_component}_{$num}'>" . __( 'No Product', 'wp-e-commerce' ) . "</label>\r\n";
 	$output .= "  </p>\r\n";
 
 	foreach ( (array)$file_list as $file ) {

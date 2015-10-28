@@ -75,7 +75,7 @@ final class WPSC_Payment_Gateways {
 			);
 
 			if ( ! class_exists( $class_name ) ) {
-				$error = new WP_Error( 'wpsc_invalid_payment_gateway', sprintf( __( 'Invalid payment gateway: Class %s does not exist.', 'wpsc' ), $class_name ) );
+				$error = new WP_Error( 'wpsc_invalid_payment_gateway', sprintf( __( 'Invalid payment gateway: Class %s does not exist.', 'wp-e-commerce' ), $class_name ) );
 				return $error;
 			}
 
@@ -477,18 +477,18 @@ abstract class WPSC_Payment_Gateway {
 	 */
 	public function setup_form() {
 		$checkout_field_types = array(
-			'billing'  => __( 'Billing Fields' , 'wpsc' ),
-			'shipping' => __( 'Shipping Fields', 'wpsc' ),
+			'billing'  => __( 'Billing Fields' , 'wp-e-commerce' ),
+			'shipping' => __( 'Shipping Fields', 'wp-e-commerce' ),
 		);
 
 		$fields = array(
-			'firstname' => __( 'First Name' , 'wpsc' ),
-			'lastname'  => __( 'Last Name'  , 'wpsc' ),
-			'address'   => __( 'Address'    , 'wpsc' ),
-			'city'      => __( 'City'       , 'wpsc' ),
-			'state'     => __( 'State'      , 'wpsc' ),
-			'country'   => __( 'Country'    , 'wpsc' ),
-			'postcode'  => __( 'Postal Code', 'wpsc' ),
+			'firstname' => __( 'First Name' , 'wp-e-commerce' ),
+			'lastname'  => __( 'Last Name'  , 'wp-e-commerce' ),
+			'address'   => __( 'Address'    , 'wp-e-commerce' ),
+			'city'      => __( 'City'       , 'wp-e-commerce' ),
+			'state'     => __( 'State'      , 'wp-e-commerce' ),
+			'country'   => __( 'Country'    , 'wp-e-commerce' ),
+			'postcode'  => __( 'Postal Code', 'wp-e-commerce' ),
 		);
 
 		$checkout_form = WPSC_Checkout_Form::get();

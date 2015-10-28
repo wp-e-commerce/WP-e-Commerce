@@ -23,10 +23,10 @@ function _wpsc_db_upgrade_10() {
  */
 function _wpsc_add_region_name_meta() {
 	$wpsc_country = new WPSC_Country( 'US' );
-	$wpsc_country->set( 'region_label', __( 'State', 'wpsc' ) );
+	$wpsc_country->set( 'region_label', __( 'State', 'wp-e-commerce' ) );
 
 	$wpsc_country = new WPSC_Country( 'CA' );
-	$wpsc_country->set( 'region_label', __( 'Province', 'wpsc' ) );
+	$wpsc_country->set( 'region_label', __( 'Province', 'wp-e-commerce' ) );
 }
 
 /**
@@ -66,7 +66,7 @@ function _wpsc_meta_migrate_anonymous_users() {
 	$role = get_role( 'wpsc_anonymous' );
 
 	if ( $role ) {
-		remove_role( 'wpsc_anonymous', __( 'Anonymous', 'wpsc' ) );
+		remove_role( 'wpsc_anonymous', __( 'Anonymous', 'wp-e-commerce' ) );
 	}
 
 	wp_schedule_single_event( time() + 5 , 'wpsc_migrate_anonymous_user_cron' );

@@ -1,7 +1,7 @@
 <p>
 	<?php
 	wpsc_form_label(
-		__( 'Title:', 'wpsc' ),
+		__( 'Title:', 'wp-e-commerce' ),
 		$this->get_field_id( 'title')
 	); ?><br />
 	<?php
@@ -15,7 +15,7 @@
 <p>
 	<?php
 	wpsc_form_label(
-		__( 'Number of posts:', 'wpsc' ),
+		__( 'Number of posts:', 'wp-e-commerce' ),
 		$this->get_field_id( 'post_count')
 	); ?><br />
 	<?php
@@ -31,7 +31,7 @@
 	wpsc_form_checkbox(
 		$this->get_field_name( 'show_name' ),
 		1,
-		_x( 'Show Product Name', 'latest products widget', 'wpsc' ),
+		_x( 'Show Product Name', 'latest products widget', 'wp-e-commerce' ),
 		$instance['show_name']
 	); ?>
 </p>
@@ -41,7 +41,7 @@
 	wpsc_form_checkbox(
 		$this->get_field_name( 'show_image' ),
 		1,
-		_x( 'Show Thumbnails', 'latest products widget', 'wpsc' ),
+		_x( 'Show Thumbnails', 'latest products widget', 'wp-e-commerce' ),
 		! empty( $instance['show_image'] )
 	); ?>
 </p>
@@ -50,9 +50,9 @@
 		<?php
 		printf(
 			/** translators: %1$s: Label, %2$s: Input box, %3$s: pixel unit **/
-			_x( '%1$s %2$s %3$s', 'latest products widget width / height option', 'wpsc' ),
+			_x( '%1$s %2$s %3$s', 'latest products widget width / height option', 'wp-e-commerce' ),
 			wpsc_form_label(
-				_x( 'Width:', 'latest products widget', 'wpsc' ),
+				_x( 'Width:', 'latest products widget', 'wp-e-commerce' ),
 				$this->get_field_id( 'width' ),
 				array(),
 				false
@@ -63,16 +63,16 @@
 				array( 'id' => $this->get_field_id( 'width' ), 'size' => 3 ),
 				false
 			),
-			__( 'px', 'wpsc' )
+			__( 'px', 'wp-e-commerce' )
 		); ?>
 	</li>
 	<li>
 		<?php
 		printf(
 			/** translators: %1$s: Label, %2$s: Input box, %3$s: pixel unit **/
-			_x( '%1$s %2$s %3$s', 'latest products widget width / height option', 'wpsc' ),
+			_x( '%1$s %2$s %3$s', 'latest products widget width / height option', 'wp-e-commerce' ),
 			wpsc_form_label(
-				_x( 'Height:', 'latest products widget', 'wpsc' ),
+				_x( 'Height:', 'latest products widget', 'wp-e-commerce' ),
 				$this->get_field_id( 'height' ),
 				array(),
 				false
@@ -83,7 +83,7 @@
 				array( 'id' => $this->get_field_id( 'height' ), 'size' => 3 ),
 				false
 			),
-			__( 'px', 'wpsc' )
+			__( 'px', 'wp-e-commerce' )
 		); ?>
 	</li>
 </ul>

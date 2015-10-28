@@ -15,13 +15,13 @@
 	<?php wpsc_login_form(); ?>
 </div>
 <div class="wpsc-create-account-offer">
-	<p><?php esc_html_e( 'Register with us to enjoy personalized services, such as:', 'wpsc' ); ?></p>
+	<p><?php esc_html_e( 'Register with us to enjoy personalized services, such as:', 'wp-e-commerce' ); ?></p>
 	<ul>
 		<li><?php
-		 esc_html_e( 'Online order status', 'wpsc' ); ?></li>
-		<li><?php esc_html_e( 'Faster checkout process', 'wpsc' ); ?></li>
-		<li><?php esc_html_e( 'Order history', 'wpsc' ); ?></li>
+		 esc_html_e( 'Online order status', 'wp-e-commerce' ); ?></li>
+		<li><?php esc_html_e( 'Faster checkout process', 'wp-e-commerce' ); ?></li>
+		<li><?php esc_html_e( 'Order history', 'wp-e-commerce' ); ?></li>
 	</ul>
-	<a class="wpsc-button" href="<?php wpsc_register_url(); ?>"><?php esc_html_e( 'Create your account now', 'wpsc' ); ?></a>
+	<a class="wpsc-button" href="<?php wpsc_register_url(); ?>"><?php esc_html_e( 'Create your account now', 'wp-e-commerce' ); ?></a>
 </div>
 <br class="clear" />

@@ -92,7 +92,7 @@ class WPSC_Settings_Form {
 	public function filter_validation_rule_required( $valid, $value, $field_name, $field_title, $field_id ) {
 		if ( $value == '' ) {
 			$field_anchor = '<a href="#' . esc_attr( $field_id ) . '">' . esc_html( $field_title ) . '</a>';
-			add_settings_error( $field_name, 'field-required' . $field_name, sprintf( __( 'The field %s cannot be blank.', 'wpsc' ), $field_anchor ) );
+			add_settings_error( $field_name, 'field-required' . $field_name, sprintf( __( 'The field %s cannot be blank.', 'wp-e-commerce' ), $field_anchor ) );
 			$valid = false;
 		}
 		return $valid;

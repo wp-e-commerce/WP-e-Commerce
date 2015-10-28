@@ -47,11 +47,11 @@ class WPSC_Orders_Table extends WPSC_Table {
 		parent::__construct();
 
 		$this->columns = array(
-			'id'          => __( 'Order Number', 'wpsc' ),
-			'date'        => __( 'Date', 'wpsc' ),
-			'status'      => __( 'Status', 'wpsc' ),
-			'tracking_id' => __( 'Tracking ID', 'wpsc' ),
-			'total'       => __( 'Total', 'wpsc' ),
+			'id'          => __( 'Order Number', 'wp-e-commerce' ),
+			'date'        => __( 'Date', 'wp-e-commerce' ),
+			'status'      => __( 'Status', 'wp-e-commerce' ),
+			'tracking_id' => __( 'Tracking ID', 'wp-e-commerce' ),
+			'total'       => __( 'Total', 'wp-e-commerce' ),
 		);
 	}
 
@@ -97,7 +97,7 @@ class WPSC_Orders_Table extends WPSC_Table {
 
 	protected function column_tracking_id( $item ) {
 		if ( empty( $item->track_id ) ) {
-			echo __( 'n/a', 'wpsc' );
+			echo __( 'n/a', 'wp-e-commerce' );
 		} else {
 			echo esc_html( $item->track_id );
 		}

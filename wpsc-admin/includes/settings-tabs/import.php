@@ -25,15 +25,15 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 		}
 
 		$this->default_fields = apply_filters( 'wpsc_product_import_default_fields', array(
-			'column_name'                   => __( 'Product Name'          , 'wpsc' ),
-			'column_description'            => __( 'Description'           , 'wpsc' ),
-			'column_additional_description' => __( 'Additional Description', 'wpsc' ),
-			'column_price'                  => __( 'Price'                 , 'wpsc' ),
-			'column_sku'                    => __( 'SKU'                   , 'wpsc' ),
-			'column_weight'                 => __( 'Weight'                , 'wpsc' ),
-			'column_weight_unit'            => __( 'Weight Unit'           , 'wpsc' ),
-			'column_quantity'               => __( 'Stock Quantity'        , 'wpsc' ),
-			'column_quantity_limited'       => __( 'Stock Quantity Limit'  , 'wpsc' )
+			'column_name'                   => __( 'Product Name'          , 'wp-e-commerce' ),
+			'column_description'            => __( 'Description'           , 'wp-e-commerce' ),
+			'column_additional_description' => __( 'Additional Description', 'wp-e-commerce' ),
+			'column_price'                  => __( 'Price'                 , 'wp-e-commerce' ),
+			'column_sku'                    => __( 'SKU'                   , 'wp-e-commerce' ),
+			'column_weight'                 => __( 'Weight'                , 'wp-e-commerce' ),
+			'column_weight_unit'            => __( 'Weight Unit'           , 'wp-e-commerce' ),
+			'column_quantity'               => __( 'Stock Quantity'        , 'wp-e-commerce' ),
+			'column_quantity_limited'       => __( 'Stock Quantity Limit'  , 'wp-e-commerce' )
 		) );
 
 		switch ( $this->step ) {
@@ -170,7 +170,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 
 		$this->reset_state();
 		$this->completed = true;
-		add_settings_error( 'wpsc-settings', 'settings_updated', sprintf( __( 'CSV file successfully processed. %s record(s) imported.', 'wpsc' ), $record_count ), 'updated' );
+		add_settings_error( 'wpsc-settings', 'settings_updated', sprintf( __( 'CSV file successfully processed. %s record(s) imported.', 'wp-e-commerce' ), $record_count ), 'updated' );
 	}
 
 	public function callback_submit_options() {
@@ -195,22 +195,22 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 	private function display_imported_columns() {
 		extract( $this->display_data );
 		?>
-			<h3 class='hndle'><?php esc_html_e( 'Assign CSV Columns to Product Fields', 'wpsc'); ?></h3>
-			<p><?php esc_html_e( 'For each column, select the field it corresponds to in \'Product Field\'.', 'wpsc' ); ?></p>
-			<p><?php esc_html_e( 'Note: In this view we only show sample data from the first 5 records. All records in the uploaded import file will actually be imported.', 'wpsc' ); ?></p>
+			<h3 class='hndle'><?php esc_html_e( 'Assign CSV Columns to Product Fields', 'wp-e-commerce'); ?></h3>
+			<p><?php esc_html_e( 'For each column, select the field it corresponds to in \'Product Field\'.', 'wp-e-commerce' ); ?></p>
+			<p><?php esc_html_e( 'Note: In this view we only show sample data from the first 5 records. All records in the uploaded import file will actually be imported.', 'wp-e-commerce' ); ?></p>
 			<table class='wp-list-table widefat plugins' id="wpsc_imported_columns">
 				<thead>
 					<tr>
-						<th scope="col" class="manage-column"><?php _e( 'Column', 'wpsc' ); ?></th>
-						<th scope="col" class="manage-column"><?php _e( 'Sample Data from Column', 'wpsc' ); ?></th>
-						<th scope="col" class="manage-column"><?php _e( 'Product Field', 'wpsc' ); ?></th>
+						<th scope="col" class="manage-column"><?php _e( 'Column', 'wp-e-commerce' ); ?></th>
+						<th scope="col" class="manage-column"><?php _e( 'Sample Data from Column', 'wp-e-commerce' ); ?></th>
+						<th scope="col" class="manage-column"><?php _e( 'Product Field', 'wp-e-commerce' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ( $sample_row_data as $key => $sample_data ) : ?>
 						<tr>
 							<td>
-								<p><?php printf( __('Column %s', 'wpsc' ), $this->num_to_alphacolumn( $key ) ); ?></p>
+								<p><?php printf( __('Column %s', 'wp-e-commerce' ), $this->num_to_alphacolumn( $key ) ); ?></p>
 							</td>
 							<td>
 								<ol>
@@ -219,7 +219,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 										<?php if ( $datum != "" ): ?>
 											<code><?php echo esc_html( $datum ); ?></code>
 										<?php else: ?>
-											<?php _e( '<em class="empty">empty</em>', 'wpsc' ); ?>
+											<?php _e( '<em class="empty">empty</em>', 'wp-e-commerce' ); ?>
 										<?php endif; ?>
 									</li>
 								<?php endforeach; ?>
@@ -244,39 +244,39 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<h3><?php esc_html_e( 'Import Options', 'wpsc' ); ?></h3>
+			<h3><?php esc_html_e( 'Import Options', 'wp-e-commerce' ); ?></h3>
 			<table class='form-table'>
 				<tr>
 					<th>
-						<label for='post_status'><?php esc_html_e( 'Product Status' , 'wpsc' ); ?>
+						<label for='post_status'><?php esc_html_e( 'Product Status' , 'wp-e-commerce' ); ?>
 					</th>
 					<td>
 						<select name='post_status' id='post_status'>
-							<option value='publish'><?php esc_html_e( 'Publish', 'wpsc' ); ?></option>
-							<option value='draft'  ><?php esc_html_e( 'Draft'  , 'wpsc' ); ?></option>
+							<option value='publish'><?php esc_html_e( 'Publish', 'wp-e-commerce' ); ?></option>
+							<option value='draft'  ><?php esc_html_e( 'Draft'  , 'wp-e-commerce' ); ?></option>
 						</select>
 						<p class="description">
-							<?php esc_html_e( 'Set your imported products as drafts, or publish them right away.' , 'wpsc' ); ?>
+							<?php esc_html_e( 'Set your imported products as drafts, or publish them right away.' , 'wp-e-commerce' ); ?>
 						</p>
 					</td>
 				</tr>
 				<tr>
-					<th><label for="category"><?php esc_html_e( 'Import to Category', 'wpsc' ); ?></label></th>
+					<th><label for="category"><?php esc_html_e( 'Import to Category', 'wp-e-commerce' ); ?></label></th>
 					<td>
 						<select id='category' name='category'>
-							<option value=""><?php esc_html_e( "No Category", 'wpsc' ); ?></option>
+							<option value=""><?php esc_html_e( "No Category", 'wp-e-commerce' ); ?></option>
 							<?php foreach ( $categories as $category ): ?>
 								<option value="<?php echo $category->term_id; ?>"><?php echo esc_html( $category->name ); ?></option>
 							<?php endforeach; ?>
 						</select>
 						<p class="description">
-							<?php esc_html_e( 'Products imported from this CSV file will be placed in the selected category.', 'wpsc' ); ?></p>
+							<?php esc_html_e( 'Products imported from this CSV file will be placed in the selected category.', 'wp-e-commerce' ); ?></p>
 						</p>
 					</td>
 				</tr>
 			</table>
 			<input type="hidden" name="step" value="3" />
-			<input type='submit' value='<?php echo esc_html_x( 'Import Products', 'import csv', 'wpsc' ); ?>' class='button-primary'>
+			<input type='submit' value='<?php echo esc_html_x( 'Import Products', 'import csv', 'wp-e-commerce' ); ?>' class='button-primary'>
 		<?php
 	}
 
@@ -293,56 +293,56 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 	private function display_default() {
 		extract( $this->display_data );
 		?>
-			<h3><?php _e( 'Import Products', 'wpsc' ); ?></h3>
-			<p><?php _e( 'You can import your products from a <a href="http://en.wikipedia.org/wiki/Comma-separated_values"><abbr title="Comma-separated values">CSV</abbr> (Comma-separated values) file</a>, exportable from most spread-sheet programs or other software.</p>', 'wpsc' ); ?></p>
+			<h3><?php _e( 'Import Products', 'wp-e-commerce' ); ?></h3>
+			<p><?php _e( 'You can import your products from a <a href="http://en.wikipedia.org/wiki/Comma-separated_values"><abbr title="Comma-separated values">CSV</abbr> (Comma-separated values) file</a>, exportable from most spread-sheet programs or other software.</p>', 'wp-e-commerce' ); ?></p>
 
-			<h4><?php _e( 'Import New Products from CSV', 'wpsc' ); ?></h4>
+			<h4><?php _e( 'Import New Products from CSV', 'wp-e-commerce' ); ?></h4>
 			<table class='form-table'>
 				<tr>
-					<th><label for='wpsc_csv_file'><?php _e( 'CSV File', 'wpsc' ); ?><label></th>
+					<th><label for='wpsc_csv_file'><?php _e( 'CSV File', 'wp-e-commerce' ); ?><label></th>
 					<td>
 						<input type='file' name='csv_file' id='wpsc_csv_file' />
 					</td>
 				</tr>
 			</table>
 
-			<?php submit_button( esc_html_x( 'Upload', 'import csv', 'wpsc' ) ); ?>
+			<?php submit_button( esc_html_x( 'Upload', 'import csv', 'wp-e-commerce' ) ); ?>
 
-			<h4><?php _e( 'Useful Information', 'wpsc' ); ?></h4>
+			<h4><?php _e( 'Useful Information', 'wp-e-commerce' ); ?></h4>
 			<table class='form-table'>
 				<tr>
-					<th><?php echo _e( 'Supported Fields', 'wpsc' ); ?></th>
+					<th><?php echo _e( 'Supported Fields', 'wp-e-commerce' ); ?></th>
 					<td>
-						<?php _e( 'Columns supported are, in their default order:', 'wpsc'); ?><br />
+						<?php _e( 'Columns supported are, in their default order:', 'wp-e-commerce'); ?><br />
 						<code>
 							<?php echo implode( ', ', $this->default_fields ); ?>
 						</code>
 					</td>
 				</tr>
 				<tr>
-					<th><?php _e( 'Understood Weight Units', 'wpsc' ); ?></th>
+					<th><?php _e( 'Understood Weight Units', 'wp-e-commerce' ); ?></th>
 					<td>
-						<?php _e( 'Metric', 'wpsc' ); ?>: <code>kilogram</code>,<code>kilograms</code>,<code>kg</code>,<code>kgs</code>,<code>gram</code>,<code>grams</code>,<code>g</code>,<code>gs</code><br />
-						<?php _e( 'Imperial', 'wpsc' ); ?>: <code>ounce</code>,<code>ounces</code>,<code>oz</code>,<code>pound</code>,<code>pounds</code>,<code>lb</code>,<code>lbs</code>
+						<?php _e( 'Metric', 'wp-e-commerce' ); ?>: <code>kilogram</code>,<code>kilograms</code>,<code>kg</code>,<code>kgs</code>,<code>gram</code>,<code>grams</code>,<code>g</code>,<code>gs</code><br />
+						<?php _e( 'Imperial', 'wp-e-commerce' ); ?>: <code>ounce</code>,<code>ounces</code>,<code>oz</code>,<code>pound</code>,<code>pounds</code>,<code>lb</code>,<code>lbs</code>
 					</td>
 				</tr>
 				<tr>
-					<th><?php _e( 'Stock Fields', 'wpsc' ); ?></th>
+					<th><?php _e( 'Stock Fields', 'wp-e-commerce' ); ?></th>
 					<td>
-						<?php _e( '<code>Stock Quantity</code> values are used only when <code>Stock Quantity Limited</code> is blank or <code>""</code>.', 'wpsc' ); ?>
+						<?php _e( '<code>Stock Quantity</code> values are used only when <code>Stock Quantity Limited</code> is blank or <code>""</code>.', 'wp-e-commerce' ); ?>
 					</td>
 				</tr>
 				<tr>
-					<th><?php _e( 'HTML', 'wpsc' ); ?></th>
+					<th><?php _e( 'HTML', 'wp-e-commerce' ); ?></th>
 					<td>
-						<?php _e( 'Supported in <code>Description</code> and <code>Additional Description</code>. Be sure you "quote" the whole description, and slash-escape \"quotes\" inside the description itself.', 'wpsc' ); ?>
+						<?php _e( 'Supported in <code>Description</code> and <code>Additional Description</code>. Be sure you "quote" the whole description, and slash-escape \"quotes\" inside the description itself.', 'wp-e-commerce' ); ?>
 				</tr>
 				<tr>
 					<th><?php _e( 'Example CSV File'); ?></th>
 					<td>
 						<ol>
-							<li><code><?php esc_html_e( 'Banana, The Yellow Fruit, Contains Potassium, 0.67, "BANANA", 150, "g", 0, ""', 'wpsc' ); ?></code></li>
-							<li><code><?php esc_html_e( '"Apple, red", "Red, round, juicy. Isn\'t an <a href=\"http://example.com\">orange</a>.", "Red Delicious", 0.25, "RED_DELICIOUS", 5, "oz", 10, true', 'wpsc' ); ?></code></li>
+							<li><code><?php esc_html_e( 'Banana, The Yellow Fruit, Contains Potassium, 0.67, "BANANA", 150, "g", 0, ""', 'wp-e-commerce' ); ?></code></li>
+							<li><code><?php esc_html_e( '"Apple, red", "Red, round, juicy. Isn\'t an <a href=\"http://example.com\">orange</a>.", "Red Delicious", 0.25, "RED_DELICIOUS", 5, "oz", 10, true', 'wp-e-commerce' ); ?></code></li>
 						</ol>
 					</td>
 				</tr>

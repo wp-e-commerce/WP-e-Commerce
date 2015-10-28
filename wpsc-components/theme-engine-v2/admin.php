@@ -119,7 +119,7 @@ function _wpsc_te2_enqueue_reading_settings_fix() {
 	$html = sprintf(
 		$html,
 		checked( $store_as_front_page, true, false ),
-		__( 'Main store page', 'wpsc' ),
+		__( 'Main store page', 'wp-e-commerce' ),
 		$dropdown
 	);
 

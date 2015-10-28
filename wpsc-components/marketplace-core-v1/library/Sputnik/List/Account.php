@@ -15,8 +15,8 @@ class Sputnik_List_Account extends Sputnik_List_Install {
 
 		// These are the tabs which are shown on the page
 		$tabs = array();
-		$tabs['purchased'] = __( 'Purchased Plugins', 'wpsc' );
-		$tabs['yours'] = __( 'Your Plugins', 'wpsc' );
+		$tabs['purchased'] = __( 'Purchased Plugins', 'wp-e-commerce' );
+		$tabs['yours'] = __( 'Your Plugins', 'wp-e-commerce' );
 
 		$nonmenu_tabs = array( ); //Valid actions to perform which do not have a Menu item.
 
@@ -76,10 +76,10 @@ class Sputnik_List_Account extends Sputnik_List_Install {
 		global $tab;
 		echo '<p>';
 		if ($tab === 'yours') {
-			_e( "You haven't created any plugins yet. Check out our <a href='http://developer.renku.me/'>developer documentation</a> to find out how!", 'wpsc' );
+			_e( "You haven't created any plugins yet. Check out our <a href='http://developer.renku.me/'>developer documentation</a> to find out how!", 'wp-e-commerce' );
 		}
 		else {
-			printf(__( "You haven't purchased any plugins yet. Why not <a href='%s'>buy some</a>?", 'wpsc' ), Sputnik_Admin::build_url());
+			printf(__( "You haven't purchased any plugins yet. Why not <a href='%s'>buy some</a>?", 'wp-e-commerce' ), Sputnik_Admin::build_url());
 		}
 		echo '</p>';
 	}
@@ -129,11 +129,11 @@ class Sputnik_List_Account extends Sputnik_List_Install {
 			switch ($this->view) {
 				case 'list':
 					$view = 'grid';
-					$name = __('Grid', 'wpsc' );
+					$name = __('Grid', 'wp-e-commerce' );
 					break;
 				case 'grid':
 					$view = 'list';
-					$name = __('List', 'wpsc' );
+					$name = __('List', 'wp-e-commerce' );
 					break;
 			}
 ?>
@@ -156,7 +156,7 @@ class Sputnik_List_Account extends Sputnik_List_Install {
 	}
 
 	public static function mangle_action_for_own($actions, $plugin) {
-		$actions[] = sprintf('<a href="%s" class="button edit">%s</a>', sprintf(Sputnik::SITE_BASE . '/your-products/edit/%d', $plugin->product_id), _x('Edit', 'edit own product', 'wpsc' ));
+		$actions[] = sprintf('<a href="%s" class="button edit">%s</a>', sprintf(Sputnik::SITE_BASE . '/your-products/edit/%d', $plugin->product_id), _x('Edit', 'edit own product', 'wp-e-commerce' ));
 		return $actions;
 	}
 }

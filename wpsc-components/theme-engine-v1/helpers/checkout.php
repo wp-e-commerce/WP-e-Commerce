@@ -371,7 +371,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 														'acceptable_ids'        => $acceptable_countries,
 														'selected'              => $selected_country,
 														'additional_attributes' => $additional_attributes,
-														'placeholder'           => __( 'Please select a country', 'wpsc' ),
+														'placeholder'           => __( 'Please select a country', 'wp-e-commerce' ),
 													)
 											);
 
@@ -380,7 +380,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$output .= wpsc_checkout_shipping_state_and_region();
 
 	$zipvalue = (string) wpsc_get_customer_meta( 'shippingpostcode' );
-	$zip_code_text = __( 'Your Zipcode', 'wpsc' );
+	$zip_code_text = __( 'Your Zipcode', 'wp-e-commerce' );
 
 	if ( ( $zipvalue != '' ) && ( $zipvalue != $zip_code_text ) ) {
 		$color = '#000';

@@ -119,16 +119,16 @@ function _get_upgrade_data_markup_translate($upgrade_file, $upgrade_data, $marku
 	//Apply Markup
 	if ( $markup ) {
 		if ( ! empty($upgrade_data['UpgradeURI']) && ! empty($upgrade_data['Name']) )
-			$upgrade_data['Title'] = '<a href="' . $upgrade_data['UpgradeURI'] . '" title="' . __( 'Visit upgrade homepage', 'wpsc' ) . '">' . $upgrade_data['Name'] . '</a>';
+			$upgrade_data['Title'] = '<a href="' . $upgrade_data['UpgradeURI'] . '" title="' . __( 'Visit upgrade homepage', 'wp-e-commerce' ) . '">' . $upgrade_data['Name'] . '</a>';
 		else
 			$upgrade_data['Title'] = $upgrade_data['Name'];
 
 		if ( ! empty($upgrade_data['AuthorURI']) && ! empty($upgrade_data['Author']) )
-			$upgrade_data['Author'] = '<a href="' . $upgrade_data['AuthorURI'] . '" title="' . __( 'Visit author homepage', 'wpsc' ) . '">' . $upgrade_data['Author'] . '</a>';
+			$upgrade_data['Author'] = '<a href="' . $upgrade_data['AuthorURI'] . '" title="' . __( 'Visit author homepage', 'wp-e-commerce' ) . '">' . $upgrade_data['Author'] . '</a>';
 
 		$upgrade_data['Description'] = wptexturize( $upgrade_data['Description'] );
 		if( ! empty($upgrade_data['Author']) )
-			$upgrade_data['Description'] .= ' <cite>' . sprintf( __('By %s', 'wpsc'), $upgrade_data['Author'] ) . '.</cite>';
+			$upgrade_data['Description'] .= ' <cite>' . sprintf( __('By %s', 'wp-e-commerce'), $upgrade_data['Author'] ) . '.</cite>';
 	}
 
 	$upgrades_allowedtags = array('a' => array('href' => array(),'title' => array()),'abbr' => array('title' => array()),'acronym' => array('title' => array()),'code' => array(),'em' => array(),'strong' => array());

@@ -16,10 +16,10 @@ class WP_Widget_Product_Specials extends WP_Widget {
 
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_product_specials',
-			'description' => __( 'Product Specials Widget', 'wpsc' )
+			'description' => __( 'Product Specials Widget', 'wp-e-commerce' )
 		);
 
-		parent::__construct( 'wpsc_product_specials', __( '(WPEC) Product Specials', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_product_specials', __( '(WPEC) Product Specials', 'wp-e-commerce' ), $widget_ops );
 
 	}
 
@@ -38,7 +38,7 @@ class WP_Widget_Product_Specials extends WP_Widget {
 		extract( $args );
 
 		echo $before_widget;
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Specials', 'wpsc' ) : $instance['title'] );
+		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Specials', 'wp-e-commerce' ) : $instance['title'] );
 		if ( $title )
 			echo $before_title . $title . $after_title;
 
@@ -98,22 +98,22 @@ class WP_Widget_Product_Specials extends WP_Widget {
 
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'wp-e-commerce' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of products to show:', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of products to show:', 'wp-e-commerce' ); ?></label>
 			<input type="text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" value="<?php echo $number; ?>" size="3" />
 		</p>
 		<p>
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_description' ); ?>" name="<?php echo $this->get_field_name( 'show_description' ); ?>" <?php checked( $show_description ); ?>>
-			<label for="<?php echo $this->get_field_id( 'show_description' ); ?>"><?php _e( 'Show Description', 'wpsc' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_description' ); ?>"><?php _e( 'Show Description', 'wp-e-commerce' ); ?></label><br />
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>" name="<?php echo $this->get_field_name( 'show_thumbnails' ); ?>" <?php checked( $show_thumbnails ); ?>>
-			<label for="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>"><?php _e( 'Show Thumbnails', 'wpsc' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>"><?php _e( 'Show Thumbnails', 'wp-e-commerce' ); ?></label><br />
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_old_price' ); ?>" name="<?php echo $this->get_field_name( 'show_old_price' ); ?>" <?php checked( $show_old_price, '1' ); ?>>
-			<label for="<?php echo $this->get_field_id( 'show_old_price' ); ?>"><?php _e( 'Show Old Price', 'wpsc' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_old_price' ); ?>"><?php _e( 'Show Old Price', 'wp-e-commerce' ); ?></label><br />
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_discount' ); ?>" name="<?php echo $this->get_field_name( 'show_discount' ); ?>" <?php checked( $show_discount, '1' ); ?>>
-			<label for="<?php echo $this->get_field_id( 'show_discount' ); ?>"><?php _e( 'Show Discount', 'wpsc' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show_discount' ); ?>"><?php _e( 'Show Discount', 'wp-e-commerce' ); ?></label>
 		</p>
 <?php
 	}
@@ -200,7 +200,7 @@ function wpsc_specials( $args = null, $instance ) {
 	remove_filter( 'posts_where', '_wpsc_filter_special_widget_where' );
 
 	if ( ! $special_products->post_count ) {
-		echo apply_filters( 'wpsc_specials_widget_no_items_message', __( 'We currently have no items on special.', 'wpsc' ) );
+		echo apply_filters( 'wpsc_specials_widget_no_items_message', __( 'We currently have no items on special.', 'wp-e-commerce' ) );
 		return;
 	}
 

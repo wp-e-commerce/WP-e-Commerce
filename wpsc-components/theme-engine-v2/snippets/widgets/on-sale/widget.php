@@ -29,7 +29,7 @@ if ( ! empty( $title ) )
 <?php 		if ( $instance['show_normal_price'] ): ?>
 			<li>
 				<del class="wpsc-old-price">
-					<strong><?php esc_html_e( 'Old Price', 'wpsc' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
+					<strong><?php esc_html_e( 'Old Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
 				</del>
 			</li>
 <?php 		endif; ?>
@@ -37,7 +37,7 @@ if ( ! empty( $title ) )
 <?php 		if ( $instance['show_normal_price'] ): ?>
 			<li>
 				<ins class="wpsc-sale-price">
-					<strong><?php esc_html_e( 'Price', 'wpsc' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_sale_price(); ?></span>
+					<strong><?php esc_html_e( 'Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_sale_price(); ?></span>
 				</ins>
 			</li>
 <?php 		endif; ?>
@@ -45,7 +45,7 @@ if ( ! empty( $title ) )
 <?php 		if ( $instance['show_you_save'] ): ?>
 			<li>
 				<ins class="wpsc-you-save">
-					<strong><?php esc_html_e( 'You save', 'wpsc' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_you_save(); ?></span>
+					<strong><?php esc_html_e( 'You save', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_you_save(); ?></span>
 				</ins>
 			</li>
 <?php 		endif; ?>

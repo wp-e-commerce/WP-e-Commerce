@@ -61,9 +61,9 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		) );
 
 		$this->statuses = array(
-			'active'   => _x( 'Active', 'coupon status', 'wpsc' ),
-			'inactive' => _x( 'Inactive', 'coupon status', 'wpsc' ),
-			'unknown'  => _x( 'Unknown', 'coupon status', 'wpsc' ),
+			'active'   => _x( 'Active', 'coupon status', 'wp-e-commerce' ),
+			'inactive' => _x( 'Inactive', 'coupon status', 'wp-e-commerce' ),
+			'unknown'  => _x( 'Unknown', 'coupon status', 'wp-e-commerce' ),
 		);
 
 		$this->process_single_actions();
@@ -88,9 +88,9 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
 
 		$views = array(
-			'all'		=> sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'wpsc') . $total_count ),
-			'active'	=> sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', '1', $base ) ), $current === '1' ? ' class="current"' : '', __('Active', 'wpsc') . $active_count ),
-			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', '0', $base ) ), $current === '0' ? ' class="current"' : '', __('Inactive', 'wpsc') . $inactive_count ),
+			'all'		=> sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'wp-e-commerce') . $total_count ),
+			'active'	=> sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', '1', $base ) ), $current === '1' ? ' class="current"' : '', __('Active', 'wp-e-commerce') . $active_count ),
+			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', '0', $base ) ), $current === '0' ? ' class="current"' : '', __('Inactive', 'wp-e-commerce') . $inactive_count ),
 		);
 
 		return $views;
@@ -108,11 +108,11 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'           => '<input type="checkbox" />',
-			'coupon'       => __( 'Code', 'wpsc' ),
-			'discount'     => __( 'Discount', 'wpsc' ),
-			'start'        => __( 'Start Date', 'wpsc' ),
-			'expiry'       => __( 'Expiration', 'wpsc' ),
-			'status'  	   => __( 'Status', 'wpsc' ),
+			'coupon'       => __( 'Code', 'wp-e-commerce' ),
+			'discount'     => __( 'Discount', 'wp-e-commerce' ),
+			'start'        => __( 'Start Date', 'wp-e-commerce' ),
+			'expiry'       => __( 'Expiration', 'wp-e-commerce' ),
+			'status'  	   => __( 'Status', 'wp-e-commerce' ),
 		);
 
 		return $columns;
@@ -137,7 +137,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 					$start_date = strtotime( get_date_from_gmt( $item[ $column_name ] ) );
 					$value      = date_i18n( get_option( 'date_format' ), $start_date );
 				} else {
-					$value = __( 'None', 'wpsc' );
+					$value = __( 'None', 'wp-e-commerce' );
 				}
 
 				return $value;
@@ -148,7 +148,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 					$expiry_date = strtotime( get_date_from_gmt( $item[ $column_name ] ) );
 					$value       = date_i18n( get_option( 'date_format' ), $expiry_date );
 				} else {
-					$value = __( 'None', 'wpsc' );
+					$value = __( 'None', 'wp-e-commerce' );
 				}
 
 				return $value;
@@ -174,14 +174,14 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		$row_actions = array();
 
-		$row_actions['edit'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Edit', 'wpsc' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Edit', 'wp-e-commerce' ) . '</a>';
 
 		if( strtolower( $item['status'] ) == 'active' )
-			$row_actions['deactivate'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'deactivate_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Deactivate', 'wpsc' ) . '</a>';
+			$row_actions['deactivate'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'deactivate_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Deactivate', 'wp-e-commerce' ) . '</a>';
 		else
-			$row_actions['activate'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'activate_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Activate', 'wpsc' ) . '</a>';
+			$row_actions['activate'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'activate_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Activate', 'wp-e-commerce' ) . '</a>';
 
-		$row_actions['delete'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'delete_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Delete', 'wpsc' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'delete_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Delete', 'wp-e-commerce' ) . '</a>';
 
 		$row_actions = apply_filters( 'wpsc_coupon_row_actions', $row_actions, $item['ID'] );
 
@@ -244,7 +244,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 				return $item['discount'] . '%';
 				break;
 			case 2:
-				return __( 'Free shipping', 'wpsc' );
+				return __( 'Free shipping', 'wp-e-commerce' );
 				break;
 		}
 	}
@@ -260,9 +260,9 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 	public function get_bulk_actions() {
 		$actions = array(
-			'activate'   => __( 'Activate', 'wpsc' ),
-			'deactivate' => __( 'Deactivate', 'wpsc' ),
-			'delete'     => __( 'Delete', 'wpsc' )
+			'activate'   => __( 'Activate', 'wp-e-commerce' ),
+			'deactivate' => __( 'Deactivate', 'wp-e-commerce' ),
+			'delete'     => __( 'Delete', 'wp-e-commerce' )
 		);
 
 		return $actions;
@@ -337,7 +337,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 				$updated = $coupon->activate();
 
 				if ( $updated ) {
-					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been activated.', 'wpsc' ) );
+					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been activated.', 'wp-e-commerce' ) );
 				}
 
 				break;
@@ -347,7 +347,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 				$updated = $coupon->deactivate();
 
 				if ( $updated ) {
-					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been deactivated.', 'wpsc' ) );
+					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been deactivated.', 'wp-e-commerce' ) );
 				}
 
 				break;
@@ -357,7 +357,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 				$deleted = $coupon->delete();
 
 				if ( $deleted ) {
-					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been deleted.', 'wpsc' ) );
+					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been deleted.', 'wp-e-commerce' ) );
 				}
 
 				break;

@@ -72,9 +72,9 @@ function wpsc_get_buyers_email($purchase_id){
 function wpsc_display_tax_label( $checkout = false ) {
 	global $wpsc_cart;
 	if ( wpsc_tax_isincluded ( ) ) {
-		return __( 'Tax Included', 'wpsc' );
+		return __( 'Tax Included', 'wp-e-commerce' );
 	} else {
-		return __( 'Tax', 'wpsc' );
+		return __( 'Tax', 'wp-e-commerce' );
 	}
 }
 
@@ -131,12 +131,12 @@ function wpsc_get_acceptable_countries() {
 	// temporarily hijack this session variable to display target market restriction warnings
 	if ( ! empty( $target_conflict ) || ! wpsc_has_category_and_country_conflict() ) {
 		wpsc_update_customer_meta( 'category_shipping_target_market_conflict', true );
-		wpsc_update_customer_meta( 'category_shipping_conflict', __( "Some of your cart items are targeted specifically to certain markets. As a result, you can only select those countries as your shipping destination.", 'wpsc' ) );
+		wpsc_update_customer_meta( 'category_shipping_conflict', __( "Some of your cart items are targeted specifically to certain markets. As a result, you can only select those countries as your shipping destination.", 'wp-e-commerce' ) );
 	}
 
 	if ( empty( $target_market_ids ) ) {
 		wpsc_update_customer_meta( 'category_shipping_target_market_conflict', true );
-		wpsc_update_customer_meta( 'category_shipping_conflict', __( 'It appears that some products in your cart have conflicting target market restrictions. As a result, there is no common destination country where your cart items can be shipped to. Please contact the site administrator for more information.', 'wpsc' ) );
+		wpsc_update_customer_meta( 'category_shipping_conflict', __( 'It appears that some products in your cart have conflicting target market restrictions. As a result, there is no common destination country where your cart items can be shipped to. Please contact the site administrator for more information.', 'wp-e-commerce' ) );
 	}
 
 	return $target_market_ids;
@@ -332,7 +332,7 @@ class wpsc_checkout {
 				$options = $this->get_checkout_options( $this->checkout_item->id );
 				if ( $options != '' ) {
 					$output = '<select class="wpsc-visitor-meta" data-wpsc-meta-key="' . $meta_key . '" name="collected_data[' . $this->checkout_item->id . ']"' . $an_array . '">';
-					$output .= "<option value='-1'>" . _x( 'Select an Option', 'Dropdown default when called within checkout class' , 'wpsc' ) . "</option>";
+					$output .= "<option value='-1'>" . _x( 'Select an Option', 'Dropdown default when called within checkout class' , 'wp-e-commerce' ) . "</option>";
 					foreach ( (array)$options as $label => $value ) {
 						$value = esc_attr(str_replace( ' ', '', $value ) );
 						$output .="<option " . selected( $value, $saved_form_data, false ) . " value='" . esc_attr( $value ) . "'>" . esc_html( $label ) . "</option>\n\r";
@@ -398,7 +398,7 @@ class wpsc_checkout {
 
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$wpsc_gateway_error_messages['card_number'] = __( 'Please enter a valid card number.', 'wpsc' );
+				$wpsc_gateway_error_messages['card_number'] = __( 'Please enter a valid card number.', 'wp-e-commerce' );
 				$wpsc_customer_checkout_details['card_number'] = '';
 			}
 		}
@@ -408,7 +408,7 @@ class wpsc_checkout {
 			} else {
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$wpsc_gateway_error_messages['expdate'] = __( 'Please enter a valid expiry date.', 'wpsc' );
+				$wpsc_gateway_error_messages['expdate'] = __( 'Please enter a valid expiry date.', 'wp-e-commerce' );
 				$wpsc_customer_checkout_details['expdate'] = '';
 			}
 		}
@@ -416,7 +416,7 @@ class wpsc_checkout {
 			if ( empty($_POST['card_code']) || (!is_numeric( $_POST['card_code'] )) ) {
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$wpsc_gateway_error_messages['card_code'] = __( 'Please enter a valid CVV.', 'wpsc' );
+				$wpsc_gateway_error_messages['card_code'] = __( 'Please enter a valid CVV.', 'wp-e-commerce' );
 				$wpsc_customer_checkout_details['card_code'] = '';
 			} else {
 				$wpsc_gateway_error_messages['card_code'] = '';
@@ -426,7 +426,7 @@ class wpsc_checkout {
 			if ( $_POST['cctype'] == '' ) {
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$wpsc_gateway_error_messages['cctype'] = __( 'Please enter a valid CVV.', 'wpsc' );
+				$wpsc_gateway_error_messages['cctype'] = __( 'Please enter a valid CVV.', 'wp-e-commerce' );
 				$wpsc_customer_checkout_details['cctype'] = '';
 			} else {
 				$wpsc_gateway_error_messages['cctype'] = '';
@@ -528,7 +528,7 @@ class wpsc_checkout {
 				}
 
 				if ( $bad_input === true ) {
-					$wpsc_checkout_error_messages[$form_data->id] = sprintf( __( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), strtolower( esc_attr( $name ) ) );
+					$wpsc_checkout_error_messages[$form_data->id] = sprintf( __( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wp-e-commerce' ), strtolower( esc_attr( $name ) ) );
 					$wpsc_customer_checkout_details[$form_data->id] = '';
 				}
 			}

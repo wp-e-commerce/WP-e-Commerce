@@ -22,7 +22,7 @@ function wpsc_validate_form( $form_args, &$validated_array = false ) {
 			if ( empty( $prop['rules'] ) ) {
 				continue;
 			}
-		
+
 			$prop = _wpsc_populate_field_default_args( $prop );
 			$field = $prop['name'];
 			$rules = $prop['rules'];
@@ -31,7 +31,7 @@ function wpsc_validate_form( $form_args, &$validated_array = false ) {
 				$rules = explode( '|', $rules );
 			}
 
-			
+
 			$value = wpsc_submitted_value( $field, '', $validated_array );
 
 			foreach ( $rules as $rule ) {
@@ -56,7 +56,7 @@ function wpsc_validate_form( $form_args, &$validated_array = false ) {
 				}
 			}
 		}
-		
+
 		_wpsc_set_submitted_value( $field, $value, $validated_array );
 	}
 
@@ -105,7 +105,7 @@ function _wpsc_set_submitted_value( $name, $value, &$from = null ) {
 
 function wpsc_validation_rule_required( $error, $value, $field, $props ) {
 	if ( $value === '' ) {
-		$error_message = apply_filters( 'wpsc_validation_rule_required_message', __( 'The %s field is empty.', 'wpsc' ), $value, $field, $props );
+		$error_message = apply_filters( 'wpsc_validation_rule_required_message', __( 'The %s field is empty.', 'wp-e-commerce' ), $value, $field, $props );
 		$title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
 		$error->add( $field, sprintf( $error_message, $title ), array( 'value' => $value, 'props' => $props ) );
 	}
@@ -117,7 +117,7 @@ add_filter( 'wpsc_validation_rule_required', 'wpsc_validation_rule_required', 10
 
 function _wpsc_filter_terms_conditions_required_message( $message, $value, $field, $props ) {
 	if ( $props['name'] == 'wpsc_terms_conditions' )
-		$message = __( 'You are required to agree to our <a class="thickbox" target="_blank" href="%s" class="termsandconds">Terms and Conditions</a> in order to proceed with checkout.', 'wpsc' );
+		$message = __( 'You are required to agree to our <a class="thickbox" target="_blank" href="%s" class="termsandconds">Terms and Conditions</a> in order to proceed with checkout.', 'wp-e-commerce' );
 
 	return $message;
 }
@@ -132,7 +132,7 @@ function wpsc_validation_rule_email( $error, $value, $field, $props ) {
 	}
 
 	if ( ! is_email( $value ) ) {
-		$message = apply_filters( 'wpsc_validation_rule_invalid_email_message', __( 'The %s field contains an invalid email address.', 'wpsc' ) );
+		$message = apply_filters( 'wpsc_validation_rule_invalid_email_message', __( 'The %s field contains an invalid email address.', 'wp-e-commerce' ) );
 		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
 	}
 
@@ -144,13 +144,13 @@ function wpsc_validation_rule_valid_username_or_email( $error, $value, $field, $
 	if ( strpos( $value, '@' ) ) {
 		$user = get_user_by( 'email', $value );
 		if ( empty( $user ) ) {
-			$message = apply_filters( 'wpsc_validation_rule_account_email_not_found_message', __( 'There is no user registered with that email address.', 'wpsc' ), $value, $field, $props );
+			$message = apply_filters( 'wpsc_validation_rule_account_email_not_found_message', __( 'There is no user registered with that email address.', 'wp-e-commerce' ), $value, $field, $props );
 			$error->add( $field, $message, array( 'value' => $value, 'props' => $props) );
 		}
 	} else {
 		$user = get_user_by( 'login', $value );
 		if ( empty( $user ) ) {
-			$message = apply_filters( 'wpsc_validation_rule_username_not_found_message', __( 'There is no user registered with that username.', 'wpsc' ), $value, $field, $props );
+			$message = apply_filters( 'wpsc_validation_rule_username_not_found_message', __( 'There is no user registered with that username.', 'wp-e-commerce' ), $value, $field, $props );
 			$error->add( $field, $message, array( 'value' => $value, 'props' => $props ) );
 		}
 	}
@@ -161,7 +161,7 @@ add_filter( 'wpsc_validation_rule_valid_username_or_email', 'wpsc_validation_rul
 
 function wpsc_validation_rule_matches( $error, $value, $field, $props, $matched_field, $matched_value, $matched_props ) {
 	if ( is_null( $matched_value ) || $value != $matched_value ) {
-		$message = apply_filters( 'wpsc_validation_rule_fields_dont_match_message', __( 'The %s and %s fields do not match.', 'wpsc' ), $value, $field, $props, $matched_field, $matched_value, $matched_props );
+		$message = apply_filters( 'wpsc_validation_rule_fields_dont_match_message', __( 'The %s and %s fields do not match.', 'wp-e-commerce' ), $value, $field, $props, $matched_field, $matched_value, $matched_props );
 		$title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
 		$matched_title = isset( $matched_props['title_validation'] ) ? $matched_props['title_validation'] : $field;
 		$error->add( $field, sprintf( $message, $title, $matched_title ), array( 'value' => $value, 'props' => $props ) );
@@ -175,10 +175,10 @@ function wpsc_validation_rule_username( $error, $value, $field, $props ) {
 	$field_title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
 
 	if ( ! validate_username( $value ) ) {
-		$message = apply_filters( 'wpsc_validation_rule_invalid_username_message', __( 'This %s contains invalid characters. Username may contain letters (a-z), numbers (0-9), dashes (-), underscores (_) and periods (.).', 'wpsc' ) );
+		$message = apply_filters( 'wpsc_validation_rule_invalid_username_message', __( 'This %s contains invalid characters. Username may contain letters (a-z), numbers (0-9), dashes (-), underscores (_) and periods (.).', 'wp-e-commerce' ) );
 		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
 	} elseif ( username_exists( $value ) ) {
-		$message = apply_filters( 'wpsc_validation_rule_username_not_available_message', _x( 'This %s is already used by another account. Please choose another one.', 'username not available', 'wpsc' ) );
+		$message = apply_filters( 'wpsc_validation_rule_username_not_available_message', _x( 'This %s is already used by another account. Please choose another one.', 'username not available', 'wp-e-commerce' ) );
 		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
 	}
 
@@ -190,10 +190,10 @@ function wpsc_validation_rule_account_email( $error, $value, $field, $props ) {
 	$field_title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
 
 	if ( ! is_email( $value ) ) {
-		$message = apply_filters( 'wpsc_validation_rule_invalid_account_email_message', __( 'The %s is not valid.', 'wpsc' ) );
+		$message = apply_filters( 'wpsc_validation_rule_invalid_account_email_message', __( 'The %s is not valid.', 'wp-e-commerce' ) );
 		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
 	} elseif ( email_exists( $value ) ) {
-		$message = apply_filters( 'wpsc_validation_rule_account_email_not_available_message', _x( 'This %s is already used by another account. Please choose another one.', 'email not available', 'wpsc' ) );
+		$message = apply_filters( 'wpsc_validation_rule_account_email_not_available_message', _x( 'This %s is already used by another account. Please choose another one.', 'email not available', 'wp-e-commerce' ) );
 		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
 	}
 
@@ -221,7 +221,7 @@ function _wpsc_filter_validation_rule_state_of( $error, $value, $field, $props, 
 		$message = apply_filters(
 			'wpsc_validation_rule_invalid_state_message',
 			/* translators: %1$s is state, %2$s is country */
-			__( '%1$s is not a valid state or province in %2$s', 'wpsc' )
+			__( '%1$s is not a valid state or province in %2$s', 'wp-e-commerce' )
 		);
 		$message = sprintf( $message, $value, $country->get_name() );
 		$error->add(
@@ -242,7 +242,7 @@ function _wpsc_filter_validation_rule_state_of( $error, $value, $field, $props, 
 	if ( $count == 0 ) {
 		$message = apply_filters(
 			'wpsc_validation_rule_invalid_state_id_message',
-			__( 'You specified or were assigned an invalid state or province. Please contact administrator for assistance', 'wpsc' )
+			__( 'You specified or were assigned an invalid state or province. Please contact administrator for assistance', 'wp-e-commerce' )
 		);
 		$error->add(
 			$field,

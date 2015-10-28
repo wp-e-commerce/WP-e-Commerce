@@ -21,7 +21,7 @@
 			<td></td>
 			<td>
 				<input type="hidden" value="true" name="submitwpcheckout_profile" />
-				<input type="submit" value="<?php _e( 'Save Profile', 'wpsc' ); ?>" name="submit" />
+				<input type="submit" value="<?php _e( 'Save Profile', 'wp-e-commerce' ); ?>" name="submit" />
 			</td>
 		</tr>
 	</table>

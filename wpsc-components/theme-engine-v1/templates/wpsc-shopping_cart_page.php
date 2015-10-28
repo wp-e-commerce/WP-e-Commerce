@@ -7,18 +7,18 @@ if( $coupon_num )
    $wpsc_coupons = new wpsc_coupons( $coupon_num );
 
 if(wpsc_cart_item_count() < 1) :
-	echo __('Oops, there is nothing in your cart.', 'wpsc') . '<a href=' . esc_url( get_option( 'product_list_url', '' ) ) . ">" . __('Please visit our shop', 'wpsc') . '</a>';
+	echo __('Oops, there is nothing in your cart.', 'wp-e-commerce') . '<a href=' . esc_url( get_option( 'product_list_url', '' ) ) . ">" . __('Please visit our shop', 'wp-e-commerce') . '</a>';
 	return;
 endif;
 ?>
 <div id="checkout_page_container">
-<h3><?php _e('Please review your order', 'wpsc'); ?></h3>
+<h3><?php _e('Please review your order', 'wp-e-commerce'); ?></h3>
 <table class="checkout_cart">
    <tr class="header">
-      <th colspan="2" ><?php _e('Product', 'wpsc'); ?></th>
-      <th><?php _e('Quantity', 'wpsc'); ?></th>
-      <th><?php _e('Price', 'wpsc'); ?></th>
-      <th><?php _e('Total', 'wpsc'); ?></th>
+      <th colspan="2" ><?php _e('Product', 'wp-e-commerce'); ?></th>
+      <th><?php _e('Quantity', 'wp-e-commerce'); ?></th>
+      <th><?php _e('Price', 'wp-e-commerce'); ?></th>
+      <th><?php _e('Total', 'wp-e-commerce'); ?></th>
         <th>&nbsp;</th>
    </tr>
    <?php while (wpsc_have_cart_items()) : wpsc_the_cart_item(); ?>
@@ -45,7 +45,7 @@ endif;
             <div class="item_no_image">
 				<?php do_action ( "wpsc_before_checkout_cart_item_image" ); ?>
                <a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>">
-               <span><?php _e('No Image','wpsc'); ?></span>
+               <span><?php _e('No Image','wp-e-commerce'); ?></span>
 
                </a>
 				<?php do_action ( "wpsc_after_checkout_cart_item_image" ); ?>
@@ -65,7 +65,7 @@ endif;
                <input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
                <input type="hidden" name="wpsc_update_quantity" value="true" />
                <input type='hidden' name='wpsc_ajax_action' value='wpsc_update_quantity' />
-               <input type="submit" value="<?php _e('Update', 'wpsc'); ?>" />
+               <input type="submit" value="<?php _e('Update', 'wp-e-commerce'); ?>" />
             </form>
          </td>
 
@@ -79,7 +79,7 @@ endif;
                <input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
                <input type="hidden" name="wpsc_update_quantity" value="true" />
                <input type='hidden' name='wpsc_ajax_action' value='wpsc_update_quantity' />
-               <input type="submit" value="<?php _e('Remove', 'wpsc'); ?>" />
+               <input type="submit" value="<?php _e('Remove', 'wp-e-commerce'); ?>" />
             </form>
          </td>
       </tr>
@@ -94,18 +94,18 @@ endif;
    if(wpsc_uses_coupons()): ?>
 
       <tr class="wpsc_total_before_shipping">
-         <td colspan="3"><?php _e('Cost before shipping:','wpsc'); ?></td>
+         <td colspan="3"><?php _e('Cost before shipping:','wp-e-commerce'); ?></td>
          <td colspan="3" class="wpsc_total_amount_before_shipping"><?php echo wpsc_cart_total_widget(false,false,false);?></td>
       </tr>
       <?php if(wpsc_coupons_error()): ?>
-         <tr class="wpsc_coupon_row wpsc_coupon_error_row"><td colspan="6"><?php _e('Coupon is not valid.', 'wpsc'); ?></td></tr>
+         <tr class="wpsc_coupon_row wpsc_coupon_error_row"><td colspan="6"><?php _e('Coupon is not valid.', 'wp-e-commerce'); ?></td></tr>
       <?php endif; ?>
       <tr class="wpsc_coupon_row">
-         <td colspan="2"><?php _e('Enter coupon code :', 'wpsc'); ?></td>
+         <td colspan="2"><?php _e('Enter coupon code :', 'wp-e-commerce'); ?></td>
          <td  colspan="4" class="coupon_code">
             <form  method="post" action="<?php echo esc_url( get_option( 'shopping_cart_url' ) ); ?>">
                <input type="text" name="coupon_num" id="coupon_num" value="<?php echo $wpsc_cart->coupons_name; ?>" />
-               <input type="submit" value="<?php _e('Update', 'wpsc') ?>" />
+               <input type="submit" value="<?php _e('Update', 'wp-e-commerce') ?>" />
             </form>
          </td>
       </tr>
@@ -132,11 +132,11 @@ endif;
    <div id="wpsc_shopping_cart_container">
 
    <?php if(wpsc_uses_shipping()) : ?>
-      <h2><?php _e('Calculate Shipping Price', 'wpsc'); ?></h2>
+      <h2><?php _e('Calculate Shipping Price', 'wp-e-commerce'); ?></h2>
       <table class="productcart">
          <tr class="wpsc_shipping_info">
             <td colspan="5">
-               <?php _e('Please specify shipping location below to calculate your shipping costs', 'wpsc'); ?>
+               <?php _e('Please specify shipping location below to calculate your shipping costs', 'wp-e-commerce'); ?>
             </td>
          </tr>
 
@@ -144,13 +144,13 @@ endif;
             <?php if ( ! wpsc_have_valid_shipping_zipcode() ) : ?>
                   <tr class='wpsc_update_location'>
                      <td colspan='5' class='shipping_error' >
-                        <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wpsc'); ?>
+                        <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wp-e-commerce'); ?>
                      </td>
                   </tr>
             <?php else: ?>
                <tr class='wpsc_update_location_error'>
                   <td colspan='5' class='shipping_error' >
-                     <?php _e('Sorry, shipping quotes could not be calculated with the details provided. Please double check your shipping address details.', 'wpsc'); ?>
+                     <?php _e('Sorry, shipping quotes could not be calculated with the details provided. Please double check your shipping address details.', 'wp-e-commerce'); ?>
                   </td>
                </tr>
             <?php endif; ?>
@@ -160,7 +160,7 @@ endif;
                <form name='change_country' id='change_country' action='' method='post'>
                   <?php echo wpsc_shipping_country_list();?>
                   <input type='hidden' name='wpsc_update_location' value='true' />
-                  <input type='submit' name='wpsc_submit_zipcode' value='<?php esc_attr_e( 'Calculate', 'wpsc' ); ?>' />
+                  <input type='submit' name='wpsc_submit_zipcode' value='<?php esc_attr_e( 'Calculate', 'wp-e-commerce' ); ?>' />
                </form>
             </td>
          </tr>
@@ -168,7 +168,7 @@ endif;
          <?php if (wpsc_have_morethanone_shipping_quote()) :?>
             <?php while (wpsc_have_shipping_methods()) : wpsc_the_shipping_method(); ?>
                   <?php    if (!wpsc_have_shipping_quotes()) { continue; } // Don't display shipping method if it doesn't have at least one quote ?>
-                  <tr class='wpsc_shipping_header'><td class='shipping_header' colspan='5'><?php echo wpsc_shipping_method_name().__(' - Choose a Shipping Rate', 'wpsc'); ?> </td></tr>
+                  <tr class='wpsc_shipping_header'><td class='shipping_header' colspan='5'><?php echo wpsc_shipping_method_name().__(' - Choose a Shipping Rate', 'wp-e-commerce'); ?> </td></tr>
                   <?php while (wpsc_have_shipping_quotes()) : wpsc_the_shipping_quote();  ?>
                      <tr class='<?php echo wpsc_shipping_quote_html_id(); ?>'>
                         <td class='wpsc_shipping_quote_name wpsc_shipping_quote_name_<?php echo wpsc_shipping_quote_html_id(); ?>' colspan='3'>
@@ -220,11 +220,11 @@ endif;
 	<?php endif; ?>
 
 	<?php if ( wpsc_show_user_login_form() && !is_user_logged_in() ): ?>
-			<p><?php _e('You must sign in or register with us to continue with your purchase', 'wpsc');?></p>
+			<p><?php _e('You must sign in or register with us to continue with your purchase', 'wp-e-commerce');?></p>
 			<div class="wpsc_registration_form">
 
 				<fieldset class='wpsc_registration_form'>
-					<h2><?php _e( 'Sign in', 'wpsc' ); ?></h2>
+					<h2><?php _e( 'Sign in', 'wp-e-commerce' ); ?></h2>
 					<?php
 					$args = array(
 						'remember' => false,
@@ -232,7 +232,7 @@ endif;
 					);
 					wp_login_form( $args );
 					?>
-					<div class="wpsc_signup_text"><?php _e('If you have bought from us before please sign in here to purchase', 'wpsc');?></div>
+					<div class="wpsc_signup_text"><?php _e('If you have bought from us before please sign in here to purchase', 'wp-e-commerce');?></div>
 				</fieldset>
 			</div>
 	<?php endif; ?>
@@ -240,7 +240,7 @@ endif;
       <?php if(wpsc_uses_shipping()) : ?>
 	      <tr class="total_price total_shipping">
 	         <td class='wpsc_totals'>
-	            <?php _e('Total Shipping:', 'wpsc'); ?>
+	            <?php _e('Total Shipping:', 'wp-e-commerce'); ?>
 	         </td>
 	         <td class='wpsc_totals'>
 	            <span id="checkout_shipping" class="pricedisplay checkout-shipping"><?php echo wpsc_cart_shipping(); ?></span>
@@ -251,7 +251,7 @@ endif;
      <?php if(wpsc_uses_coupons() && (wpsc_coupon_amount(false) > 0)): ?>
       <tr class="total_price">
          <td class='wpsc_totals'>
-            <?php _e('Discount:', 'wpsc'); ?>
+            <?php _e('Discount:', 'wp-e-commerce'); ?>
          </td>
          <td class='wpsc_totals'>
             <span id="coupons_amount" class="pricedisplay"><?php echo wpsc_coupon_amount(); ?></span>
@@ -263,7 +263,7 @@ endif;
 
    <tr class='total_price'>
       <td class='wpsc_totals'>
-      <?php _e('Total Price:', 'wpsc'); ?>
+      <?php _e('Total Price:', 'wp-e-commerce'); ?>
       </td>
       <td class='wpsc_totals'>
          <span id='checkout_total' class="pricedisplay checkout-total"><?php echo wpsc_cart_total(); ?></span>
@@ -285,17 +285,17 @@ endif;
 		<div class="wpsc_registration_form">
 
 	        <fieldset class='wpsc_registration_form wpsc_right_registration'>
-	        	<h2><?php _e('Join up now', 'wpsc');?></h2>
+	        	<h2><?php _e('Join up now', 'wp-e-commerce');?></h2>
 
-				<label><?php _e('Username:', 'wpsc'); ?></label>
+				<label><?php _e('Username:', 'wp-e-commerce'); ?></label>
 				<input type="text" name="log" id="log" value="" size="20"/><br/>
 
-				<label><?php _e('Password:', 'wpsc'); ?></label>
+				<label><?php _e('Password:', 'wp-e-commerce'); ?></label>
 				<input type="password" name="pwd" id="pwd" value="" size="20" /><br />
 
-				<label><?php _e('E-mail', 'wpsc'); ?>:</label>
+				<label><?php _e('E-mail', 'wp-e-commerce'); ?>:</label>
 	            <input type="text" name="user_email" id="user_email" value="" size="20" /><br />
-	            <div class="wpsc_signup_text"><?php _e('Signing up is free and easy! please fill out your details your registration will happen automatically as you checkout. Don\'t forget to use your details to login with next time!', 'wpsc');?></div>
+	            <div class="wpsc_signup_text"><?php _e('Signing up is free and easy! please fill out your details your registration will happen automatically as you checkout. Don\'t forget to use your details to login with next time!', 'wp-e-commerce');?></div>
 	        </fieldset>
 
         </div>
@@ -343,8 +343,8 @@ endif;
                   	if( $shipping_same_as_billing )
                   		$checked = 'checked="checked"';
                    ?>
-					<label for='shippingSameBilling'><input type='checkbox' value='true'  data-wpsc-meta-key="shippingSameBilling" class= "wpsc-visitor-meta"  name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> /><?php _e('Same as billing address:','wpsc'); ?></label>
-					<br/><span id="shippingsameasbillingmessage"><?php _e('Your order will be shipped to the billing address', 'wpsc'); ?></span>
+					<label for='shippingSameBilling'><input type='checkbox' value='true'  data-wpsc-meta-key="shippingSameBilling" class= "wpsc-visitor-meta"  name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> /><?php _e('Same as billing address:','wp-e-commerce'); ?></label>
+					<br/><span id="shippingsameasbillingmessage"><?php _e('Your order will be shipped to the billing address', 'wp-e-commerce'); ?></span>
                   </td>
                </tr>
                <?php endif;
@@ -355,7 +355,7 @@ endif;
                "<div class='wpsc_email_address'>
                   <p class='" . wpsc_checkout_form_element_id() . "'>
                      <label class='wpsc_email_address' for='" . wpsc_checkout_form_element_id() . "'>
-                     " . __('Enter your email address', 'wpsc') . "
+                     " . __('Enter your email address', 'wp-e-commerce') . "
                      </label>
                   <p class='wpsc_email_address_p'>
                   <img src='https://secure.gravatar.com/avatar/empty?s=60&amp;d=mm' id='wpsc_checkout_gravatar' />
@@ -393,13 +393,13 @@ endif;
 
       <?php if (wpsc_show_find_us()) : ?>
       <tr>
-         <td><label for='how_find_us'><?php _e('How did you find us' , 'wpsc'); ?></label></td>
+         <td><label for='how_find_us'><?php _e('How did you find us' , 'wp-e-commerce'); ?></label></td>
          <td>
             <select name='how_find_us'>
-               <option value='Word of Mouth'><?php _e('Word of mouth' , 'wpsc'); ?></option>
-               <option value='Advertisement'><?php _e('Advertising' , 'wpsc'); ?></option>
-               <option value='Internet'><?php _e('Internet' , 'wpsc'); ?></option>
-               <option value='Customer'><?php _e('Existing Customer' , 'wpsc'); ?></option>
+               <option value='Word of Mouth'><?php _e('Word of mouth' , 'wp-e-commerce'); ?></option>
+               <option value='Advertisement'><?php _e('Advertising' , 'wp-e-commerce'); ?></option>
+               <option value='Internet'><?php _e('Internet' , 'wp-e-commerce'); ?></option>
+               <option value='Customer'><?php _e('Existing Customer' , 'wp-e-commerce'); ?></option>
             </select>
          </td>
       </tr>
@@ -410,7 +410,7 @@ endif;
       <?php if(wpsc_gateway_count() > 1): // if we have more than one gateway enabled, offer the user a choice ?>
          <tr>
             <td colspan='2' class='wpsc_gateway_container'>
-               <h3><?php _e('Payment Type', 'wpsc');?></h3>
+               <h3><?php _e('Payment Type', 'wp-e-commerce');?></h3>
                <?php wpsc_gateway_list(); ?>
                </td>
          </tr>
@@ -425,7 +425,7 @@ endif;
       <?php if(wpsc_has_tnc()) : ?>
          <tr>
             <td colspan='2'>
-                <label for="agree"><input id="agree" type='checkbox' value='yes' name='agree' /> <?php printf(__("I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"), esc_url( home_url( "?termsandconds=true&amp;width=360&amp;height=400" ) ) ); ?> <span class="asterix">*</span></label>
+                <label for="agree"><input id="agree" type='checkbox' value='yes' name='agree' /> <?php printf(__("I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", 'wp-e-commerce'), esc_url( home_url( "?termsandconds=true&amp;width=360&amp;height=400" ) ) ); ?> <span class="asterix">*</span></label>
                </td>
          </tr>
       <?php endif; ?>
@@ -438,7 +438,7 @@ endif;
                <input type='hidden' value='yes' name='agree' />
             <?php endif; ?>
                <input type='hidden' value='submit_checkout' name='wpsc_action' />
-               <input type='submit' value='<?php _e('Purchase', 'wpsc');?>' class='make_purchase wpsc_buy_button' />
+               <input type='submit' value='<?php _e('Purchase', 'wp-e-commerce');?>' class='make_purchase wpsc_buy_button' />
          </span>
       </div>
 
