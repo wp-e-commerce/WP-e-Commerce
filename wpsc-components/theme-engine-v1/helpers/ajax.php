@@ -98,7 +98,7 @@ function wpsc_add_to_cart() {
 	$default_parameters['provided_price'] = null;
 	$default_parameters['comment'] = null;
 	$default_parameters['time_requested'] = null;
-	$default_parameters['custom_message'] = null;
+	$default_parameters['custom_message'] = '';
 	$default_parameters['file_data'] = null;
 	$default_parameters['is_customisable'] = false;
 	$default_parameters['meta'] = null;
