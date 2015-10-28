@@ -1,3 +1,4 @@
+/*global WPSC_Set_Post_Thumbnail, post_id, alert */
 function WPSetAsThumbnail(id, nonce){
 	var $link = jQuery('a#wp-post-thumbnail-' + id);
 
