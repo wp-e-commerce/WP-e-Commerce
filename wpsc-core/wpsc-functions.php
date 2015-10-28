@@ -1134,3 +1134,19 @@ function wpsc_repair_tables() {
 }
 
 add_action( 'wpsc_init', 'wpsc_repair_tables' );
+
+/**
+ * Addes 'wpsc' to the list of Say What aliases after moving to WordPress.org language packs.
+ *
+ * @since  3.11.0
+ *
+ * @param  array $aliases Say What domain aliases
+ * @return array          Say What domain alises with 'wpsc' added
+ */
+function wpsc_say_what_domain_aliases( $aliases ) {
+	$aliases['wp-e-commerce'][] = 'wpsc';
+
+	return $aliases;
+}
+
+add_filter( 'say_what_domain_aliases', 'wpsc_say_what_domain_aliases' );
