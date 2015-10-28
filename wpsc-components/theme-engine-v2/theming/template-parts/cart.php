@@ -17,7 +17,7 @@
 	<?php if ( wpsc_cart_has_items() ): ?>
 		<?php wpsc_cart_item_table(); ?>
 	<?php else: ?>
-		<p><?php esc_html_e( "There is nothing in your cart.", 'wpsc' ); ?></p>
+		<p><?php esc_html_e( "There is nothing in your cart.", 'wp-e-commerce' ); ?></p>
 		<p><?php wpsc_keep_shopping_button(); ?></p>
 	<?php endif ?>
 </div>

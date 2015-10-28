@@ -197,6 +197,6 @@ function _wpsc_force_download_file( $file_id ) {
 		wpsc_readfile_chunked( $file_path );
 		exit();
 	}else{
-		wp_die(__('Sorry, something has gone wrong with your download!', 'wpsc'));
+		wp_die(__('Sorry, something has gone wrong with your download!', 'wp-e-commerce'));
 	}
 }

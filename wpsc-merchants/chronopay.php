@@ -423,7 +423,7 @@ function form_chronopay()
 			</td>
 		</tr>
 		<tr>
-			<td>" . __( 'Postal / ZIP Code Field', 'wpsc' ) . "</td>
+			<td>" . __( 'Postal / ZIP Code Field', 'wp-e-commerce' ) . "</td>
 			<td><select name='chronopay_form[post_code]'>
 				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_post_code' ) ) . "
 				</select>

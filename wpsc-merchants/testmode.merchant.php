@@ -53,10 +53,10 @@ function form_testmode() {
 				" . __( 'Payment Instructions', 'wp-e-commerce' ) . "
 			</td>
 			<td>
-				".__('Enter the payment instructions that you wish to display to your customers when they make a purchase.', 'wpsc')."
+				".__('Enter the payment instructions that you wish to display to your customers when they make a purchase.', 'wp-e-commerce')."
 				<textarea cols='40' rows='9' name='wpsc_options[payment_instructions]'>" . esc_textarea( get_option( 'payment_instructions' ) ) . "</textarea><br />
 				<p class='description'>
-					".__('For example, this is where you, the Shop Owner, might enter your bank account details or address so that your customer can make their manual payment.', 'wpsc')."
+					".__('For example, this is where you, the Shop Owner, might enter your bank account details or address so that your customer can make their manual payment.', 'wp-e-commerce')."
 				</p>
 			</td>
 		</tr>\n";

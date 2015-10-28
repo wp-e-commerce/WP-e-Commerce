@@ -42,7 +42,7 @@ function _wpsc_filter_merchant_v3_gateway_form( $form, $gateway_id ) {
 		</td>
 		<td style='border-top: none;'>
 			<input type='text' name='user_defined_name[<?php echo esc_attr( $gateway_id ); ?>]' value='<?php echo esc_attr( $display_name ); ?>' /><br />
-			<span class='small description'><?php _e('The text that people see when making a purchase.', 'wpsc'); ?></span>
+			<span class='small description'><?php _e('The text that people see when making a purchase.', 'wp-e-commerce'); ?></span>
 		</td>
 	</tr>
 	<?php

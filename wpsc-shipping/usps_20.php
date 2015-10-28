@@ -202,9 +202,9 @@ class ash_usps {
 			<td><?php _e( 'USPS ID', 'wp-e-commerce' ); ?></td>
 			<td>
 				<input type='text' name='wpec_usps[id]' value='<?php esc_attr_e( $settings["id"] ); ?>' />
-				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wpsc' ), 'https://registration.shippingapis.com/' ); ?></p>
-				<p class='description'><?php _e( "Make sure your account has been activated with USPS. If you're unsure if this applies to you, then please check with USPS.", 'wpsc' ); ?></p>
-				<p class='description'><?php printf( __("Once you've completed integration, <a href='%s' target='_blank'>you'll need to submit a request to promote tools to production</a>.", 'wpsc' ), 'https://www.usps.com/business/web-tools-apis/developers-center.htm#learn-more--1-1' ); ?></p>
+				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wp-e-commerce' ), 'https://registration.shippingapis.com/' ); ?></p>
+				<p class='description'><?php _e( "Make sure your account has been activated with USPS. If you're unsure if this applies to you, then please check with USPS.", 'wp-e-commerce' ); ?></p>
+				<p class='description'><?php printf( __("Once you've completed integration, <a href='%s' target='_blank'>you'll need to submit a request to promote tools to production</a>.", 'wp-e-commerce' ), 'https://www.usps.com/business/web-tools-apis/developers-center.htm#learn-more--1-1' ); ?></p>
 			</td>
 		</tr>
 
@@ -243,8 +243,8 @@ class ash_usps {
 				 		<br />
 					<?php endforeach; ?>
 				</div>
-				<p class='description'><?php _e( "* Standard Post should never be used as the sole USPS mail service provided. It's only available for destinations located far from your base zip code. In this case, and to provide shipping coverage for locations closer to your base zip code, the Priority Mail service must be selected too.", 'wpsc' ); ?></p>
-				<p class='description'><?php printf( __("** Media Mail must only be used for books, printed material and sound or video recordings (CDs, DVDs, Blu-rays and other, excluding games). It may be subjected to postal inspection to enforce this. For more information, please consult the <a href='%s' target='_blank'>Media Mail's Rules & Restrictions web page.</a>", 'wpsc' ), 'https://www.usps.com/ship/media-mail.htm' ); ?></p>
+				<p class='description'><?php _e( "* Standard Post should never be used as the sole USPS mail service provided. It's only available for destinations located far from your base zip code. In this case, and to provide shipping coverage for locations closer to your base zip code, the Priority Mail service must be selected too.", 'wp-e-commerce' ); ?></p>
+				<p class='description'><?php printf( __("** Media Mail must only be used for books, printed material and sound or video recordings (CDs, DVDs, Blu-rays and other, excluding games). It may be subjected to postal inspection to enforce this. For more information, please consult the <a href='%s' target='_blank'>Media Mail's Rules & Restrictions web page.</a>", 'wp-e-commerce' ), 'https://www.usps.com/ship/media-mail.htm' ); ?></p>
 			</td>
 		</tr>
 

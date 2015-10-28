@@ -321,7 +321,7 @@ class wpec_taxes {
 			// little logic here to try to catch an improper call, but it isn't perfect.
 
 			if ( ( $country == null ) ) {
-				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Prior to version 3.8.14 this function was made available without the country parameter. Because there is no assurance that region codes are unique across the globe, we need to specify a country.', 'wpsc' ), '3.8.14' );
+				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Prior to version 3.8.14 this function was made available without the country parameter. Because there is no assurance that region codes are unique across the globe, we need to specify a country.', 'wp-e-commerce' ), '3.8.14' );
 			}
 
 			//check for all markets ifset return the string 'All Markets'

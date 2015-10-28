@@ -674,12 +674,12 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 </tr>
 <tr>
     <td colspan="2">
-        <p><?php _e( "Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to PayPal, WP eCommerce has to convert the amounts into one of PayPal's supported currencies. Please select your preferred currency below.", 'wpsc' ); ?></p>
+        <p><?php _e( "Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to PayPal, WP eCommerce has to convert the amounts into one of PayPal's supported currencies. Please select your preferred currency below.", 'wp-e-commerce' ); ?></p>
     </td>
 </tr>
 <tr>
     <td>
-        <label for "wpsc-paypal-express-currency"><?php _e( 'PayPal Currency', 'wpsc' ); ?></label>
+        <label for "wpsc-paypal-express-currency"><?php _e( 'PayPal Currency', 'wp-e-commerce' ); ?></label>
     </td>
     <td>
         <select name="<?php echo esc_attr( $this->setting->get_field_name( 'currency' ) ); ?>" id="wpsc-paypal-express-currency">

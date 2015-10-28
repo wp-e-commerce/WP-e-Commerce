@@ -87,9 +87,9 @@ function _wpsc_fix_timor_leste_name() {
 		'id'          => 245,
 		'country'     => __( 'Timor-Leste', 'wp-e-commerce' ),
 		'isocode'     => 'TL',
-		'currency'    => __( 'US Dollar', 'wpsc' ),
-		'symbol'      => __( '$', 'wpsc' ),
-		'symbol_html' => __( '&#036;', 'wpsc' ),
+		'currency'    => __( 'US Dollar', 'wp-e-commerce' ),
+		'symbol'      => __( '$', 'wp-e-commerce' ),
+		'symbol_html' => __( '&#036;', 'wp-e-commerce' ),
 		'code'        => 'USD',
 		'continent'   => 'asiapacific',
 		'visible'     => '0',
@@ -171,10 +171,10 @@ function _wpsc_new_country_palestinian_territories() {
 		'id'          => 251,
 		'country'     => __( 'Palestinian Territories', 'wp-e-commerce' ),
 		'isocode'     => 'PS',
-		'currency'    => __( 'Israeli New Shekel', 'wpsc' ),
-		'symbol'      => __( '₪', 'wpsc' ),
-		'symbol_html' => __( '&#8362;', 'wpsc' ),
-		'code'        => __( 'ILS', 'wpsc' ),
+		'currency'    => __( 'Israeli New Shekel', 'wp-e-commerce' ),
+		'symbol'      => __( '₪', 'wp-e-commerce' ),
+		'symbol_html' => __( '&#8362;', 'wp-e-commerce' ),
+		'code'        => __( 'ILS', 'wp-e-commerce' ),
 		'continent'   => 'asiapacific',
 		'visible'     => '0',
 	) );
@@ -274,9 +274,9 @@ function _wpsc_fix_republic_of_the_congo() {
 function _wpsc_fix_currency_el_salvador() {
 	$country = new WPSC_Country( array(
 		'isocode'     => 'SV',
-		'currency'    => __( 'US Dollar', 'wpsc' ),
-		'symbol'      => __( '$', 'wpsc' ),
-		'symbol_html' => __( '&#036;', 'wpsc' ),
+		'currency'    => __( 'US Dollar', 'wp-e-commerce' ),
+		'symbol'      => __( '$', 'wp-e-commerce' ),
+		'symbol_html' => __( '&#036;', 'wp-e-commerce' ),
 		'code'        => 'USD',
 	) );
 }
@@ -421,9 +421,9 @@ function _wpsc_fix_venezuela_currency() {
 function _wpsc_fix_zimbabwe_currency() {
 	$country = new WPSC_Country( array(
 		'isocode'     => 'ZW',
-		'currency'    => __( 'US Dollar', 'wpsc' ),
-		'symbol'      => __( '$', 'wpsc' ),
-		'symbol_html' => __( '&#036;', 'wpsc' ),
+		'currency'    => __( 'US Dollar', 'wp-e-commerce' ),
+		'symbol'      => __( '$', 'wp-e-commerce' ),
+		'symbol_html' => __( '&#036;', 'wp-e-commerce' ),
 		'code'        => 'USD',
 		'continent'   => 'asiapacific',
 	) );

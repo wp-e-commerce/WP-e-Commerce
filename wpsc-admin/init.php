@@ -477,7 +477,7 @@ function wpsc_purchlog_clear_download_items( $log_id = '' ) {
 			$download_links .= add_query_arg( 'downloadid', $downloadable_item['uniqueid'], home_url() )  . "\n";
 		}
 
-		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wpsc' ), str_replace( "[download_links]", $download_links, __( 'Dear Customer, We are pleased to advise you that your order has been updated and your downloads are now active. Please download your purchase using the links provided below. [download_links] Thank you for your order.', 'wpsc' ) ), "From: " . get_option( 'return_email' )  );
+		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wp-e-commerce' ), str_replace( "[download_links]", $download_links, __( 'Dear Customer, We are pleased to advise you that your order has been updated and your downloads are now active. Please download your purchase using the links provided below. [download_links] Thank you for your order.', 'wp-e-commerce' ) ), "From: " . get_option( 'return_email' )  );
 
 		return true;
 

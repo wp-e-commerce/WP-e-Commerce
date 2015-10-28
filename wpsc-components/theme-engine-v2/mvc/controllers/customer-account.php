@@ -175,7 +175,7 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 
 		if ( is_wp_error( $validation ) ) {
 			$this->message_collection->add(
-				__( 'Sorry, but it looks like there are some errors with your submitted information.', 'wpsc' ),
+				__( 'Sorry, but it looks like there are some errors with your submitted information.', 'wp-e-commerce' ),
 				'error'
 			);
 			wpsc_set_validation_errors( $validation, $context = 'inline' );

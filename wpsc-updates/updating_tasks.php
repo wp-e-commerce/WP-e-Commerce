@@ -353,14 +353,14 @@ if($wpdb->get_var("SELECT COUNT(*) FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `co
 	$wpdb->query("UPDATE `".WPSC_TABLE_CURRENCY_LIST."` SET `continent`='asiapacific' WHERE `continent`='asiapasific'");
 }
 
-add_option('wpsc_email_receipt', '', __('Thank you for purchasing with %shop_name%, any items to be shipped will be processed as soon as possible, any items that can be downloaded can be downloaded using the links on this page. All prices include tax and postage and packaging where applicable.You ordered these items:%product_list%%total_shipping%%total_price%', 'wpsc'), 'yes');
-add_option('wpsc_email_admin', '', __('%product_list%%total_shipping%%total_price%', 'wpsc'), 'yes');
+add_option('wpsc_email_receipt', '', __('Thank you for purchasing with %shop_name%, any items to be shipped will be processed as soon as possible, any items that can be downloaded can be downloaded using the links on this page. All prices include tax and postage and packaging where applicable.You ordered these items:%product_list%%total_shipping%%total_price%', 'wp-e-commerce'), 'yes');
+add_option('wpsc_email_admin', '', __('%product_list%%total_shipping%%total_price%', 'wp-e-commerce'), 'yes');
 
 if(get_option('wpsc_email_receipt') == '') {
 	if(get_option('email_receipt') != '') {
 		update_option('wpsc_email_receipt', get_option('email_receipt'));
 	} else {
-		update_option('wpsc_email_receipt', __('Thank you for purchasing with %shop_name%, any items to be shipped will be processed as soon as possible, any items that can be downloaded can be downloaded using the links on this page. All prices include tax and postage and packaging where applicable.You ordered these items:%product_list%%total_shipping%%total_price%', 'wpsc'));
+		update_option('wpsc_email_receipt', __('Thank you for purchasing with %shop_name%, any items to be shipped will be processed as soon as possible, any items that can be downloaded can be downloaded using the links on this page. All prices include tax and postage and packaging where applicable.You ordered these items:%product_list%%total_shipping%%total_price%', 'wp-e-commerce'));
 	}
 }
 if(get_option('wpsc_email_admin') == '') {

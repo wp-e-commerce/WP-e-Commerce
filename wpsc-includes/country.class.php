@@ -16,7 +16,7 @@ if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
 	_wpsc_deprecated_file(
 							__FILE__,
 							'3.8.14',
-							__( 'You should not be including the country.class.php (or any WPeC) file directly. The WPSC_Country class has been moved to wpsc-country.class.php', 'wpsc' )
+							__( 'You should not be including the country.class.php (or any WPeC) file directly. The WPSC_Country class has been moved to wpsc-country.class.php', 'wp-e-commerce' )
 						);
 	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-country.class.php' );
 }
