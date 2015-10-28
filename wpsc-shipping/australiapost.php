@@ -4,35 +4,40 @@
  *
  */
 class australiapost {
-	var $internal_name, $name;
+	public $internal_name;
+	public $name;
 
 	/**
 	 * List of Valid Australia Post services
 	 *
 	 * @var Array
 	 */
-	var $services = array();
+	public $services = array();
 
 	/**
 	 * Shipping module settings
 	 *
 	 * @var Array
 	 */
-	var $settings;
+	public $settings;
 
-	var $base_country;
-	var $base_zipcode;
+	public $base_country;
+	public $base_zipcode;
+	public $is_external;
+	public $requires_weight;
+	public $needs_zipcode;
+	public $debug;
 
 	/**
 	 * Constructor
 	 */
-	function australiapost () {
-		$this->internal_name = "australiapost";
-		$this->name = __( 'Australia Post', 'wpsc' );
-		$this->is_external = true;
+	function __construct () {
+		$this->internal_name   = 'australiapost';
+		$this->name            = __( 'Australia Post', 'wpsc' );
+		$this->is_external     = true;
 		$this->requires_weight = true;
-		$this->needs_zipcode = true;
-		$this->debug = false; // change to true to log (to the PHP error log) the API URLs and responses for each active service
+		$this->needs_zipcode   = true;
+		$this->debug           = false; // change to true to log (to the PHP error log) the API URLs and responses for each active service
 
 		// Initialise the list of available postage services
 
@@ -208,34 +213,36 @@ class australiapost {
 			$meta = $meta['dimensions'];
 
 
-			if ($meta && is_array($meta)) {
+			if ( $meta && is_array( $meta ) ) {
 				$productVolume = 1;
-				foreach (array('width','height','length') as $dimension) {
+				foreach ( array( 'width', 'height', 'length' ) as $dimension ) {
+
 					// default dimension to 100mm
-					if ( empty( $meta[$dimension] ) ) {
-						$meta[$dimension] = 100;
+					if ( empty( $meta[ $dimension ] ) ) {
+						$meta[ $dimension ] = 100;
 						$unit = 'mm';
 					}
-					switch ($unit) {
+
+					switch ( $unit ) {
 						// we need the units in mm
 						case 'cm':
 							// convert from cm to mm
-							$meta[$dimension] *= 10;
+							$meta[ $dimension ] *= 10;
 							break;
 						case 'meter':
 							// convert from m to mm
-							$meta[$dimension] *= 1000;
+							$meta[ $dimension ] *= 1000;
 							break;
 						case 'in':
 							// convert from in to mm
-							$meta[$dimension] *= 25.4;
+							$meta[ $dimension ] *= 25.4;
 							break;
 					}
 
-					$productVolume *= $meta[$dimension];
+					$productVolume *= $meta[ $dimension ];
 				}
 
-				$volume += floatval($productVolume) * $cart_item->quantity;
+				$volume += floatval( $productVolume ) * $cart_item->quantity;
 			}
 		}
 
@@ -249,13 +256,21 @@ class australiapost {
 			// Calculate the cubic root of the total volume, rounding up
 			$cuberoot = ceil(pow($volume, 1 / 3));
 
-			if ($cuberoot > 0)
-			    $height = $width = $length = $cuberoot;
+			if ( $cuberoot > 0 ) {
+				$height = $width = $length = $cuberoot;
+			} else {
+				$height = $width = $length = $cuberoot;
+			}
 		}
 
 		// As per http://auspost.com.au/personal/parcel-dimensions.html: if the parcel is box-shaped, both its length and width must be at least 15cm.
-		if ($length < 150) $length = 150;
-		if ($width < 150) $width = 150;
+		if ( $length < 150 ) {
+			$length = 150;
+		}
+
+		if ( $width < 150 ) {
+			$width = 150;
+		}
 
 		// By default we should use Australia Post's quoted rate(s)
 		$shippingPriceNeedsToBeZero = false;
