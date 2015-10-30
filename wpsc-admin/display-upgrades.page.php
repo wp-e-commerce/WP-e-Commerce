@@ -47,8 +47,8 @@ function wpse_license_page_display_licenses () {
 	if ( ! empty( $licenses ) ) {
 		foreach ( (array) $licenses as $license ) { ?>
 			<tr><td class="product_name column-product_name"><p><strong><?php echo esc_html( $license['name'] ); ?></strong></p></td>
-			<td class="product_license column-product_license"><p><strong><?php echo esc_html( $license['license'] ); ?>'</strong></p></td>
-			<td class="product_expiry column-product_expiry"><p><strong><?php echo esc_html( $license['expires'] ); ?>'</strong></p></td></tr>
+			<td class="product_license column-product_license"><p><strong><?php echo esc_html( $license['license'] ); ?></strong></p></td>
+			<td class="product_expiry column-product_expiry"><p><strong><?php echo esc_html( $license['expires'] ); ?></strong></p></td></tr>
 		<?php }
 	} else {
 		?>
