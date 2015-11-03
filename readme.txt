@@ -38,9 +38,33 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 = 3.11.0 =
 
-* Fix: Uses version_compare() for comparing wpsc_version constant in legacy code (from 5 years ago).  Using comparators was causing 3.10.0 to be "less than" 3.8, resulting in an unnecessary admin notice.
-* Fix: Changes internal mechanism for detecting which theme engine is in use. The way we were checking for it before caused many core actions to be unhooked, leading to unsavory results, like Fancy Notifications no longer working.
-* Fix: Patched in a few fixes for incorrect usage of esc_url(). This resolves scenarios like the selecting a custom checkout form in the Dashboard failing because of double-encoded ampersands.
+* _Potentially breaking change_: wpsc_add_to_cart() now checks the `$_REQUEST` super global, rather than `$_POST`. This allows for future features, such as populating carts from a URL token, etc. Anywhere you may have code that checks for $_POST, in this context, it should now check $_REQUEST. See [#1852](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1852).
+* Fix: Improvements to internationalization across the board, including updates to introduce compatibility for translate.wordpress.org.
+* Fix: Show admin notice if administrator has not set any target markets. See [#711](https://github.com/wp-e-commerce/WP-e-Commerce/issues/711).
+* Fix: Check post_status more stringently in single page template controller. See [#844](https://github.com/wp-e-commerce/WP-e-Commerce/issues/844).
+* Fix: The Google Analytics integration was calculating products once, not once per quantity in the cart. See [#1718](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1718).
+* Fix: The Google Analytics integration was incompatible with the Yoast Analytics plugin. See [#1736](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1736).
+* Fix: Resolve scenarios where variation combinations for products that were unavailable could still allow for cart addition (adding the parent product, rather than the variation). See [#1373](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1373).
+* Fix: Order totals on sales log page did not count Closed Orders, but did Orders Received. This has been reversed, as that is the paradigm used throughout the rest of the project. See [#1728](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1728).
+* Fix: Deleting a purchase log now also deletes the purchase meta associated with that log. See [#1877](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1877).
+* Fix: Deleting a purchase log now also deletes the download status entries for that log. See [#1964](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1964).
+* Fix: In the rare occurrence that an insert for a purchase log entry fails, we now return an error saying so. See [#1892](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1892).
+* Fix: When creating a variation, you should be limited to selecting only variation sets as parents, not other variations. See [#1893](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1893).
+* Enhancement: General performance improvements surrounding meta retreival, especially for countries. Including caching, cache invalidation, etc. See [#1894](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1894).
+* Enhancement: New 3.0 Payment Gateway API now has a method that checks for currencies that don't use fractions. Our code formally had several areas these currencies were hard-coded, and egregiously incomplete.  See [#1917](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1917).
+* Enhancement: Mass improvements to 2.0 theme engine. Bug fixes, rich markup support, and much more. Want to test it out before 4.0? We have a filter for that.
+* Enhancement: Filter bulk messages to reflect that users are updating products, not posts. See [#844](https://github.com/wp-e-commerce/WP-e-Commerce/issues/844).
+* Enhancement: Improvements to code for Australia Post. See [#1337](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1337).
+* Enhancement: Standardize on a single, filterable method for checking the completion status of an order. See [#1360](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1360).
+* Enhancement: Significant improvements to how digital downloads are handled and made available.  See [#37](https://github.com/wp-e-commerce/WP-e-Commerce/issues/37).
+* Enhancement: Improve admin performance for sorted product categories. See [#1389](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1389).
+* Enhancement: Regions are now filtered. See [#1930](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1930).
+* Enhancement: Improve flexibility of product duplication functionality.  Ensures that post meta tied to specific IDs have the available filters to update those IDs. See [#1672](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1672).
+* Enhancement: All front-end AJAX responses are now filtered. See [#1698](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1698).
+* New: Introducing Amazon Payments as an available payment gateway.
+* New: Introduced better filtering mechanisms for custom purchase statuses and related bulk actions and labels for those statuses. See [#1525](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1525) and related issues/PRs.
+* New: Introduced a new filter, `wpsc_checkout_get_fields`, allowing you to add, remove, and modify checkout form fields. See [#1837](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1837).
+
 
 = 3.10.1 =
 
