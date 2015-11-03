@@ -113,9 +113,9 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 			echo '<li>';
 
 			if ( $i === 0 ) {
-				echo '<a href="' . esc_url( $href ) . '">' . sprintf( __( 'Under %s', 'price range widget', 'wp-e-commerce' ), wpsc_format_currency( $range_max ) ) . '</a>';
+				echo '<a href="' . esc_url( $href ) . '">' . sprintf( _x( 'Under %s', 'price range widget', 'wp-e-commerce' ), wpsc_format_currency( $range_max ) ) . '</a>';
 			} elseif ( $range_max >= $prices->max ) {
-				echo '<a href="' . esc_url( $href ) . '">' . sprintf( __( 'Over %s', 'price range widget', 'wp-e-commerce' ), wpsc_format_currency( $range_min ) ) . '</a>';
+				echo '<a href="' . esc_url( $href ) . '">' . sprintf( _x( 'Over %s', 'price range widget', 'wp-e-commerce' ), wpsc_format_currency( $range_min ) ) . '</a>';
 			} else {
 				echo '<a href="' . esc_url( $href ) . '">' . sprintf( $text, wpsc_format_currency( $range_min ), wpsc_format_currency( $range_max ) ) . '</a>';
 			}

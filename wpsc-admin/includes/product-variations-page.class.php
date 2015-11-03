@@ -105,7 +105,7 @@ class WPSC_Product_Variations_Page {
 		check_admin_referer( 'wpsc_save_variations_meta', '_wpsc_save_meta_nonce' );
 		$post_type_object = get_post_type_object( 'wpsc-product' );
 		if ( ! current_user_can( $post_type_object->cap->edit_posts ) )
-			wp_die( __( 'Cheatin&#8217; uh?' ) );
+			wp_die( __( 'Cheatin&#8217; uh?', 'wp-e-commerce' ) );
 
 		/* Long-term, we should have a better saving routine here.  Can't unset these currently. *
 		/* That said, the only thing that fails hard if we can't unset it is the checkbox. */
@@ -210,10 +210,10 @@ class WPSC_Product_Variations_Page {
 		$trashed = 0;
 		foreach( (array) $post_ids as $post_id ) {
 			if ( !current_user_can( $post_type_object->cap->delete_post, $post_id ) )
-				wp_die( __( 'You are not allowed to move this item to the Trash.' ) );
+				wp_die( __( 'You are not allowed to move this item to the Trash.', 'wp-e-commerce' ) );
 
 			if ( !wp_trash_post( $post_id ) )
-				wp_die( __( 'Error in moving to Trash.' ) );
+				wp_die( __( 'Error in moving to Trash.', 'wp-e-commerce' ) );
 
 			$trashed++;
 		}
@@ -225,10 +225,10 @@ class WPSC_Product_Variations_Page {
 		$untrashed = 0;
 		foreach( (array) $post_ids as $post_id ) {
 			if ( ! current_user_can( $post_type_object->cap->delete_post, $post_id ) )
-				wp_die( __( 'You are not allowed to restore this item from the Trash.' ) );
+				wp_die( __( 'You are not allowed to restore this item from the Trash.', 'wp-e-commerce' ) );
 
 			if ( !wp_untrash_post( $post_id ) )
-				wp_die( __( 'Error in restoring from Trash.' ) );
+				wp_die( __( 'Error in restoring from Trash.', 'wp-e-commerce' ) );
 
 			$untrashed++;
 		}
@@ -242,14 +242,14 @@ class WPSC_Product_Variations_Page {
 			$post_del = & get_post( $post_id );
 
 			if ( ! current_user_can( $post_type_object->cap->delete_post, $post_id ) )
-				wp_die( __( 'You are not allowed to delete this item.' ) );
+				wp_die( __( 'You are not allowed to delete this item.', 'wp-e-commerce' ) );
 
 			if ( $post_del->post_type == 'attachment' ) {
 				if ( ! wp_delete_attachment( $post_id ) )
-					wp_die( __( 'Error in deleting...' ) );
+					wp_die( __( 'Error in deleting...', 'wp-e-commerce' ) );
 			} else {
 				if ( ! wp_delete_post( $post_id ) )
-					wp_die( __( 'Error in deleting...' ) );
+					wp_die( __( 'Error in deleting...', 'wp-e-commerce' ) );
 			}
 			$deleted++;
 		}

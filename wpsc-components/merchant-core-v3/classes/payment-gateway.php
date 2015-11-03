@@ -233,7 +233,7 @@ final class WPSC_Payment_Gateways {
 
 			self::unregister_file( $filename );
 
-			$error = new WP_Error( 'wpsc-payment', __( 'Error' ) );
+			$error = new WP_Error( 'wpsc-payment', __( 'Error', 'wp-e-commerce' ) );
 
 			return $error;
 		}

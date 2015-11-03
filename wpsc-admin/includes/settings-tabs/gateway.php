@@ -91,7 +91,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 				<?php $this->gateway_list(); ?>
 			</tbody>
 		</table>
-		<?php submit_button( __( 'Save Changes' ) );
+		<?php submit_button( __( 'Save Changes', 'wp-e-commerce' ) );
 	}
 
 	private function gateway_list_item( $gateway, $force ) {

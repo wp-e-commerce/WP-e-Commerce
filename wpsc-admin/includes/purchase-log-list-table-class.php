@@ -593,7 +593,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		if ( ! empty( $months ) ) {
 			?>
 			<select name="m">
-				<option <?php selected( 0, $m ); ?> value="0"><?php _e( 'Show all dates' ); ?></option>
+				<option <?php selected( 0, $m ); ?> value="0"><?php _e( 'Show all dates', 'wp-e-commerce' ); ?></option>
 				<?php
 
 				$this->special_periods( $m );
@@ -766,16 +766,16 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	}
 
 	public function column_date( $item ) {
-		$format = __( 'Y/m/d g:i:s A' );
+		$format = _x( 'Y/m/d g:i:s A', 'default date format for purchase log columns', 'wp-e-commerce' );
 		$timestamp = (int) $item->date;
 		$full_time = date( $format, $timestamp );
 		$time_diff = time() - $timestamp;
 		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 )
-			$h_time = $h_time = sprintf( __( '%s ago' ), human_time_diff( $timestamp ) );
+			$h_time = $h_time = sprintf( __( '%s ago', 'wp-e-commerce' ), human_time_diff( $timestamp ) );
 		else
-			$h_time = date( __( get_option( 'date_format', 'Y/m/d' ) ), $timestamp );
+			$h_time = date( get_option( 'date_format', 'Y/m/d' ), $timestamp );
 
-		echo '<abbr title="' . $full_time . '">' . $h_time . '</abbr>';
+		echo '<abbr title="' . esc_attr( $full_time ) . '">' . esc_html( $h_time ) . '</abbr>';
 	}
 
 	public function column_amount( $item ) {

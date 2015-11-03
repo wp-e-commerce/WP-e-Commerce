@@ -392,7 +392,7 @@ final class WPSC_Settings_Page {
 			}
 			if ( $this->current_tab->is_update_message_displayed() ) {
 				if ( ! count( get_settings_errors() ) )
-					add_settings_error( 'wpsc-settings', 'settings_updated', __( 'Settings saved.' ), 'updated' );
+					add_settings_error( 'wpsc-settings', 'settings_updated', __( 'Settings saved.', 'wp-e-commerce' ), 'updated' );
 				set_transient( 'settings_errors', get_settings_errors(), 30 );
 				$query_args['settings-updated'] = true;
 			}
@@ -488,7 +488,7 @@ final class WPSC_Settings_Page {
 				<?php do_action( 'wpsc_' . $this->current_tab_id . '_settings_page' ); ?>
 				<div class="submit">
 					<?php if ( $this->current_tab->is_submit_button_displayed() ): ?>
-						<?php submit_button( __( 'Save Changes' ) ); ?>
+						<?php submit_button( __( 'Save Changes', 'wp-e-commerce' ) ); ?>
 					<?php endif ?>
 				</div>
 			</div>

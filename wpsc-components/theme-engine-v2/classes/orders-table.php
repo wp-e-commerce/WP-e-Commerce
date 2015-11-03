@@ -66,15 +66,15 @@ class WPSC_Orders_Table extends WPSC_Table {
 	}
 
 	protected function column_date( $item ) {
-		$format    = __( 'Y/m/d g:i:s A' );
+		$format    = _x( 'Y/m/d g:i:s A', 'orders table column date format', 'wp-e-commerce' );
 		$timestamp = (int) $item->date;
 		$full_time = date( $format, $timestamp );
 		$time_diff = time() - $timestamp;
 
 		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
-			$h_time = $h_time = sprintf( __( '%s ago' ), human_time_diff( $timestamp ) );
+			$h_time = $h_time = sprintf( __( '%s ago', 'wp-e-commerce' ), human_time_diff( $timestamp ) );
 		} else {
-			$h_time = date( __( get_option( 'date_format', 'Y/m/d' ) ), $timestamp );
+			$h_time = date( get_option( 'date_format', 'Y/m/d' ), $timestamp );
 		}
 
 		echo '<a href="' . $this->item_url( $item ) . '">';

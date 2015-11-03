@@ -55,7 +55,7 @@ function _wpsc_upgrade_display_backup_warning() {
 }
 
 function _wpsc_upgrade_display_prompt() {
-	$message = __( '<strong>WP eCommerce %1$s is almost ready.</strong> Some database routines need to be run before the upgrade is complete. <a href="%2$s">Click here to start!</a>', 'wpsc' );
+	$message = __( '<strong>WP eCommerce %1$s is almost ready.</strong> Some database routines need to be run before the upgrade is complete. <a href="%2$s">Click here to start!</a>', 'wp-e-commerce' );
 	$message = sprintf( $message, WPSC_VERSION, admin_url( '?page=wpsc-db-upgrade' ) );
 	?>
 	<div id="wpsc-upgrade-warning" class="error">

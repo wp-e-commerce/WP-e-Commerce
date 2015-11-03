@@ -573,12 +573,12 @@ class wpec_taxes_controller {
 
 		ob_start();
 		?>
-		<tr id='wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-row-<?php esc_attr_e( $row_key ); ?>' data-row-key="<?php esc_attr_e( $row_key ); ?>" class='wpsc-tax-<?php esc_attr_e( $row_mode ); ?>-row <?php esc_attr_e( $tax_rate['row_class'] ); ?>'>
+		<tr id='wpsc-taxes-<?php esc_attr( $row_mode ); ?>-row-<?php esc_attr( $row_key ); ?>' data-row-key="<?php esc_attr( $row_key ); ?>" class='wpsc-tax-<?php esc_attr( $row_mode ); ?>-row <?php esc_attr( $tax_rate['row_class'] ); ?>'>
 
 			<?php if ( $row_mode == 'bands' ) : // BAND NAME ?>
 				<td>
-					<input type='hidden' id='band-index-<?php esc_attr_e( $row_key ); ?>' name="wpsc_options[wpec_taxes_bands][<?php esc_attr_e( $row_key ); ?>][index]" value="<?php esc_attr_e( $row_key ); ?>" />
-					<input id='band-name-<?php esc_attr_e( $row_key ); ?>' name="wpsc_options[wpec_taxes_bands][<?php esc_attr_e( $row_key ); ?>][name]" class='taxes-band' type='text' value='<?php esc_attr_e( $tax_rate['name'] ); ?>' />
+					<input type='hidden' id='band-index-<?php esc_attr( $row_key ); ?>' name="wpsc_options[wpec_taxes_bands][<?php esc_attr( $row_key ); ?>][index]" value="<?php esc_attr( $row_key ); ?>" />
+					<input id='band-name-<?php esc_attr( $row_key ); ?>' name="wpsc_options[wpec_taxes_bands][<?php esc_attr( $row_key ); ?>][name]" class='taxes-band' type='text' value='<?php esc_attr( $tax_rate['name'] ); ?>' />
 				</td>
 			<?php endif; ?>
 
@@ -634,13 +634,13 @@ class wpec_taxes_controller {
 
 
 			<td><?php // TAX RATE ?>
-				<input type='text' size='3' id="<?php esc_attr_e( $row_mode ); ?>-rate-<?php esc_attr_e( $row_key ); ?>" name="wpsc_options[wpec_taxes_<?php esc_attr_e( $row_mode ); ?>][<?php esc_attr_e( $row_key ); ?>][rate]" class="taxes-<?php esc_attr_e( $row_mode ); ?>" value="<?php esc_attr_e( $tax_rate['rate'] ); ?>" /> %
+				<input type='text' size='3' id="<?php esc_attr( $row_mode ); ?>-rate-<?php esc_attr( $row_key ); ?>" name="wpsc_options[wpec_taxes_<?php esc_attr( $row_mode ); ?>][<?php esc_attr( $row_key ); ?>][rate]" class="taxes-<?php esc_attr_e( $row_mode ); ?>" value="<?php esc_attr( $tax_rate['rate'] ); ?>" /> %
 			</td>
 
 			<?php if ( $row_mode == 'rates' ): // TAX SHIPPING ? ?>
 				<td>
 					<label>
-						<input type='checkbox' id="shipping-<?php esc_attr_e( $row_key ); ?>" name="wpsc_options[wpec_taxes_<?php esc_attr_e( $row_mode ); ?>][<?php esc_attr_e( $row_key ); ?>][shipping]" class="taxes-<?php esc_attr_e( $row_mode ); ?>" <?php checked( $tax_rate['shipping'] == 1 ); ?> />
+						<input type='checkbox' id="shipping-<?php esc_attr( $row_key ); ?>" name="wpsc_options[wpec_taxes_<?php esc_attr_e( $row_mode ); ?>][<?php esc_attr( $row_key ); ?>][shipping]" class="taxes-<?php esc_attr( $row_mode ); ?>" <?php checked( $tax_rate['shipping'] == 1 ); ?> />
 						<?php _e( 'Apply to Shipping', 'wp-e-commerce' ); ?>
 					</label>
 				</td>
@@ -648,8 +648,8 @@ class wpec_taxes_controller {
 
 			<?php // ACTIONS ?>
 			<td>
-				<a tabindex="-1" title="<?php _e( 'Delete Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-delete" id="wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-delete-<?php esc_attr_e( $row_key ); ?>" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
-				<a tabindex="-1" title="<?php _e( 'Add Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-add" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
+				<a tabindex="-1" title="<?php _e( 'Delete Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus wpsc-taxes-<?php esc_attr( $row_mode ); ?>-delete" id="wpsc-taxes-<?php esc_attr( $row_mode ); ?>-delete-<?php esc_attr( $row_key ); ?>" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
+				<a tabindex="-1" title="<?php _e( 'Add Field', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus wpsc-taxes-<?php esc_attr( $row_mode ); ?>-add" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
 			</td>
 
 		</tr>

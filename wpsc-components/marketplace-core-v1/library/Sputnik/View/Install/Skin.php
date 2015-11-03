@@ -17,7 +17,7 @@ class Sputnik_View_Install_Skin extends WP_Upgrader_Skin {
 	function before() {
 		if ( ! empty( $this->api ) ) {
 			$asset_type = $this->api->is_theme ? 'theme' : 'plugin';
-			$this->upgrader->strings['process_success'] = sprintf( __('Successfully installed the %s <strong>%s %s</strong>.'), $asset_type, $this->api->name, $this->api->version);
+			$this->upgrader->strings['process_success'] = sprintf( __('Successfully installed the %s <strong>%s %s</strong>.', 'wp-e-commerce' ), $asset_type, $this->api->name, $this->api->version);
 		}
 
 		echo '<script>if (window.parent.tb_showIframe) { window.parent.tb_showIframe(); }</script>';

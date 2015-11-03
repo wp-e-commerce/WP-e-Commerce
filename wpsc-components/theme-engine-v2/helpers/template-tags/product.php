@@ -232,7 +232,7 @@ function wpsc_get_product_tag_list( $args = '' ) {
 		'id'        => 0,
 		'before'    => '',
 		'after'     => '',
-		'separator' => __( ', ', 'tag list separator', 'wp-e-commerce' ),
+		'separator' => _x( ', ', 'tag list separator', 'wp-e-commerce' ),
 	);
 
 	$r = wp_parse_args( $args, $defaults );

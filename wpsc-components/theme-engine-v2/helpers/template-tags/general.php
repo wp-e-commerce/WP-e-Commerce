@@ -432,13 +432,13 @@ function wpsc_get_customer_orders_statuses() {
 	$controller = _wpsc_get_current_controller();
 
 	$view_labels = array(
-		0 => _nx_noop( 'All <span class="count">(%s)</span>'       , 'All <span class="count">(%s)</span>'       , 'purchase logs' ),
-		1 => _nx_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'purchase logs' ),
-		2 => _nx_noop( 'Received <span class="count">(%s)</span>'  , 'Received <span class="count">(%s)</span>'  , 'purchase logs' ),
-		3 => _nx_noop( 'Accepted <span class="count">(%s)</span>'  , 'Accepted <span class="count">(%s)</span>'  , 'purchase logs' ),
-		4 => _nx_noop( 'Dispatched <span class="count">(%s)</span>', 'Dispatched <span class="count">(%s)</span>', 'purchase logs' ),
-		5 => _nx_noop( 'Closed <span class="count">(%s)</span>'    , 'Closed <span class="count">(%s)</span>'    , 'purchase logs' ),
-		6 => _nx_noop( 'Declined <span class="count">(%s)</span>'  , 'Declined <span class="count">(%s)</span>'  , 'purchase logs' ),
+		0 => _nx_noop( 'All <span class="count">(%s)</span>'       , 'All <span class="count">(%s)</span>'       , 'purchase logs', 'wp-e-commerce' ),
+		1 => _nx_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'purchase logs', 'wp-e-commerce' ),
+		2 => _nx_noop( 'Received <span class="count">(%s)</span>'  , 'Received <span class="count">(%s)</span>'  , 'purchase logs', 'wp-e-commerce' ),
+		3 => _nx_noop( 'Accepted <span class="count">(%s)</span>'  , 'Accepted <span class="count">(%s)</span>'  , 'purchase logs', 'wp-e-commerce' ),
+		4 => _nx_noop( 'Dispatched <span class="count">(%s)</span>', 'Dispatched <span class="count">(%s)</span>', 'purchase logs', 'wp-e-commerce' ),
+		5 => _nx_noop( 'Closed <span class="count">(%s)</span>'    , 'Closed <span class="count">(%s)</span>'    , 'purchase logs', 'wp-e-commerce' ),
+		6 => _nx_noop( 'Declined <span class="count">(%s)</span>'  , 'Declined <span class="count">(%s)</span>'  , 'purchase logs', 'wp-e-commerce' ),
 	);
 
 	$views = array();

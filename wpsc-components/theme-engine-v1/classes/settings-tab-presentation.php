@@ -155,7 +155,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<p><?php
 						wp_nonce_field('wpsc_copy_themes');
 						?>
-						<input type='submit' value='<?php esc_attr_e( 'Move Template Files &rarr;' ); ?>' class="button" name='wpsc_move_themes' />
+						<input type='submit' value='<?php esc_attr_e( 'Move Template Files &rarr;', 'wp-e-commerce' ); ?>' class="button" name='wpsc_move_themes' />
 					</p>
 					 <p><?php _e( 'You can create a copy of your WordPress Theme by clicking the backup button bellow. Once copied you can find them here:' ,'wp-e-commerce' ); ?></p>
 					<p class="howto"><?php echo esc_html( '/wp-content/uploads/wpsc/theme_backup/' ); ?></p>
@@ -470,7 +470,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 				<tr id="wpsc-grid-settings">
 					<th scope="row"><?php esc_html_e( 'Grid view settings:', 'wp-e-commerce' ) ?></th>
 					<td>
-						<input type='number' min="0" name='wpsc_options[grid_number_per_row]' id='grid_number_per_row' size='2' value='<?php esc_attr_e( get_option( 'grid_number_per_row' ) ); ?>' class='small-text' />
+						<input type='number' min="0" name='wpsc_options[grid_number_per_row]' id='grid_number_per_row' size='2' value='<?php esc_attr( get_option( 'grid_number_per_row' ) ); ?>' class='small-text' />
 						<label for='grid_number_per_row'><?php esc_html_e( 'Products Per Row', 'wp-e-commerce' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[show_images_only]' />
@@ -961,9 +961,9 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						<td>
 							<fieldset class="wpsc-width-height-fields">
 								<label for="image_width"><?php esc_html_e( 'Width', 'wp-e-commerce' ); ?></label>
-								<input name="wpsc_options[product_image_width]" type="number" step="1" min="0" id="product_image_width" value="<?php esc_attr_e( get_option( 'product_image_width' ) ); ?>" class="small-text">
+								<input name="wpsc_options[product_image_width]" type="number" step="1" min="0" id="product_image_width" value="<?php esc_attr( get_option( 'product_image_width' ) ); ?>" class="small-text">
 								<label for="large_size_h"><?php esc_html_e( 'Height', 'wp-e-commerce' ); ?></label>
-								<input name="wpsc_options[product_image_height]" type="number" step="1" min="0" id="product_image_height" value="<?php esc_attr_e( get_option( 'product_image_height' ) ); ?>" class="small-text">
+								<input name="wpsc_options[product_image_height]" type="number" step="1" min="0" id="product_image_height" value="<?php esc_attr( get_option( 'product_image_height' ) ); ?>" class="small-text">
 							</fieldset>
 						</td>
 					</tr>
@@ -974,9 +974,9 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						<td>
 							<fieldset class="wpsc-width-height-fields">
 								<label for="image_width"><?php esc_html_e( 'Width', 'wp-e-commerce' ); ?></label>
-								<input name="wpsc_options[category_image_width]" type="number" step="1" min="0" id="category_image_width" value="<?php esc_attr_e( get_option( 'category_image_width' ) ); ?>" class="small-text">
+								<input name="wpsc_options[category_image_width]" type="number" step="1" min="0" id="category_image_width" value="<?php esc_attr( get_option( 'category_image_width' ) ); ?>" class="small-text">
 								<label for="large_size_h"><?php esc_html_e( 'Height', 'wp-e-commerce' ); ?></label>
-								<input name="wpsc_options[category_image_height]" type="number" step="1" min="0" id="category_image_height" value="<?php esc_attr_e( get_option( 'category_image_height' ) ); ?>" class="small-text">
+								<input name="wpsc_options[category_image_height]" type="number" step="1" min="0" id="category_image_height" value="<?php esc_attr( get_option( 'category_image_height' ) ); ?>" class="small-text">
 							</fieldset>
 						</td>
 					</tr>
@@ -987,9 +987,9 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 						<td>
 							<fieldset class="wpsc-width-height-fields">
 								<label for="image_width"><?php esc_html_e( 'Width', 'wp-e-commerce' ); ?></label>
-								<input name="wpsc_options[single_view_image_width]" type="number" step="1" min="0" id="single_view_image_width" value="<?php esc_attr_e( get_option( 'single_view_image_width' ) ); ?>" class="small-text">
+								<input name="wpsc_options[single_view_image_width]" type="number" step="1" min="0" id="single_view_image_width" value="<?php esc_attr( get_option( 'single_view_image_width' ) ); ?>" class="small-text">
 								<label for="large_size_h"><?php esc_html_e( 'Height', 'wp-e-commerce' ); ?></label>
-								<input name="wpsc_options[single_view_image_height]" type="number" step="1" min="0" id="single_view_image_height" value="<?php esc_attr_e( get_option( 'single_view_image_height' ) ); ?>" class="small-text">
+								<input name="wpsc_options[single_view_image_height]" type="number" step="1" min="0" id="single_view_image_height" value="<?php esc_attr( get_option( 'single_view_image_height' ) ); ?>" class="small-text">
 							</fieldset>
 						</td>
 					</tr>
@@ -1113,9 +1113,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 									<?php esc_html_e( 'Gallery Thumbnail Image Size', 'wp-e-commerce' ); ?>:
 								</th>
 								<td>
-									<?php esc_html_e( 'Width', 'wp-e-commerce' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_width]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_width' ) ); ?>' />
-									<?php esc_html_e( 'Height', 'wp-e-commerce' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_height]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_height' ) ); ?>' /><br />
-
+									<?php esc_html_e( 'Width', 'wp-e-commerce' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_width]' value='<?php esc_attr( get_option( 'wpsc_gallery_image_width' ) ); ?>' />
+									<?php esc_html_e( 'Height', 'wp-e-commerce' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_height]' value='<?php esc_attr( get_option( 'wpsc_gallery_image_height' ) ); ?>' /><br />
 								</td>
 							</tr>
 
@@ -1205,7 +1204,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<input onclick='jQuery("#wpsc_enable_comments,.wpsc_comments_details").hide()' type='radio' value='0' name='wpsc_options[wpsc_enable_comments]' id='wpsc_enable_comments2' <?php echo $enable_comments2; ?> /> <label for='wpsc_enable_comments1'><?php _e( 'No', 'wp-e-commerce' ); ?></label><br />
 					<div id='wpsc_enable_comments' <?php echo $intense_debate_account_id_display_state; ?> >
 						<?php esc_html_e( 'IntenseDebate Account ID', 'wp-e-commerce' ); ?>:<br/>
-						<input type='text' size='30' name='wpsc_options[wpsc_intense_debate_account_id]' value='<?php esc_attr_e( get_option( 'wpsc_intense_debate_account_id' ) ); ?>' /><br/>
+						<input type='text' size='30' name='wpsc_options[wpsc_intense_debate_account_id]' value='<?php esc_attr( get_option( 'wpsc_intense_debate_account_id' ) ); ?>' /><br/>
 						<small><a href='http://intensedebate.com/sitekey/' title='<?php esc_attr_e( 'Help on finding the Account ID', 'wp-e-commerce' ); ?>'><?php _e( 'Help on finding the Account ID', 'wp-e-commerce' ); ?></a></small>
 					</div>
 				</td>

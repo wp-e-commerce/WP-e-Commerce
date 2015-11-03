@@ -288,7 +288,7 @@ class Sputnik_List_Install extends WP_List_Table {
 		$action_links = array();
 		$action_links[] = '<a href="' . Sputnik_Admin::build_url(array('info' => $plugin->slug, 'TB_iframe' => true))
 							. '" class="thickbox info" title="' .
-							esc_attr( sprintf( __( 'More information about %s', 'wp-e-commerce' ), $name ) ) . '">' . __( 'Details' ) . '</a>';
+							esc_attr( sprintf( __( 'More information about %s', 'wp-e-commerce' ), $name ) ) . '">' . __( 'Details', 'wp-e-commerce' ) . '</a>';
 
 		$purchase_link = $plugin->price;
 

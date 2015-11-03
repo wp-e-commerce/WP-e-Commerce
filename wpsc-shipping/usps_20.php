@@ -201,7 +201,7 @@ class ash_usps {
 		<tr>
 			<td><?php _e( 'USPS ID', 'wp-e-commerce' ); ?></td>
 			<td>
-				<input type='text' name='wpec_usps[id]' value='<?php esc_attr_e( $settings["id"] ); ?>' />
+				<input type='text' name='wpec_usps[id]' value='<?php esc_attr( $settings["id"] ); ?>' />
 				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wp-e-commerce' ), 'https://registration.shippingapis.com/' ); ?></p>
 				<p class='description'><?php _e( "Make sure your account has been activated with USPS. If you're unsure if this applies to you, then please check with USPS.", 'wp-e-commerce' ); ?></p>
 				<p class='description'><?php printf( __("Once you've completed integration, <a href='%s' target='_blank'>you'll need to submit a request to promote tools to production</a>.", 'wp-e-commerce' ), 'https://www.usps.com/business/web-tools-apis/developers-center.htm#learn-more--1-1' ); ?></p>
@@ -238,7 +238,7 @@ class ash_usps {
 			<td>
 				<div class="ui-widget-content multiple-select">
 					<?php foreach ( $this->services as $label => $service ): ?>
-						<input type="checkbox" id="wpec_usps_srv_<?php echo sanitize_title( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( (bool) array_search( $service, $wpec_usps_services ) ); ?> />
+						<input type="checkbox" id="wpec_usps_srv_<?php echo sanitize_title( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr( $service ); ?>" <?php checked( (bool) array_search( $service, $wpec_usps_services ) ); ?> />
 				 		<label for="wpec_usps_srv_<?php echo sanitize_title( $service ); ?>"><?php echo esc_html( $label ); ?></label>
 				 		<br />
 					<?php endforeach; ?>
@@ -263,7 +263,7 @@ class ash_usps {
 			<td>
 				<select id="wpec_usps_intl_pkg" name="wpec_usps[intl_pkg]">
 					<?php foreach ( $mt_array as $mt ): ?>
-						<option value="<?php esc_attr_e( $mt ); ?>" <?php selected( $mt, $mt_selected );?> ><?php echo $mt; ?></option>
+						<option value="<?php esc_attr( $mt ); ?>" <?php selected( $mt, $mt_selected );?> ><?php echo $mt; ?></option>
 					<?php endforeach; ?>
 				</select>
 			</td>
@@ -285,7 +285,7 @@ class ash_usps {
 			<td>
 				<select id="first_cls_type" name="wpec_usps[fcl_type]">
 					<?php foreach ( $fcl_types as $label => $value ): ?>
-						<option value="<?php esc_attr_e( $value ); ?>" <?php selected( $value, $type_selected ); ?>><?php echo $label; ?></option>
+						<option value="<?php esc_attr( $value ); ?>" <?php selected( $value, $type_selected ); ?>><?php echo $label; ?></option>
 					<?php endforeach; ?>
 				</select>
 				<br />

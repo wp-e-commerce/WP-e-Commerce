@@ -107,7 +107,7 @@ class Sputnik_View_Browser extends Sputnik_View {
 	<script type="text/html" id="tmpl-sputnik-modal">
 		<div class="sputnik-modal">
 			<h3 class="sputnik-modal-title">{{ title }}</h3>
-			<a class="sputnik-modal-close" href="" title="<?php esc_attr_e('Close'); ?>">&times;</a>
+			<a class="sputnik-modal-close" href="" title="<?php esc_attr_e('Close', 'wp-e-commerce' ); ?>">&times;</a>
 		</div>
 		<div class="sputnik-modal-backdrop">
 			<div></div>

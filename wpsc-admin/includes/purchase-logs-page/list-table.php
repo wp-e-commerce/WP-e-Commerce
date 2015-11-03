@@ -5,7 +5,7 @@
 
 		<?php
 			if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
-				printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;' ) . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
+				printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;', 'wp-e-commerce' ) . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
 	</h2>
 
 	<?php if ( ! empty( $_REQUEST['updated'] ) || ! empty( $_REQUEST['deleted'] ) ): ?>
@@ -13,11 +13,11 @@
 			<p>
 				<?php
 					if ( ! empty( $_REQUEST['updated'] ) )
-						printf( _n( '%s item updated.', '%s items updated.', $_REQUEST['updated'] ), number_format_i18n( $_REQUEST['updated'] ) );
+						printf( _n( '%s item updated.', '%s items updated.', $_REQUEST['updated'], 'wp-e-commerce' ), number_format_i18n( $_REQUEST['updated'] ) );
 				?>
 				<?php
 					if ( ! empty( $_REQUEST['deleted'] ) )
-						printf( _n( '%s item deleted.', '%s items deleted.', $_REQUEST['deleted'] ), number_format_i18n( $_REQUEST['deleted'] ) );
+						printf( _n( '%s item deleted.', '%s items deleted.', $_REQUEST['deleted'], 'wp-e-commerce' ), number_format_i18n( $_REQUEST['deleted'] ) );
 				?>
 			</p>
 		</div>

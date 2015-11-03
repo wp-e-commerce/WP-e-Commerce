@@ -11,7 +11,7 @@ class Sputnik_View_Browser_List extends Sputnik_View_Browser_Grid {
 		$action_links = array();
 		$action_links[] = '<a href="' . Sputnik_Admin::build_url(array('info' => $plugin->slug, 'TB_iframe' => true))
 							. '" class="button thickbox info" title="' .
-							esc_attr( sprintf( __( 'More information about %s', 'wp-e-commerce' ), $name ) ) . '">' . __( 'Details' ) . '</a>';
+							esc_attr( sprintf( __( 'More information about %s', 'wp-e-commerce' ), $name ) ) . '">' . __( 'Details', 'wp-e-commerce' ) . '</a>';
 
 		$purchase_link = $plugin->price;
 

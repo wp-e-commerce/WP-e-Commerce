@@ -134,7 +134,7 @@ class WPSC_Settings_Form {
 	}
 
 	public function callback_section_separator() {
-		submit_button( __( 'Save Changes' ) );
+		submit_button( __( 'Save Changes', 'wp-e-commerce' ) );
 	}
 
 	public function filter_output_number( $output, $field_array ) {

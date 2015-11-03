@@ -23,11 +23,11 @@ class Sputnik_ThemeUpgrader extends Theme_Upgrader {
 	protected static function download( $url, $timeout = 300 ) {
 		//WARNING: The file is not automatically deleted, The script must unlink() the file.
 		if ( ! $url )
-			return new WP_Error('http_no_url', __('Invalid URL Provided.'));
+			return new WP_Error('http_no_url', __('Invalid URL Provided.', 'wp-e-commerce' ));
 
 		$tmpfname = wp_tempnam($url);
 		if ( ! $tmpfname )
-			return new WP_Error('http_no_file', __('Could not create Temporary file.'));
+			return new WP_Error('http_no_file', __('Could not create Temporary file.', 'wp-e-commerce' ));
 
 		$args = array(
 			'timeout' => $timeout,

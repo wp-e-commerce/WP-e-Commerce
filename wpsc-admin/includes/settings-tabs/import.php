@@ -338,7 +338,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 						<?php _e( 'Supported in <code>Description</code> and <code>Additional Description</code>. Be sure you "quote" the whole description, and slash-escape \"quotes\" inside the description itself.', 'wp-e-commerce' ); ?>
 				</tr>
 				<tr>
-					<th><?php _e( 'Example CSV File'); ?></th>
+					<th><?php _e( 'Example CSV File', 'wp-e-commerce' ); ?></th>
 					<td>
 						<ol>
 							<li><code><?php esc_html_e( 'Banana, The Yellow Fruit, Contains Potassium, 0.67, "BANANA", 150, "g", 0, ""', 'wp-e-commerce' ); ?></code></li>

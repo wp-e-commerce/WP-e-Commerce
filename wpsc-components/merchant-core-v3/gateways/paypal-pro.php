@@ -99,7 +99,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function get_mark_html() {
-		$html = '<img src="' . WPSC_URL . '/images/cc.png" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
+		$html = '<img src="' . WPSC_URL . '/images/cc.png" border="0" alt="' . esc_attr__( 'Credit Card Icons', 'wp-e-commerce' ) .'" />';
 
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
 	}

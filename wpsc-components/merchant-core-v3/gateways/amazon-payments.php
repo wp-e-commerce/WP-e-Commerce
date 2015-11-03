@@ -220,7 +220,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 					<option value='banner' <?php selected( 'banner', $this->setting->get( 'cart_button_display' ) ); ?>><?php _e( 'Banner', 'wp-e-commerce' )?></option>
 					<option value='disabled' <?php selected( 'disabled', $this->setting->get( 'cart_button_display' ) ); ?>><?php _e( 'Disabled', 'wp-e-commerce' )?></option>
 				</select><br />
-				<small><?php _e( 'How the Login with Amazon button gets displayed on the cart page.' ); ?></small>
+				<small><?php _e( 'How the Login with Amazon button gets displayed on the cart page.', 'wp-e-commerce' ); ?></small>
 			</td>
 		</tr>
 		<tr>

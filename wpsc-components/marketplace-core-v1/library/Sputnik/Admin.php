@@ -692,11 +692,11 @@ class Sputnik_Admin {
 	protected static function dashboard() { ?>
 		<p><?php _e('Some text about WPEconomy goes here! This will eventually be replaced with a dashboard-like interface, including latest news, etc.', 'wp-e-commerce'); ?></p>
 
-		<h4><?php _e('Search', 'wp-e-commerce') ?></h4>
+		<h4><?php _e( 'Search', 'wp-e-commerce' ) ?></h4>
 		<p class="install-help"><?php _e('Search for plugins by keyword.', 'wp-e-commerce') ?></p>
 		<?php Sputnik_Admin::search_form(); ?>
 
-		<h4><?php _e('Popular tags') ?></h4>
+		<h4><?php _e( 'Popular tags', 'wp-e-commerce' ) ?></h4>
 		<p class="install-help"><?php _e('You may also browse based on the most popular tags on the store:', 'wp-e-commerce') ?></p>
 <?php
 		echo '<p class="popular-tags">';
@@ -948,7 +948,7 @@ class Sputnik_Admin {
 			<input type="hidden" name="post_type" value="wpsc-product" />
 			<input type="hidden" name="tab" value="search" />
 			<input type="text" name="s" value="<?php echo esc_attr($term) ?>" />
-			<?php submit_button( __( 'Search Plugins' ), 'button', '', false ); ?>
+			<?php submit_button( __( 'Search Plugins', 'wp-e-commerce' ), 'button', '', false ); ?>
 		</form><?php
 	}
 

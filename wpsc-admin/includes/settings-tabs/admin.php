@@ -79,7 +79,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab {
 					</th>
 					<td>
 					<input class='text' name='wpsc_options[purch_log_email]' type='text' size='40' value='<?php echo esc_attr( get_option( 'purch_log_email' ) ); ?>' />
-					<p class="howto"><?php esc_html_e( 'Admin notifications will be sent here.' ); ?></p>
+					<p class="howto"><?php esc_html_e( 'Admin notifications will be sent here.', 'wp-e-commerce' ); ?></p>
 					</td>
 				</tr>
 

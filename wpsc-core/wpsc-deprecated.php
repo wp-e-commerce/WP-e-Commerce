@@ -1431,7 +1431,7 @@ function wpsc_gallery_css_mods() {
 
 		jQuery("a.wp-post-thumbnail").each(function(){
 			var product_image = jQuery(this).text();
-			if (product_image == "' . __( 'Use as featured image' ) . '") {
+			if (product_image == "' . __( 'Use as featured image', 'wp-e-commerce' ) . '") {
 				jQuery(this).text("' . __( 'Use as Product Thumbnail', 'wp-e-commerce' ) . '");
 			}
 		});
@@ -2066,7 +2066,7 @@ function wpsc_user_log_deprecated_filter_values( $meta_value, $meta_key ) {
 	$filter = 'wpsc_account_form_field_' . $meta_key;
 	if ( has_filter( $filter ) ) {
 		$meta_value = apply_filters( $filter , esc_html( $meta_value ) );
-		_wpsc_doing_it_wrong( $filter, __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$neta_name instead.' ), '3.8.14' );
+		_wpsc_doing_it_wrong( $filter, __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$meta_name instead.', 'wp-e-commerce' ), '3.8.14' );
 	}
 
 	return $meta_value;
@@ -2085,7 +2085,7 @@ function wpsc_deprecated_filter_user_log_get() {
 		$meta_data = wpsc_get_customer_meta( 'checkout_details' );
 		$meta_data = apply_filters( 'wpsc_user_log_get', $meta_data, wpsc_get_current_customer_id() );
 		wpsc_update_customer_meta( 'checkout_details', $meta_data );
-		_wpsc_doing_it_wrong( 'wpsc_user_log_get', __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$neta_name instead.' ), '3.8.14' );
+		_wpsc_doing_it_wrong( 'wpsc_user_log_get', __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$meta_name instead.', 'wp-e-commerce' ), '3.8.14' );
 	}
 }
 
