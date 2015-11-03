@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the WP eCommerce package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP eCommerce 3.10.1\n"
+"Project-Id-Version: WP eCommerce 3.11.0\n"
 "Report-Msgid-Bugs-To: https://wpecommerce.org/\n"
-"POT-Creation-Date: 2015-10-29 00:08:41+00:00\n"
+"POT-Creation-Date: 2015-11-03 21:48:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -352,14 +352,6 @@ msgid ""
 "\"Variation Set\" of Size. Once you have made your set you can use the "
 "table on the right to manage them (edit, delete). You will be able to order "
 "your variants by dragging and dropping them within their Variation Set."
-msgstr ""
-
-#: wpsc-admin/admin.php:649
-msgid " downloads"
-msgstr ""
-
-#: wpsc-admin/admin.php:650
-msgid " download"
 msgstr ""
 
 #: wpsc-admin/admin.php:651
@@ -1804,8 +1796,8 @@ msgid "None"
 msgstr ""
 
 #: wpsc-admin/includes/coupon-list-table-class.php:177
-#: wpsc-admin/includes/product-variation-list-table.class.php:165
-#: wpsc-admin/includes/product-variation-list-table.class.php:436
+#: wpsc-admin/includes/product-variation-list-table.class.php:167
+#: wpsc-admin/includes/product-variation-list-table.class.php:439
 #: wpsc-components/theme-engine-v1/helpers/template-tags.php:123
 #: wpsc-components/theme-engine-v1/templates/wpsc-products_page.php:208
 #: wpsc-core/wpsc-deprecated.php:957 wpsc-core/wpsc-deprecated.php:1137
@@ -2180,7 +2172,7 @@ msgid "Use as featured image"
 msgstr ""
 
 #: wpsc-admin/includes/display-items-functions.php:1158
-#: wpsc-admin/includes/product-variation-list-table.class.php:202
+#: wpsc-admin/includes/product-variation-list-table.class.php:205
 msgid "Trash"
 msgstr ""
 
@@ -2280,115 +2272,116 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:165
+#: wpsc-admin/includes/product-variation-list-table.class.php:167
+#: wpsc-admin/includes/product-variation-list-table.class.php:245
 msgid "Edit this item"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:167
+#: wpsc-admin/includes/product-variation-list-table.class.php:170
 msgid "Show shipping editor"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:167
+#: wpsc-admin/includes/product-variation-list-table.class.php:170
 msgid "Edit Shipping"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:175
+#: wpsc-admin/includes/product-variation-list-table.class.php:178
 msgid "Show this variation on the front-end"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:175
-#: wpsc-admin/includes/product-variation-list-table.class.php:432
+#: wpsc-admin/includes/product-variation-list-table.class.php:178
+#: wpsc-admin/includes/product-variation-list-table.class.php:435
 #: wpsc-admin/includes/settings-tabs/import.php:255
 msgid "Publish"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:182
+#: wpsc-admin/includes/product-variation-list-table.class.php:185
 msgid "Mark this variation as draft to hide it from the front-end."
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:182
-#: wpsc-admin/includes/product-variation-list-table.class.php:434
+#: wpsc-admin/includes/product-variation-list-table.class.php:185
+#: wpsc-admin/includes/product-variation-list-table.class.php:437
 msgid "Mark as Draft"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:200
+#: wpsc-admin/includes/product-variation-list-table.class.php:203
 msgid "Restore this item from the Trash"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:200
-#: wpsc-admin/includes/product-variation-list-table.class.php:429
+#: wpsc-admin/includes/product-variation-list-table.class.php:203
+#: wpsc-admin/includes/product-variation-list-table.class.php:432
 msgid "Restore"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:202
+#: wpsc-admin/includes/product-variation-list-table.class.php:205
 msgid "Move this item to the Trash"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:206
+#: wpsc-admin/includes/product-variation-list-table.class.php:209
 msgid "Delete this item permanently"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:206
-#: wpsc-admin/includes/product-variation-list-table.class.php:439
+#: wpsc-admin/includes/product-variation-list-table.class.php:209
+#: wpsc-admin/includes/product-variation-list-table.class.php:442
 msgid "Delete Permanently"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:339
+#: wpsc-admin/includes/product-variation-list-table.class.php:342
 msgid "Variation Shipping Editor"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:388
+#: wpsc-admin/includes/product-variation-list-table.class.php:391
 msgid "%s post updated."
 msgid_plural "%s posts updated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:396
+#: wpsc-admin/includes/product-variation-list-table.class.php:399
 msgid "%s item not updated, somebody is editing it."
 msgid_plural "%s items not updated, somebody is editing them."
 msgstr[0] ""
 msgstr[1] ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:401
+#: wpsc-admin/includes/product-variation-list-table.class.php:404
 msgid "Item permanently deleted."
 msgid_plural "%s items permanently deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:406
+#: wpsc-admin/includes/product-variation-list-table.class.php:409
 msgid "Item moved to the Trash."
 msgid_plural "%s items moved to the Trash."
 msgstr[0] ""
 msgstr[1] ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:409
+#: wpsc-admin/includes/product-variation-list-table.class.php:412
 msgid "Undo"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:414
+#: wpsc-admin/includes/product-variation-list-table.class.php:417
 msgid "Item restored from the Trash."
 msgid_plural "%s items restored from the Trash."
 msgstr[0] ""
 msgstr[1] ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:441
+#: wpsc-admin/includes/product-variation-list-table.class.php:444
 msgid "Move to Trash"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:464
+#: wpsc-admin/includes/product-variation-list-table.class.php:467
 msgid "Bulk Actions"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:474
+#: wpsc-admin/includes/product-variation-list-table.class.php:477
 #: wpsc-admin/includes/purchase-logs-page/upgrade.php:41
 msgid "Apply"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:623
+#: wpsc-admin/includes/product-variation-list-table.class.php:626
 msgid "Edit this variation"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:671
+#: wpsc-admin/includes/product-variation-list-table.class.php:674
 msgid "Empty Trash"
 msgstr ""
 
@@ -2508,12 +2501,6 @@ msgstr ""
 #: wpsc-admin/includes/purchase-log-list-table-class.php:760
 #: wpsc-admin/includes/purchase-log-list-table-class.php:782
 msgid "View order details"
-msgstr ""
-
-#: wpsc-admin/includes/purchase-log-list-table-class.php:769
-#: wpsc-components/theme-engine-v2/classes/orders-table.php:69
-#: wpsc-core/wpsc-deprecated.php:884
-msgid "Y/m/d g:i:s A"
 msgstr ""
 
 #: wpsc-admin/includes/purchase-log-list-table-class.php:774
@@ -2937,8 +2924,8 @@ msgstr ""
 #: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1041
 #: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1062
 #: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1106
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1151
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1204
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1150
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1203
 #: wpsc-merchants/paypal-express.merchant.php:507
 #: wpsc-merchants/paypal-standard.merchant.php:755
 #: wpsc-merchants/paypal-standard.merchant.php:765
@@ -2985,8 +2972,8 @@ msgstr ""
 #: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1042
 #: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1063
 #: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1107
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1152
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1205
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1151
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1204
 #: wpsc-merchants/paypal-express.merchant.php:508
 #: wpsc-merchants/paypal-standard.merchant.php:756
 #: wpsc-merchants/paypal-standard.merchant.php:766
@@ -5705,73 +5692,73 @@ msgstr ""
 msgid "Gallery Thumbnail Image Size"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1128
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1127
 msgid "Pagination Settings"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1132
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1131
 msgid "Use Pagination"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1154
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1153
 msgid "number of products to show per page"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1161
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1160
 msgid "Page Number position"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1166
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1165
 msgid "Top"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1169
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1168
 msgid "Bottom"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1172
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1171
 msgid "Both"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1179
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1178
 msgid "Comment Settings"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1183
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1182
 msgid "Use IntenseDebate Comments"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1184
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1183
 msgid ""
 "IntenseDebate comments enhance and encourage conversation on your blog or "
 "website"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1184
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1183
 msgid "intensedebate-logo"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1184
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1183
 msgid "IntenseDebate"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1207
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1206
 msgid "IntenseDebate Account ID"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1209
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1208
 msgid "Help on finding the Account ID"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1218
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1217
 msgid "By Default Display Comments on"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1225
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1224
 msgid "All Products"
 msgstr ""
 
-#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1228
+#: wpsc-components/theme-engine-v1/classes/settings-tab-presentation.php:1227
 msgid "Per Product"
 msgstr ""
 
@@ -6897,14 +6884,6 @@ msgstr ""
 msgid "WP eCommerce Price Range Widget"
 msgstr ""
 
-#: wpsc-components/theme-engine-v2/classes/widgets/price-range.php:116
-msgid "Under %s"
-msgstr ""
-
-#: wpsc-components/theme-engine-v2/classes/widgets/price-range.php:118
-msgid "Over %s"
-msgstr ""
-
 #: wpsc-components/theme-engine-v2/classes/widgets/product-categories.php:20
 msgid "Product Categories Widget"
 msgstr ""
@@ -7213,11 +7192,6 @@ msgstr ""
 msgid ""
 "Creating an account keeps your order history, user profile, and more all in "
 "one place. We’ll email you account information right away."
-msgstr ""
-
-#: wpsc-components/theme-engine-v2/helpers/template-tags/product.php:198
-#: wpsc-components/theme-engine-v2/helpers/template-tags/product.php:235
-msgid ", "
 msgstr ""
 
 #: wpsc-components/theme-engine-v2/helpers/template-tags/product.php:620
@@ -7748,6 +7722,10 @@ msgstr ""
 msgid "Unpublished"
 msgstr ""
 
+#: wpsc-core/wpsc-deprecated.php:884
+msgid "Y/m/d g:i:s A"
+msgstr ""
+
 #: wpsc-core/wpsc-deprecated.php:893
 msgid "Y/m/d"
 msgstr ""
@@ -7860,7 +7838,7 @@ msgstr ""
 #: wpsc-core/wpsc-deprecated.php:2069 wpsc-core/wpsc-deprecated.php:2088
 msgid ""
 "The filter being used has been deprecated. Use wpsc_get_visitor_meta or "
-"wpsc_get_visitor_meta_$neta_name instead."
+"wpsc_get_visitor_meta_$meta_name instead."
 msgstr ""
 
 #: wpsc-core/wpsc-deprecated.php:2176
@@ -11941,6 +11919,16 @@ msgctxt "Coupon comparison logic"
 msgid "AND"
 msgstr ""
 
+#: wpsc-admin/admin.php:649
+msgctxt "live preview for downloads metabox"
+msgid " downloads"
+msgstr ""
+
+#: wpsc-admin/admin.php:650
+msgctxt "live preview for downloads metabox"
+msgid " download"
+msgstr ""
+
 #: wpsc-admin/admin.php:802 wpsc-admin/admin.php:829
 msgctxt "the total value of sales in dashboard widget"
 msgid "Sales"
@@ -12055,7 +12043,7 @@ msgctxt "External product link target"
 msgid "Default (set by theme)"
 msgstr ""
 
-#: wpsc-admin/includes/product-variation-list-table.class.php:543
+#: wpsc-admin/includes/product-variation-list-table.class.php:546
 msgctxt "posts"
 msgid "All <span class=\"count\">(%s)</span>"
 msgid_plural "All <span class=\"count\">(%s)</span>"
@@ -12217,6 +12205,11 @@ msgstr ""
 #: wpsc-admin/includes/purchase-log-list-table-class.php:763
 msgctxt "Sales log page"
 msgid "Delete"
+msgstr ""
+
+#: wpsc-admin/includes/purchase-log-list-table-class.php:769
+msgctxt "default date format for purchase log columns"
+msgid "Y/m/d g:i:s A"
 msgstr ""
 
 #: wpsc-admin/includes/purchase-log-list-table-class.php:819
@@ -12625,6 +12618,16 @@ msgctxt "price range widget"
 msgid "From %1$s to %2$s"
 msgstr ""
 
+#: wpsc-components/theme-engine-v2/classes/widgets/price-range.php:116
+msgctxt "price range widget"
+msgid "Under %s"
+msgstr ""
+
+#: wpsc-components/theme-engine-v2/classes/widgets/price-range.php:118
+msgctxt "price range widget"
+msgid "Over %s"
+msgstr ""
+
 #: wpsc-components/theme-engine-v2/classes/cart-item-table-widget-form.php:14
 msgctxt "quantity abbreviation"
 msgid "Qty"
@@ -12638,6 +12641,11 @@ msgstr ""
 #: wpsc-components/theme-engine-v2/classes/digital-contents-table.php:84
 msgctxt "customer account - digital contents - table header"
 msgid "Digital Contents"
+msgstr ""
+
+#: wpsc-components/theme-engine-v2/classes/orders-table.php:69
+msgctxt "orders table column date format"
+msgid "Y/m/d g:i:s A"
 msgstr ""
 
 #: wpsc-components/theme-engine-v2/classes/settings-pages.php:40
@@ -12935,6 +12943,16 @@ msgstr ""
 #: wpsc-components/theme-engine-v2/helpers/template-tags/general.php:397
 msgctxt "customer account tab"
 msgid "Settings"
+msgstr ""
+
+#: wpsc-components/theme-engine-v2/helpers/template-tags/product.php:198
+msgctxt "category list separator"
+msgid ", "
+msgstr ""
+
+#: wpsc-components/theme-engine-v2/helpers/template-tags/product.php:235
+msgctxt "tag list separator"
+msgid ", "
 msgstr ""
 
 #: wpsc-components/theme-engine-v2/helpers/template-tags/product.php:298
