@@ -158,7 +158,7 @@ class WPSC_Purchase_Log_Page {
 				$disabled = '';
 			}
 			?>
-			<a href='<?php esc_attr_e( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
+			<a href='<?php esc_url( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
 
 		</span></span></span>
 		<?php

@@ -536,7 +536,7 @@ function wpsc_admin_include_optionspage_css_and_js() {
 		'add_tax_rate_nonce'                  => _wpsc_create_ajax_nonce( 'add_tax_rate' ),
 		'current_tab'                         => WPSC_Settings_Page::get_instance()->get_current_tab_id(),
 		'before_unload_dialog'                => __( 'The changes you made will be lost if you navigate away from this page.', 'wp-e-commerce' ),
-		'ajax_navigate_confirm_dialog'        => __( 'The changes you made will be lost if you navigate away from this page.', 'wp-e-commerce' ) . "\n\n" . __( 'Click OK to discard your changes, or Cancel to remain on this page.' ),
+		'ajax_navigate_confirm_dialog'        => __( 'The changes you made will be lost if you navigate away from this page.', 'wp-e-commerce' ) . "\n\n" . __( 'Click OK to discard your changes, or Cancel to remain on this page.', 'wp-e-commerce' ),
 		'edit_field_options'                  => __( 'Edit Options', 'wp-e-commerce' ),
 		'hide_edit_field_options'             => __( 'Hide Options', 'wp-e-commerce' ),
 		'delete_form_set_confirm'             => __( 'Are you sure you want to delete %s? Submitted data of this form set will also be removed from sales logs.', 'wp-e-commerce' ),
@@ -646,9 +646,9 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 				/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
 				'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wp-e-commerce' ),
 				'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wp-e-commerce' ),
-				'meta_downloads_plural'    => __( ' downloads', 'live preview for downloads metabox', 'wp-e-commerce' ),
-				'meta_downloads_singular'  => __( ' download' , 'live preview for downloads metabox', 'wp-e-commerce' ),
-				'wpsc_inline_css_error'    => __( 'It is not possible to change the state of the inline CSS without also changing the common CSS.' )
+				'meta_downloads_plural'    => _x( ' downloads', 'live preview for downloads metabox', 'wp-e-commerce' ),
+				'meta_downloads_singular'  => _x( ' download' , 'live preview for downloads metabox', 'wp-e-commerce' ),
+				'wpsc_inline_css_error'    => __( 'It is not possible to change the state of the inline CSS without also changing the common CSS.', 'wp-e-commerce' )
 			) );
 
 			$_wpsc_admin_l10n_loaded = true;
@@ -675,9 +675,9 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 			wp_enqueue_script( 'wpsc-set-post-thumbnail', WPSC_URL . '/wpsc-admin/js/set-post-thumbnail.js', array( 'jquery', 'wp-e-commerce-admin' ), $version_identifier );
 			wp_localize_script( 'wpsc-set-post-thumbnail', 'WPSC_Set_Post_Thumbnail', array(
 				'link_text' => __( 'Use as Product Thumbnail', 'wp-e-commerce' ),
-				'saving'    => __( 'Saving...' ),
-				'error'     => __( 'Could not set that as the thumbnail image. Try a different attachment.' ),
-				'done'      => __( 'Done' ),
+				'saving'    => __( 'Saving...', 'wp-e-commerce' ),
+				'error'     => __( 'Could not set that as the thumbnail image. Try a different attachment.', 'wp-e-commerce' ),
+				'done'      => __( 'Done', 'wp-e-commerce' ),
 				'nonce'     => _wpsc_create_ajax_nonce( 'set_variation_product_thumbnail' ),
 			) );
 		}

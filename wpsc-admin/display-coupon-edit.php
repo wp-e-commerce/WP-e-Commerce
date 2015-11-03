@@ -30,7 +30,7 @@ $coupon = new WPSC_Coupon( $_GET['coupon'] );
 							<label for="edit_coupon_code"><?php _e( 'Coupon Code', 'wp-e-commerce' ); ?></label>
 						</th>
 						<td>
-							<input name="edit_coupon_code" id="edit_coupon_code" type="text" value="<?php esc_attr_e( $coupon->get( 'coupon_code' ) ); ?>" style="width: 300px;"/>
+							<input name="edit_coupon_code" id="edit_coupon_code" type="text" value="<?php esc_attr( $coupon->get( 'coupon_code' ) ); ?>" style="width: 300px;"/>
 							<p class="description"><?php _e( 'The code entered to receive the discount', 'wp-e-commerce' ); ?></p>
 						</td>
 					</tr>
@@ -40,7 +40,7 @@ $coupon = new WPSC_Coupon( $_GET['coupon'] );
 							<label for="edit_coupon_amount"><?php _e( 'Discount', 'wp-e-commerce' ); ?></label>
 						</th>
 						<td>
-							<input name="edit_coupon_amount" id="edit_coupon_amount" type="number" step=".01" value="<?php esc_attr_e( $coupon->get( 'value' ) ); ?>" class="small-text" min="0" style="width: 300px" />
+							<input name="edit_coupon_amount" id="edit_coupon_amount" type="number" step=".01" value="<?php esc_attr( $coupon->get( 'value' ) ); ?>" class="small-text" min="0" style="width: 300px" />
 							<p class="description"><?php _e( 'The discount amount', 'wp-e-commerce' ); ?></p>
 						</td>
 					</tr>
@@ -72,9 +72,9 @@ $coupon = new WPSC_Coupon( $_GET['coupon'] );
 								$end   = $coupon->get( 'expiry' ) == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon->get( 'expiry' ), 'Y-m-d' );
 							?>
 							<span class="description"><?php _e( 'Start: ', 'wp-e-commerce' ); ?></span>
-							<input name="edit_coupon_start" id="edit_coupon_start" type="text" value="<?php esc_attr_e( $start ); ?>" class="regular-text pickdate" style="width: 100px"/>
+							<input name="edit_coupon_start" id="edit_coupon_start" type="text" value="<?php esc_attr( $start ); ?>" class="regular-text pickdate" style="width: 100px"/>
 							<span class="description"><?php _e( 'End: ', 'wp-e-commerce' ); ?></span>
-							<input name="edit_coupon_end" id="edit_coupon_end" type="text" value="<?php esc_attr_e( $end ); ?>" class="regular-text pickdate" style="width: 100px"/>
+							<input name="edit_coupon_end" id="edit_coupon_end" type="text" value="<?php esc_attr( $end ); ?>" class="regular-text pickdate" style="width: 100px"/>
 							<p class="description"><?php _e( 'If date fields are left empty, there will be no expiration on this coupon.', 'wp-e-commerce' ); ?></p>
 						</td>
 					</tr>
@@ -159,7 +159,7 @@ $coupon = new WPSC_Coupon( $_GET['coupon'] );
 										<option value="category"<?php selected( 'category', $condition['logic'] ); ?>><?php _e( 'In Category', 'wp-e-commerce' ); ?></option>
 									</select>
 
-									<input type="text" name="rules[value][]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 150px;"/>
+									<input type="text" name="rules[value][]" value="<?php esc_attr( $condition['value'] ); ?>" style="width: 150px;"/>
 									<a title="<?php esc_attr_e( 'Delete condition', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wp-e-commerce' ); ?></a>
 									<a title="<?php esc_attr_e( 'Add condition', 'wp-e-commerce' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wp-e-commerce' ); ?></a>
 								</div>

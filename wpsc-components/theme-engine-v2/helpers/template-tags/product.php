@@ -195,7 +195,7 @@ function wpsc_get_product_category_list( $args = '' ) {
 		'id'        => 0,
 		'before'    => '',
 		'after'     => '',
-		'separator' => __( ', ', 'category list separator', 'wp-e-commerce' ),
+		'separator' => _x( ', ', 'category list separator', 'wp-e-commerce' ),
 	);
 
 	$r = wp_parse_args( $args, $defaults );
