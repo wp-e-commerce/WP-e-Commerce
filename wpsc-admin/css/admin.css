@@ -1419,7 +1419,6 @@ table.category_forms td.last_row {
 }
 
 a.admin_download {
-	display: block;
 	height: 26px;
 	border-bottom: none;
 	text-decoration: none;
