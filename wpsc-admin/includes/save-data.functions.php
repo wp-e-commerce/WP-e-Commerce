@@ -206,10 +206,10 @@ function wpsc_admin_category_forms_add() {
 					<?php foreach( $countrylist as $country ): ?>
 						<?php if ( in_array( $country['id'], (array)$selectedCountries ) ): ?>
 							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo $country['id']; ?>' value='<?php echo $country['id']; ?>' checked='<?php echo $country['visible']; ?>' />
-							<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html( $country['country'] ); ?></label><br />
+							<label for="countrylist2-<?php echo $country['id']; ?>"><?php echo esc_html( $country['country'] ); ?></label><br />
 						<?php else: ?>
 							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo $country['id']; ?>' value='<?php echo $country['id']; ?>'  />
-							<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html( $country['country'] ); ?></label><br />
+							<label for="countrylist2-<?php echo $country['id']; ?>"><?php echo esc_html( $country['country'] ); ?></label><br />
 						<?php endif; ?>
 					<?php endforeach; ?>
 				</div>
@@ -401,12 +401,12 @@ function wpsc_admin_category_forms_edit() {
 						if ( in_array( $country['id'], (array)$selectedCountries ) ) {
 							?>
 							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo $country['id']; ?>' value='<?php echo $country['id']; ?>' checked='<?php echo $country['visible']; ?>' />
-							<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html( $country['country'] ); ?></label><br />
+							<label for="countrylist2-<?php echo $country['id']; ?>"><?php echo esc_html( $country['country'] ); ?></label><br />
 							<?php
 						} else {
 							?>
 							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo $country['id']; ?>' value='<?php echo $country['id']; ?>'  />
-							<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html( $country['country'] ); ?></label><br />
+							<label for="countrylist2-<?php echo $country['id']; ?>"><?php echo esc_html( $country['country'] ); ?></label><br />
 							<?php
 						}
 					} ?>

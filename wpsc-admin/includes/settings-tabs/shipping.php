@@ -81,7 +81,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		}
 
 		?>
-			<div id='wpsc_shipping_settings_<?php esc_attr( $selected_module_id ); ?>_form' class='shipping-module-settings-form'>
+			<div id='wpsc_shipping_settings_<?php echo esc_attr( $selected_module_id ); ?>_form' class='shipping-module-settings-form'>
 				<table class='form-table'>
 					<?php echo $content; ?>
 				</table>
@@ -146,14 +146,14 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			<tr>
 				<th><?php esc_html_e( 'Shipping Origin City', 'wp-e-commerce' ); ?></th>
 				<td>
-					<input type='text' name='wpsc_options[base_city]' value='<?php esc_attr( get_option( 'base_city' ) ); ?>' />
+					<input type='text' name='wpsc_options[base_city]' value='<?php echo esc_attr( get_option( 'base_city' ) ); ?>' />
 					<p class='description'><?php esc_html_e( 'The name of the city where you fulfill and ship orders from. This enables us to give your customers more accurate shipping pricing.', 'wp-e-commerce' ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<th><?php esc_html_e( 'Shipping Origin Zipcode/Postcode', 'wp-e-commerce' ); ?></th>
 				<td>
-					<input type='text' name='wpsc_options[base_zipcode]' value='<?php esc_attr( get_option( 'base_zipcode' ) ); ?>' />
+					<input type='text' name='wpsc_options[base_zipcode]' value='<?php echo esc_attr( get_option( 'base_zipcode' ) ); ?>' />
 					<p class='description'>
 						<?php esc_html_e( 'The ZIP code / Postal code from where you fulfill and ship orders.', 'wp-e-commerce' ); ?><br />
 						<?php esc_html_e( 'If you are based in the United States, then this field is required in order for the UPS and USPS Shipping Calculators to work.', 'wp-e-commerce' ); ?>
@@ -187,11 +187,11 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 					<table>
 						<tr>
 							<th><?php esc_html_e( 'Shipwire Email', 'wp-e-commerce' ); ?></th>
-							<td><input type="text" name='wpsc_options[shipwireemail]' value="<?php esc_attr( get_option( 'shipwireemail' ) ); ?>" /></td>
+							<td><input type="text" name='wpsc_options[shipwireemail]' value="<?php echo esc_attr( get_option( 'shipwireemail' ) ); ?>" /></td>
 						</tr>
 						<tr>
 							<th><?php esc_html_e( 'Shipwire Password', 'wp-e-commerce' ); ?></th>
-							<td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php esc_attr( get_option( 'shipwirepassword' ) ); ?>" /></td>
+							<td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php echo esc_attr( get_option( 'shipwirepassword' ) ); ?>" /></td>
 						</tr>
 						<tr>
 							<th><?php esc_html_e( 'Use Test Server?', 'wp-e-commerce' ); ?></th>

@@ -147,7 +147,7 @@ function wpsc_price_control_forms() {
 ?>
 		<em id="wpsc_product_price_metabox_live_title" class="wpsc_metabox_live_title">
 			<p>&nbsp;<?php echo esc_html( $ct_symb ); ?><span><?php echo esc_html( $sale_price ); ?></span></p>
-			<del><?php esc_html( $ct_symb ); ?><span><?php esc_html( $price ) ?></span></del>
+			<del><?php echo esc_html( $ct_symb ); ?><span><?php echo esc_html( $price ) ?></span></del>
 		</em>
 		<input type="hidden" id="parent_post" name="parent_post" value="<?php echo $post->post_parent; ?>" />
 		<?php /* Lots of tedious work is avoided with this little line. */ ?>
