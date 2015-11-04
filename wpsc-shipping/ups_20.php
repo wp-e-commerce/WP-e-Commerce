@@ -158,7 +158,7 @@ class ash_ups {
 					</script>
 					<select id='drop_type' name='wpsc_ups_settings[DropoffType]' onChange='checkDropValue()' >
 						<?php foreach ( array_keys( (array) $this->drop_types ) as $dkey ): ?>
-							<option value="<?php esc_attr( $dkey ); ?>" <?php selected( $dkey, $sel2_drop ); ?> >
+							<option value="<?php echo esc_attr( $dkey ); ?>" <?php selected( $dkey, $sel2_drop ); ?> >
 								<?php echo( $this->drop_types[$dkey] ); ?>
 							</option>
 						<?php endforeach; ?>
@@ -179,7 +179,7 @@ class ash_ups {
 				<td>
 					<select id='cust_type' name='wpsc_ups_settings[CustomerType]' <?php disabled( $wpsc_ups_settings['DropoffType'] != '11' ); ?> >
 						<?php foreach( array_keys( $this->cust_types ) as $dkey ): ?>
-							<option value="<?php esc_attr( $dkey ); ?>" <?php selected( $sel3_drop == $dkey ); ?> >
+							<option value="<?php echo esc_attr( $dkey ); ?>" <?php selected( $sel3_drop == $dkey ); ?> >
 								<?php echo( $this->cust_types[$dkey] ); ?>
 							</option>
 						<?php endforeach; ?>
@@ -192,8 +192,8 @@ class ash_ups {
 				<td>
 					<select name='wpsc_ups_settings[48_container]'>
 						<?php foreach ( $packaging_options as $key => $name ): ?>
-							<option value='<?php esc_attr( $key ); ?>' <?php selected( $key == $wpsc_ups_settings['48_container'] );?>>
-								<?php esc_html( $name ); ?>
+							<option value='<?php echo esc_attr( $key ); ?>' <?php selected( $key == $wpsc_ups_settings['48_container'] );?>>
+								<?php echo esc_html( $name ); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -230,8 +230,8 @@ class ash_ups {
 				<td>
 					<div class="ui-widget-content multiple-select">
 						<?php foreach( array_keys( $this->Services ) as $service ): ?>
-							<input type="checkbox" id="wps_ups_srv_<?php esc_attr( $service ); ?>" name="wpsc_ups_services[]" value="<?php esc_attr( $service ); ?>" <?php checked( is_array( $wpsc_ups_services ) && ( array_search( $service, $wpsc_ups_services ) !== false ) ); ?> />
-							<label for="wps_ups_srv_<?php esc_attr( $service ); ?>"><?php esc_html( $this->Services[ $service ] ); ?></label><br />
+							<input type="checkbox" id="wps_ups_srv_<?php echo esc_attr( $service ); ?>" name="wpsc_ups_services[]" value="<?php echo esc_attr( $service ); ?>" <?php checked( is_array( $wpsc_ups_services ) && ( array_search( $service, $wpsc_ups_services ) !== false ) ); ?> />
+							<label for="wps_ups_srv_<?php echo esc_attr( $service ); ?>"><?php echo esc_html( $this->Services[ $service ] ); ?></label><br />
 						<?php endforeach; ?>
 					</div>
 					<p class='description'><?php _e( 'Note: All services used if no services selected', 'wp-e-commerce' ); ?></p>
@@ -244,25 +244,25 @@ class ash_ups {
 			<tr>
 				<td><?php _e( 'Account Number', 'wp-e-commerce' ); ?> *</td>
 				<td>
-					<input type="text" name='wpsc_ups_settings[upsaccount]' value="<?php esc_attr( $wpsc_ups_settings['upsaccount'] ); ?>" />
+					<input type="text" name='wpsc_ups_settings[upsaccount]' value="<?php echo esc_attr( $wpsc_ups_settings['upsaccount'] ); ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td><?php _e( 'Username', 'wp-e-commerce' ); ?></td>
 				<td>
-					<input type="text" name='wpsc_ups_settings[upsusername]' value="<?php esc_attr( base64_decode( $wpsc_ups_settings['upsusername'] ) ); ?>" />
+					<input type="text" name='wpsc_ups_settings[upsusername]' value="<?php echo esc_attr( base64_decode( $wpsc_ups_settings['upsusername'] ) ); ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td><?php _e( 'Password', 'wp-e-commerce' ); ?></td>
 				<td>
-					<input type="password" name='wpsc_ups_settings[upspassword]' value="<?php esc_attr( base64_decode( $wpsc_ups_settings['upspassword'] ) ); ?>" />
+					<input type="password" name='wpsc_ups_settings[upspassword]' value="<?php echo esc_attr( base64_decode( $wpsc_ups_settings['upspassword'] ) ); ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td><?php _e( 'UPS XML API Key', 'wp-e-commerce' ); ?></td>
 				<td>
-					<input type="text" name='wpsc_ups_settings[upsid]' value="<?php esc_attr( base64_decode( $wpsc_ups_settings['upsid'] ) ); ?>" />
+					<input type="text" name='wpsc_ups_settings[upsid]' value="<?php echo esc_attr( base64_decode( $wpsc_ups_settings['upsid'] ) ); ?>" />
 					<p class='description'><?php printf( __( "Don't have an API login/ID? <a href='%s' target='_blank'>Sign up for My UPS</a>", 'wp-e-commerce' ), esc_url( "https://www.ups.com/upsdeveloperkit?loc=en_US" ) ); ?></p>
 				</td>
 			</tr>
