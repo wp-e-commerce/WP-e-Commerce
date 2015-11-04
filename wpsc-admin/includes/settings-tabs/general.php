@@ -95,10 +95,10 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 								<?php foreach ( (array)$countrylist as $country ) : ?>
 									<?php if ( $country['visible'] == 1 ) : ?>
 										<input type='checkbox' id="countrylist2-<?php echo $country['id']; ?>" name='countrylist2[]' value='<?php echo $country['id']; ?>' checked='checked' />
-										<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html( $country['country'] ); ?></label><br />
+										<label for="countrylist2-<?php echo $country['id']; ?>"><?php echo esc_html( $country['country'] ); ?></label><br />
 									<?php else : ?>
 										<input type='checkbox' id="countrylist2-<?php echo $country['id']; ?>" name='countrylist2[]' value='<?php echo $country['id']; ?>'  />
-										<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html( $country['country'] ); ?></label><br />
+										<label for="countrylist2-<?php echo $country['id']; ?>"><?php echo esc_html( $country['country'] ); ?></label><br />
 									<?php endif; ?>
 								<?php endforeach; ?>
 							</div>
@@ -155,7 +155,7 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 				<td>
 					<select id="wpsc_options_currency_type" name='wpsc_options[currency_type]' onchange='getcurrency(this.options[this.selectedIndex].value);'>
 					<?php foreach ( $currency_data as $currency ) : ?>
-						<option value='<?php echo $currency['id']; ?>' <?php selected( $currency['id'], $currency_type ); ?>><?php esc_html( $currency['country'] ); ?> (<?php echo $currency['currency']; ?>)</option>
+						<option value='<?php echo $currency['id']; ?>' <?php selected( $currency['id'], $currency_type ); ?>><?php echo esc_html( $currency['country'] ); ?> (<?php echo $currency['currency']; ?>)</option>
 					<?php endforeach; ?>
 					</select>
 				</td>

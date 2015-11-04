@@ -89,7 +89,9 @@
 			<table class="widefat" cellspacing="0">
 				<thead>
 				<tr>
-					<?php print_column_headers( 'wpsc_purchase_log_item_details' ); ?>
+					<?php
+						print_column_headers( 'wpsc_purchase_log_item_details' );
+					 ?>
 				</tr>
 				</thead>
 
