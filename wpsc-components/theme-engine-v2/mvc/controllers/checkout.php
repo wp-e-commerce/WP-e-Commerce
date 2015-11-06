@@ -317,7 +317,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		//Check to ensure purchase log row was inserted successfully
 		if(is_null($purchase_log->get( 'id' ))) {
 			$this->message_collection->add(
-				__( 'A database error occured while processing your request.', 'wp-e-commerce' ),
+				__( 'A database error occurred while processing your request.', 'wp-e-commerce' ),
 				'error'
 			);
 			return;
