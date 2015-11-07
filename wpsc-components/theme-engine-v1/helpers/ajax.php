@@ -749,7 +749,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 		//Check to ensure log row was inserted successfully
 		if(is_null($purchase_log_id)) {
-			$error_messages[] = __( 'A database error occured while processing your request.', 'wp-e-commerce' );
+			$error_messages[] = __( 'A database error occurred while processing your request.', 'wp-e-commerce' );
 			wpsc_update_customer_meta( 'checkout_misc_error_messages', $error_messages );
 			return;
 		}
