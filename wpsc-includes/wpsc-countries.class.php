@@ -706,7 +706,6 @@ class WPSC_Countries {
 		}
 
 		if ( ! $region_id ) {
-			_wpsc_doing_it_wrong( 'WPSC_Countries::get_country_id_by_region_id', __( 'Function "get_country_id_by_region_id" requires an integer $region_id', 'wp-e-commerce' ), '3.8.14' );
 			return false;
 		}
 
