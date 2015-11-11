@@ -1699,15 +1699,17 @@ class WPSC_Amazon_Payments_Order_Handler {
 		$message = ob_get_clean();
 		$subject = $template['subject'];
 
-		$content_type = function () { return 'text/html'; };
-
-		add_filter( 'wp_mail_content_type', $content_type );
+		add_filter( 'wp_mail_content_type', array( __CLASS__, 'email_content_type' ) );
 
 		$sent = wp_mail( $order->get( 'billingemail' ), $subject, $message );
 
-		remove_filter( 'wp_mail_content_type', $content_type );
+		remove_filter( 'wp_mail_content_type', array( __CLASS__, 'email_content_type' ) );
 
 		return $sent;
+	}
+
+	public static function email_content_type( $type ) {
+		return 'text/html';
 	}
 
 	/**
