@@ -816,6 +816,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 */
 	public function api_request( $args ) {
 
+		if ( ! version_compare( phpversion(), '5.3', '>=' ) ) {
+			return;
+		}
+
 		if ( ! class_exists( 'PayWithAmazon\ResponseParser' ) ) {
 			require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/ResponseParser.php';
 		}
