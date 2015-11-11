@@ -1198,7 +1198,7 @@ function wpec_remap_shop_subpages( $vars ) {
 
 function wpsc_remove_page_from_query_string( $query_string ) {
 
-	if ( false === strpos( implode( ' ', $query_string ), 'wp-e-commerce' ) ) {
+	if ( false === strpos( implode( ' ', $query_string ), 'wpsc' ) ) {
 		return $query_string;
 	}
 
