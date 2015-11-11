@@ -22,7 +22,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		)
 	);
 
+	private $ipn_handler;
 	private $order_handler;
+	private $response_parser;
 	private $reference_id;
 	private $seller_id;
 	private $mws_access_key;
@@ -43,9 +45,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$this->user_is_authenticated = isset( $_GET['amazon_payments_advanced'] ) && 'true' == $_GET['amazon_payments_advanced'] && isset( $_GET['access_token'] );
 
-		$this->order_handler = WPSC_Amazon_Payments_Order_Handler::get_instance( $this );
+		$this->order_handler    = WPSC_Amazon_Payments_Order_Handler::get_instance( $this );
 
 		add_action( 'init', array( $this->order_handler, 'process_ipn' ) );
+
 		// Define user set variables
 		$this->seller_id       = $this->setting->get( 'seller_id' );
 		$this->mws_access_key  = $this->setting->get( 'mws_access_key' );
@@ -820,10 +823,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			return;
 		}
 
-		if ( ! class_exists( 'PayWithAmazon\ResponseParser' ) ) {
-			require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/ResponseParser.php';
-		}
-
 		$defaults = array(
 			'AWSAccessKeyId' => $this->mws_access_key,
 			'SellerId'       => $this->seller_id
@@ -841,11 +840,18 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$this->log( $args, $response );
 
 		if ( ! is_wp_error( $response ) ) {
+
 			$response_object = array();
 			$response_object['ResponseBody'] = $response['body'];
 			$response_object['Status']       = wp_remote_retrieve_response_code( $response );
-			$response_parser = new PayWithAmazon\ResponseParser( $response_object );
-			$response = $response_parser->toArray();
+
+			if ( ! class_exists( 'PayWithAmazon\ResponseParser' ) ) {
+				require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/ResponseParser.php';
+			}
+
+			$this->response_parser->response = $response_object;
+
+			$response = $this->response_parser->toArray();
 		}
 
 		return $response;
@@ -1583,13 +1589,13 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 		$this->doing_ipn = true;
 
-		if ( ! class_exists( 'PayWithAmazon\IpnHandler' ) ) {
-			require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/IpnHandler.php';
-		}
-
 		try {
-			$ipn       = new PayWithAmazon\IpnHandler( $headers, $body );
-			$data      = $ipn->toArray();
+
+			if ( ! class_exists( 'PayWithAmazon\IpnHandler' ) ) {
+				require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/IpnHandler.php';
+			}
+
+			$data      = $this->ipn_handler->toArray();
 			$seller_id = $data['SellerId'];
 
 			if ( $seller_id != $this->gateway->seller_id ) {
