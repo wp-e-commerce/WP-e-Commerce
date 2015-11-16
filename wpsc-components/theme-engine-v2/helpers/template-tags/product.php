@@ -620,7 +620,7 @@ function wpsc_get_product_description( $more_link_text = null, $mode = 'with-tea
 		$more_link_text = __( 'More details &raquo;', 'wp-e-commerce' );
 	}
 
-	$content = get_the_content( $more_link_text, $stripteaser );
+	$content = in_the_loop() ? get_the_content( $more_link_text, $stripteaser ) : get_post_field( 'post_content', get_queried_object_id() );
 
 	if ( $mode == 'only-teaser' ) {
 		remove_filter( 'the_content_more_link', '__return_empty_string', 99 );
