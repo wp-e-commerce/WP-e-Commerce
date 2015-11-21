@@ -790,4 +790,4 @@ class WPSC_Payment_Gateway_Setting {
 	}
 }
 
-WPSC_Payment_Gateways::init();
+add_action( 'wpsc_loaded', array( 'WPSC_Payment_Gateways', 'init' ) );
