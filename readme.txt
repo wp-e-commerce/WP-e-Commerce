@@ -3,8 +3,8 @@ Contributors: JustinSainton
 Donate link: https://wpecommerce.org
 Tags: e-commerce, woocommerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 4.1
-Tested up to: 4.3
-Stable tag: 3.11.0
+Tested up to: 4.4
+Stable tag: 3.11.1
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,6 +35,11 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.11.1 =
+
+* Fix: Amazon Payments caused fatal errors on PHP 5.2. See [#2026](https://github.com/wp-e-commerce/WP-e-Commerce/issues/2026).
+* Fix: Our translation update was too fast, too furious. We accidentally replaced a string we didn't intend to replace. This broke pagination for products. We feel pretty bad about that.
 
 = 3.11.0 =
 

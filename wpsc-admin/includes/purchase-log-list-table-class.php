@@ -409,7 +409,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	 * Define the columns in the table which are sortable. You can add/amend
 	 * this list using the WordPress core filter manage_{screen}_sortable_columns
 	 * Specifically: manage_dashboard_page_wpsc-purchase-logs_sortable_columns
-* 	 *
+ 	 *
 	 * @return array[string]string List of sortable column IDs and corresponding db column of the item
 	 */
 	public function get_sortable_columns() {
