@@ -31,7 +31,7 @@ class australiapost {
 	/**
 	 * Constructor
 	 */
-	function __construct () {
+	public function __construct () {
 		$this->internal_name   = 'australiapost';
 		$this->name            = __( 'Australia Post', 'wp-e-commerce' );
 		$this->is_external     = true;

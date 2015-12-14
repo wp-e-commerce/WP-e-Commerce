@@ -509,37 +509,37 @@ class wpsc_cart_item {
 		}
 
 		$wpdb->insert(
-				WPSC_TABLE_CART_CONTENTS,
-				array(
-		    'prodid' => $this->product_id,
-		    'name' => $this->get_title(),
-		    'purchaseid' => $purchase_log_id,
-		    'price' => $this->unit_price,
-		    'pnp' => $shipping,
-		    'tax_charged' => $tax,
-		    'gst' => $tax_rate,
-		    'quantity' => $this->quantity,
-		    'donation' => $this->is_donation,
-		    'no_shipping' => 0,
-		    'custom_message' => $this->custom_message,
-		    'files' => serialize($this->custom_file),
-		    'meta' => NULL
-				),
-				array(
-		    '%d',
-		    '%s',
-		    '%d',
-		    '%f',
-		    '%f',
-		    '%f',
-		    '%f',
-		    '%s',
-		    '%d',
-		    '%d',
-		    '%s',
-		    '%s',
-		    '%s'
-				)
+			WPSC_TABLE_CART_CONTENTS,
+			array(
+				'prodid'         => $this->product_id,
+				'name'           => $this->get_title(),
+				'purchaseid'     => $purchase_log_id,
+				'price'          => $this->unit_price,
+				'pnp'            => floatval( $shipping ),
+				'tax_charged'    => $tax,
+				'gst'            => $tax_rate,
+				'quantity'       => $this->quantity,
+				'donation'       => $this->is_donation,
+				'no_shipping'    => 0,
+				'custom_message' => $this->custom_message,
+				'files'          => serialize( $this->custom_file ),
+				'meta'           => null
+			),
+			array(
+				'%d',
+				'%s',
+				'%d',
+				'%f',
+				'%f',
+				'%f',
+				'%f',
+				'%s',
+				'%d',
+				'%d',
+				'%s',
+				'%s',
+				'%s'
+			)
 		);
 
 		$cart_item_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_CART_CONTENTS."` LIMIT 1");
