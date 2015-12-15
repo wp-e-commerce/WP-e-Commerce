@@ -581,7 +581,8 @@ class wpsc_checkout {
 					if ( $wpsc_country->has_regions() ) {
 						$region = wpsc_get_customer_meta( 'billingregion' );
 						if ( ! empty( $region ) ) {
-							$checkout_item_values = $region;
+							$wpsc_region = $wpsc_country->get_region( $region );
+							$checkout_item_values = $wpsc_region->get_name();
 						}
 					}
 				}
@@ -592,7 +593,8 @@ class wpsc_checkout {
 					if ( $wpsc_country->has_regions() ) {
 						$region = wpsc_get_customer_meta( 'shippingregion' );
 						if ( ! empty( $region ) ) {
-							$checkout_item_values = $region;
+							$wpsc_region = $wpsc_country->get_region( $region );
+							$checkout_item_values = $wpsc_region->get_name();
 						}
 					}
 				}
