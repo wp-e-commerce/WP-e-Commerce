@@ -517,7 +517,7 @@ class wpsc_cart_item {
 				'price'          => $this->unit_price,
 				'pnp'            => floatval( $shipping ),
 				'tax_charged'    => $tax,
-				'gst'            => $tax_rate,
+				'gst'            => floatval( $tax_rate ),
 				'quantity'       => $this->quantity,
 				'donation'       => $this->is_donation,
 				'no_shipping'    => 0,
