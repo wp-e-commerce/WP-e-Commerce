@@ -292,7 +292,7 @@ function wpsc_the_sticky_image( $product_id ) {
 function wpsc_change_canonical_url( $url = '' ) {
 	global $wp_query;
 
-	if ( $wp_query->is_single && ( isset( $wp_query->query_vars['post_type'] ) && 'wpsc-product' == $wp_query->query_vars['post_type'] ) {
+	if ( $wp_query->is_single && ( isset( $wp_query->query_vars['post_type'] ) && 'wpsc-product' == $wp_query->query_vars['post_type'] ) ) {
 		$url = get_permalink( $wp_query->get_queried_object()->ID );
 	}
 
