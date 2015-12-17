@@ -290,11 +290,12 @@ function wpsc_the_sticky_image( $product_id ) {
  * @return bool true or false
  */
 function wpsc_change_canonical_url( $url = '' ) {
-	global $wpdb, $wp_query, $wpsc_page_titles;
+	global $wp_query;
 
-	if ( $wp_query->is_single == true && 'wpsc-product' == $wp_query->query_vars['post_type']) {
+	if ( $wp_query->is_single && ( isset( $wp_query->query_vars['post_type'] ) && 'wpsc-product' == $wp_query->query_vars['post_type'] ) {
 		$url = get_permalink( $wp_query->get_queried_object()->ID );
 	}
+
 	return apply_filters( 'wpsc_change_canonical_url', $url );
 }
 
