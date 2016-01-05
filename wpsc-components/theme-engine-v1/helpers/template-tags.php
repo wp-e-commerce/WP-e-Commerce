@@ -403,7 +403,7 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 		if($i <= 0) $i =1;
 		while($i < $current_page){
 			if($count <= $num_paged_links){
-				if($count == 1)
+				if($i == 1)
 					$output .= " <a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wp-e-commerce'), $i ) . " \">".$i."</a>";
 				else
 					$output .= " <a href=\"". esc_url( $page_link .$separator. $i . '/' . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wp-e-commerce'), $i ) . " \">".$i."</a>";
