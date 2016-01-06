@@ -2354,3 +2354,48 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 	$duplicate->duplicate_product_image_process();
 
 }
+
+/**
+ * Fancy Notifications
+ *
+ * @deprecated
+ */
+function fancy_notifications() {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Fancy_Notifications::fancy_notifications' );
+
+	WPSC_Fancy_Notifications::fancy_notifications();
+
+}
+
+/**
+ * Fancy Notifications
+ *
+ * @deprecated
+ */
+function wpsc_fancy_notifications( $return = false ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Fancy_Notifications::fancy_notifications' );
+
+	$fancy_notifications = WPSC_Fancy_Notifications::fancy_notifications( true );
+
+	if ( $return ) {
+		return $fancy_notifications;
+	}
+
+	echo $fancy_notifications;
+
+}
+
+/**
+ * Fancy Notification Content
+ *
+ * @deprecated
+ */
+function fancy_notification_content( $cart_messages ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Fancy_Notifications::fancy_notification_content' );
+
+	return WPSC_Fancy_Notifications::fancy_notification_content( $cart_messages );
+
+}

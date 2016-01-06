@@ -1,6 +1,5 @@
 <?php
 add_action( 'save_post'        , 'wpsc_refresh_page_urls', 10, 2 );
-add_action( 'wpsc_theme_footer', 'wpsc_fancy_notifications' );
 
 if ( get_option( 'wpsc_replace_page_title' ) == 1 ) {
 	add_filter( 'wp_title', 'wpsc_replace_wp_title', 10, 2 );
@@ -772,46 +771,6 @@ function wpsc_also_bought( $product_id ) {
  */
 function wpsc_loading_animation_url() {
 	return apply_filters( 'wpsc_loading_animation_url', WPSC_CORE_THEME_URL . 'wpsc-images/indicator.gif' );
-}
-
-function fancy_notifications() {
-	return wpsc_fancy_notifications( true );
-}
-function wpsc_fancy_notifications( $return = false ) {
-	static $already_output = false;
-
-	if ( $already_output )
-		return '';
-
-	$output = "";
-	if ( get_option( 'fancy_notifications' ) == 1 ) {
-		$output = "";
-		$output .= "<div id='fancy_notification'>\n\r";
-		$output .= "  <div id='loading_animation'>\n\r";
-		$output .= '<img id="fancy_notificationimage" title="' . esc_attr__( 'Loading', 'wp-e-commerce' ) . '" alt="' . esc_attr__( 'Loading', 'wp-e-commerce' ) . '" src="' . wpsc_loading_animation_url() . '" />' . __( 'Updating', 'wp-e-commerce' ) . "...\n\r";
-		$output .= "  </div>\n\r";
-		$output .= "  <div id='fancy_notification_content'>\n\r";
-		$output .= "  </div>\n\r";
-		$output .= "</div>\n\r";
-	}
-
-	$already_output = true;
-
-	if ( $return )
-		return $output;
-	else
-		echo $output;
-}
-
-function fancy_notification_content( $cart_messages ) {
-	$siteurl = get_option( 'siteurl' );
-	$output = '';
-	foreach ( (array)$cart_messages as $cart_message ) {
-		$output .= "<span>" . $cart_message . "</span><br />";
-	}
-	$output .= "<a href='" . get_option( 'shopping_cart_url' ) . "' class='go_to_checkout'>" . __( 'Go to Checkout', 'wp-e-commerce' ) . "</a>";
-	$output .= "<a href='#' onclick='jQuery(\"#fancy_notification\").css(\"display\", \"none\"); return false;' class='continue_shopping'>" . __( 'Continue Shopping', 'wp-e-commerce' ) . "</a>";
-	return $output;
 }
 
 /*

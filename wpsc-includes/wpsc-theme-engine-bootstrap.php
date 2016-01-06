@@ -56,7 +56,6 @@ function _wpsc_theme_engine_v1_has_actions() {
 	 */
 	$core_exceptions = array(
 		'wpsc_start_display_user_log_form_fields'    => 'wpsc_deprecated_filter_user_log_get',
-		'wpsc_theme_footer'                          => 'wpsc_fancy_notifications',
 		'wpsc_before_shipping_of_shopping_cart'      => array( '_wpsc_calculate_shipping_quotes_before_product_page', '_wpsc_action_init_shipping_method' ),
 		'wpsc_before_form_of_shopping_cart'          => '_wpsc_shipping_error_messages',
 		'wpsc_user_profile_section_purchase_history' => '_wpsc_action_purchase_history_section',

@@ -1,0 +1,41 @@
+
+/**
+ * WP eCommerce Fancy Notifications CSS
+ */
+
+#fancy_notification {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: #fff;
+	border: 4px solid #ccc;
+	display: none;
+	height: auto;
+	z-index: 9;
+}
+
+#fancy_notification #loading_animation {
+	display: none;
+}
+
+#fancy_notification #fancy_notification_content {
+	display: none;
+	width: 300px;
+	height: auto;
+	padding: 8px;
+	text-align: left;
+	margin: 0 !important;
+}
+
+#fancy_notification #fancy_notification_content span {
+	margin: 0 0 6px 0;
+	display: block;
+	font-weight: normal;
+}
+
+#fancy_notification #fancy_notification_content a {
+	display: block;
+	float: left;
+	margin-right: 6px;
+	margin-bottom: 3px;
+}
