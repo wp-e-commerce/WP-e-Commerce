@@ -401,6 +401,11 @@ function wpsc_check_weight($state, $product) {
 	$shipping_modules = array();
 	$product_meta = get_product_meta( $product->ID, 'product_metadata',true );
 	if(! $product->post_parent && wpsc_product_has_children($product->ID)) return $state;
+	
+	if ( get_option( 'do_not_use_shipping' ) ) {
+		return $state;
+	}
+	
 	// only do anything if UPS is on and shipping is used
 	if( array_search( 'ups', $custom_shipping ) !== false )
 		$shipping_modules[] = 'UPS';
