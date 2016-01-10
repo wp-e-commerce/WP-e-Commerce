@@ -580,6 +580,11 @@ function wpsc_single_template( $content ) {
 		 */
 		$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? apply_filters( 'wpsc_product_display_status', array( 'publish' ) ) : array( 'publish' );
 
+		// If previewing a product, ensure post status can be draft
+		if ( $wp_query->is_preview() ) {
+			$permitted_post_statuses[] = 'draft';
+		}
+
 		$wpsc_temp_query = new WP_Query(
 			array(
 				'p'              => $wp_query->post->ID ,
