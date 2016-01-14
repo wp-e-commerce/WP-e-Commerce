@@ -187,7 +187,7 @@ function wpsc_purchase_log_csv() {
 			$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
 
 			$output .= "\"" . $status_name . "\","; //get purchase status
-			$output .= "\"" . date( "jS M Y", $purchase['date'] ) . "\","; //date
+			$output .= "\"" . date( apply_filters( 'wpsc_purchase_log_csv_date_format', 'jS M Y' ), $purchase['date'] ) . "\","; //date
 
 			$cartsql = "SELECT `prodid`, `quantity`, `name` FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`=" . $purchase['id'] . "";
 			$cart = $wpdb->get_results( $cartsql, ARRAY_A );
