@@ -14,7 +14,7 @@ class wpsc_products_by_category {
 	 * @param mixed $query
 	 * @return void
 	 */
-	function wpsc_products_by_category( $query ) {
+	function __construct( $query ) {
 
 		_wpsc_doing_it_wrong( 'wpsc_products_by_category', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wp-e-commerce' ), '4.0' );
 

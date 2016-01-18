@@ -162,7 +162,7 @@ class wpsc_checkout {
 	 * wpsc_checkout method, gets the tax rate as a percentage, based on the selected country and region
 	 * @access public
 	 */
-	function wpsc_checkout( $checkout_set = 0 ) {
+	public function __construct( $checkout_set = 0 ) {
 		global $wpdb;
 		$this->checkout_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1'  AND `checkout_set`= %s ORDER BY `checkout_order`;", $checkout_set ) );
 

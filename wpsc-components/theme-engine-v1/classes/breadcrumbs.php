@@ -201,7 +201,7 @@ class wpsc_breadcrumbs {
 	 * @access public
 	 * @return void
 	 */
-	function wpsc_breadcrumbs() {
+	public function __construct() {
 		global $wp_query, $wpsc_query;
 		$this->breadcrumbs = array();
 		$query_data = Array();
@@ -260,7 +260,7 @@ class wpsc_breadcrumbs {
 	 * @access public
 	 * @return void
 	 */
-	function next_breadcrumbs() {
+	public function next_breadcrumbs() {
 		$this->current_breadcrumb++;
 		$this->breadcrumb = $this->breadcrumbs[$this->current_breadcrumb];
 		return $this->breadcrumb;
@@ -273,7 +273,7 @@ class wpsc_breadcrumbs {
 	 * @access public
 	 * @return void
 	 */
-	function the_breadcrumb() {
+	public function the_breadcrumb() {
 		$this->breadcrumb = $this->next_breadcrumbs();
 	}
 
@@ -283,7 +283,7 @@ class wpsc_breadcrumbs {
 	 * @access public
 	 * @return void
 	 */
-	function have_breadcrumbs() {
+	public function have_breadcrumbs() {
 		if ($this->current_breadcrumb + 1 < $this->breadcrumb_count) {
 			return true;
 		} else if ($this->current_breadcrumb + 1 == $this->breadcrumb_count && $this->breadcrumb_count > 0) {
@@ -298,7 +298,7 @@ class wpsc_breadcrumbs {
 	 * @access public
 	 * @return void
 	 */
-	function rewind_breadcrumbs() {
+	public function rewind_breadcrumbs() {
 		$this->current_breadcrumb = -1;
 		if ($this->breadcrumb_count > 0) {
 			$this->breadcrumb = $this->breadcrumbs[0];

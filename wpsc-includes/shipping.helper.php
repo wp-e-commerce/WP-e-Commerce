@@ -374,10 +374,10 @@ class ASHPackage {
      * The constructor for the ASHPackage class
      * Accepts an arguments array to fill out the class on initialization
      *
-     * @since 0.0.1
+     * @since 3.11.3
      * @param array $args
      */
-    function ASHPackage(array $args = array()){
+   public function __construct(array $args = array()){
         foreach($args as $key=>$value){
             $this->$key=$value;
         }
@@ -483,9 +483,9 @@ class ASHShipment{
     /**
      * Constructor for the ASHShipment class
      *
-     * @since 0.0.1
+     * @since 3.11.3
      */
-    function ASHShipment(){
+    public function __construct(){
     }
 
     /**
@@ -564,7 +564,7 @@ class ASH{
      * General constructor for ASH class
      *
      */
-    function ASH(){
+    public function _construct(){
     }
 
     /**
