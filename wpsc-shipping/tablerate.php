@@ -15,7 +15,7 @@ class tablerate {
 	 *
 	 * @return boolean Always returns true.
 	 */
-	function tablerate() {
+	public function __construct() {
 		$this->internal_name = "tablerate";
 		$this->name = __( "Table Rate", 'wp-e-commerce' );
 		$this->is_external=false;

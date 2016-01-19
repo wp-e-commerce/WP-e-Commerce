@@ -14,7 +14,7 @@ class flatrate {
 	 *
 	 * @return boolean Always returns true.
 	 */
-	function flatrate() {
+	public function __construct() {
 		$this->internal_name = "flatrate";
 		$this->name= __( "Flat Rate", 'wp-e-commerce' );
 		$this->is_external = false;

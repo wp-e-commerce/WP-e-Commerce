@@ -18,7 +18,7 @@ class ash_ups {
 	public $drop_types = array();
 	public $cust_types = array();
 
-	function ash_ups () {
+	public function __construct() {
 		$this->internal_name = 'ups';
 		$this->name = _x( 'UPS', 'Shipping Module', 'wp-e-commerce' );
 		$this->is_external = true;

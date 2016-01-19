@@ -70,7 +70,7 @@ class ash_usps {
 	 * Automatically loads services that are available into the class instance
 	 * @since 1.0
 	 */
-	function ash_usps() {
+	public function __construct() {
 		$this->_load_services();
 		return TRUE;
 	}

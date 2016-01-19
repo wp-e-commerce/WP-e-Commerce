@@ -11,7 +11,7 @@ class wpsc_gateways {
 	var $current_gateway = -1;
 	var $in_the_loop = false;
 
-	function wpsc_gateways() {
+	public function __construct() {
 		global $nzshpcrt_gateways;
 
 		$gateway_options = get_option( 'custom_gateway_options' );
@@ -32,20 +32,20 @@ class wpsc_gateways {
 	/**
 	 * checkout loop methods
 	 */
-	function next_gateway() {
+	public function next_gateway() {
 		$this->current_gateway++;
 		$this->gateway = $this->wpsc_gateways[$this->current_gateway];
 		return $this->gateway;
 	}
 
-	function the_gateway() {
+	public function the_gateway() {
 		$this->in_the_loop = true;
 		$this->gateway = $this->next_gateway();
 		if ( $this->current_gateway == 0 ) // loop has just started
 			do_action( 'wpsc_checkout_loop_start' );
 	}
 
-	function have_gateways() {
+	public function have_gateways() {
 		if ( $this->current_gateway + 1 < $this->gateway_count ) {
 			return true;
 		} else if ( $this->current_gateway + 1 == $this->gateway_count && $this->gateway_count > 0 ) {
@@ -58,7 +58,7 @@ class wpsc_gateways {
 		return false;
 	}
 
-	function rewind_gateways() {
+	public function rewind_gateways() {
 		$this->current_gateway = -1;
 		if ( $this->gateway_count > 0 ) {
 			$this->gateway = $this->wpsc_gateways[0];

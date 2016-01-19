@@ -1073,7 +1073,7 @@ class wpsc_variation_combinator {
 	var $reprocessed_array = array();
 	var $combinations= array();
 
-function wpsc_variation_combinator($variation_sets) {
+public function __construct($variation_sets) {
 	if( $variation_sets ) {
 		foreach($variation_sets as $variation_set_id => $variation_set) {
 			$this->variation_sets[] = absint($variation_set_id);
