@@ -564,7 +564,7 @@ class ASH{
      * General constructor for ASH class
      *
      */
-    public function _construct(){
+    public function __construct(){
     }
 
     /**
