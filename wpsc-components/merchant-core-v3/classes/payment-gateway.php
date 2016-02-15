@@ -179,6 +179,10 @@ final class WPSC_Payment_Gateways {
 			}
 
 			$return = self::register_file( $path );
+			
+			if ( is_wp_error( $return ) ) {
+				//We should log this
+			}
 
 		}
 	}
@@ -471,7 +475,7 @@ abstract class WPSC_Payment_Gateway {
 				<input id="' . esc_attr( $this->id ) . '-card-number" class="input-text wpsc-credit-card-form-card-number" type="text" maxlength="20" autocomplete="off" placeholder="•••• •••• •••• ••••" name="' . ( $args['fields_have_names'] ? $this->id . '-card-number' : '' ) . '" />
 			</p>',
 			'card-expiry-field' => '<p class="form-row form-row-first">
-				<label for="' . esc_attr( $this->id ) . '-card-expiry">' . __( 'Expiry (MM/YY)', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
+				<label for="' . esc_attr( $this->id ) . '-card-expiry">' . __( 'Expiration Date (MM/YY)', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
 				<input id="' . esc_attr( $this->id ) . '-card-expiry" class="input-text wpsc-credit-card-form-card-expiry" type="text" autocomplete="off" placeholder="' . esc_attr__( 'MM / YY', 'wp-e-commerce' ) . '" name="' . ( $args['fields_have_names'] ? $this->id . '-card-expiry' : '' ) . '" />
 			</p>',
 			'card-cvc-field' => '<p class="form-row form-row-last">
