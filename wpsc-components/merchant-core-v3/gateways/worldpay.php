@@ -3,7 +3,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 	private $endpoints = array(
 		'sandbox' => 'https://gwapi.demo.securenet.com/api/',
-		'production' => '',
+		'production' => 'https://gwapi.securenet.com/api/',
 	);
 	
 	/**
@@ -17,6 +17,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		parent::__construct();
 		
 		$this->title = __( 'WorldPay Payment Gateway', 'wp-e-commerce' );
+		$this->supports = array( 'default_credit_card_form' );
 		
 		// Define user set variables
 		$this->secure_net_id	= $this->setting->get( 'secure_net_id' );
@@ -83,6 +84,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		</tr>
 <?php
 	}
+	
 
 	public function process() {
 		$this->purchase_log->set( 'processed', WPSC_PAYMENT_STATUS_RECEIVED )->save();
