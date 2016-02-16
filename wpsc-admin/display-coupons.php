@@ -20,8 +20,8 @@ function wpsc_display_coupons_page() {
 			$use_once      = (int)(bool)$_POST['add_use-once'];
 			$every_product = (int)(bool)$_POST['add_every_product'];
 			$is_active     = (int)(bool)$_POST['add_active'];
-			$start_date    = ! empty( $_POST['add_start'] ) ? date( 'Y-m-d', strtotime( $_POST['add_start'] ) ) . " 00:00:00" : null;
-			$end_date      = ! empty( $_POST['add_end'] ) ? date( 'Y-m-d', strtotime( $_POST['add_end'] ) ) . " 23:59:59" : null;
+			$start_date    = ! empty( $_POST['add_start'] ) ? date( 'Y-m-d', strtotime( $_POST['add_start'] ) ) . " 00:00:00" : "0000-00-00 00:00:00";
+			$end_date      = ! empty( $_POST['add_end'] ) ? date( 'Y-m-d', strtotime( $_POST['add_end'] ) ) . " 23:59:59" : "0000-00-00 00:00:00";
 			$rules         = $_POST['rules'];
 			$new_rules     = array();
 
@@ -84,8 +84,8 @@ function wpsc_display_coupons_page() {
 				'is-used'       => $_POST['edit_coupon_is_used'],
 				'active'        => $_POST['edit_coupon_active'],
 				'every_product' => $_POST['edit_coupon_every_product'],
-				'start'         => ! empty( $_POST['edit_coupon_start'] ) ? get_gmt_from_date( $_POST['edit_coupon_start'] . ' 00:00:00' ) : null,
-				'expiry'        => ! empty( $_POST['edit_coupon_end'] ) ? get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' ) : null,
+				'start'         => ! empty( $_POST['edit_coupon_start'] ) ? get_gmt_from_date( $_POST['edit_coupon_start'] . ' 00:00:00' ) : "0000-00-00 00:00:00",
+				'expiry'        => ! empty( $_POST['edit_coupon_end'] ) ? get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' ) : "0000-00-00 00:00:00",
 				'condition'     => $new_rules
 			) );
 
