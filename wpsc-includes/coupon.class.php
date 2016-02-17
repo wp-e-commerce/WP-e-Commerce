@@ -271,8 +271,8 @@ class WPSC_Coupon {
 				'is-used'       => '',
 				'active'        => '',
 				'use-once'      => '',
-				'start'         => '',
-				'expiry'        => '',
+				'start'         => '0000-00-00 00:00:00',
+				'expiry'        => '0000-00-00 00:00:00',
 				'every_product' => ''
 			) );
 			$this->data['value'] = (float) $this->data['value'];

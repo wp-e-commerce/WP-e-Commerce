@@ -85,9 +85,31 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 <?php
 	}
 	
+	public function init() {
+		add_action( 'te_v1_before_submit', array( $this, 'payment_fields' ) );
+		add_action( 'wpsc_after_payment_method_form', array( $this, 'payment_fields' ) );
+		
+		add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'te_v2_show_payment_fields' ) );
+	}
+	
+	public function te_v2_show_payment_fields( $args ) {
+		
+		$default = '<div class="wpsc-form-actions">';
+		ob_start();
+
+		$this->payment_fields();
+		$fields = ob_get_clean();
+		
+		$args['before_form_actions'] = $fields . $default;
+
+		return $args;
+	}
+	
+	
 
 	public function process() {
-		$this->purchase_log->set( 'processed', WPSC_PAYMENT_STATUS_RECEIVED )->save();
-		$this->go_to_transaction_results();
+
 	}
+	
+
 }
