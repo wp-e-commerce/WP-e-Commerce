@@ -17,7 +17,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		parent::__construct();
 		
 		$this->title = __( 'WorldPay Payment Gateway', 'wp-e-commerce' );
-		$this->supports = array( 'default_credit_card_form' );
+		$this->supports = array( 'default_credit_card_form', 'tev1' );
 		
 		// Define user set variables
 		$this->secure_net_id	= $this->setting->get( 'secure_net_id' );
@@ -88,9 +88,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	public function init() {
 		add_filter( 'wpsc_gateway_checkout_form_worldpay', array( $this, 'payment_fields' ) );
 	
-		add_action( 'wpsc_after_payment_method_form', array( $this, 'payment_fields' ) );
-		
-		add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'te_v2_show_payment_fields' ) );
+		//add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'te_v2_show_payment_fields' ) );
 	}
 	
 	public function te_v2_show_payment_fields( $args ) {
@@ -106,8 +104,6 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		return $args;
 	}
 	
-	
-
 	public function process() {
 
 	}
