@@ -85,7 +85,18 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 <?php
 	}
 	
+	/**
+	 * Add scripts
+	 */
+	public function scripts() {
+		
+		$jsfile = $this->sandbox ? 'PayOSDev.js' : 'PayOS.js';
+		wp_enqueue_script( 'worldpay_payos', WPSC_MERCHANT_V3_SDKS_URL . '/worldpay/assets/js/'.$jsfile, '', WPSC_VERSION );
+	}
+	
 	public function init() {
+		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
+
 		add_filter( 'wpsc_gateway_checkout_form_worldpay', array( $this, 'payment_fields' ) );
 	
 		//add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'te_v2_show_payment_fields' ) );
@@ -105,6 +116,13 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	}
 	
 	public function process() {
+		
+		$order = $this->purchase_log;
+		
+		
+		
+		var_dump($order);
+		exit;
 
 	}
 	
