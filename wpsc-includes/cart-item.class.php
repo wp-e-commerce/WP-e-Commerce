@@ -59,7 +59,7 @@ class wpsc_cart_item {
 	public $priceandstock_id;
 
 	// user provided values
-	public $custom_message = null;
+	public $custom_message = '';
 	public $custom_file = null;
 
 	/**

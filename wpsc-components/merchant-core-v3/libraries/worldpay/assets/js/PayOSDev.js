@@ -10,7 +10,7 @@ return publicKey;
 
 function tokenizeCard(x) {
 
-	return $.ajax({
+	return jQuery.ajax({
 		type: "POST",
 		url: serviceUrlCard,
 		data: JSON.stringify(x),
@@ -22,7 +22,7 @@ function tokenizeCard(x) {
 
 function tokenizeCheck(x) {
 
-	return $.ajax({
+	return jQuery.ajax({
 		type: "POST",
 		url: serviceUrlCheck,
 		data: JSON.stringify(x),

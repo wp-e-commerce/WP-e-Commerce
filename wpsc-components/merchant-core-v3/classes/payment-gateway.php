@@ -472,20 +472,20 @@ abstract class WPSC_Payment_Gateway {
 					<tr>
 						<td><?php _e( 'Card Number', 'wp-e-commerce' ); ?></td>
 						<td>
-							<input type='text' value='' name='card_number' autocomplete="off" />
+							<input type='text' id='card_number' value='' autocomplete="off" />
 						</td>
 					</tr>
 					<tr>
 						<td><?php _e( 'Expiration Date', 'wp-e-commerce' ); ?></td>
 						<td>
-							<input type='text' value='' name='card_expiry_month' autocomplete="off" size='3' placeholder="<?php esc_attr_e( 'MM', 'wp-e-commerce' ); ?>" />&nbsp;
-							<input type='text' value='' name='card_expiry_year' autocomplete="off" size='3' placeholder="<?php esc_attr_e( 'YY', 'wp-e-commerce' ); ?>" />
+							<input type='text' id='card_expiry_month' value='' autocomplete="off" maxlength='2' size='3' placeholder="<?php esc_attr_e( 'MM', 'wp-e-commerce' ); ?>" />&nbsp;
+							<input type='text' id='card_expiry_year' value='' autocomplete="off" maxlength='2' size='3' placeholder="<?php esc_attr_e( 'YY', 'wp-e-commerce' ); ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td><?php _e( 'Card Code', 'wp-e-commerce' ); ?></td>
 						<td>
-							<input type='text' value='' name='card_code' autocomplete="off" size='5' placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
+							<input type='text' id='card_code' value='' autocomplete="off" size='5' maxlength='4' placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
 						</td>
 					</tr>					
 				</table>			
@@ -499,15 +499,15 @@ abstract class WPSC_Payment_Gateway {
 			$default_fields = array(
 				'card-number-field' => '<p class="form-row form-row-wide">
 					<label for="' . esc_attr( $this->setting->gateway_name ) . '-card-number">' . __( 'Card Number', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
-					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-number" class="input-text wpsc-credit-card-form-card-number" type="text" maxlength="20" autocomplete="off" placeholder="•••• •••• •••• ••••" name="' . ( $args['fields_have_names'] ? $this->setting->gateway_name . '-card-number' : '' ) . '" />
+					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-number" class="input-text wpsc-credit-card-form-card-number" type="text" maxlength="20" autocomplete="off" placeholder="•••• •••• •••• ••••" />
 				</p>',
 				'card-expiry-field' => '<p class="form-row form-row-first">
 					<label for="' . esc_attr( $this->setting->gateway_name ) . '-card-expiry">' . __( 'Expiration Date (MM/YY)', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
-					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-expiry" class="input-text wpsc-credit-card-form-card-expiry" type="text" autocomplete="off" placeholder="' . esc_attr__( 'MM / YY', 'wp-e-commerce' ) . '" name="' . ( $args['fields_have_names'] ? $this->setting->gateway_name . '-card-expiry' : '' ) . '" />
+					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-expiry" class="input-text wpsc-credit-card-form-card-expiry" type="text" autocomplete="off" placeholder="' . esc_attr__( 'MM / YY', 'wp-e-commerce' ) . '" />
 				</p>',
 				'card-cvc-field' => '<p class="form-row form-row-last">
 					<label for="' . esc_attr( $this->setting->gateway_name ) . '-card-cvc">' . __( 'Card Code', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
-					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-cvc" class="input-text wpsc-credit-card-form-card-cvc" type="text" autocomplete="off" placeholder="' . esc_attr__( 'CVC', 'wp-e-commerce' ) . '" name="' . ( $args['fields_have_names'] ? $this->setting->gateway_name . '-card-cvc' : '' ) . '" />
+					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-cvc" class="input-text wpsc-credit-card-form-card-cvc" type="text" autocomplete="off" placeholder="' . esc_attr__( 'CVC', 'wp-e-commerce' ) . '" />
 				</p>'
 			);
 			$fields = wp_parse_args( $fields, apply_filters( 'wpsc_default_credit_card_form_fields', $default_fields, $this->setting->gateway_name ) );
