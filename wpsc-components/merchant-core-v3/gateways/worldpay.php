@@ -5,6 +5,8 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		'sandbox' => 'https://gwapi.demo.securenet.com/api/',
 		'production' => 'https://gwapi.securenet.com/api/',
 	);
+	
+	private $auth;
 
 	/**
 	 * Constructor of WorldPay Payment Gateway
@@ -66,6 +68,17 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'public_key' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'public_key' ) ); ?>" id="wpsc-worldpay-public-key" />
 				<br><span class="small description"><?php _e( 'You can obtain the Public Key by signing into the Virtual Terminal. You will then need to navigate to Settings and click on the Obtain Public Key link.', 'wp-e-commerce' ); ?></span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="wpsc-worldpay-payment-capture"><?php _e( 'Payment Capture', 'wp-e-commerce' ); ?></label>
+			</td>
+			<td>
+				<select id="wpsc-worldpay-payment-capture" name="<?php echo esc_attr( $this->setting->get_field_name( 'payment_capture' ) ); ?>">
+					<option value='' <?php selected( '', $this->setting->get( 'payment_capture' ) ); ?>><?php _e( 'Authorize and capture the payment when the order is placed.', 'wp-e-commerce' )?></option>
+					<option value='authorize' <?php selected( 'authorize', $this->setting->get( 'payment_capture' ) ); ?>><?php _e( 'Authorize the payment when the order is placed.', 'wp-e-commerce' )?></option>
+				</select>
 			</td>
 		</tr>
 		<tr>
@@ -172,6 +185,9 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	}
 
 	public function init() {
+		add_filter( 'https_ssl_verify', '__return_false' );
+		add_filter( 'https_local_ssl_verify', '__return_false' );
+		
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 		add_action( 'wp_head'           , array( $this, 'head_script' ) );
 
@@ -198,13 +214,80 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	public function process() {
 
 		$order = $this->purchase_log;
+	
+		$this->authorize( $_POST['worldpay_pay_token'] );
 
-
-
-		var_dump($_POST);
+		
 		exit;
 
 	}
+	
+	public function authorize( $token ) {
+		
+		$order = $this->purchase_log;
+		
+		$params = array (
+			'amount'	=> $order->get( 'totalprice' ),
+			"addToVault" => true,
+			"paymentVaultToken" => array(
+				"paymentMethodId" => $token,
+				"publicKey" => $this->public_key
+			),
+		);
+		
+		//test auth
+		$this->execute( 'Payments/Charge', $params );
+		
+	}
 
+	public function execute( $endpoint, $params ) {
+       
+	   // where we make the API petition
+        $endpoint = $this->endpoint . $endpoint;
+        
+		$params += array(
+			"developerApplication" => array(
+				"developerId" => 12345678,
+				"version" => "1.2"
+			),
+			"extendedInformation" => array(
+				"typeOfGoods" => "PHYSICAL"
+			),
+		);
+		
+		$response = wp_safe_remote_post( $endpoint,
+			array (
+				'timeout' => 15,
+				'headers' => array(
+					'Authorization' => $this->auth,
+					'Content-Type' => 'application/json',
+					'Content-Length' => strlen( json_encode( $params ) ),
+				),
+				'httpversion' => '1.0',
+				'sslverify' => false,
+				'body' => json_encode( $params ),
+			)
+		);
+
+        // headers to authenticate
+        $header = array( 'Authorization: ' . $this->auth,
+                         'Content-Type: application/json',
+                         'Content-Length: ' . strlen( json_encode( $params ) ),
+                         );
+
+        //open connection
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode( $params ) );
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_TIMEOUT,15);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
+
+        //$result = curl_exec($ch);		
+  	
+		var_dump( $response );
+		exit;
+    }
 
 }
