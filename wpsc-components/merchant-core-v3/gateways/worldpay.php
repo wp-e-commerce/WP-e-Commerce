@@ -7,6 +7,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	);
 	
 	private $auth;
+	private $payment_capture;
 
 	/**
 	 * Constructor of WorldPay Payment Gateway
@@ -27,6 +28,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		$this->public_key  		= $this->setting->get( 'public_key' );
 		$this->sandbox			= $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
 		$this->endpoint			= $this->sandbox ? $this->endpoints['sandbox'] : $this->endpoints['production'];
+		$this->payment_capture 	= $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
 		$this->auth				= 'Basic ' . base64_encode( $this->setting->get( 'secure_net_id' ) . ':' . $this->setting->get( 'secure_key' ) );
 	}
 
@@ -123,8 +125,10 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 			jQuery(document).ready(function($) {
 				$( ".wpsc_checkout_forms" ).submit(function( event ) {
-
-					jQuery( 'input[type="submit"]', this ).prop( { 'disabled': true } );
+					
+					event.preventDefault();
+					
+					//jQuery( 'input[type="submit"]', this ).prop( { 'disabled': true } );
 
 					var response = tokenizeCard(
 						{
@@ -185,9 +189,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	}
 
 	public function init() {
-		add_filter( 'https_ssl_verify', '__return_false' );
-		add_filter( 'https_local_ssl_verify', '__return_false' );
-		
+
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 		add_action( 'wp_head'           , array( $this, 'head_script' ) );
 
@@ -214,29 +216,63 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	public function process() {
 
 		$order = $this->purchase_log;
+		
+		$status = $this->payment_capture === '' ? WPSC_Purchase_Log::ACCEPTED_PAYMENT : WPSC_Purchase_Log::ORDER_RECEIVED;
+		
+		$card_token = isset( $_POST['worldpay_pay_token'] ) ? sanitize_text_field( $_POST['worldpay_pay_token'] ) : '';
 	
-		$this->authorize( $_POST['worldpay_pay_token'] );
+		switch ( $this->payment_capture ) {
+			case 'authorize' :
 
+				// Authorize only
+				$result = $this->authorize_payment( $card_token );
+
+				if ( $result ) {
+					// Mark as on-hold
+					$order->set( 'worldpay-status', __( 'WorldPay order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wp-e-commerce' ) )->save();
+
+				} else {
+					$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED )->save();
+					$order->set( 'worldpay-status', __( 'Could not authorize WorldPay payment.', 'wp-e-commerce' ) )->save();
+
+					//$this->handle_declined_transaction( $order );
+				}
+
+			break;
+			default:
+			
+			break;
+		}
+		
+		
+		var_dump($_POST);
 		
 		exit;
 
 	}
 	
-	public function authorize( $token ) {
+	public function authorize_payment( $token ) {
+
+		if ( $this->purchase_log->get( 'gateway' ) == 'worldpay' ) {
+			
+			$order = $this->purchase_log;
+			
+			$params = array (
+				'amount'	=> $order->get( 'totalprice' ),
+				'orderId'	=> $order->get( 'sessionid' ),
+				"addToVault" => false,
+				"paymentVaultToken" => array(
+					"paymentMethodId" => $token,
+					"publicKey" => $this->public_key
+				),
+			);		
+		}
 		
-		$order = $this->purchase_log;
-		
-		$params = array (
-			'amount'	=> $order->get( 'totalprice' ),
-			"addToVault" => true,
-			"paymentVaultToken" => array(
-				"paymentMethodId" => $token,
-				"publicKey" => $this->public_key
-			),
-		);
-		
-		//test auth
-		$this->execute( 'Payments/Charge', $params );
+		$response = $this->execute( 'Payments/Authorize', $params );
+
+		var_dump($response);
+		exit;
+
 		
 	}
 
@@ -255,39 +291,35 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			),
 		);
 		
-		$response = wp_safe_remote_post( $endpoint,
-			array (
-				'timeout' => 15,
-				'headers' => array(
-					'Authorization' => $this->auth,
-					'Content-Type' => 'application/json',
-					'Content-Length' => strlen( json_encode( $params ) ),
-				),
-				'httpversion' => '1.0',
-				'sslverify' => false,
-				'body' => json_encode( $params ),
-			)
+		$data = json_encode( $params );
+		
+		$args = array (
+			'timeout' => 15,
+			'headers' => array(
+				'Authorization' => $this->auth,
+				'Content-Type' => 'application/json',
+			),
+			'sslverify' => false,
+			'body' => $data,
 		);
-
-        // headers to authenticate
-        $header = array( 'Authorization: ' . $this->auth,
-                         'Content-Type: application/json',
-                         'Content-Length: ' . strlen( json_encode( $params ) ),
-                         );
-
-        //open connection
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $endpoint);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode( $params ) );
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_TIMEOUT,15);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
-
-        //$result = curl_exec($ch);		
+		
+		
+		var_dump($args);
   	
-		var_dump( $response );
-		exit;
+		$request  = wp_safe_remote_post( $endpoint, $args );
+        $response = wp_remote_retrieve_body( $request );
+        $payload  = json_decode( $response );
+		
+		if ( ! is_wp_error( $request ) ) {
+
+			$response_object = array();
+			$response_object['ResponseBody'] = $response;
+			$response_object['Status']       = wp_remote_retrieve_response_code( $request );
+
+			$request = $response_object;
+		}
+		
+		return $request;
     }
 
 }
