@@ -182,6 +182,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 					}).fail(function ( response ) {
 						jQuery( 'input[type="submit"]', this ).prop( { 'disabled': false } );
+							console.log( response )
 						// an error occurred
 					});
 				});
@@ -465,7 +466,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			
 			case 'refund' :
 				// refund a settled payment
-				$this->refun_payment( $id );
+				$this->refund_payment( $id );
 			break;
 		}
 
@@ -564,8 +565,6 @@ class WPSC_WorldPay_Payments_Order_Handler {
 				
 			break;
 			case 'Refunded' :
-				
-			break;
 			case 'Voided' :
 			
 			break;
@@ -644,6 +643,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 				break;
 				
 				case 'REFUND' :
+				case 'CREDIT' :
 					$this->log->set( 'wp_order_status', 'Refunded' )->save();
 				break;				
 				
@@ -694,17 +694,18 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			
 			$params = array(
 				'transactionId' => $transaction_id,
+				'amount'		=> $this->log->get( 'totalprice' )
 			);
 			
-			$response = $this->gateway->execute( 'Payments/Void', $params );
-
+			$response = $this->gateway->execute( 'Payments/Refund', $params );
+			
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
 			
 			$this->log->set( 'wp_order_status', 'Refunded' )->save();
 			
-			$this->log->set( 'worldpay-status', sprintf( __( 'Refunded %s (%s)', 'wp-e-commerce' ), wpsc_currency_display( $amount ), $note ) )->save();
+			$this->log->set( 'worldpay-status', sprintf( __( 'Refunded (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
 			$this->log->set( 'processed', WPSC_Purchase_Log::REFUNDED )->save();
 		}
     }
