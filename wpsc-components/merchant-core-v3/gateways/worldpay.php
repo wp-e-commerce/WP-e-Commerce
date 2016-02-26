@@ -182,7 +182,6 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 					}).fail(function ( response ) {
 						jQuery( 'input[type="submit"]', this ).prop( { 'disabled': false } );
-							console.log( response )
 						// an error occurred
 					});
 				});
