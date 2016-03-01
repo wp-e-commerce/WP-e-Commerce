@@ -372,8 +372,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 				),
 			);			
 		}
-		
-		
+			
 		$data = json_encode( $params );
 		
 		$args = array (
@@ -668,6 +667,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
 			
 			$params = array(
+				'amount'		=>  $this->log->get( 'totalprice' ),
 				'transactionId' => $transaction_id,
 			);
 			
@@ -693,12 +693,13 @@ class WPSC_WorldPay_Payments_Order_Handler {
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
 			
 			$params = array(
+				'amount'		=> $this->log->get( 'totalprice' ),
 				'transactionId' => $transaction_id,
-				'amount'		=> $this->log->get( 'totalprice' )
+				
 			);
 			
 			$response = $this->gateway->execute( 'Payments/Refund', $params );
-			
+		
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
@@ -720,6 +721,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
 			
 			$params = array(
+				'amount'		=>  $this->log->get( 'totalprice' ),
 				'transactionId' => $transaction_id,
 			);
 			
