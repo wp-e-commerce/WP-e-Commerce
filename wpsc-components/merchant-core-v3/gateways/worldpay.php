@@ -505,12 +505,9 @@ class WPSC_WorldPay_Payments_Order_Handler {
 
 		// Get ids
 		$wp_transaction_id 	= $this->log->get( 'wp_transactionId' );
-		
-		$order_info = $this->refresh_transaction_info( $wp_transaction_id );
-	
+		$order_info 		= $this->refresh_transaction_info( $wp_transaction_id );
 		$wp_auth_code		= $this->log->get( 'wp_authcode' );
 		$wp_order_status	= $this->log->get( 'wp_order_status' );
-		
 		?>
 		
 		<div class="metabox-holder">
@@ -566,8 +563,24 @@ class WPSC_WorldPay_Payments_Order_Handler {
 				
 			break;
 			case 'Refunded' :
+				//Order is settled and a refund has been requested
+				$wp_refund_id       = wpsc_get_purchase_meta( $order_id, 'worldpay_refund_id', true );
+				
+				if ( $wp_refund_id ) {
+					//Get refund order status to check if its eligible for a void (not settled)
+					$refund_status = $this->refresh_transaction_info( $wp_refund_id, false );
+					
+					if ( ! $refund_status['settled'] ) {
+						//Show void only if not settled.
+						$actions['void_refund'] = array(
+							'id' => $wp_refund_id,
+							'button' => __( 'Void Refund request', 'wp-e-commerce' )
+						);						
+					}
+				}
+
+				break;
 			case 'Voided' :
-			
 			break;
 		}			
 		
@@ -619,7 +632,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
      *
      * @param  string $transaction_id
      */	
-	public function refresh_transaction_info( $transaction_id ) {
+	public function refresh_transaction_info( $transaction_id, $update = true ) {
 		
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
 			
@@ -634,27 +647,29 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			$response_object['settled'] 	= isset( $response['ResponseBody']->transactions[0]->settlementData ) ? true : false;
 
 			//Recheck status and update if required
-			switch ( $response_object['trans_type'] ) {
-				case 'AUTH_ONLY' :
-					$this->log->set( 'wp_order_status', 'Open' )->save();
-				break;
-				
-				case 'VOID' :
-					$this->log->set( 'wp_order_status', 'Voided' )->save();
-				break;
-				
-				case 'REFUND' :
-				case 'CREDIT' :
-					$this->log->set( 'wp_order_status', 'Refunded' )->save();
-				break;				
-				
-				case 'AUTH_CAPTURE' :
-				case 'PRIOR_AUTH_CAPTURE' :
-					$this->log->set( 'wp_order_status', 'Completed' )->save();
-				break;
+			if ( $update ) {
+				switch ( $response_object['trans_type'] ) {
+					case 'AUTH_ONLY' :
+						$this->log->set( 'wp_order_status', 'Open' )->save();
+					break;
+					
+					case 'VOID' :
+						$this->log->set( 'wp_order_status', 'Voided' )->save();
+					break;
+					
+					case 'REFUND' :
+					case 'CREDIT' :
+						$this->log->set( 'wp_order_status', 'Refunded' )->save();
+					break;				
+					
+					case 'AUTH_CAPTURE' :
+					case 'PRIOR_AUTH_CAPTURE' :
+						$this->log->set( 'wp_order_status', 'Completed' )->save();
+					break;
+				}				
 			}
-			
-			return $response_object;
+
+		return $response_object;
 		}
 	}
 	
