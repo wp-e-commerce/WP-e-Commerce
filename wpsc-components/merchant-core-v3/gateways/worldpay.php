@@ -384,6 +384,8 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			'sslverify' => false,
 			'body' => $data,
 		);
+		
+
   	
 		$request  = $type == 'GET' ? wp_safe_remote_get( $endpoint, $args ) : wp_safe_remote_post( $endpoint, $args );
         $response = wp_remote_retrieve_body( $request );
@@ -706,7 +708,8 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			
 			$this->log->set( 'wp_order_status', 'Refunded' )->save();
 			
-			$this->log->set( 'worldpay-status', sprintf( __( 'Refunded (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
+			wpsc_add_purchase_meta( $this->log->get( 'id' ), 'worldpay_refund_id', $response['ResponseBody']->transaction->transactionId );
+			$this->log->set( 'worldpay-status', sprintf( __( 'Refunded (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
 			$this->log->set( 'processed', WPSC_Purchase_Log::REFUNDED )->save();
 		}
     }
