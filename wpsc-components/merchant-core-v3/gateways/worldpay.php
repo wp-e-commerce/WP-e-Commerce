@@ -13,6 +13,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	private $secure_key;
 	private $public_key;
 	private $endpoint;
+	private $sandbox;
 
 	
 
@@ -417,8 +418,6 @@ class WPSC_WorldPay_Payments_Order_Handler {
 		$this->gateway = $gateway;
 
 		$this->init();
-
-		return $this;
 	}
 
 	/**
