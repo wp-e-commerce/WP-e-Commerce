@@ -469,6 +469,11 @@ class WPSC_WorldPay_Payments_Order_Handler {
 				// refund a settled payment
 				$this->refund_payment( $id );
 			break;
+			
+			case 'void_refund' :
+				// void a refund request
+				$this->void_refund( $id );
+			break;
 		}
 
 		echo json_encode( array( 'action' => $action, 'order_id' => $order_id, 'worldpay_id' => $id ) );
@@ -505,9 +510,12 @@ class WPSC_WorldPay_Payments_Order_Handler {
 
 		// Get ids
 		$wp_transaction_id 	= $this->log->get( 'wp_transactionId' );
-		$order_info 		= $this->refresh_transaction_info( $wp_transaction_id );
 		$wp_auth_code		= $this->log->get( 'wp_authcode' );
 		$wp_order_status	= $this->log->get( 'wp_order_status' );
+		
+		//Don't change order status if a refund has been requested
+		$wp_refund_set       = wpsc_get_purchase_meta( $order_id, 'worldpay_refunded', true );
+		$order_info = $this->refresh_transaction_info( $wp_transaction_id, ! ( bool ) $wp_refund_set );
 		?>
 		
 		<div class="metabox-holder">
@@ -721,11 +729,11 @@ class WPSC_WorldPay_Payments_Order_Handler {
 				throw new Exception( $response->get_error_message() );
 			}
 			
-			$this->log->set( 'wp_order_status', 'Refunded' )->save();
-			
+			wpsc_add_purchase_meta( $this->log->get( 'id' ), 'worldpay_refunded', true );
 			wpsc_add_purchase_meta( $this->log->get( 'id' ), 'worldpay_refund_id', $response['ResponseBody']->transaction->transactionId );
 			$this->log->set( 'worldpay-status', sprintf( __( 'Refunded (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
 			$this->log->set( 'processed', WPSC_Purchase_Log::REFUNDED )->save();
+			$this->log->set( 'wp_order_status', 'Refunded' )->save();
 		}
     }
 	
@@ -753,6 +761,34 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			
 			$this->log->set( 'worldpay-status', sprintf( __( 'Authorization Captured (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
 			$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
+		}
+    }
+	
+    /**
+     * Void a refund request
+     *
+     * @param  string $transaction_id
+     */
+    public function void_refund( $transaction_id ) {
+
+		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
+			
+			$params = array(
+				'amount'		=>  $this->log->get( 'totalprice' ),
+				'transactionId' => $transaction_id,
+			);
+			
+			$response = $this->gateway->execute( 'Payments/Void', $params );
+
+			if ( is_wp_error( $response ) ) {
+				throw new Exception( $response->get_error_message() );
+			}
+			
+			wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'worldpay_refunded' );
+			wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'worldpay_refund_id' );
+			$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
+			$this->log->set( 'wp_order_status', 'Completed' )->save();
+			$this->log->set( 'worldpay-status', sprintf( __( 'Refund Voided (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
 		}
     }
 }
