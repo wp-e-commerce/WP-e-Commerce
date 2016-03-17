@@ -516,7 +516,7 @@ class wpsc_cart_item {
 				'purchaseid'     => $purchase_log_id,
 				'price'          => $this->unit_price,
 				'pnp'            => floatval( $shipping ),
-				'tax_charged'    => $tax,
+				'tax_charged'    => floatval( $tax ),
 				'gst'            => floatval( $tax_rate ),
 				'quantity'       => $this->quantity,
 				'donation'       => $this->is_donation,
