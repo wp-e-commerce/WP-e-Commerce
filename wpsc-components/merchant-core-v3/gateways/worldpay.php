@@ -155,7 +155,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 							},
 							"addToVault": false,
 							"developerApplication": {
-								"developerId": 12345678,
+								"developerId": 10000644,
 								"version": '1.2'
 
 							}
@@ -309,6 +309,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			$order->set( 'wp_transactionId', $transaction_id )->save();
 			$order->set( 'wp_order_status', 'Completed' )->save();
 			$order->set( 'wp_authcode', $auth_code )->save();
+			$order->set( 'transactid', $transaction_id )->save();
 				
 			return true;
 		}
@@ -350,7 +351,8 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			$order->set( 'wp_transactionId', $transaction_id )->save();
 			$order->set( 'wp_order_status', 'Open' )->save();
 			$order->set( 'wp_authcode', $auth_code )->save();
-				
+			$order->set( 'transactid', $transaction_id )->save();
+							
 			return true;
 		}
 		
@@ -365,7 +367,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		if ( ! is_null( $params ) ) {
 			$params += array(
 				"developerApplication" => array(
-					"developerId" => 12345678,
+					"developerId" => 10000644,
 					"version" => "1.2"
 				),
 				"extendedInformation" => array(
@@ -704,6 +706,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			$this->log->set( 'wp_order_status', 'Voided' )->save();
 			$this->log->set( 'worldpay-status', sprintf( __( 'Authorization voided (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
 			$this->log->set( 'processed', WPSC_Purchase_Log::INCOMPLETE_SALE )->save();
+			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
 	
@@ -733,6 +736,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			$this->log->set( 'worldpay-status', sprintf( __( 'Refunded (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
 			$this->log->set( 'processed', WPSC_Purchase_Log::REFUNDED )->save();
 			$this->log->set( 'wp_order_status', 'Refunded' )->save();
+			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
 	
@@ -760,6 +764,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			
 			$this->log->set( 'worldpay-status', sprintf( __( 'Authorization Captured (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
 			$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
+			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
 	
@@ -788,6 +793,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
 			$this->log->set( 'wp_order_status', 'Completed' )->save();
 			$this->log->set( 'worldpay-status', sprintf( __( 'Refund Voided (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
+			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
 }
