@@ -179,11 +179,10 @@ final class WPSC_Payment_Gateways {
 			}
 
 			$return = self::register_file( $path );
-			
+
 			if ( is_wp_error( $return ) ) {
 				//We should log this
 			}
-
 		}
 	}
 
@@ -439,7 +438,7 @@ abstract class WPSC_Payment_Gateway {
 	 * @access public
 	 * @var WPSC_Payment_Gateway_Setting
 	 */
-	 
+
 	public $setting;
 
 	public $purchase_log;
@@ -464,7 +463,7 @@ abstract class WPSC_Payment_Gateway {
 	 * @since
 	 */
 	public function default_credit_card_form( $args = array(), $fields = array() ) {
-		
+
 		if ( $this->supports( 'tev1' ) && '1.0' == get_option( 'wpsc_get_active_theme_engine' ) ) {
 			// Show 2.0 gateway API table-based code
 			?>
@@ -487,14 +486,14 @@ abstract class WPSC_Payment_Gateway {
 						<td>
 							<input type='text' id='card_code' value='' autocomplete="off" size='5' maxlength='4' placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
 						</td>
-					</tr>					
-				</table>			
+					</tr>
+				</table>
 			<?php
 		} else {
 			$default_args = array(
 				'fields_have_names' => true, // Some gateways like stripe don't need names as the form is tokenized.
 			);
-			
+
 			$args = wp_parse_args( $args, apply_filters( 'wpsc_default_credit_card_form_args', $default_args, $this->setting->gateway_name ) );
 			$default_fields = array(
 				'card-number-field' => '<p class="form-row form-row-wide">
@@ -525,8 +524,8 @@ abstract class WPSC_Payment_Gateway {
 		<?php
 		}
 	}
-	
-	
+
+
 	/**
 	 * Check if a gateway supports a given feature.
 	 *
@@ -539,7 +538,7 @@ abstract class WPSC_Payment_Gateway {
 	public function supports( $feature ) {
 		return apply_filters( 'wpsc_payment_gateway_supports', in_array( $feature, $this->supports ) ? true : false, $feature, $this );
 	}
-	
+
 	/**
 	 * If There are no payment fields show the description if set.
 	 * Override this in your gateway if you have some.
@@ -549,7 +548,7 @@ abstract class WPSC_Payment_Gateway {
 			$this->default_credit_card_form();
 		}
 	}
-	
+
 	/**
 	 * Return the title of the payment gateway. For this to work, $this->title must
 	 * be set already.
