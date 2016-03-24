@@ -146,7 +146,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 								"firstName": $( 'input[title="billingfirstname"]' ).val(),
 								"lastName": $( 'input[title="billinglastname"]' ).val(),
 								"address": {
-									"line1": $( 'input[title="billingaddress"]' ).val(),
+									"line1": $( 'textarea[title="billingaddress"]' ).text(),
 									"city": $( 'input[title="billingcity"]' ).val(),
 									"state": $( 'input[title="billingstate"]' ).val(),
 									"zip": $( 'input[title="billingpostcode"]' ).val()
@@ -311,6 +311,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			$order->set( 'wp_order_status', 'Completed' )->save();
 			$order->set( 'wp_authcode', $auth_code )->save();
 			$order->set( 'transactid', $transaction_id )->save();
+			$order->set( 'wp_order_token', $token )->save();
 			
 			return true;
 		}
@@ -356,6 +357,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			$order->set( 'wp_order_status', 'Open' )->save();
 			$order->set( 'wp_authcode', $auth_code )->save();
 			$order->set( 'transactid', $transaction_id )->save();
+			$order->set( 'wp_order_token', $token )->save();
 
 			return true;
 		}
