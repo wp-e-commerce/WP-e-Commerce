@@ -5,7 +5,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		'sandbox' => 'https://gwapi.demo.securenet.com/api/',
 		'production' => 'https://gwapi.securenet.com/api/',
 	);
-	
+
 	private $auth;
 	private $payment_capture;
 	private $order_handler;
@@ -14,8 +14,6 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	private $public_key;
 	private $endpoint;
 	private $sandbox;
-
-	
 
 	/**
 	 * Constructor of WorldPay Payment Gateway
@@ -125,20 +123,18 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	 */
 	public function scripts() {
 
-		$jsfile = $this->sandbox ? 'PayOSDev.js' : 'PayOS.js';
-		wp_enqueue_script( 'worldpay_payos', WPSC_MERCHANT_V3_SDKS_URL . '/worldpay/assets/js/'.$jsfile, '', WPSC_VERSION );
+		$js = $this->sandbox ? 'PayOSDev.js' : 'PayOS.js';
+		wp_enqueue_script( 'worldpay_payos', WPSC_MERCHANT_V3_SDKS_URL . '/worldpay/assets/js/' . $js, '', WPSC_VERSION );
 	}
 
 	public function head_script() {
 		?>
 		<script type='text/javascript'>
 
-			jQuery(document).ready(function($) {
-				$( ".wpsc_checkout_forms" ).submit(function( event ) {
-					
-					event.preventDefault();
-					
-					//jQuery( 'input[type="submit"]', this ).prop( { 'disabled': true } );
+			jQuery( document ).ready( function( $ ) {
+				$( '.wpsc_checkout_forms' ).submit( function( e ) {
+
+					e.preventDefault();
 
 					var response = tokenizeCard(
 						{
@@ -169,13 +165,13 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 						if (responseObj.success) {
 
-							var form$ = jQuery('.wpsc_checkout_forms');
+							var $form = $( '.wpsc_checkout_forms' );
 
 							var token = responseObj.token;
 
 							$("#worldpay_pay_token").val(token);
 							// and submit
-							form$.get(0).submit();
+							$form.get(0).submit();
 
 							// do something with responseObj.token
 						} else {
@@ -185,9 +181,8 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 						}
 
 					}).fail(function ( response ) {
-						jQuery( 'input[type="submit"]', this ).prop( { 'disabled': false } );
-							console.log( response )
-						// an error occurred
+						$( 'input[type="submit"]', this ).prop( { 'disabled': false } );
+						console.log( response );
 					});
 				});
 
@@ -441,7 +436,6 @@ class WPSC_WorldPay_Payments_Order_Handler {
 	private static $instance;
 	private $log;
 	private $gateway;
-	private $doing_ipn = false;
 
 	public function __construct( &$gateway ) {
 
@@ -646,7 +640,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 					order_id: 		'<?php echo $order_id; ?>',
 					worldpay_action: 	$this.data('action'),
 					worldpay_id: 		$this.data('id'),
-					worldpay_refund_amount: jQuery('.worldpay_refund_amount').val(),
+					worldpay_refund_amount: $('.worldpay_refund_amount').val(),
 				};
 
 				// Ajax action
