@@ -123,8 +123,8 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	 */
 	public function scripts() {
 
-		$js = $this->sandbox ? 'PayOSDev.js' : 'PayOS.js';
-		wp_enqueue_script( 'worldpay_payos', WPSC_MERCHANT_V3_SDKS_URL . '/worldpay/assets/js/' . $js, '', WPSC_VERSION );
+		$js = $this->sandbox ? 'demo.' : '';
+		wp_enqueue_script( 'worldpay_payos', 'https://gwapi.'.$js.'securenet.com/v1/PayOS.js', 'jquery', false, true );
 	}
 
 	public function head_script() {
