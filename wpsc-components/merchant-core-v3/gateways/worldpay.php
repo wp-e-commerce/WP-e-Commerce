@@ -150,6 +150,9 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 								"firstName": $( 'input[title="billingfirstname"]' ).val(),
 								"lastName": $( 'input[title="billinglastname"]' ).val(),
 								"address": {
+									"line1": $( 'input[title="billingaddress"]' ).val(),
+									"city": $( 'input[title="billingcity"]' ).val(),
+									"state": $( 'input[title="billingstate"]' ).val(),
 									"zip": $( 'input[title="billingpostcode"]' ).val()
 								}
 							},
@@ -290,6 +293,9 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 					"paymentMethodId" => $token,
 					"publicKey" => $this->public_key
 				),
+				"extendedInformation" => array(
+					"typeOfGoods" => $this->type_of_goods( $order->get( 'id' ) )
+				),
 			);
 
 			$response = $this->execute( 'Payments/Charge', $params );
@@ -310,7 +316,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			$order->set( 'wp_order_status', 'Completed' )->save();
 			$order->set( 'wp_authcode', $auth_code )->save();
 			$order->set( 'transactid', $transaction_id )->save();
-				
+			
 			return true;
 		}
 		
@@ -330,10 +336,13 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 				"addToVault" => false,
 				"paymentVaultToken" => array(
 					"paymentMethodId" => $token,
-					"publicKey" => $this->public_key
+					"publicKey" => $this->public_key,
+				),
+				"extendedInformation" => array(
+					"typeOfGoods" => $this->type_of_goods( $order->get( 'id' ) )
 				),
 			);
-
+		
 			$response = $this->execute( 'Payments/Authorize', $params );
 
 			if ( is_wp_error( $response ) ) {
@@ -352,7 +361,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			$order->set( 'wp_order_status', 'Open' )->save();
 			$order->set( 'wp_authcode', $auth_code )->save();
 			$order->set( 'transactid', $transaction_id )->save();
-							
+
 			return true;
 		}
 		
@@ -369,9 +378,6 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 				"developerApplication" => array(
 					"developerId" => 10000644,
 					"version" => "1.2"
-				),
-				"extendedInformation" => array(
-					"typeOfGoods" => "PHYSICAL"
 				),
 			);			
 		}
@@ -405,6 +411,29 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		return $request;
     }
 
+	public function type_of_goods( $log_id ) {
+		$digital = 0;
+
+		$log = new WPSC_Purchase_Log( $log_id );
+		$cart = $log->get_cart_contents();
+		
+		foreach ( $cart as $cartitem ) {
+			$product_meta = get_post_meta( $cartitem->prodid, '_wpsc_product_metadata' );
+			
+			if( isset( $product_meta[0]['no_shipping'] ) && $product_meta[0]['no_shipping'] == 1 ) {
+				$digital++;
+			}
+		}
+		
+		if( $digital == count( $cart ) ) {
+			//At least one item is downloadable
+			$transtype = 'DIGITAL';
+		} else {
+			$transtype = 'PHYSICAL';
+		}
+		
+		return $transtype;
+	}
 }
 
 class WPSC_WorldPay_Payments_Order_Handler {
@@ -761,7 +790,6 @@ class WPSC_WorldPay_Payments_Order_Handler {
 			}
 			
 			$this->log->set( 'wp_order_status', 'Completed' )->save();
-			
 			$this->log->set( 'worldpay-status', sprintf( __( 'Authorization Captured (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
 			$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
 			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
