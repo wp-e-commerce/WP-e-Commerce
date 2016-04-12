@@ -74,22 +74,6 @@ function wpsc_display_form_fields() {
 			<?php }
 
 			// Not a header so start display form fields
-		} elseif ( $wpsc_checkout->checkout_item->unique_name == 'billingemail' ) {
-			?>
-               <?php
-
-               	$email_markup = "<div class='wpsc_email_address'>
-                  <p class='" . wpsc_checkout_form_element_id() . "'>
-                     <label class='wpsc_email_address' for='" . wpsc_checkout_form_element_id() . "'>
-                     " . __( 'Enter your email address', 'wp-e-commerce' ) . "
-                     </label>
-                  <p class='wpsc_email_address_p'>
-                  <img src='https://secure.gravatar.com/avatar/empty?s=60&amp;d=mm' id='wpsc_checkout_gravatar' />
-                  " . wpsc_checkout_form_field();
-
-			if ( wpsc_the_checkout_item_error() != '' )
-				$email_markup .= "<p class='validation-error'>" . wpsc_the_checkout_item_error() . "</p>";
-			$email_markup .= "</div>";
 		} else {
 			?>
 			<tr>
