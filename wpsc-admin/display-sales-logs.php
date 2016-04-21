@@ -146,8 +146,9 @@ class WPSC_Purchase_Log_Page {
 				$href = $this->get_purchase_log_url( ( $this->log_id - 1 ) );
 				$disabled = '';
 			}
+			
 			?>
-			<a href='<?php esc_url( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
+			<a href='<?php echo esc_url( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
 			<?php
 
 			$max_purchase_id = wpsc_max_purchase_id();
@@ -158,7 +159,7 @@ class WPSC_Purchase_Log_Page {
 				$disabled = '';
 			}
 			?>
-			<a href='<?php esc_url( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
+			<a href='<?php echo esc_url( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
 
 		</span></span></span>
 		<?php
