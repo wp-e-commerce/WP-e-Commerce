@@ -32,7 +32,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 			'provided_price'   => null,
 			'comment'          => null,
 			'time_requested'   => null,
-			'custom_message'   => null,
+			'custom_message'   => '',
 			'file_data'        => null,
 			'is_customisable'  => false,
 			'meta'             => null,
