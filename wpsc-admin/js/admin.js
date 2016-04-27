@@ -78,6 +78,7 @@
 				stop : category_sort
 			});
 
+			$('#edittag').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
 			$('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
 
 			$('[name="image"]').on('change', function() {
