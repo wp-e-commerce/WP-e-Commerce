@@ -203,6 +203,9 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 
 	if ( $old_theme_engine !== $new_theme_engine ) {
 
+		// _wpsc_action_flush_rewrite_rules lives here.
+		require_once( WPSC_FILE_PATH . '/wpsc-admin/init.php' );
+
 		do_action( 'wpsc_updated_theme_engine', $new_theme_engine, $old_theme_engine );
 
 		do_action( "wpsc_updated_theme_engine_from_{$old_theme_engine}_to_{$new_theme_engine}" );
@@ -210,6 +213,11 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 		add_action( 'shutdown', '_wpsc_action_flush_rewrite_rules' );
 
 		update_option( 'wpsc_get_active_theme_engine', $new_theme_engine );
+
+		$location = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : home_url();
+		// Redirect ensures that both templates will not be loaded, fixing fatal errors, etc.
+		wp_safe_redirect( esc_url_raw( $location ) );
+		exit;
 	}
 
 	return $activate;
