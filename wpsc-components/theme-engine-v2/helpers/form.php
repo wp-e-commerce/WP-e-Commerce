@@ -124,9 +124,9 @@ function wpsc_get_form_output( $args ) {
 	$defaults = apply_filters( 'wpsc_get_form_output_default_args', $defaults );
 
 	$r = wp_parse_args( $args, $defaults );
-
+	
 	$output = "<form id='{$r['id']}' method='{$r['method']}' action='{$r['action']}' class='{$r['class']}'>";
-
+	
 	foreach ( $r['fields'] as $field ) {
 		$output .= _wpsc_get_field_output( $field, $r );
 	}

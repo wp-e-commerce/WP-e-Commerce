@@ -7,14 +7,15 @@ if ( ! defined( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE' ) ) {
 }
 
 class WPSC_Purchase_Log {
-	const INCOMPLETE_SALE  = 1;
-	const ORDER_RECEIVED   = 2;
-	const ACCEPTED_PAYMENT = 3;
-	const JOB_DISPATCHED   = 4;
-	const CLOSED_ORDER     = 5;
-	const PAYMENT_DECLINED = 6;
-	const REFUNDED         = 7;
-	const REFUND_PENDING   = 8;
+	const INCOMPLETE_SALE  		= 1;
+	const ORDER_RECEIVED  	 	= 2;
+	const ACCEPTED_PAYMENT		= 3;
+	const JOB_DISPATCHED   		= 4;
+	const CLOSED_ORDER     		= 5;
+	const PAYMENT_DECLINED 		= 6;
+	const REFUNDED         		= 7;
+	const REFUND_PENDING   		= 8;
+	const PARTIALLY_REFUNDED 	= 9;
 
 	/**
 	 * Names of column that requires escaping values as strings before being inserted

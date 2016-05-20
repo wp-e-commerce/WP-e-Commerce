@@ -181,7 +181,7 @@ final class WPSC_Payment_Gateways {
 			$return = self::register_file( $path );
 
 			if ( is_wp_error( $return ) ) {
-				return $return;
+				//We should log this
 			}
 		}
 	}
@@ -438,6 +438,7 @@ abstract class WPSC_Payment_Gateway {
 	 * @access public
 	 * @var WPSC_Payment_Gateway_Setting
 	 */
+
 	public $setting;
 
 	public $purchase_log;
@@ -447,6 +448,106 @@ abstract class WPSC_Payment_Gateway {
 	public $currency_code;
 
 	public $title;
+
+	/**
+	 * Supported features such as 'default_credit_card_form', 'refunds'.
+	 * @var array
+	 */
+	public $supports = array();
+
+	/**
+	 * Display default credit card form.
+	 *
+	 * @param  array $args
+	 * @param  array $fields
+	 * @since
+	 */
+	public function default_credit_card_form( $args = array(), $fields = array() ) {
+
+		if ( $this->supports( 'tev1' ) && '1.0' == get_option( 'wpsc_get_active_theme_engine' ) ) {
+			// Show 2.0 gateway API table-based code
+			?>
+				<table class="wpsc_checkout_table <?php echo wpsc_gateway_form_field_style(); ?>">
+					<tr>
+						<td><?php _e( 'Card Number', 'wp-e-commerce' ); ?></td>
+						<td>
+							<input type='text' id='card_number' value='' autocomplete="off" />
+						</td>
+					</tr>
+					<tr>
+						<td><?php _e( 'Expiration Date', 'wp-e-commerce' ); ?></td>
+						<td>
+							<input type='text' id='card_expiry_month' value='' autocomplete="off" maxlength='2' size='3' placeholder="<?php esc_attr_e( 'MM', 'wp-e-commerce' ); ?>" />&nbsp;
+							<input type='text' id='card_expiry_year' value='' autocomplete="off" maxlength='2' size='3' placeholder="<?php esc_attr_e( 'YY', 'wp-e-commerce' ); ?>" />
+						</td>
+					</tr>
+					<tr>
+						<td><?php _e( 'Card Code', 'wp-e-commerce' ); ?></td>
+						<td>
+							<input type='text' id='card_code' value='' autocomplete="off" size='5' maxlength='4' placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
+						</td>
+					</tr>
+				</table>
+			<?php
+		} else {
+			$default_args = array(
+				'fields_have_names' => true, // Some gateways like stripe don't need names as the form is tokenized.
+			);
+
+			$args = wp_parse_args( $args, apply_filters( 'wpsc_default_credit_card_form_args', $default_args, $this->setting->gateway_name ) );
+			$default_fields = array(
+				'card-number-field' => '<p class="form-row form-row-wide">
+					<label for="' . esc_attr( $this->setting->gateway_name ) . '-card-number">' . __( 'Card Number', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
+					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-number" class="input-text wpsc-credit-card-form-card-number" type="text" maxlength="20" autocomplete="off" placeholder="•••• •••• •••• ••••" />
+				</p>',
+				'card-expiry-field' => '<p class="form-row form-row-first">
+					<label for="' . esc_attr( $this->setting->gateway_name ) . '-card-expiry">' . __( 'Expiration Date (MM/YY)', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
+					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-expiry" class="input-text wpsc-credit-card-form-card-expiry" type="text" autocomplete="off" placeholder="' . esc_attr__( 'MM / YY', 'wp-e-commerce' ) . '" />
+				</p>',
+				'card-cvc-field' => '<p class="form-row form-row-last">
+					<label for="' . esc_attr( $this->setting->gateway_name ) . '-card-cvc">' . __( 'Card Code', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
+					<input id="' . esc_attr( $this->setting->gateway_name ) . '-card-cvc" class="input-text wpsc-credit-card-form-card-cvc" type="text" autocomplete="off" placeholder="' . esc_attr__( 'CVC', 'wp-e-commerce' ) . '" />
+				</p>'
+			);
+			$fields = wp_parse_args( $fields, apply_filters( 'wpsc_default_credit_card_form_fields', $default_fields, $this->setting->gateway_name ) );
+			?>
+			<fieldset id="<?php echo $this->setting->gateway_name; ?>-cc-form">
+				<?php do_action( 'wpsc_default_credit_card_form_start', $this->setting->gateway_name ); ?>
+				<?php
+					foreach ( $fields as $field ) {
+						echo $field;
+					}
+				?>
+				<?php do_action( 'wpsc_default_credit_card_form_end', $this->setting->gateway_name ); ?>
+				<div class="clear"></div>
+			</fieldset>
+		<?php
+		}
+	}
+
+
+	/**
+	 * Check if a gateway supports a given feature.
+	 *
+	 * Gateways should override this to declare support (or lack of support) for a feature.
+	 *
+	 * @param string $feature string The name of a feature to test support for.
+	 * @return bool True if the gateway supports the feature, false otherwise.
+	 * @since
+	 */
+	public function supports( $feature ) {
+		return apply_filters( 'wpsc_payment_gateway_supports', in_array( $feature, $this->supports ) ? true : false, $feature, $this );
+	}
+
+	/**
+	 * If There are no payment fields show the description if set.
+	 * Override this in your gateway if you have some.
+	 */
+	public function payment_fields() {
+		if ( $this->supports( 'default_credit_card_form' ) ) {
+			$this->default_credit_card_form();
+		}
+	}
 
 	/**
 	 * Return the title of the payment gateway. For this to work, $this->title must
@@ -664,7 +765,7 @@ class WPSC_Payment_Gateway_Setting {
 	 * @access private
 	 * @var string
 	 */
-	private $gateway_name = '';
+	public $gateway_name = '';
 
 	/**
 	 * Name of the option containing all the settings in WP DB

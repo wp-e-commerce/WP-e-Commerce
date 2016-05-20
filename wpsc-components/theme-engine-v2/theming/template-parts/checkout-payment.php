@@ -25,5 +25,6 @@
 		<?php endif; ?>
 
 		<?php wpsc_checkout_payment_method_form(); ?>
+		
 	</div>
 </div>
