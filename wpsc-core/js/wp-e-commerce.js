@@ -1101,8 +1101,6 @@ jQuery(document).ready(function ($) {
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery(this).val().split(' ').join(''))+'?s=60&d=mm');
 	});
 
-	jQuery('#fancy_notification').appendTo('body');
-
 	/* Clears shipping state and billing state on body load if they are numeric */
 	$( 'input[title="shippingstate"], input[title="billingstate"]' ).each( function( index, value ){
 		var $this = $( this ), $val = $this.val();
@@ -1132,41 +1130,30 @@ jQuery(document).ready(function ($) {
 
 			form_values = jQuery(this).serialize() + '&action=' + action;
 
-			// Sometimes jQuery returns an object instead of null, using length tells us how many elements are in the object, which is more reliable than comparing the object to null
-			if ( jQuery( '#fancy_notification' ).length === 0 ) {
-				jQuery( 'div.wpsc_loading_animation', this ).css( 'visibility', 'visible' );
-			}
+			jQuery( 'div.wpsc_loading_animation', this ).css( 'visibility', 'visible' );
 
 			var success = function( response ) {
 				if ( ( response ) ) {
-					if ( response.hasOwnProperty('fancy_notification') && response.fancy_notification ) {
-						if ( jQuery( '#fancy_notification_content' ) ) {
-							jQuery( '#fancy_notification_content' ).html( response.fancy_notification );
-							jQuery( '#loading_animation').css( 'display', 'none' );
-							jQuery( '#fancy_notification_content' ).css( 'display', 'block' );
-						}
-					}
 					jQuery('div.shopping-cart-wrapper').html( response.widget_output );
 					jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
 
 					jQuery( '.cart_message' ).delay( 3000 ).slideUp( 500 );
 
-					//Until we get to an acceptable level of education on the new custom event - this is probably necessary for plugins.
+					// Until we get to an acceptable level of education on the new custom event - this is probably necessary for plugins.
 					if ( response.wpsc_alternate_cart_html ) {
 						eval( response.wpsc_alternate_cart_html );
 					}
 
-					jQuery( document ).trigger( { type : 'wpsc_fancy_notification', response : response } );
 				}
 
-				if ( jQuery( '#fancy_notification' ).length > 0 ) {
-					jQuery( '#loading_animation' ).css( "display", 'none' );
-				}
+				jQuery( document ).trigger( { 'type' : 'wpscAddedToCart', 'response' : response } );
+
 			};
+
+			jQuery( document ).trigger( { 'type' : 'wpscAddToCart', 'form' : this } );
 
 			jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
 
-			wpsc_fancy_notification(this);
 			return false;
 		}
 	});
@@ -1355,22 +1342,21 @@ function submit_change_country(){
 	document.forms.change_country.submit();
 }
 
-// submit the fancy notifications forms.
-function wpsc_fancy_notification(parent_form){
-	if(typeof(WPSC_SHOW_FANCY_NOTIFICATION) == 'undefined'){
-		WPSC_SHOW_FANCY_NOTIFICATION = true;
-	}
-	if((WPSC_SHOW_FANCY_NOTIFICATION === true) && (jQuery('#fancy_notification') !== null)){
-		jQuery('#fancy_notification').css({
-		        position:'fixed',
-		        left: (jQuery(window).width() - jQuery('#fancy_notification').outerWidth())/2,
-		        top: (jQuery(window).height() - jQuery('#fancy_notification').outerHeight())/2
-		    });
+/**
+ * Submit the fancy notifications forms.
+ *
+ * @deprecated  Since 4.0. Use WPEC_Fancy_Notifications.fancy_notification() instead.
+ *
+ * @param  object  parent_form  Deprecated. Form element. Kept for legacy purposes.
+ */
+function wpsc_fancy_notification( parent_form ) {
 
-		jQuery('#fancy_notification').css("display", 'block');
-		jQuery('#loading_animation').css("display", 'block');
-		jQuery('#fancy_notification_content').css("display", 'none');
+	if ( window.console && window.console.log ) {
+		console.log( 'wpsc_fancy_notification() is deprecated. Use WPEC_Fancy_Notifications.fancy_notification() instead.' );
 	}
+
+	WPEC_Fancy_Notifications.fancy_notification();
+
 }
 
 function shopping_cart_collapser() {

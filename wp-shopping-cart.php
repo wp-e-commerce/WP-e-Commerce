@@ -87,6 +87,11 @@ class WP_eCommerce {
 				WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/marketplace-core-v1.php'
 		);
 
+		$components['fancy-notifications']['fancy-notifications-v1'] = array(
+			'title'    => __( 'Fancy Notifications v1', 'wpsc' ),
+			'includes' => WPSC_FILE_PATH . '/wpsc-components/fancy-notifications/fancy-notifications.php'
+		);
+
 		return $components;
 	}
 
