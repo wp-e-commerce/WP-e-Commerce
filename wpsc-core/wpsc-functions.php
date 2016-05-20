@@ -693,6 +693,23 @@ function wpsc_cron() {
 add_action( 'init', 'wpsc_cron' );
 
 /**
+ * wpsc_add_weekly_schedule()
+ *
+ * Creates a weekly schedule event
+ *
+ * @param none
+ * @return void
+ */
+function wpsc_add_weekly_schedule( $schedules = array()) {
+    $schedules['weekly'] = array(
+        'interval' => 604800,
+        'display'  => __( 'Once Weekly', 'wp-e-commerce' )
+    );
+    return $schedules;
+}
+add_filter( 'cron_schedules', 'wpsc_add_weekly_schedule' );
+
+/**
  * Updates permalink slugs
  *
  * @since 3.8.9
