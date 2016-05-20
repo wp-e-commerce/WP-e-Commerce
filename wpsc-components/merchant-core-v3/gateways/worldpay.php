@@ -29,7 +29,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		$this->supports = array( 'default_credit_card_form', 'tev1' );
 
 		$this->order_handler	= WPSC_WorldPay_Payments_Order_Handler::get_instance( $this );
-		
+
 		// Define user set variables
 		$this->secure_net_id	= $this->setting->get( 'secure_net_id' );
 		$this->secure_key  		= $this->setting->get( 'secure_key' );
@@ -191,7 +191,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		</script>
 		<?php
 	}
-	
+
 	public function te_v1_insert_hidden_field() {
 		echo '<input type="hidden" id="worldpay_pay_token" name="worldpay_pay_token" value="" />';
 	}
@@ -202,9 +202,8 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		add_action( 'wp_head'           , array( $this, 'head_script' ) );
 
 		add_action( 'wpsc_inside_shopping_cart', array( $this, 'te_v1_insert_hidden_field' ) );
-		
+
 		add_filter( 'wpsc_gateway_checkout_form_worldpay', array( $this, 'payment_fields' ) );
-		//add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'te_v2_show_payment_fields' ) );
 	}
 
 	public function te_v2_show_payment_fields( $args ) {
@@ -223,15 +222,15 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	public function process() {
 
 		$order = $this->purchase_log;
-		
+
 		$status = $this->payment_capture === '' ? WPSC_Purchase_Log::ACCEPTED_PAYMENT : WPSC_Purchase_Log::ORDER_RECEIVED;
-		
+
 		$order->set( 'processed', $status )->save();
-		
+
 		$card_token = isset( $_POST['worldpay_pay_token'] ) ? sanitize_text_field( $_POST['worldpay_pay_token'] ) : '';
-	
+
 		$this->order_handler->set_purchase_log( $order->get( 'id' ) );
-		
+
 		switch ( $this->payment_capture ) {
 			case 'authorize' :
 
@@ -245,13 +244,11 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 				} else {
 					$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED )->save();
 					$order->set( 'worldpay-status', __( 'Could not authorize WorldPay payment.', 'wp-e-commerce' ) )->save();
-
-					//$this->handle_declined_transaction( $order );
 				}
 
 			break;
 			default:
-					
+
 				// Capture
 				$result = $this->capture_payment( $card_token );
 
@@ -259,34 +256,32 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 					// Payment complete
 					$order->set( 'worldpay-status', __( 'WorldPay order completed.  Funds have been authorized and captured.', 'wp-e-commerce' ) );
 				} else {
-					$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
+					$order->set( 'processed'      , WPSC_Purchase_Log::PAYMENT_DECLINED );
 					$order->set( 'worldpay-status', __( 'Could not authorize WorldPay payment.', 'wp-e-commerce' ) );
+				}
 
-					//$this->handle_declined_transaction( $order );
-				}	
-				
 			break;
 		}
-		
+
 		$order->save();
 		$this->go_to_transaction_results();
 
 	}
-	
+
 	public function capture_payment( $token ) {
 
 		if ( $this->purchase_log->get( 'gateway' ) == 'worldpay' ) {
-			
+
 			$order = $this->purchase_log;
-			
-			$params = array (
-				'amount'	=> $order->get( 'totalprice' ),
-				'orderId'	=> $order->get( 'id' ),
-				'invoiceNumber' => $order->get( 'sessionid' ),
-				"addToVault" => false,
+
+			$params = array(
+				'amount'	        => $order->get( 'totalprice' ),
+				'orderId'	        => $order->get( 'id' ),
+				'invoiceNumber'     => $order->get( 'sessionid' ),
+				"addToVault"        => false,
 				"paymentVaultToken" => array(
 					"paymentMethodId" => $token,
-					"publicKey" => $this->public_key
+					"publicKey"       => $this->public_key
 				),
 				"extendedInformation" => array(
 					"typeOfGoods" => $this->type_of_goods( $order->get( 'id' ) )
@@ -298,104 +293,102 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
-			
+
 			if ( isset( $response['ResponseBody']->transaction->transactionId ) ) {
 				$transaction_id = $response['ResponseBody']->transaction->transactionId;
-				$auth_code = $response['ResponseBody']->transaction->authorizationCode;
+				$auth_code      = $response['ResponseBody']->transaction->authorizationCode;
 			} else {
 				return false;
 			}
-			
+
 			// Store transaction ID and Auth code in the order
 			$order->set( 'wp_transactionId', $transaction_id )->save();
-			$order->set( 'wp_order_status', 'Completed' )->save();
-			$order->set( 'wp_authcode', $auth_code )->save();
-			$order->set( 'transactid', $transaction_id )->save();
-			$order->set( 'wp_order_token', $token )->save();
-			
+			$order->set( 'wp_order_status' , 'Completed' )->save();
+			$order->set( 'wp_authcode'     , $auth_code )->save();
+			$order->set( 'transactid'      , $transaction_id )->save();
+			$order->set( 'wp_order_token'  , $token )->save();
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	public function authorize_payment( $token ) {
 
 		if ( $this->purchase_log->get( 'gateway' ) == 'worldpay' ) {
-			
+
 			$order = $this->purchase_log;
-			
-			$params = array (
-				'amount'	=> $order->get( 'totalprice' ),
-				'orderId'	=> $order->get( 'id' ),
-				'invoiceNumber' => $order->get( 'sessionid' ),
-				"addToVault" => false,
+
+			$params = array(
+				'amount'	        => $order->get( 'totalprice' ),
+				'orderId'	        => $order->get( 'id' ),
+				'invoiceNumber'     => $order->get( 'sessionid' ),
+				"addToVault"        => false,
 				"paymentVaultToken" => array(
 					"paymentMethodId" => $token,
-					"publicKey" => $this->public_key,
+					"publicKey"       => $this->public_key,
 				),
 				"extendedInformation" => array(
 					"typeOfGoods" => $this->type_of_goods( $order->get( 'id' ) )
 				),
 			);
-		
+
 			$response = $this->execute( 'Payments/Authorize', $params );
 
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
-			
+
 			if ( isset( $response['ResponseBody']->transaction->transactionId ) ) {
 				$transaction_id = $response['ResponseBody']->transaction->transactionId;
-				$auth_code = $response['ResponseBody']->transaction->authorizationCode;
+				$auth_code      = $response['ResponseBody']->transaction->authorizationCode;
 			} else {
 				return false;
 			}
-			
+
 			// Store transaction ID and Auth code in the order
 			$order->set( 'wp_transactionId', $transaction_id )->save();
-			$order->set( 'wp_order_status', 'Open' )->save();
-			$order->set( 'wp_authcode', $auth_code )->save();
-			$order->set( 'transactid', $transaction_id )->save();
-			$order->set( 'wp_order_token', $token )->save();
+			$order->set( 'wp_order_status' , 'Open' )->save();
+			$order->set( 'wp_authcode'     , $auth_code )->save();
+			$order->set( 'transactid'      , $transaction_id )->save();
+			$order->set( 'wp_order_token'  , $token )->save();
 
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public function execute( $endpoint, $params = array(), $type = 'POST' ) {
-       
+
 	   // where we make the API petition
         $endpoint = $this->endpoint . $endpoint;
-        
+
 		if ( ! is_null( $params ) ) {
 			$params += array(
 				"developerApplication" => array(
 					"developerId" => 10000644,
-					"version" => "1.2"
+					"version"     => "1.2"
 				),
-			);			
+			);
 		}
-			
+
 		$data = json_encode( $params );
-		
-		$args = array (
+
+		$args = array(
 			'timeout' => 15,
 			'headers' => array(
 				'Authorization' => $this->auth,
-				'Content-Type' => 'application/json',
+				'Content-Type'  => 'application/json',
 			),
 			'sslverify' => false,
-			'body' => $data,
+			'body'      => $data,
 		);
-		
 
-  	
 		$request  = $type == 'GET' ? wp_safe_remote_get( $endpoint, $args ) : wp_safe_remote_post( $endpoint, $args );
         $response = wp_remote_retrieve_body( $request );
-		
+
 		if ( ! is_wp_error( $request ) ) {
 
 			$response_object = array();
@@ -404,7 +397,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 			$request = $response_object;
 		}
-		
+
 		return $request;
     }
 
@@ -413,28 +406,21 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 		$log = new WPSC_Purchase_Log( $log_id );
 		$cart = $log->get_cart_contents();
-		
+
 		foreach ( $cart as $cartitem ) {
 			$product_meta = get_post_meta( $cartitem->prodid, '_wpsc_product_metadata' );
-			
-			if( isset( $product_meta[0]['no_shipping'] ) && $product_meta[0]['no_shipping'] == 1 ) {
+
+			if ( isset( $product_meta[0]['no_shipping'] ) && $product_meta[0]['no_shipping'] == 1 ) {
 				$digital++;
 			}
 		}
-		
-		if( $digital == count( $cart ) ) {
-			//At least one item is downloadable
-			$transtype = 'DIGITAL';
-		} else {
-			$transtype = 'PHYSICAL';
-		}
-		
-		return $transtype;
+
+		return $digital == count( $cart ) ? 'DIGITAL' : 'PHYSICAL';
 	}
 }
 
 class WPSC_WorldPay_Payments_Order_Handler {
-	
+
 	private static $instance;
 	private $log;
 	private $gateway;
@@ -452,7 +438,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 	 */
 	public function init() {
 		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'meta_box' ), 8 );
-		add_action( 'wp_ajax_worldpay_order_action'    , array( $this, 'order_actions' ) );
+		add_action( 'wp_ajax_worldpay_order_action'  , array( $this, 'order_actions' ) );
 
 	}
 
@@ -467,7 +453,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 	public function set_purchase_log( $id ) {
 		$this->log = new WPSC_Purchase_Log( $id );
 	}
-	
+
 	/**
 	 * Perform order actions for amazon
 	 */
@@ -485,17 +471,17 @@ class WPSC_WorldPay_Payments_Order_Handler {
 				//Capture an AUTH
 				$this->capture_payment($id);
 			break;
-			
+
 			case 'void' :
 				// void capture or auth before settled
 				$this->void_payment( $id );
 			break;
-			
+
 			case 'refund' :
 				// refund a settled payment
 				$this->refund_payment( $id );
 			break;
-			
+
 			case 'void_refund' :
 				// void a refund request
 				$this->void_refund( $id );
@@ -506,7 +492,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 
 		die();
 	}
-	
+
 	/**
 	 * meta_box function.
 	 *
@@ -530,7 +516,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 	 * @return void
 	 */
 	public function authorization_box() {
-		
+
 		$actions  = array();
 		$order_id = $this->log->get( 'id' );
 
@@ -538,12 +524,12 @@ class WPSC_WorldPay_Payments_Order_Handler {
 		$wp_transaction_id 	= $this->log->get( 'wp_transactionId' );
 		$wp_auth_code		= $this->log->get( 'wp_authcode' );
 		$wp_order_status	= $this->log->get( 'wp_order_status' );
-		
+
 		//Don't change order status if a refund has been requested
-		$wp_refund_set       = wpsc_get_purchase_meta( $order_id, 'worldpay_refunded', true );
-		$order_info = $this->refresh_transaction_info( $wp_transaction_id, ! ( bool ) $wp_refund_set );
+		$wp_refund_set = wpsc_get_purchase_meta( $order_id, 'worldpay_refunded', true );
+		$order_info    = $this->refresh_transaction_info( $wp_transaction_id, ! (bool) $wp_refund_set );
 		?>
-		
+
 		<div class="metabox-holder">
 			<div id="wpsc-worldpay-payments" class="postbox">
 				<h3 class='hndle'><?php _e( 'WorldPay Payments' , 'wp-e-commerce' ); ?></h3>
@@ -559,65 +545,65 @@ class WPSC_WorldPay_Payments_Order_Handler {
 						?>
 					</p>
 		<?php
-		
+
 		//Show actions based on order status
 		switch ( $wp_order_status ) {
 			case 'Open' :
 				//Order is only authorized and still not captured/voided
 				$actions['capture'] = array(
-					'id' => $wp_transaction_id,
+					'id'     => $wp_transaction_id,
 					'button' => __( 'Capture funds', 'wp-e-commerce' )
 				);
-				
+
 				//
 				if ( ! $order_info['settled'] ) {
 					//Void
 					$actions['void'] = array(
-						'id' => $wp_transaction_id,
+						'id'     => $wp_transaction_id,
 						'button' => __( 'Void order', 'wp-e-commerce' )
-					);					
+					);
 				}
-				
+
 				break;
 			case 'Completed' :
 				//Order has been captured or its a direct payment
 				if ( $order_info['settled'] ) {
 					//Refund
 					$actions['refund'] = array(
-						'id' => $wp_transaction_id,
+						'id'     => $wp_transaction_id,
 						'button' => __( 'Refund order', 'wp-e-commerce' )
 					);
 				} else {
 					//Void
 					$actions['void'] = array(
-						'id' => $wp_transaction_id,
+						'id'     => $wp_transaction_id,
 						'button' => __( 'Void order', 'wp-e-commerce' )
-					);					
+					);
 				}
-				
+
 			break;
 			case 'Refunded' :
 				//Order is settled and a refund has been requested
 				$wp_refund_id       = wpsc_get_purchase_meta( $order_id, 'worldpay_refund_id', true );
-				
+
 				if ( $wp_refund_id ) {
 					//Get refund order status to check if its eligible for a void (not settled)
 					$refund_status = $this->refresh_transaction_info( $wp_refund_id, false );
-					
+
 					if ( ! $refund_status['settled'] ) {
 						//Show void only if not settled.
 						$actions['void_refund'] = array(
-							'id' => $wp_refund_id,
+							'id'     => $wp_refund_id,
 							'button' => __( 'Void Refund request', 'wp-e-commerce' )
-						);						
+						);
 					}
 				}
 
 				break;
 			case 'Voided' :
 			break;
-		}			
-		
+		}
+
 		if ( ! empty( $actions ) ) {
 
 			echo '<p class="buttons">';
@@ -628,7 +614,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 
 			echo '</p>';
 
-		}		
+		}
 		?>
 		<script type="text/javascript">
 		jQuery( document ).ready( function( $ ) {
@@ -665,20 +651,20 @@ class WPSC_WorldPay_Payments_Order_Handler {
      * Get the order status from API
      *
      * @param  string $transaction_id
-     */	
+     */
 	public function refresh_transaction_info( $transaction_id, $update = true ) {
-		
+
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
-			
+
 			$response = $this->gateway->execute( 'transactions/'. $transaction_id, null, 'GET' );
 
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
-			
+
 			$response_object = array();
-			$response_object['trans_type'] 	= $response['ResponseBody']->transactions[0]->transactionType;
-			$response_object['settled'] 	= isset( $response['ResponseBody']->transactions[0]->settlementData ) ? true : false;
+			$response_object['trans_type'] = $response['ResponseBody']->transactions[0]->transactionType;
+			$response_object['settled']    = isset( $response['ResponseBody']->transactions[0]->settlementData ) ? true : false;
 
 			//Recheck status and update if required
 			if ( $update ) {
@@ -686,28 +672,28 @@ class WPSC_WorldPay_Payments_Order_Handler {
 					case 'AUTH_ONLY' :
 						$this->log->set( 'wp_order_status', 'Open' )->save();
 					break;
-					
+
 					case 'VOID' :
 						$this->log->set( 'wp_order_status', 'Voided' )->save();
 					break;
-					
+
 					case 'REFUND' :
 					case 'CREDIT' :
 						$this->log->set( 'wp_order_status', 'Refunded' )->save();
-					break;				
-					
+					break;
+
 					case 'AUTH_CAPTURE' :
 					case 'PRIOR_AUTH_CAPTURE' :
 						$this->log->set( 'wp_order_status', 'Completed' )->save();
 					break;
-				}				
+				}
 			}
 
-		return $response_object;
+			return $response_object;
 		}
 	}
-	
-	
+
+
     /**
      * Void auth/capture
      *
@@ -716,25 +702,25 @@ class WPSC_WorldPay_Payments_Order_Handler {
     public function void_payment( $transaction_id ) {
 
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
-			
+
 			$params = array(
 				'amount'		=>  $this->log->get( 'totalprice' ),
 				'transactionId' => $transaction_id,
 			);
-			
+
 			$response = $this->gateway->execute( 'Payments/Void', $params );
 
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
-			
+
 			$this->log->set( 'wp_order_status', 'Voided' )->save();
 			$this->log->set( 'worldpay-status', sprintf( __( 'Authorization voided (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
-			$this->log->set( 'processed', WPSC_Purchase_Log::INCOMPLETE_SALE )->save();
-			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
+			$this->log->set( 'processed'      , WPSC_Purchase_Log::INCOMPLETE_SALE )->save();
+			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
-	
+
     /**
      * Refund payment
      *
@@ -743,28 +729,29 @@ class WPSC_WorldPay_Payments_Order_Handler {
     public function refund_payment( $transaction_id ) {
 
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
-			
+
 			$params = array(
 				'amount'		=> $this->log->get( 'totalprice' ),
 				'transactionId' => $transaction_id,
-				
+
 			);
-			
+
 			$response = $this->gateway->execute( 'Payments/Refund', $params );
-		
+
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
-			
+
 			wpsc_add_purchase_meta( $this->log->get( 'id' ), 'worldpay_refunded', true );
 			wpsc_add_purchase_meta( $this->log->get( 'id' ), 'worldpay_refund_id', $response['ResponseBody']->transaction->transactionId );
+
 			$this->log->set( 'worldpay-status', sprintf( __( 'Refunded (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
-			$this->log->set( 'processed', WPSC_Purchase_Log::REFUNDED )->save();
+			$this->log->set( 'processed'      , WPSC_Purchase_Log::REFUNDED )->save();
 			$this->log->set( 'wp_order_status', 'Refunded' )->save();
-			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
+			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
-	
+
     /**
      * Capture authorized payment
      *
@@ -773,25 +760,25 @@ class WPSC_WorldPay_Payments_Order_Handler {
     public function capture_payment( $transaction_id ) {
 
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
-			
+
 			$params = array(
-				'amount'		=>  $this->log->get( 'totalprice' ),
+				'amount'		=> $this->log->get( 'totalprice' ),
 				'transactionId' => $transaction_id,
 			);
-			
+
 			$response = $this->gateway->execute( 'Payments/Capture', $params );
 
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
-			
+
 			$this->log->set( 'wp_order_status', 'Completed' )->save();
 			$this->log->set( 'worldpay-status', sprintf( __( 'Authorization Captured (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
-			$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
-			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
+			$this->log->set( 'processed'      , WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
+			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
-	
+
     /**
      * Void a refund request
      *
@@ -800,24 +787,25 @@ class WPSC_WorldPay_Payments_Order_Handler {
     public function void_refund( $transaction_id ) {
 
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
-			
+
 			$params = array(
-				'amount'		=>  $this->log->get( 'totalprice' ),
+				'amount'		=> $this->log->get( 'totalprice' ),
 				'transactionId' => $transaction_id,
 			);
-			
+
 			$response = $this->gateway->execute( 'Payments/Void', $params );
 
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
-			
+
 			wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'worldpay_refunded' );
 			wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'worldpay_refund_id' );
-			$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
+
+			$this->log->set( 'processed'      , WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
 			$this->log->set( 'wp_order_status', 'Completed' )->save();
 			$this->log->set( 'worldpay-status', sprintf( __( 'Refund Voided (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
-			$this->log->set( 'transactid', $response['ResponseBody']->transaction->transactionId )->save();
+			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
 }
