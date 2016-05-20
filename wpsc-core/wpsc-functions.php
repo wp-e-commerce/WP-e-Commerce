@@ -674,7 +674,7 @@ function wpsc_get_page_post_names() {
  * @return void
  */
 function wpsc_cron() {
-	$default_schedules = array( 'hourly', 'twicedaily', 'daily');
+	$default_schedules = array( 'hourly', 'twicedaily', 'daily', 'weekly');
 
 	/*
 	 * Create a cron event for each likely cron schedule.  The likely cron schedules
