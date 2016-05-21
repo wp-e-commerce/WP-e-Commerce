@@ -176,7 +176,7 @@ function wpec_lic_weekly_license_check() {
 			}
 
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-			update_option( 'wpec_product_' . $license_info->item_id . '_license_active', $license_data );	
+			update_option( 'wpec_product_' . $license . '_license_active', $license_data );	
 		}
 }
 add_action( 'wpsc_weekly_cron_task', 'wpec_lic_weekly_license_check' ); // For testing use admin_init
