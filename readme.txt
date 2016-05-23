@@ -2,9 +2,9 @@
 Contributors: JustinSainton
 Donate link: https://wpecommerce.org
 Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
-Requires at least: 4.3
+Requires at least: 4.5
 Tested up to: 4.6
-Stable tag: 3.11.2
+Stable tag: 4.0-dev
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,6 +35,14 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.11.3 [2016-5-23] =
+
+* Fix: WordPress 4.4 introduced changes to the WPDB class that caused loosely typed data to fail upon insert, causing empty cart contents entries when taxes were applied and coupons not being created.
+* Fix: Pagination on purchase logs was broken. Now, it's not.
+* Fix: Now, you can upload category images when editing product categories, not just when adding them.
+* Fix: A random and quite awful bug was causing the "collapse menu" toggle to be perpetually collapsed if you collapsed it even once. No more!
+* Enhancement: Addition of premium product license activation functionality on licensing page.
 
 = 3.11.2 =
 
