@@ -161,7 +161,7 @@
 }(jQuery));
 
 jQuery(document).ready(function($){
-		
+
 	$('.ui-sortable li .list_gallery_image').mouseover(function(){
 		$('.product_gallery_image_delete_button', $(this).parent()).show();
 	}).mouseout(function(){
@@ -178,9 +178,18 @@ jQuery(document).ready(function($){
 		$.post(ajaxurl, product_gallery_image_data, function(response){});
 		$(this).parent().parent().fadeOut( 'slow' );
 	});
-		
-		
-		
+
+	$( document ).on( 'wp-collapse-menu', function( event, state ) {
+
+	    if ( $( 'body' ).hasClass( 'folded' ) ) {
+	        $( 'body' ).removeClass( 'folded' );
+	        setUserSetting('mfold', 'o');
+	    } else {
+	        $( 'body' ).addClass( 'folded' );
+	        setUserSetting('mfold', 'f');
+	    }
+	} );
+
 	$( '#wpsc_price' ).on( 'change', wpsc_update_price_live_preview );
 	$( '#wpsc_sale_price' ).on( 'change', wpsc_update_price_live_preview );
 
@@ -362,29 +371,6 @@ jQuery(document).ready(function($){
 		}, 'json' );
 
 		return false;
-	});
-
-	// Fill in values when inline editor appears.
-	// This should be done properly so we don't need livequery here - see http://codex.wordpress.org/Plugin_API/Action_Reference/quick_edit_custom_box
-	jQuery('.inline-editor').livequery(function() {
-		var id = jQuery(this).attr('id');
-		id     = id.replace(/^edit-/, '');
-
-		if ( ! id || ! parseInt( id, 10 ) ) {
-			return;
-		}
-
-		var weight = jQuery('#inline_' + id + '_weight').text(),
-			stock = jQuery('#inline_' + id + '_stock').text(),
-			price = jQuery('#inline_' + id + '_price').text(),
-			sale_price = jQuery('#inline_' + id + '_sale_price').text(),
-			sku = jQuery('#inline_' + id + '_sku').text();
-
-		jQuery(this).find('.wpsc_ie_weight').val(weight);
-		jQuery(this).find('.wpsc_ie_stock').val(stock);
-		jQuery(this).find('.wpsc_ie_price').val(price);
-		jQuery(this).find('.wpsc_ie_sale_price').val(sale_price);
-		jQuery(this).find('.wpsc_ie_sku').val(sku);
 	});
 
 	jQuery( 'div.coupon-condition' ).each( function( index, value ){
