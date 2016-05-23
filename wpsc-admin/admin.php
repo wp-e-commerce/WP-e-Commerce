@@ -1481,7 +1481,7 @@ if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
  * @return array $links Updated links
  */
 function wpsc_support_links( $links ) {
-	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'https://wpecommerce.org/premium-support/', 'Premium Support URL', 'wp-e-commerce' ),  __( 'Premium Support', 'wp-e-commerce' ) );
+	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'https://wpecommerce.org/support/', 'Support URL', 'wp-e-commerce' ),  __( 'Support', 'wp-e-commerce' ) );
 	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://docs.wpecommerce.org/', 'Documentation URL', 'wp-e-commerce' ),  __( 'Documentation', 'wp-e-commerce' ) );
 
 	return $links;
