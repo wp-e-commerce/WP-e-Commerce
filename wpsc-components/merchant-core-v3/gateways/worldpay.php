@@ -704,7 +704,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 		if ( $this->log->get( 'gateway' ) == 'worldpay' ) {
 
 			$params = array(
-				'amount'		=>  $this->log->get( 'totalprice' ),
+				'amount'		=> $this->log->get( 'totalprice' ),
 				'transactionId' => $transaction_id,
 			);
 
