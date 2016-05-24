@@ -135,7 +135,7 @@ function _wpsc_action_after_setup_theme() {
 	}
 
 	foreach ( $paths as $path ) {
-		$filename = $path . '/functions.php';
+		$filename = $path . '/wpsc-functions.php';
 		if ( file_exists( $filename ) ) {
 			require_once( $filename );
 		}
