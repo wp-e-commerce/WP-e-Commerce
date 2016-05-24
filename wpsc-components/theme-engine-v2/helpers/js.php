@@ -33,6 +33,12 @@ function _wpsc_te2_register_scripts() {
 		array( 'jquery' ),
 		WPSC_VERSION
 	);
+	wp_register_script(
+		'wpsc-stacktable',
+		wpsc_locate_asset_uri( 'js/stacktable.min.js' ),
+		array( 'jquery' ),
+		WPSC_VERSION
+	);
 
 	do_action( 'wpsc_register_scripts' );
 	do_action( 'wpsc_enqueue_scripts' );
