@@ -13,28 +13,70 @@
     max-width: 100%;
     height: auto; }
 
-/* Stacktable CSS */
+/* Cart */
+.wpsc-table .table {
+  width: 100%; }
+.wpsc-table .tr {
+  display: block;
+  padding: 20px 0;
+  border-top: 1px solid #ccc; }
+.wpsc-table .tbody .tr:last-of-type {
+  border-bottom: 1px solid #ccc; }
+.wpsc-table .th {
+  font-size: 12px;
+  font-weight: bold; }
+.wpsc-table .td, .wpsc-table .th {
+  display: inline-block;
+  margin-right: 2.5%; }
+.wpsc-table .td:last-of-type, .wpsc-table .th:last-of-type {
+  margin-right: 0; }
+.wpsc-table .th.image,
+.wpsc-table .td.image {
+  width: 20%; }
+.wpsc-table .th.items,
+.wpsc-table .td.items {
+  width: 40%; }
+.wpsc-table .th.unit-price,
+.wpsc-table .td.unit-price {
+  width: 10%; }
+.wpsc-table .th.quantity,
+.wpsc-table .td.quantity {
+  width: 10%; }
+.wpsc-table .th.item-total,
+.wpsc-table .td.item-total {
+  width: 10%; }
+.wpsc-table .wpsc-cart-aggregate {
+  margin-right: 0; }
+.wpsc-table .tr.wpsc-cart-aggregate {
+  text-align: right; }
+.wpsc-table .wpsc-cart-aggregate .td {
+  margin-right: 0; }
+.wpsc-table .tfoot .tr {
+  border: 0; }
 
-.stacktable.small-only .st-val,
-.stacktable.small-only .st-head-row  {
-	border-right: 0;
-}
-
-th.st-head-row.st-head-row-main {
-	display: none;
-}
-/*.stacktable.small-only {
-	display: none;
-}*/
-.stacktable.large-only {
-	display: table;
-}
-
-@media (max-width: 600px) {
-  	.stacktable.large-only { 
-  		display: none; 
-	}
-  	.stacktable.small-only { 
-  		display: table; 
-  	}
-}
+@media (max-width: 700px) {
+  .wpsc-table .td, .wpsc-table .th {
+    display: block; }
+  .wpsc-table .thead .tr {
+    display: none; }
+  .wpsc-table .td.image,
+  .wpsc-table .td.items,
+  .wpsc-table .td.unit-price,
+  .wpsc-table .td.quantity,
+  .wpsc-table .td.item-total {
+    width: 100%; }
+  .wpsc-table .td.items:before,
+  .wpsc-table .td.unit-price:before,
+  .wpsc-table .td.quantity:before,
+  .wpsc-table .td.item-total:before {
+    font-weight: 600; }
+  .wpsc-table .td.items:before {
+    content: 'Product Description: '; }
+  .wpsc-table .td.unit-price:before {
+    content: 'Unit Price: '; }
+  .wpsc-table .td.quantity:before {
+    content: 'Quantity: '; }
+  .wpsc-table .td.item-total:before {
+    content: 'Item Total: '; }
+  .wpsc-table .wpsc-cart-quantity-input {
+    width: 50%; } }

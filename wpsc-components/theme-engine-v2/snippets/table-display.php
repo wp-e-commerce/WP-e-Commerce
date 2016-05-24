@@ -1,17 +1,17 @@
 <!-- WP eCommerce Table Begins -->
-<table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
-	<thead>
-		<tr>
+<div class="table <?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
+	<div class="thead">
+		<div class="tr">
 			<?php $this->print_column_headers(); ?>
-		</tr>
-	</thead>
-	<tfoot>
-		<tr>
+		</div>
+	</div>
+	<div class="tfoot">
+		<div class="tr">
 			<?php $this->print_column_headers(); ?>
-		</tr>
-	</tfoot>
-	<tbody>
+		</div>
+	</div>
+	<div class="tbody">
 		<?php $this->display_rows(); ?>
-	</tbody>
-</table>
+	</div>
+</div>
 <!-- WP eCommerce Table Ends -->
