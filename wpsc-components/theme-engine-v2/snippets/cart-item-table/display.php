@@ -9,7 +9,7 @@
 		<?php  if ( wpsc_is_cart() ) : ?>
 
 		<tr class="wpsc-cart-aggregate wpsc-cart-actions-row">
-			<td>
+			<td colspan="2">
 				<input type="submit" class="wpsc-button wpsc-button-small wpsc-cart-update" name="update_quantity" value="<?php esc_html_e( 'Update Quantity', 'wp-e-commerce' ); ?>" />
 				<input type="hidden" name="action" value="update_quantity" />
 			</td>

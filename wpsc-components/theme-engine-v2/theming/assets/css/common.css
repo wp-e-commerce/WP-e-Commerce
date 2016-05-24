@@ -4596,8 +4596,7 @@ br.clear {
 }
 .wpsc-controller table.wpsc-cart-item-table td .wpsc-cart-quantity-input,
 .wpsc-cart-widget-table table.wpsc-cart-item-table td .wpsc-cart-quantity-input {
-  text-align: right;
-  width: 60px;
+  text-align: center;
 }
 .wpsc-controller table.wpsc-cart-item-table .item-total,
 .wpsc-cart-widget-table table.wpsc-cart-item-table .item-total,
@@ -4605,11 +4604,10 @@ br.clear {
 .wpsc-cart-widget-table table.wpsc-cart-item-table .unit-price,
 .wpsc-controller table.wpsc-cart-item-table .quantity,
 .wpsc-cart-widget-table table.wpsc-cart-item-table .quantity {
-  text-align: right;
+  text-align: center;
 }
-.wpsc-controller table.wpsc-cart-item-table .wpsc-thumbnail,
-.wpsc-cart-widget-table table.wpsc-cart-item-table .wpsc-thumbnail {
-  float: left;
+.wpsc-thumbnail.wpsc-product-thumbnail img {
+    width: 100%;
 }
 .wpsc-controller table.wpsc-cart-item-table tfoot tr:first-child td,
 .wpsc-cart-widget-table table.wpsc-cart-item-table tfoot tr:first-child td,
