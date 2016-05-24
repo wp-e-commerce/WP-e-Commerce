@@ -243,24 +243,6 @@
 .wpsc-controller .wpsc-category-filter ul.wpsc-category-filter-list {
   float: left;
 }
-.wpsc-controller .wpsc-thumbnail img {
-  background-color: #fff;
-  display: inline-block;
-  padding: 4px;
-  border: 1px solid #dddddd;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-}
-.wpsc-controller .wpsc-thumbnail:hover img {
-  border-color: #0088cc;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-  -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-  box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-}
 .wpsc-controller table.wpsc-table {
   border: none;
   border-collapse: collapse;
