@@ -342,10 +342,6 @@ class WPSC_Coupon {
 
 		global $wpdb;
 
-		if ( ! function_exists( 'wpsc_is_store_admin' ) || ! wpsc_is_store_admin() ) {
-			return false;
-		}
-
 		do_action( 'wpsc_coupon_pre_save', $this );
 
 		$result = false;

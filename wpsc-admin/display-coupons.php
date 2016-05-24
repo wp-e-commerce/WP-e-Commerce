@@ -14,6 +14,10 @@ function wpsc_display_coupons_page() {
 
 			check_admin_referer( 'wpsc_coupon', 'wpsc-coupon-add' );
 
+			if ( ! function_exists( 'wpsc_is_store_admin' ) || ! wpsc_is_store_admin() ) {
+				wp_die( __( 'Permission denied', 'wpsc' ) );
+			}
+
 			$coupon_code   = $_POST['add_coupon_code'];
 			$discount      = (double)$_POST['add_discount'];
 			$discount_type = (int)$_POST['add_discount_type'];
@@ -60,6 +64,10 @@ function wpsc_display_coupons_page() {
 		if ( isset( $_POST['is_edit_coupon'] ) && ($_POST['is_edit_coupon'] == 'true') && !(isset( $_POST['delete_condition'] )) && !(isset( $_POST['submit_condition'] )) ) {
 
 			check_admin_referer( 'wpsc_coupon', 'wpsc-coupon-edit' );
+
+			if ( ! function_exists( 'wpsc_is_store_admin' ) || ! wpsc_is_store_admin() ) {
+				wp_die( __( 'Permission denied', 'wpsc' ) );
+			}
 
 			$rules     = isset( $_POST['rules'] ) ? $_POST['rules'] : array();
 			$new_rules = array();
