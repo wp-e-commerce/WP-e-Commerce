@@ -5,6 +5,9 @@
 			<?php $this->print_column_headers(); ?>
 		</tr>
 	</thead>
+	<tbody>
+		<?php $this->display_rows(); ?>
+	</tbody>
 	<tfoot>
 		<?php  if ( wpsc_is_cart() ) : ?>
 
@@ -73,8 +76,5 @@
 		<?php $this->tfoot_append(); ?>
 	</tfoot>
 
-	<tbody>
-		<?php $this->display_rows(); ?>
-	</tbody>
 </table>
 <!-- WP eCommerce Checkout Table Ends -->

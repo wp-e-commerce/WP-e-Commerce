@@ -47,6 +47,11 @@ function _wpsc_te2_register_scripts() {
 	);
 
 	do_action( 'wpsc_register_scripts' );
+	
+	//Change this later so it's not enqueued everywhere
+	wp_enqueue_script( 'wpsc-stacktable' );
+	wp_enqueue_script( 'wpsc-checkout' );
+
 	do_action( 'wpsc_enqueue_scripts' );
 }
 

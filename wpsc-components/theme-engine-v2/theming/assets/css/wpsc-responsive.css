@@ -12,3 +12,29 @@
   .post-type-archive-wpsc-product .wpsc-product-thumbnail img {
     max-width: 100%;
     height: auto; }
+
+/* Stacktable CSS */
+
+.stacktable.small-only .st-val,
+.stacktable.small-only .st-head-row  {
+	border-right: 0;
+}
+
+th.st-head-row.st-head-row-main {
+	display: none;
+}
+/*.stacktable.small-only {
+	display: none;
+}*/
+.stacktable.large-only {
+	display: table;
+}
+
+@media (max-width: 600px) {
+  	.stacktable.large-only { 
+  		display: none; 
+	}
+  	.stacktable.small-only { 
+  		display: table; 
+  	}
+}
