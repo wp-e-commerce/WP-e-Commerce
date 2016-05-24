@@ -110,7 +110,20 @@ function _wpsc_te2_enqueue_reading_settings_fix() {
 	// generate the HTML for the Main store as front page option in Settings->Reading
 	// the radio's value is 'wpsc_main_store', but this will be reset back to
 	// either 'posts' or 'page' in {@link _wpsc_te2_action_sanitize_show_on_front() }
-	$dropdown = '<label>' . sprintf( __( 'Posts page: %s', 'wp-e-commerce' ), wp_dropdown_pages( array( 'id' => 'wpsc_page_for_posts', 'name' => 'page_for_posts', 'echo' => 0, 'show_option_none' => __( '&mdash; Select &mdash;', 'wp-e-commerce' ), 'option_none_value' => '0', 'selected' => get_option( 'page_for_posts' ) ) ) ) . '</label>';
+	$dropdown = '<label>' .
+	 sprintf(
+	 	__( 'Posts page: %s', 'wp-e-commerce' ),
+		wp_dropdown_pages(
+			array(
+				'id' => 'wpsc_page_for_posts',
+				'name' => 'page_for_posts',
+				'echo' => 0,
+				'show_option_none' => __( '&mdash; Select &mdash;', 'wp-e-commerce' ),
+				'option_none_value' => '0',
+				'selected' => get_option( 'page_for_posts' )
+			)
+		)
+	) . '</label>';
 
 	$html = '<div class="wpsc-main-store-on-front"><p><label><input class="tog" %1$s type="radio" name="show_on_front" value="wpsc_main_store" />%2$s</label></p>';
 	$html .= '<ul><li>%3$s</li></ul></div>';

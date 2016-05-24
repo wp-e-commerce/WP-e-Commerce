@@ -4623,10 +4623,7 @@ br.clear {
 .wpsc-cart-widget-table table.wpsc-cart-item-table tfoot th {
   border: none;
 }
-.wpsc-controller .wpsc-cart-item-description,
-.wpsc-cart-widget-table .wpsc-cart-item-description {
-  margin-left: 84px;
-}
+
 .wpsc-controller .wpsc-cart-aggregate th,
 .wpsc-cart-widget-table .wpsc-cart-aggregate th,
 .wpsc-controller .wpsc-cart-aggregate td,
