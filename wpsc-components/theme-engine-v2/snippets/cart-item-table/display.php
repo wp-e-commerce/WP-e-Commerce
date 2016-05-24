@@ -13,7 +13,7 @@
 				<input type="submit" class="wpsc-button wpsc-button-small wpsc-cart-update" name="update_quantity" value="<?php esc_html_e( 'Update Quantity', 'wp-e-commerce' ); ?>" />
 				<input type="hidden" name="action" value="update_quantity" />
 			</td>
-			<td class="apply-coupon" colspan="<?php echo count( $this->columns ) -1; ?>">
+			<td class="apply-coupon" colspan="<?php echo count( $this->columns ) -2; ?>">
 			<?php if ( wpsc_uses_coupons() && $this->show_coupon_field ) : ?>
 				<input type="text" name="coupon_code" placeholder="<?php _e( 'Coupon code', 'wp-e-commerce' ); ?>" id="coupon_code" value="<?php echo esc_attr( wpsc_get_customer_meta( 'coupon' ) ); ?>">
 				<input type="submit" class="wpsc-button wpsc-button-small wpsc-cart-apply-coupon" name="apply_coupon" value="<?php esc_html_e( 'Apply Coupon', 'wp-e-commerce' ); ?>" />
