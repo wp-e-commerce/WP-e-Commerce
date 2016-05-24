@@ -396,10 +396,6 @@ class WPSC_Coupon {
 
 		global $wpdb;
 
-		if ( ! function_exists( 'wpsc_is_store_admin' ) || ! wpsc_is_store_admin() ) {
-			return;
-		}
-
 		do_action( 'wpsc_coupon_before_delete', $this->id );
 
 		$this->delete_cache();

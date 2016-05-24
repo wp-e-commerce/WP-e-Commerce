@@ -856,6 +856,10 @@ function wpsc_delete_coupon(){
 
 	check_admin_referer( 'delete-coupon' );
 
+	if ( ! function_exists( 'wpsc_is_store_admin' ) || ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	$deleted = 0;
 
 	if ( isset( $_GET['delete_id'] ) ) {
