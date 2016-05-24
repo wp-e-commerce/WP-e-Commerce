@@ -127,7 +127,7 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 		}
 	}
 
-	protected function column_image( $item, $key ) {
+	protected function column_image( $item ) {
 		if ( $this->show_thumbnails ) : ?>
 				<div class="wpsc-thumbnail wpsc-product-thumbnail">
 					<?php if ( wpsc_has_product_thumbnail( $item->product_id ) ) : ?>
