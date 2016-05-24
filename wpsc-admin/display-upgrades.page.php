@@ -32,7 +32,7 @@ wpse_license_page_display_licenses();
 }
 
 function wpse_license_page_display_licenses () {
-	$licenses = get_option( 'wpec_license_active_products', array() );
+	$licenses = get_option( 'wpec_licenses_active_products', array() );
 	?>
 	<table class="wp-list-table widefat striped">
 			<thead>
@@ -45,10 +45,11 @@ function wpse_license_page_display_licenses () {
 			<tbody id="the-list">
 	<?php
 	if ( ! empty( $licenses ) ) {
-		foreach ( (array) $licenses as $license ) { ?>
-			<tr><td class="product_name column-product_name"><p><strong><?php echo esc_html( $license['name'] ); ?></strong></p></td>
-			<td class="product_license column-product_license"><p><strong><?php echo esc_html( $license['license'] ); ?></strong></p></td>
-			<td class="product_expiry column-product_expiry"><p><strong><?php echo esc_html( $license['expires'] ); ?></strong></p></td></tr>
+		foreach ( (array) $licenses as $license ) { $license_info = get_option( 'wpec_product_' . $license . '_license_active', array() ); ?>
+			<?php do_action( 'wpec_license_individual_license', $license_info ); ?>
+			<tr><td class="product_name column-product_name"><p><strong><?php echo esc_html( $license_info->item_name ); ?></strong></p></td>
+			<td class="product_license column-product_license"><p><strong><?php echo esc_html( $license_info->license_key ); ?></strong></p></td>
+			<td class="product_expiry column-product_expiry"><p><strong><?php if ( $license_info->expiration == 'lifetime' ) { _e('Lifetime', 'wp-e-commerce'); } else { echo esc_html( $license_info->expiration ); } ?></strong></p></td></tr>
 		<?php }
 	} else {
 		?>
@@ -71,67 +72,146 @@ function wpse_license_page_display_licenses () {
 /**
  * Activate Gold Cart plugin
  */
-function wpsc_licenses_action_stuff() {
+function wpec_licenses_action_stuff() {
 	//Activate a new Product License
+	
+	if( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	
 	if ( isset( $_POST['product_license_key'] ) && $_POST['product_license_key'] == 'true' ) {
 		if ( isset( $_POST['product_license'] ) && $_POST['product_license'] != '' ) {
 			
 			//Do stuff
-			$url = "https://wpecommerce.org/wp-license-api/license_register.php";
 			$params = array (
-				'api'		=> 'v2',
-				'key'		=> base64_encode( stripslashes( $_POST['product_license'] ) ),
-				'url'		=> base64_encode( esc_url_raw( site_url() ) )
+				'license'   			=> sanitize_text_field( $_POST['product_license'] ),
+				'url'        			=> home_url()
 			);
 			
-			$args = array(
-				'httpversion' => '1.0',
-				'sslverify'	  => false,
-				'timeout'	  => 15,
-				'user-agent'  => 'WP eCommerce Licensing/' . get_bloginfo( 'url' ),	
-			);
-			
+			$activation = false;
 			if ( isset( $_POST['submit_values'] ) && $_POST['submit_values'] == 'submit_values' ) {
-				$params['action'] = 'activate';
+				$activation = true;
+				$params['wpec_lic_action'] = 'activate_license';
 			} elseif ( isset( $_POST['reset_values'] ) && $_POST['reset_values'] == 'reset_values' ) {
-				$params['action'] = 'deactivate';
+				$params['wpec_lic_action'] = 'deactivate_license';
 			}
 			
-			$url = add_query_arg( $params, $url );
+			$response = wp_remote_post(
+				'https://wpecommerce.org/',
+				array(
+					'timeout'   => 15,
+					'sslverify' => false,
+					'body'      => $params
+				)
+			);
 			
-
-			$response = json_decode( wp_remote_retrieve_body( wp_remote_get( $url, $args ) ) );
-
-			$licenses = get_option( 'wpec_license_active_products', array() );
+			// Make sure there are no errors
+			if ( is_wp_error( $response ) ) {
+				return;
+			}
 			
-			if ( 'activated' === $response->status) {
-				
-				$licenses[] = array(
-					'tag'		=> $response->fileid,
-					'name'		=> $response->product,
-					'license'	=> $response->license,
-					'expires'	=> $response->valid
-				);
-				
-				update_option( 'wpec_license_active_products', $licenses );
-				echo '<div class="updated"><p>'.esc_html( $response->message ).'</p></div>';
+			// Decode license data
+			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+			$active_licenses = get_option( 'wpec_licenses_active_products', array() );
 
-			} elseif ( 'deactivated' === $response->status ) {
-				
-				foreach ( $licenses as $key => $license ) {
-					if ( in_array( $response->fileid, $license ) ) {
-						unset( $licenses[$key] );
-						array_values($licenses);
-					}
+			if( $license_data->success === true ) {
+				if ( $activation ) {
+					// Tell WordPress to look for updates
+					set_site_transient( 'update_plugins', null );
+					$active_licenses[] = $license_data->item_id;
+					update_option( 'wpec_licenses_active_products', $active_licenses );
+					update_option( 'wpec_product_' . $license_data->item_id . '_license_active', $license_data );
+				} else {
+					$key = array_search( $license_data->item_id, $active_licenses );
+					unset( $active_licenses[ $key ] );
+					update_option( 'wpec_licenses_active_products', $active_licenses );
+					delete_option( 'wpec_product_' . $license_data->item_id . '_license_active' );
 				}
 				
-				update_option( 'wpec_license_active_products', $licenses );
-				echo '<div class="updated"><p>'.esc_html( $response->message ).'</p></div>';
-				
+
+				echo '<div class="updated"><p>'.esc_html( $license_data->message ).'</p></div>';
 			} else {
-				echo '<div class="error"><p>'.esc_html( $response->message ).'</p></div>';
+				echo '<div class="error"><p>'.esc_html( $license_data->message ).'</p></div>';
 			}
 		}
 	}
 }
-add_action( 'wpsc_upgrades_license_activation', 'wpsc_licenses_action_stuff' );
+add_action( 'wpsc_upgrades_license_activation', 'wpec_licenses_action_stuff' );
+
+function wpec_lic_weekly_license_check() {
+	
+		if( ! empty( $_POST['product_license_key'] ) ) {
+			return; // Don't fire when saving settings
+		}
+
+		$active_licenses = get_option( 'wpec_licenses_active_products', array() );
+		if( empty( $active_licenses ) ) {
+			return;
+		}
+		
+		foreach ( (array) $active_licenses as $license ) {
+			$license_info = get_option( 'wpec_product_' . $license . '_license_active' );
+			
+			// data to send in our API request
+			$api_params = array(
+				'wpec_lic_action'=> 'check_license',
+				'license' 	=> $license_info->license_key,
+				'item_id' 	=> $license_info->item_id,
+				'url'       => home_url()
+			);
+
+			// Call the API
+			$response = wp_remote_post(
+				'https://wpecommerce.org/',
+				array(
+					'timeout'   => 15,
+					'sslverify' => false,
+					'body'      => $api_params
+				)
+			);
+
+			// make sure the response came back okay
+			if ( is_wp_error( $response ) ) {
+				return false;
+			}
+
+			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+			update_option( 'wpec_product_' . $license . '_license_active', $license_data );	
+		}
+}
+add_action( 'wpsc_weekly_cron_task', 'wpec_lic_weekly_license_check' ); // For testing use admin_init
+
+function wpec_license_notices() {
+		if( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		
+		$active_licenses = get_option( 'wpec_licenses_active_products', array() );
+		if( empty( $active_licenses ) ) {
+			return;
+		}
+		
+		$messages = array();
+		
+		foreach ( (array) $active_licenses as $license ) {
+			$license = get_option( 'wpec_product_' . $license . '_license_active' );
+			if( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+				if( isset( $_GET['page'] ) && 'wpsc-upgrades' !== $_GET['page'] ) {
+					$messages[] = sprintf(
+						__( 'You have invalid or expired license keys for WP eCommerce. Please go to the <a href="%s" title="Go to Licenses page">Licenses page</a> to correct this issue.', 'wp-e-commerce' ),
+						admin_url( 'index.php?page=wpsc-upgrades' )
+					);
+					$showed_invalid_message = true;
+				}
+			}		
+		}
+
+		if( ! empty( $messages ) ) {
+			foreach( $messages as $message ) {
+				echo '<div class="error">';
+					echo '<p>' . $message . '</p>';
+				echo '</div>';
+			}
+		}	
+}
+add_action( 'admin_notices', 'wpec_license_notices' );

@@ -183,13 +183,7 @@ function wpsc_add_to_cart() {
 
 		$output = _wpsc_ajax_get_cart( false, $cart_messages );
 
-		$json_response = $json_response + $output;
-
-		if ( is_numeric( $product_id ) && 1 == get_option( 'fancy_notifications' ) ) {
-			$json_response['fancy_notification'] = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), fancy_notification_content( $cart_messages ) );
-		}
-
-		$json_response = apply_filters( 'wpsc_add_to_cart_json_response', $json_response );
+		$json_response = apply_filters( 'wpsc_add_to_cart_json_response', $json_response + $output );
 
 		die( json_encode( $json_response ) );
 	}
@@ -241,13 +235,16 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 	}
 }
 
-/* 19-02-09
- * add to cart shortcode function used for shortcodes calls the function in
+/**
+ * Add to cart shortcode function used for shortcodes calls the function in
  * product_display_functions.php
+ *
+ * @since  19-02-2009
+ *
+ * Note: Really old legacy shortcode support for add to cart buttons.
+ * This isn't a proper WordPress shortcode!
  */
-
 function add_to_cart_shortcode( $content = '' ) {
-	static $fancy_notification_output = false;
 	if ( ! in_the_loop() )
 		return $content;
 
@@ -256,11 +253,6 @@ function add_to_cart_shortcode( $content = '' ) {
 			$original_string = $matches[0][$key];
 			$output = wpsc_add_to_cart_button( $product_id, true );
 			$content = str_replace( $original_string, $output, $content );
-		}
-
-		if ( ! $fancy_notification_output ) {
-			$content .= wpsc_fancy_notifications( true );
-			$fancy_notification_output = true;
 		}
 	}
 	return $content;

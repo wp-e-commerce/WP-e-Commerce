@@ -159,9 +159,7 @@ function _wpsc_merchant_v2_get_active_gateways() {
 function _wpsc_merchant_v2_get_gateway_form( $gateway ) {
 	global $gateway_checkout_form_fields, $wpsc_gateway_error_messages;
 
-	$submitted_gateway = isset( $_POST['wpsc_payment_method'] )
-	                     ? $_POST['wpsc_payment_method']
-	                     : '';
+	$submitted_gateway = isset( $_POST['wpsc_payment_method'] ) ? $_POST['wpsc_payment_method'] : '';
 
 	$error = array(
 		'card_number' => '',
@@ -170,11 +168,7 @@ function _wpsc_merchant_v2_get_gateway_form( $gateway ) {
 		'cctype' => '',
 	);
 
-	if (
-		   ! empty( $submitted_gateway )
-		&& $submitted_gateway == $gateway['internalname']
-		&& is_array( $wpsc_gateway_error_messages )
-	)
+	if ( ! empty( $submitted_gateway ) && $submitted_gateway == $gateway['internalname'] && is_array( $wpsc_gateway_error_messages ) )
 		$error = array_merge( $error, $wpsc_gateway_error_messages );
 
 	$classes = array();

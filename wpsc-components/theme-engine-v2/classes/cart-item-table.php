@@ -32,13 +32,14 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 		$this->prepare_cache();
 
 		$this->columns = array(
+			'image'       => '',
 			'items'       => __( 'Items'     , 'wp-e-commerce' ),
 			'unit_price'  => __( 'Unit Price', 'wp-e-commerce' ),
 			'quantity'    => __( 'Quantity'  , 'wp-e-commerce' ),
 			'item_total'  => __( 'Item Total', 'wp-e-commerce' ),
 		);
 
-		$this->columns = apply_filters( 'wpsc_cart_item_table_columns', $this->columns );
+		$this->columns = apply_filters( 'wpsc_cart_item_table_columns', $this->columns, $this );
 
 		$this->items = $wpsc_cart->cart_items;
 	}
@@ -59,9 +60,7 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 		return $classes;
 	}
 
-	protected function get_columns() {
-
-	}
+	protected function get_columns() {}
 
 	protected function column_default( $item, $key, $column ) {
 		do_action( "wpsc_cart_item_table_column_{$column}", $item, $key );
@@ -128,6 +127,18 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 		}
 	}
 
+	protected function column_image( $item, $key ) {
+		if ( $this->show_thumbnails ) : ?>
+				<div class="wpsc-thumbnail wpsc-product-thumbnail">
+					<?php if ( wpsc_has_product_thumbnail( $item->product_id ) ) : ?>
+						<?php echo wpsc_get_product_thumbnail( $item->product_id, 'cart' ); ?>
+					<?php else : ?>
+						<?php wpsc_product_no_thumbnail_image( 'cart' ); ?>
+					<?php endif; ?>
+				</div>
+			<?php endif;
+	}
+
 	protected function column_items( $item, $key ) {
 		$product      = get_post( $item->product_id );
 		$product_name = $item->product_name;
@@ -161,15 +172,6 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 		}
 
 		?>
-			<?php if ( $this->show_thumbnails ) : ?>
-				<div class="wpsc-thumbnail wpsc-product-thumbnail">
-					<?php if ( wpsc_has_product_thumbnail( $item->product_id ) ) : ?>
-						<?php echo wpsc_get_product_thumbnail( $item->product_id, 'cart' ); ?>
-					<?php else : ?>
-						<?php wpsc_product_no_thumbnail_image( 'cart' ); ?>
-					<?php endif; ?>
-				</div>
-			<?php endif; ?>
 			<div class="wpsc-cart-item-description">
 				<div class="wpsc-cart-item-title">
 					<strong><a href="<?php echo $permalink; ?>"><?php echo esc_html( $product_name ); ?></a></strong>
@@ -208,4 +210,3 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 		echo wpsc_format_currency( $item->unit_price * $item->quantity );
 	}
 }
-

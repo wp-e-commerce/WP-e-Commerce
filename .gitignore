@@ -16,3 +16,4 @@ wp-config.php
 node_modules
 .svn
 .git
+release.sh

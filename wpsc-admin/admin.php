@@ -590,7 +590,12 @@ add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
 function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	global $post_type, $post;
 
-	$current_screen = get_current_screen();
+	$current_screen     = get_current_screen();
+	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
+	$pages              = array( 'index.php', 'options-general.php', 'edit.php', 'post.php', 'post-new.php' );
+
+	_wpsc_enqueue_wp_e_commerce_admin();
+	wp_enqueue_script( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/js/admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
 
 	if ( 'dashboard_page_wpsc-sales-logs' == $current_screen->id ) {
 		// jQuery
@@ -605,15 +610,9 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_script( 'postbox' );
 	}
 
-	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
-	$pages = array( 'index.php', 'options-general.php', 'edit.php', 'post.php', 'post-new.php' );
-
 	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' )  || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'dashboard_page_wpsc-purchase-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' || $current_screen->id == 'edit-wpsc-variation' || $current_screen->id == 'wpsc-product-variations-iframe' || ( $pagehook == 'media-upload-popup' && get_post_type( $_REQUEST['post_id'] ) == 'wpsc-product' ) ) {
 
-		_wpsc_enqueue_wp_e_commerce_admin();
-
 		wp_enqueue_script( 'livequery',                      WPSC_URL . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ), '1.0.3' );
-		wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
 		wp_enqueue_script( 'wpsc-sortable-table', WPSC_URL . '/wpsc-admin/js/sortable-table.js', array( 'jquery' ) );
 
 		if ( in_array( $current_screen->id, array( 'wpsc-product', 'edit-wpsc-variation', 'wpsc-product' ) ) ) {
@@ -628,33 +627,34 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		}
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 
-		static $_wpsc_admin_l10n_loaded;
-
-		if ( ! $_wpsc_admin_l10n_loaded ) {
-			// Localize scripts
-			wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
-				'dragndrop_set'            => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
-				'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
-				'l10n_print_after'         => 'try{convertEntities(wpsc_adminL10n);}catch(e){};',
-				'empty_coupon'             => esc_html__( 'Please enter a coupon code.', 'wp-e-commerce' ),
-				'bulk_edit_no_vars'        => esc_html__( 'Quick Edit options are limited when editing products that have variations. You will need to edit the variations themselves.', 'wp-e-commerce' ),
-				'wpsc_core_images_url'     => WPSC_CORE_IMAGES_URL,
-				'variation_parent_swap'    => esc_html_x( 'New Variation Set', 'Variation taxonomy parent', 'wp-e-commerce' ),
-				/* translators             : This string is prepended to the 'New Variation Set' string */
-				'variation_helper_text'    => esc_html_x( 'Choose the Variation Set you want to add variants to. If you\'re creating a new variation set, then select', 'Variation helper text', 'wp-e-commerce' ),
-				'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wp-e-commerce' ),
-				/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
-				'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wp-e-commerce' ),
-				'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wp-e-commerce' ),
-				'meta_downloads_plural'    => _x( ' downloads', 'live preview for downloads metabox', 'wp-e-commerce' ),
-				'meta_downloads_singular'  => _x( ' download' , 'live preview for downloads metabox', 'wp-e-commerce' ),
-				'wpsc_inline_css_error'    => __( 'It is not possible to change the state of the inline CSS without also changing the common CSS.', 'wp-e-commerce' )
-			) );
-
-			$_wpsc_admin_l10n_loaded = true;
-		}
-
 	}
+
+	static $_wpsc_admin_l10n_loaded;
+
+	if ( ! $_wpsc_admin_l10n_loaded ) {
+		// Localize scripts
+		wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
+			'dragndrop_set'            => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
+			'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
+			'l10n_print_after'         => 'try{convertEntities(wpsc_adminL10n);}catch(e){};',
+			'empty_coupon'             => esc_html__( 'Please enter a coupon code.', 'wp-e-commerce' ),
+			'bulk_edit_no_vars'        => esc_html__( 'Quick Edit options are limited when editing products that have variations. You will need to edit the variations themselves.', 'wp-e-commerce' ),
+			'wpsc_core_images_url'     => WPSC_CORE_IMAGES_URL,
+			'variation_parent_swap'    => esc_html_x( 'New Variation Set', 'Variation taxonomy parent', 'wp-e-commerce' ),
+			/* translators             : This string is prepended to the 'New Variation Set' string */
+			'variation_helper_text'    => esc_html_x( 'Choose the Variation Set you want to add variants to. If you\'re creating a new variation set, then select', 'Variation helper text', 'wp-e-commerce' ),
+			'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wp-e-commerce' ),
+			/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
+			'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wp-e-commerce' ),
+			'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wp-e-commerce' ),
+			'meta_downloads_plural'    => _x( ' downloads', 'live preview for downloads metabox', 'wp-e-commerce' ),
+			'meta_downloads_singular'  => _x( ' download' , 'live preview for downloads metabox', 'wp-e-commerce' ),
+			'wpsc_inline_css_error'    => __( 'It is not possible to change the state of the inline CSS without also changing the common CSS.', 'wp-e-commerce' )
+		) );
+
+		$_wpsc_admin_l10n_loaded = true;
+	}
+
 	if ( $pagehook == 'wpsc-product-variations-iframe' ) {
 		_wpsc_enqueue_wp_e_commerce_admin();
 
@@ -1481,7 +1481,7 @@ if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
  * @return array $links Updated links
  */
 function wpsc_support_links( $links ) {
-	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'https://wpecommerce.org/premium-support/', 'Premium Support URL', 'wp-e-commerce' ),  __( 'Premium Support', 'wp-e-commerce' ) );
+	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'https://wpecommerce.org/support/', 'Support URL', 'wp-e-commerce' ),  __( 'Support', 'wp-e-commerce' ) );
 	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://docs.wpecommerce.org/', 'Documentation URL', 'wp-e-commerce' ),  __( 'Documentation', 'wp-e-commerce' ) );
 
 	return $links;
