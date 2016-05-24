@@ -7,7 +7,7 @@ function _wpsc_te2_enqueue_styles() {
 
 	do_action( 'wpsc_register_styles' );
 
-	wpsc_enqueue_style( 'wpsc-common' );
+	wp_enqueue_style( 'wpsc-common' );
 
 	if ( apply_filters( 'wpsc_add_inline_style', true ) ) {
 		wp_add_inline_style( 'wpsc-common', _wpsc_get_inline_style() );
