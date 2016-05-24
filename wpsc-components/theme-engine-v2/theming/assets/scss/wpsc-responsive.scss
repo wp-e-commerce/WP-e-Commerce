@@ -1,0 +1,26 @@
+/* Grid Styling on archive product pages */
+.post-type-archive-wpsc-product {
+
+	.wpsc-product-description {
+		display: none;
+	}
+
+	.wpsc-page-main-store {
+    margin-left: -2.5%;
+	}
+
+	.wpsc-product {
+	    display: inline-block;
+	    padding: 10px;
+	    margin: 0 0 2.5% 2.5%;
+	}
+
+	.wpsc-product-thumbnail {
+		margin: 0 0 10px;
+		img {
+			max-width: 100%;
+			height: auto;
+		}
+	}
+
+}
