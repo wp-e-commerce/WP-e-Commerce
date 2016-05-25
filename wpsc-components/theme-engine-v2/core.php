@@ -45,9 +45,7 @@ function _wpsc_te_v2_includes() {
 		require_once( WPSC_THEME_ENGINE_V2_PATH . '/admin.php' );
 	}
 
-	if ( is_customize_preview() ) {
-		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-customizer.class.php' );
-	}
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-customizer.class.php' );
 
 	if ( ! is_admin() || ( is_admin() && defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 		_wpsc_te2_mvc_init();
