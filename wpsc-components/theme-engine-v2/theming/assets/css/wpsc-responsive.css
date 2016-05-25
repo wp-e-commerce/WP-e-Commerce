@@ -1,82 +1,83 @@
-/* Grid Styling on archive product pages */
-.post-type-archive-wpsc-product .wpsc-product-description {
+/* Grid Styling on archive cart pages */
+.post-type-archive-wpsc-cart .wpsc-cart-description {
   display: none; }
-.post-type-archive-wpsc-product .wpsc-page-main-store {
+.post-type-archive-wpsc-cart .wpsc-page-main-store {
   margin-left: -2.5%; }
-.post-type-archive-wpsc-product .wpsc-product {
+.post-type-archive-wpsc-cart .wpsc-cart {
   display: inline-block;
   padding: 10px;
   margin: 0 0 2.5% 2.5%; }
-.post-type-archive-wpsc-product .wpsc-product-thumbnail {
+.post-type-archive-wpsc-cart .wpsc-cart-thumbnail {
   margin: 0 0 10px; }
-  .post-type-archive-wpsc-product .wpsc-product-thumbnail img {
+  .post-type-archive-wpsc-cart .wpsc-cart-thumbnail img {
     max-width: 100%;
     height: auto; }
 
 /* Cart */
-.wpsc-table .table {
+.wpsc-table .wpsc-cart-table {
   width: 100%; }
-.wpsc-table .tr {
+.wpsc-table .wpsc-cart-item,
+.wpsc-table .wpsc-row {
   display: block;
   padding: 20px 0;
   border-top: 1px solid #ccc; }
-.wpsc-table .tbody .tr:last-of-type {
+.wpsc-table .wpsc-cart-item:last-of-type {
   border-bottom: 1px solid #ccc; }
-.wpsc-table .th {
+.wpsc-table .wpsc-cart-cell-header {
   font-size: 12px;
   font-weight: bold; }
-.wpsc-table .td, .wpsc-table .th {
+.wpsc-table .wpsc-cart-cell, .wpsc-table .wpsc-cart-cell-header {
   display: inline-block;
   margin-right: 2.5%; }
-.wpsc-table .td:last-of-type, .wpsc-table .th:last-of-type {
+.wpsc-table .wpsc-cart-cell:last-of-type, .wpsc-table .wpsc-cart-cell-header:last-of-type {
   margin-right: 0; }
-.wpsc-table .th.image,
-.wpsc-table .td.image {
+.wpsc-table .wpsc-cart-cell-header.image,
+.wpsc-table .wpsc-cart-cell.image {
   width: 20%; }
-.wpsc-table .th.items,
-.wpsc-table .td.items {
+.wpsc-table .wpsc-cart-cell-header.items,
+.wpsc-table .wpsc-cart-cell.items {
   width: 40%; }
-.wpsc-table .th.unit-price,
-.wpsc-table .td.unit-price {
+.wpsc-table .wpsc-cart-cell-header.unit-price,
+.wpsc-table .wpsc-cart-cell.unit-price {
   width: 10%; }
-.wpsc-table .th.quantity,
-.wpsc-table .td.quantity {
+.wpsc-table .wpsc-cart-cell-header.quantity,
+.wpsc-table .wpsc-cart-cell.quantity {
   width: 10%; }
-.wpsc-table .th.item-total,
-.wpsc-table .td.item-total {
+.wpsc-table .wpsc-cart-cell-header.item-total,
+.wpsc-table .wpsc-cart-cell.item-total {
   width: 10%; }
-.wpsc-table .wpsc-cart-aggregate {
+.wpsc-table .wpsc-cart-footer {
   margin-right: 0; }
-.wpsc-table .tr.wpsc-cart-aggregate {
-  text-align: right; }
-.wpsc-table .wpsc-cart-aggregate .td {
-  margin-right: 0; }
-.wpsc-table .tfoot .tr {
-  border: 0; }
+  .wpsc-table .wpsc-cart-footer .wpsc-cart-cell,
+  .wpsc-table .wpsc-cart-footer .wpsc-row {
+    text-align: right;
+    margin-right: 0; }
+  .wpsc-table .wpsc-cart-footer .wpsc-row {
+    border: 0; }
 
 @media (max-width: 700px) {
-  .wpsc-table .td, .wpsc-table .th {
+  .wpsc-table .wpsc-cart-cell, .wpsc-table .wpsc-cart-cell-header {
     display: block; }
-  .wpsc-table .thead .tr {
+  .wpsc-table .wpsc-cart-header {
     display: none; }
-  .wpsc-table .td.image,
-  .wpsc-table .td.items,
-  .wpsc-table .td.unit-price,
-  .wpsc-table .td.quantity,
-  .wpsc-table .td.item-total {
+  .wpsc-table .wpsc-cart-cell.image,
+  .wpsc-table .wpsc-cart-cell.items,
+  .wpsc-table .wpsc-cart-cell.unit-price,
+  .wpsc-table .wpsc-cart-cell.quantity,
+  .wpsc-table .wpsc-cart-cell.item-total {
     width: 100%; }
-  .wpsc-table .td.items:before,
-  .wpsc-table .td.unit-price:before,
-  .wpsc-table .td.quantity:before,
-  .wpsc-table .td.item-total:before {
+  .wpsc-table .wpsc-cart-cell.items:before,
+  .wpsc-table .wpsc-cart-cell.unit-price:before,
+  .wpsc-table .wpsc-cart-cell.quantity:before,
+  .wpsc-table .wpsc-cart-cell.item-total:before {
     font-weight: 600; }
-  .wpsc-table .td.items:before {
+  .wpsc-table .wpsc-cart-cell.items:before {
     content: 'Product Description: '; }
-  .wpsc-table .td.unit-price:before {
+  .wpsc-table .wpsc-cart-cell.unit-price:before {
     content: 'Unit Price: '; }
-  .wpsc-table .td.quantity:before {
+  .wpsc-table .wpsc-cart-cell.quantity:before {
     content: 'Quantity: '; }
-  .wpsc-table .td.item-total:before {
+  .wpsc-table .wpsc-cart-cell.item-total:before {
     content: 'Item Total: '; }
   .wpsc-table .wpsc-cart-quantity-input {
     width: 50%; } }

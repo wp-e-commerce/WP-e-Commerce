@@ -10,17 +10,17 @@ class WPSC_Table {
 	public function print_column_headers() {
 		foreach ( $this->columns as $name => $title ) {
 			$class = str_replace( '_', '-', $name );
-			echo "<div class='th {$class}' scope='col'>" . esc_html( $title ) . "</div>";
+			echo "<div class='wpsc-cart-cell-header {$class}' scope='col'>" . esc_html( $title ) . "</div>";
 		}
 	}
 
 	public function display_rows() {
 
 		foreach ( $this->items as $key => $item ) {
-			echo '<div class="tr">';
+			echo '<div class="wpsc-cart-item">';
 			foreach( array_keys( $this->columns ) as $column ) {
 				$class = str_replace( '_', '-', $column );
-				echo '<div class="td ' . $class . '">';
+				echo '<div class="wpsc-cart-cell ' . $class . '">';
 				$callback = "column_{$column}";
 
 				if ( is_callable( array( $this, "column_{$column}") ) ) {
