@@ -27,62 +27,59 @@
 
 /* Cart */
 
-.wpsc-table {
+.wpsc-cart-table {
+	width: 100%;
+}
+.wpsc-cart-item,
+.wpsc-row {
+    display: block;
+    padding: 20px 0;
+    border-top: 1px solid #ccc;
+}
+.wpsc-cart-item:last-of-type {
+	border-bottom: 1px solid #ccc;
+}
+.wpsc-cart-cell-header {
+    font-size: 12px;
+    font-weight: bold;
+}
+.wpsc-cart-cell, .wpsc-cart-cell-header {
+    display: inline-block;
+    margin-right: 2.5%;
+}
+.wpsc-cart-cell:last-of-type, .wpsc-cart-cell-header:last-of-type {
+    margin-right: 0;
+}
+.wpsc-cart-cell-header.image,
+.wpsc-cart-cell.image {
+    width: 20%;
+}
+.wpsc-cart-cell-header.items,
+.wpsc-cart-cell.items {
+    width: 40%;
+}
+.wpsc-cart-cell-header.unit-price,
+.wpsc-cart-cell.unit-price  {
+    width: 10%;
+}
+.wpsc-cart-cell-header.quantity,
+.wpsc-cart-cell.quantity {
+    width: 10%;
+}
+.wpsc-cart-cell-header.item-total,
+.wpsc-cart-cell.item-total {
+    width: 10%;
+}
 
-	.wpsc-cart-table {
-		width: 100%;
-	}
-	.wpsc-cart-item,
+.wpsc-cart-footer {
+	margin-right: 0;
+	.wpsc-cart-cell,
 	.wpsc-row {
-	    display: block;
-	    padding: 20px 0;
-	    border-top: 1px solid #ccc;
-	}
-	.wpsc-cart-item:last-of-type {
-		border-bottom: 1px solid #ccc;
-	}
-	.wpsc-cart-cell-header {
-	    font-size: 12px;
-	    font-weight: bold;
-	}
-	.wpsc-cart-cell, .wpsc-cart-cell-header {
-	    display: inline-block;
-	    margin-right: 2.5%;
-	}
-	.wpsc-cart-cell:last-of-type, .wpsc-cart-cell-header:last-of-type {
-	    margin-right: 0;
-	}
-	.wpsc-cart-cell-header.image,
-	.wpsc-cart-cell.image {
-	    width: 20%;
-	}
-	.wpsc-cart-cell-header.items,
-	.wpsc-cart-cell.items {
-	    width: 40%;
-	}
-	.wpsc-cart-cell-header.unit-price,
-	.wpsc-cart-cell.unit-price  {
-	    width: 10%;
-	}
-	.wpsc-cart-cell-header.quantity,
-	.wpsc-cart-cell.quantity {
-	    width: 10%;
-	}
-	.wpsc-cart-cell-header.item-total,
-	.wpsc-cart-cell.item-total {
-	    width: 10%;
-	}
-
-	.wpsc-cart-footer {
+		text-align: right;
 		margin-right: 0;
-		.wpsc-cart-cell,
-		.wpsc-row {
-			text-align: right;
-			margin-right: 0;
-		}
-		.wpsc-row {
-			border: 0;
-		}
+	}
+	.wpsc-row {
+		border: 0;
 	}
 }
 

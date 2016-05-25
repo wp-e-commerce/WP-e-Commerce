@@ -14,45 +14,56 @@
     height: auto; }
 
 /* Cart */
-.wpsc-table .wpsc-cart-table {
+.wpsc-cart-table {
   width: 100%; }
-.wpsc-table .wpsc-cart-item,
-.wpsc-table .wpsc-row {
+
+.wpsc-cart-item,
+.wpsc-row {
   display: block;
   padding: 20px 0;
   border-top: 1px solid #ccc; }
-.wpsc-table .wpsc-cart-item:last-of-type {
+
+.wpsc-cart-item:last-of-type {
   border-bottom: 1px solid #ccc; }
-.wpsc-table .wpsc-cart-cell-header {
+
+.wpsc-cart-cell-header {
   font-size: 12px;
   font-weight: bold; }
-.wpsc-table .wpsc-cart-cell, .wpsc-table .wpsc-cart-cell-header {
+
+.wpsc-cart-cell, .wpsc-cart-cell-header {
   display: inline-block;
   margin-right: 2.5%; }
-.wpsc-table .wpsc-cart-cell:last-of-type, .wpsc-table .wpsc-cart-cell-header:last-of-type {
+
+.wpsc-cart-cell:last-of-type, .wpsc-cart-cell-header:last-of-type {
   margin-right: 0; }
-.wpsc-table .wpsc-cart-cell-header.image,
-.wpsc-table .wpsc-cart-cell.image {
+
+.wpsc-cart-cell-header.image,
+.wpsc-cart-cell.image {
   width: 20%; }
-.wpsc-table .wpsc-cart-cell-header.items,
-.wpsc-table .wpsc-cart-cell.items {
+
+.wpsc-cart-cell-header.items,
+.wpsc-cart-cell.items {
   width: 40%; }
-.wpsc-table .wpsc-cart-cell-header.unit-price,
-.wpsc-table .wpsc-cart-cell.unit-price {
+
+.wpsc-cart-cell-header.unit-price,
+.wpsc-cart-cell.unit-price {
   width: 10%; }
-.wpsc-table .wpsc-cart-cell-header.quantity,
-.wpsc-table .wpsc-cart-cell.quantity {
+
+.wpsc-cart-cell-header.quantity,
+.wpsc-cart-cell.quantity {
   width: 10%; }
-.wpsc-table .wpsc-cart-cell-header.item-total,
-.wpsc-table .wpsc-cart-cell.item-total {
+
+.wpsc-cart-cell-header.item-total,
+.wpsc-cart-cell.item-total {
   width: 10%; }
-.wpsc-table .wpsc-cart-footer {
+
+.wpsc-cart-footer {
   margin-right: 0; }
-  .wpsc-table .wpsc-cart-footer .wpsc-cart-cell,
-  .wpsc-table .wpsc-cart-footer .wpsc-row {
+  .wpsc-cart-footer .wpsc-cart-cell,
+  .wpsc-cart-footer .wpsc-row {
     text-align: right;
     margin-right: 0; }
-  .wpsc-table .wpsc-cart-footer .wpsc-row {
+  .wpsc-cart-footer .wpsc-row {
     border: 0; }
 
 @media (max-width: 700px) {
