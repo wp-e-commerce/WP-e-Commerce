@@ -12,11 +12,9 @@ Product Grid on Archive Store Pages
   display: none; }
 .post-type-archive-wpsc-product #wpsc-products {
   margin-left: -2.5%;
-  font-size: 0;
-  /* important or else columns break */ }
+  font-size: 0; }
 .post-type-archive-wpsc-product .wpsc-product {
   display: inline-block;
-  padding: 10px;
   margin: 0 0 2.5% 2.5%;
   font-size: initial; }
 .post-type-archive-wpsc-product .wpsc-product-thumbnail {
@@ -39,10 +37,6 @@ Product Grid on Archive Store Pages
 
 .wpsc-column-6 {
   width: 14.166%; }
-
-.wpsc-column-5 .wpsc-product-title,
-.wpsc-column-6 .wpsc-product-title {
-  font-size: 16px; }
 
 /*******************
 Shopping Cart 
@@ -172,3 +166,65 @@ Shopping Cart
     content: 'Item Total: '; }
   .widget .wpsc-cart-quantity-input {
     width: 50%; }
+
+/*****************
+Media Queries
+*****************/
+@media (max-width: 960px) {
+  .wpsc-column-6,
+  .wpsc-column-5 {
+    width: 22.5%; } }
+@media (max-width: 700px) {
+  /* Mobile and Sidebar Cart Styling */
+  .wpsc-cart-cell, .wpsc-cart-cell-header, .wpsc-cart-cell-header {
+    display: block; }
+
+  .wpsc-cart-header {
+    display: none; }
+
+  .wpsc-cart-cell.image, .image.wpsc-cart-cell-header,
+  .wpsc-cart-cell.items,
+  .items.wpsc-cart-cell-header,
+  .wpsc-cart-cell.unit-price,
+  .unit-price.wpsc-cart-cell-header,
+  .wpsc-cart-cell.quantity,
+  .quantity.wpsc-cart-cell-header,
+  .wpsc-cart-cell.item-total,
+  .item-total.wpsc-cart-cell-header {
+    width: 100%; }
+
+  .wpsc-cart-cell.items:before, .items.wpsc-cart-cell-header:before,
+  .wpsc-cart-cell.unit-price:before,
+  .unit-price.wpsc-cart-cell-header:before,
+  .wpsc-cart-cell.quantity:before,
+  .quantity.wpsc-cart-cell-header:before,
+  .wpsc-cart-cell.item-total:before,
+  .item-total.wpsc-cart-cell-header:before {
+    font-weight: 600; }
+
+  .wpsc-cart-cell.items:before, .items.wpsc-cart-cell-header:before {
+    content: 'Product Description: '; }
+
+  .wpsc-cart-cell.unit-price:before, .unit-price.wpsc-cart-cell-header:before {
+    content: 'Unit Price: '; }
+
+  .wpsc-cart-cell.quantity:before, .quantity.wpsc-cart-cell-header:before {
+    content: 'Quantity: '; }
+
+  .wpsc-cart-cell.item-total:before, .item-total.wpsc-cart-cell-header:before {
+    content: 'Item Total: '; }
+
+  .wpsc-cart-quantity-input {
+    width: 50%; }
+
+  .wpsc-column-6,
+  .wpsc-column-5,
+  .wpsc-column-4 {
+    width: 30.833%; } }
+@media (max-width: 550px) {
+  .wpsc-column-6,
+  .wpsc-column-5,
+  .wpsc-column-4,
+  .wpsc-column-3,
+  .wpsc-column-2 {
+    width: 100%; } }

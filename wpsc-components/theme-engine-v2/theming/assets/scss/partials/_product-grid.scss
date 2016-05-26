@@ -10,12 +10,13 @@ Product Grid on Archive Store Pages
 
 	#wpsc-products {
 	    margin-left: $grid_margin * -1;
+	    font-size: 0;
 	}
 
 	.wpsc-product {
 	    display: inline-block;
-	    padding: 10px;
 	    margin: 0 0 $grid_margin $grid_margin;
+	    font-size: initial;
 	}
 
 	.wpsc-product-thumbnail {
