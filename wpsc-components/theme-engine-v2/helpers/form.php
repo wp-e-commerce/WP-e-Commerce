@@ -124,9 +124,9 @@ function wpsc_get_form_output( $args ) {
 	$defaults = apply_filters( 'wpsc_get_form_output_default_args', $defaults );
 
 	$r = wp_parse_args( $args, $defaults );
-	
+
 	$output = "<form id='{$r['id']}' method='{$r['method']}' action='{$r['action']}' class='{$r['class']}'>";
-	
+
 	foreach ( $r['fields'] as $field ) {
 		$output .= _wpsc_get_field_output( $field, $r );
 	}
@@ -429,18 +429,21 @@ function _wpsc_filter_control_hidden( $output, $field, $args ) {
 }
 
 function _wpsc_filter_control_button( $output, $field, $args ) {
-	extract( $field );
 	$class = $args['id'] . '-button wpsc-button';
 
 	if ( $field['primary'] ) {
 		$class .= ' wpsc-button-primary';
 	}
 
+	if ( isset( $field['button_class'] ) ) {
+		$class .= ' ' . $field['button_class'];
+	}
+
 	if ( ! isset( $field['icon'] ) ) {
 		$field['icon'] = '';
 	}
 
-	$output .= wpsc_form_button( $name, $title, array( 'class' => $class, 'icon' => $field['icon'] ), false );
+	$output .= wpsc_form_button( $field['name'], $field['title'], array( 'class' => $class, 'icon' => $field['icon'] ), false );
 
 	return $output;
 }
