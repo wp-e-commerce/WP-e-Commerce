@@ -57,13 +57,14 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 	$args['form_actions'] = array(
 		// Add to Cart button
 		array(
-			'type' => 'button',
-			'primary' => true,
-			'icon'    => apply_filters(
+			'type'         => 'button',
+			'primary'      => true,
+			'button_class' => 'wpsc-add-to-cart',
+			'icon'         => apply_filters(
 				'wpsc_add_to_cart_button_icon',
 				array( 'shopping-cart', 'white' )
 			),
-			'title'   => apply_filters(
+			'title'        => apply_filters(
 				'wpsc_add_to_cart_button_title',
 				__( 'Add to Cart', 'wp-e-commerce' )
 			),
@@ -804,7 +805,7 @@ function wpsc_get_begin_checkout_button() {
 	$args = apply_filters(
 		'wpsc_begin_checkout_button_args',
 		array(
-			'class' => 'wpsc-button wpsc-button-primary',
+			'class' => 'wpsc-button wpsc-button-primary wpsc-begin-checkout',
 			'icon'  => $icon,
 		)
 	);
