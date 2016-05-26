@@ -260,6 +260,8 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			'plugin_version' => WPSC_VERSION,
 			'statusno'       => '0',
 			'sessionid'      => $sessionid,
+			'discount_value'   => $wpsc_cart->coupons_amount,
+			'discount_data'    => $wpsc_cart->coupons_name,
 		) );
 
 		$form   = WPSC_Checkout_Form::get();

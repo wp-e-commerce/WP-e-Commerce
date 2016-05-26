@@ -32,6 +32,7 @@ class WPSC_Settings {
 				'category_base_slug'                => 'category',
 				'hierarchical_product_category_url' => 0,
 				'page_number_position'              => WPSC_PAGE_NUMBER_POSITION_BOTTOM,
+				'products_per_row'                  => 'auto',
 				'products_per_page'                 => 0,
 				'cart_page_slug'                    => 'cart',
 				'checkout_page_slug'                => 'checkout',
@@ -51,7 +52,6 @@ class WPSC_Settings {
 				'login_page_title'                  => _x( 'Login', 'login page title', 'wp-e-commerce' ),
 				'password_reminder_page_title'      => _x( 'Reset Password', 'password reminder page title', 'wp-e-commerce' ),
 				'register_page_title'               => _x( 'Register', 'register page title', 'wp-e-commerce' ),
-				'default_styles'                    => array( 'wpsc-common', 'wpsc-common-inline' ),
 			)
 		);
 	}
@@ -70,18 +70,4 @@ class WPSC_Settings {
 	public function set( $setting, $value ) {
 		return update_option( 'wpsc_' . $setting, $value );
 	}
-}
-
-// patch for beta sites which uses 'default_style' option
-add_filter( 'wpsc_default_settings', '_wpsc_filter_default_styles_setting' );
-
-function _wpsc_filter_default_styles_setting( $settings ) {
-	// prevent infinite loop
-	remove_filter( 'wpsc_default_settings', '_wpsc_filter_default_styles_setting' );
-
-	if ( ! wpsc_get_option( 'default_style' ) ) {
-		$settings['default_styles'] = array();
-	}
-
-	return $settings;
 }

@@ -215,7 +215,12 @@ function _wpsc_action_check_thumbnail_support() {
 		$crop
 	);
 
-	add_image_size( 'wpsc_product_cart_thumbnail', 64, 64, $crop );
+	add_image_size(
+		'wpsc_product_cart_thumbnail',
+		64,
+		64,
+		$crop
+	);
 }
 
 add_action( 'after_setup_theme', '_wpsc_action_check_thumbnail_support', 99 );

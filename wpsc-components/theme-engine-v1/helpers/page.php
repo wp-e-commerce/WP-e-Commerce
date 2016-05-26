@@ -361,7 +361,6 @@ function wpsc_enqueue_user_script_and_css() {
 		wp_enqueue_script( 'wp-e-commerce', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
 		wp_localize_script( 'wp-e-commerce', 'wpsc_vars', wpsc_javascript_localizations() );
 
-		wp_enqueue_script( 'livequery',                   WPSC_URL 			. '/wpsc-admin/js/jquery.livequery.js',   array( 'jquery' ), '1.0.3' );
 		if ( get_option( 'product_ratings' ) == 1 )
 			wp_enqueue_script( 'jquery-rating',               WPSC_CORE_JS_URL 	. '/jquery.rating.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-legacy',        WPSC_CORE_JS_URL 	. '/user.js',                          array( 'jquery' ), WPSC_VERSION . WPSC_MINOR_VERSION );
@@ -388,7 +387,6 @@ function wpsc_enqueue_user_script_and_css() {
 			wp_enqueue_style( 'wpsc-product-rater',           WPSC_CORE_JS_URL 	. '/product_rater.css',                                       false, $version_identifier, 'all' );
 
 	}
-
 
 	if ( !defined( 'WPSC_MP3_MODULE_USES_HOOKS' ) && function_exists( 'listen_button' ) ) {
 
@@ -1035,7 +1033,6 @@ function wpsc_all_products_on_page(){
 			array_push( $templates, "taxonomy-product_tag-{$tax_term}.php", 'taxonomy-product_tag.php' );
 		}
 
-
 		// Attempt to use the [productspage]'s custom page template as a higher priority than the normal page.php template
 		if ( false !== $productspage_page_template = get_post_meta($products_page_id, '_wp_page_template', true) )
 			array_push( $templates, $productspage_page_template );
@@ -1340,7 +1337,6 @@ function wpsc_obtain_the_title() {
 
 	if ( !isset( $wp_query->query_vars['wpsc_product_category'] ) && isset($wp_query->query_vars['wpsc-product']) )
 		$wp_query->query_vars['wpsc_product_category'] = 0;
-
 
 	if ( isset( $wp_query->query_vars['taxonomy'] ) && 'wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] || isset($wp_query->query_vars['wpsc_product_category']))
 		$category_id = wpsc_get_the_category_id($wp_query->query_vars['wpsc_product_category'],'slug');
