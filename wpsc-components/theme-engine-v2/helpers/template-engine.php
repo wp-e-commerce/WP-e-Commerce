@@ -478,7 +478,7 @@ function _wpsc_filter_generate_attachment_metadata( $metadata, $id ) {
 		$key = "wpsc_product_{$size}_thumbnail";
 
 		// if this size is not generated for this attachment, skip it
-		if ( ! array_key_exists( $key, $metadata['sizes'] ) ) {
+		if ( ! isset( $metadata['sizes'] ) || ! array_key_exists( $key, $metadata['sizes'] ) ) {
 			continue;
 		}
 
