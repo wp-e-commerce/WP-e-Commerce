@@ -11,11 +11,14 @@ Product Grid on Archive Store Pages
 .post-type-archive-wpsc-product .wpsc-product-description {
   display: none; }
 .post-type-archive-wpsc-product #wpsc-products {
-  margin-left: -2.5%; }
+  margin-left: -2.5%;
+  font-size: 0;
+  /* important or else columns break */ }
 .post-type-archive-wpsc-product .wpsc-product {
   display: inline-block;
   padding: 10px;
-  margin: 0 0 2.5% 2.5%; }
+  margin: 0 0 2.5% 2.5%;
+  font-size: initial; }
 .post-type-archive-wpsc-product .wpsc-product-thumbnail {
   margin: 0 0 10px; }
   .post-type-archive-wpsc-product .wpsc-product-thumbnail img {
@@ -36,6 +39,10 @@ Product Grid on Archive Store Pages
 
 .wpsc-column-6 {
   width: 14.166%; }
+
+.wpsc-column-5 .wpsc-product-title,
+.wpsc-column-6 .wpsc-product-title {
+  font-size: 16px; }
 
 /*******************
 Shopping Cart 
