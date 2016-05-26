@@ -243,24 +243,6 @@
 .wpsc-controller .wpsc-category-filter ul.wpsc-category-filter-list {
   float: left;
 }
-.wpsc-controller .wpsc-thumbnail img {
-  background-color: #fff;
-  display: inline-block;
-  padding: 4px;
-  border: 1px solid #dddddd;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-}
-.wpsc-controller .wpsc-thumbnail:hover img {
-  border-color: #0088cc;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-  -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-  box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-}
 .wpsc-controller table.wpsc-table {
   border: none;
   border-collapse: collapse;
@@ -4490,13 +4472,6 @@ br.clear {
   overflow: hidden;
   margin-bottom: 1.5em;
 }
-.wpsc-controller .wpsc-thumbnail-wrapper {
-  float: left;
-}
-.wpsc-controller .wpsc-product-summary {
-  float: right;
-  width: 65%;
-}
 .wpsc-controller .wpsc-product-header,
 .wpsc-controller .wpsc-product-description p,
 .wpsc-controller .wpsc-product-price {
@@ -4596,8 +4571,7 @@ br.clear {
 }
 .wpsc-controller table.wpsc-cart-item-table td .wpsc-cart-quantity-input,
 .wpsc-cart-widget-table table.wpsc-cart-item-table td .wpsc-cart-quantity-input {
-  text-align: right;
-  width: 60px;
+  text-align: center;
 }
 .wpsc-controller table.wpsc-cart-item-table .item-total,
 .wpsc-cart-widget-table table.wpsc-cart-item-table .item-total,
@@ -4605,11 +4579,10 @@ br.clear {
 .wpsc-cart-widget-table table.wpsc-cart-item-table .unit-price,
 .wpsc-controller table.wpsc-cart-item-table .quantity,
 .wpsc-cart-widget-table table.wpsc-cart-item-table .quantity {
-  text-align: right;
+  text-align: center;
 }
-.wpsc-controller table.wpsc-cart-item-table .wpsc-thumbnail,
-.wpsc-cart-widget-table table.wpsc-cart-item-table .wpsc-thumbnail {
-  float: left;
+.wpsc-thumbnail.wpsc-product-thumbnail img {
+    width: 100%;
 }
 .wpsc-controller table.wpsc-cart-item-table tfoot tr:first-child td,
 .wpsc-cart-widget-table table.wpsc-cart-item-table tfoot tr:first-child td,

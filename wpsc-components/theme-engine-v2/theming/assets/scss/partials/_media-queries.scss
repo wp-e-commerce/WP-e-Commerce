@@ -1,0 +1,29 @@
+/*****************
+Media Queries
+*****************/
+
+@media (max-width: 960px) {
+	.wpsc-column-6,
+	.wpsc-column-5 {
+		width: $columns-4;
+	}
+}
+
+@media (max-width: 700px) {
+	@import 'mobile-and-sidebar';
+	.wpsc-column-6,
+	.wpsc-column-5,
+	.wpsc-column-4 {
+		width: $columns-3;
+	}
+}
+
+@media (max-width: 550px) {
+	.wpsc-column-6,
+	.wpsc-column-5,
+	.wpsc-column-4,
+	.wpsc-column-3,
+	.wpsc-column-2 {
+		width: $full-width;
+	}
+}
