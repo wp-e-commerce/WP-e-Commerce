@@ -38,6 +38,8 @@ class WPSC_Customizer {
      */
     public function customizer( WP_Customize_Manager $wp_customize ) {
 
+        $wp_customize->register_control_type( 'WPSC_Customizer_Thumbnail_Control' );
+
         if ( ! isset( $wp_customize->selective_refresh ) ) {
     		return;
     	}
@@ -59,7 +61,12 @@ class WPSC_Customizer {
 
             $wp_customize->add_setting( $name, $settings['setting'] );
 
-            $wp_customize->add_control( $name, $settings['control'] );
+            if ( isset( $settings['control']['class'] ) && 'WP_Customize_Control' == get_parent_class( $settings['control']['class'] ) ) {
+                $control = $settings['control']['class'];
+                $wp_customize->add_control( new $control( $wp_customize, $name, $settings['control'] ) );
+            } else {
+                $wp_customize->add_control( $name, $settings['control'] );
+            }
 
             if ( isset( $settings['partial'] ) ) {
                 $wp_customize->selective_refresh->add_partial( $name, $settings['partial'] );
@@ -90,7 +97,8 @@ function wpsc_default_customizer_settings( $settings ) {
 
         // TODO: We need to create a custom control here for thumbnails...which means some modifications will be necessary.
 
-/*
+
+        /*
     	add_image_size(
     		'wpsc_product_single_thumbnail',
     		get_option( 'single_view_image_width' ),
@@ -113,7 +121,7 @@ function wpsc_default_customizer_settings( $settings ) {
     	);
 */
 
-    $settings['wpsc_products_per_row'] = array(
+    $settings['wpsc_products_per_page'] = array(
         'control' => array(
             'type'            => 'number',
             'priority'        => 20,
@@ -235,3 +243,49 @@ add_filter( 'wpsc_customizer_sections', 'wpsc_default_customizer_sections' );
 
 $c = new WPSC_Customizer();
 $c->init();
+
+/**
+ * Custom control for Customizer.
+ *
+ * Allows us to have a width and a height input for thumbnail settings.
+ *
+ * @package WP eCommerce
+ * @subpackage Customizer
+ * @since 4.0
+ */
+
+add_action( 'customize_register', function() {
+    /**
+     * Thumbnail setting control for WxH settings in Customizer.
+     *
+     * @todo Move to its own file.
+     * @since 4.0
+     */
+    class WPSC_Customizer_Thumbnail_Control extends WP_Customize_Control {
+
+        public $html = array();
+
+        public function build_field_html( $key, $setting ) {
+            $value = '';
+
+            if ( isset( $this->settings[ $key ] ) ) {
+                $value = $this->settings[ $key ]->value();
+            }
+
+            $this->html[] = '<div><input type="text" value="' . esc_attr( $value ) . '" '.$this->get_link( $key ).' /></div>';
+        }
+
+        public function render_content() {
+            $output =  '<label>' . esc_html( $this->label ) .'</label>';
+
+            echo $output;
+
+            foreach( $this->settings as $key => $value ) {
+                $this->build_field_html( $key, $value );
+            }
+
+            echo implode( '', $this->html );
+        }
+
+    }
+} );

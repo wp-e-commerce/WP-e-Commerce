@@ -26,7 +26,7 @@ class WPSC_Controller {
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/message-collection.php' );
 
 		add_filter( 'template_include' , array( $this, '_filter_template_router' ) );
-		add_action( 'wpsc_router_init', array( $this, 'force_ssl'               ) );
+		add_action( 'wpsc_router_init' , array( $this, 'force_ssl'               ) );
 
 		$this->message_collection = WPSC_Message_Collection::get_instance();
 	}
