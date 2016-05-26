@@ -216,7 +216,7 @@ function wpsc_default_customizer_settings( $settings ) {
             'type'              => 'option',
             'capability'        => 'manage_options',
             'default'           => 'auto',
-            'sanitize_callback' => 'is_numeric',
+            'sanitize_callback' => function( $value ) { return $value === 'auto' || is_numeric( $value ); },
         ),
         'partial' => array(
             'selector'            => '#wpsc-products',

@@ -32,6 +32,7 @@ class WPSC_Settings {
 				'category_base_slug'                => 'category',
 				'hierarchical_product_category_url' => 0,
 				'page_number_position'              => WPSC_PAGE_NUMBER_POSITION_BOTTOM,
+				'products_per_row'                  => 'auto',
 				'products_per_page'                 => 0,
 				'cart_page_slug'                    => 'cart',
 				'checkout_page_slug'                => 'checkout',

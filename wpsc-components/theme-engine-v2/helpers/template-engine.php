@@ -498,3 +498,14 @@ add_filter(
 	10,
 	2
 );
+
+function wpsc_add_products_per_row_class( $classes ) {
+
+	$rows = wpsc_get_option( 'products_per_row' );
+
+	$classes[] = 'wpsc-column-' . $rows;
+
+	return $classes;
+}
+
+add_filter( 'wpsc_product_class', 'wpsc_add_products_per_row_class' );
