@@ -1,31 +1,6 @@
 @import 'partials/variables';
 
-/* Grid Styling on archive cart pages */
-.post-type-archive-wpsc-cart {
-
-	.wpsc-cart-description {
-		display: none;
-	}
-
-	.wpsc-page-main-store {
-    margin-left: -2.5%;
-	}
-
-	.wpsc-cart {
-	    display: inline-block;
-	    padding: 10px;
-	    margin: 0 0 2.5% 2.5%;
-	}
-
-	.wpsc-cart-thumbnail {
-		margin: 0 0 10px;
-		img {
-			max-width: 100%;
-			height: auto;
-		}
-	}
-
-}
+@import 'partials/product-grid';
 
 @import 'partials/shopping-cart';
 

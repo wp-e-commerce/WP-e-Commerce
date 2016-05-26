@@ -4472,13 +4472,6 @@ br.clear {
   overflow: hidden;
   margin-bottom: 1.5em;
 }
-.wpsc-controller .wpsc-thumbnail-wrapper {
-  float: left;
-}
-.wpsc-controller .wpsc-product-summary {
-  float: right;
-  width: 65%;
-}
 .wpsc-controller .wpsc-product-header,
 .wpsc-controller .wpsc-product-description p,
 .wpsc-controller .wpsc-product-price {
