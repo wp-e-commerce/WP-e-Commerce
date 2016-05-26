@@ -34,7 +34,8 @@ function _wpsc_get_inline_style() {
 	$thumbnail_padding = apply_filters( 'wpsc_thumbnail_padding', 15 );
 
 	ob_start();
-	?>
+	
+	/*
 	.wpsc-page-main-store .wpsc-product-summary {
 		width: -moz-calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
 		width: -webkit-calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
@@ -52,6 +53,7 @@ function _wpsc_get_inline_style() {
 		width: -webkit-calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 		width: calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 	}
-	<?php
+	*/
+
 	return ob_get_clean();
 }
