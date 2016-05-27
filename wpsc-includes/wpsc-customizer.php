@@ -17,7 +17,6 @@ function wpsc_default_customizer_settings( $settings ) {
             'type'              => 'option',
             'capability'        => 'manage_options',
             'sanitize_callback' => 'absint',
-            'input'             => 'number'
         )
     );
 
@@ -36,7 +35,6 @@ function wpsc_default_customizer_settings( $settings ) {
             'type'              => 'option',
             'capability'        => 'manage_options',
             'sanitize_callback' => 'absint',
-            'input'             => 'number'
         )
     );
 
@@ -55,7 +53,6 @@ function wpsc_default_customizer_settings( $settings ) {
             'type'              => 'option',
             'capability'        => 'manage_options',
             'sanitize_callback' => 'absint',
-            'input'             => 'number'
         )
     );
 
@@ -82,47 +79,41 @@ function wpsc_default_customizer_settings( $settings ) {
             'priority'        => 20,
             'section'         => 'wpsc_general',
             'label'           => __( 'Products Per Page' ),
-            'default'         => get_option( 'posts_per_page' ),
+            'default'         => wpsc_get_option( 'products_per_page' ),
             'description'     => __( 'Set the maximum number of products per page.', 'wp-e-commerce' ),
         ),
         'setting' => array(
             'type'              => 'option',
             'capability'        => 'manage_options',
-            'default'           => 'auto',
-            'sanitize_callback' => 'is_numeric',
+            'sanitize_callback' => 'absint',
         ),
         'partial' => array(
             'selector'            => '#wpsc-products',
-            'render_callback'     => function() {
-                wpsc_get_template_part( 'loop', 'products' );
-             }
+            'render_callback'     => 'wpsc_customizer_render_products'
         )
     );
 
     $settings['wpsc_fancy_notifications'] = array(
-            'control' => array(
-                'type'            => 'checkbox',
-                'priority'        => 10,
-                'section'         => 'wpsc_general',
-                'label'           => __( 'Add to Cart Notifications' ),
-                'default'         => false,
-                'description'     => __( 'Enable Add to Cart notifications. When adding an item to your cart, this will create a popup notification for users.' ),
-            ),
-            'setting' => array(
-                'type'              => 'option',
-                'capability'        => 'manage_options',
-                'default'           => false,
-                'sanitize_callback' => 'esc_attr',
-            ),
-            'partial' => array(
-                'selector'            => '#wpsc-products',
-                'render_callback'     => function() {
-                    wpsc_get_template_part( 'loop', 'products' );
-                 }
-            )
-        );
+        'control' => array(
+            'type'            => 'checkbox',
+            'priority'        => 10,
+            'section'         => 'wpsc_general',
+            'label'           => __( 'Add to Cart Notifications' ),
+            'default'         => false,
+            'description'     => __( 'Enable Add to Cart notifications. When adding an item to your cart, this will create a popup notification for users.', 'wp-e-commerce' ),
+        ),
+        'setting' => array(
+            'type'              => 'option',
+            'capability'        => 'manage_options',
+            'default'           => false,
+            'sanitize_callback' => 'esc_attr',
+        ),
+        'partial' => array(
+            'selector'            => '#wpsc-products',
+            'render_callback'     => 'wpsc_customizer_render_products'
+        )
+    );
 
-    // TODO: Modify Body Class via JS. Also, hide products per row based on value
     $settings['wpsc_layout'] = array(
         'control' => array(
             'type'            => 'select',
@@ -166,13 +157,11 @@ function wpsc_default_customizer_settings( $settings ) {
             'type'              => 'option',
             'capability'        => 'manage_options',
             'default'           => 'auto',
-            'sanitize_callback' => function( $value ) { return $value === 'auto' || is_numeric( $value ) ? $value : 'auto'; },
+            'sanitize_callback' => 'wpsc_customizer_products_per_row',
         ),
         'partial' => array(
             'selector'            => '#wpsc-products',
-            'render_callback'     => function() {
-                wpsc_get_template_part( 'loop', 'products' );
-             }
+            'render_callback'     => 'wpsc_customizer_render_products'
         )
     );
 
@@ -198,5 +187,13 @@ function wpsc_customizer_assets() {
 }
 
 add_action( 'customize_controls_enqueue_scripts', 'wpsc_customizer_assets' );
+
+function wpsc_customizer_render_products() {
+    wpsc_get_template_part( 'loop', 'products' );
+ }
+
+function wpsc_customizer_products_per_row( $value ) {
+    return $value === 'auto' || is_numeric( $value ) ? $value : 'auto';
+}
 
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-customizer.class.php' );

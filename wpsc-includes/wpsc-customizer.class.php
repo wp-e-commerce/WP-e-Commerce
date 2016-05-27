@@ -42,7 +42,7 @@ class WPSC_Customizer {
     }
 
     /**
-     * Register selective refresh partial.
+     * Register Customizer routine.
      *
      * @param \WP_Customize_Manager $wp_customize Manager.
      */
@@ -69,17 +69,12 @@ class WPSC_Customizer {
 
             $wp_customize->add_setting( $name, $settings['setting'] );
 
-            if ( isset( $settings['control']['class'] ) ) {
+            if ( isset( $settings['control']['class'] ) && 'WP_Customize_Control' === get_parent_class( $settings['control']['class'] ) ) {
 
                 $class = $settings['control']['class'];
 
                 foreach ( $settings['control']['settings'] as $s ) {
-                    $wp_customize->add_setting( $s, array(
-                        'default'           => '',
-                        'type'              => 'option',
-                        'capability'        => 'manage_options',
-                        'sanitize_callback' => 'absint'
-                    ) );
+                    $wp_customize->add_setting( $s, $settings['setting'] );
                 }
 
                 $wp_customize->add_control(

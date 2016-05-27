@@ -47,11 +47,11 @@ class WPSC_Customizer_Thumbnail_Control extends WP_Customize_Control {
 
         foreach ( $keys as $key ) {
             if ( isset( $args[ $key ] ) ) {
-                    $this->$key = $args[ $key ];
+                $this->$key = $args[ $key ];
             }
         }
 
-        $output =  '<label class="customize-control-title">' . esc_html( $this->label ) .'</label>';
+        $output = '<label class="customize-control-title">' . esc_html( $this->label ) .'</label>';
 
         echo $output;
 
