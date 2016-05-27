@@ -5,38 +5,39 @@ Variables
 /* Shopping Cart Single Product Cells (Needs to add up to 100%) */
 /* value x 4 i.e. 2.5 x 4 = 10% */
 /*Product Grid*/
-/**********************************
-Product Grid on Archive Store Pages 
-**********************************/
-.post-type-archive-wpsc-product .wpsc-product-description {
-  display: none; }
-.post-type-archive-wpsc-product #wpsc-products {
-  margin-left: -2.5%;
-  font-size: 0; }
-.post-type-archive-wpsc-product .wpsc-product {
-  display: inline-block;
-  margin: 0 0 2.5% 2.5%;
-  font-size: initial; }
-.post-type-archive-wpsc-product .wpsc-product-thumbnail {
-  margin: 0 0 10px; }
-  .post-type-archive-wpsc-product .wpsc-product-thumbnail img {
-    max-width: 100%;
-    height: auto; }
+.wpsc-grid {
+  /**********************************
+  Product Grid on Archive Store Pages 
+  **********************************/ }
+  .wpsc-grid .post-type-archive-wpsc-product .wpsc-product-description {
+    display: none; }
+  .wpsc-grid .post-type-archive-wpsc-product #wpsc-products {
+    margin-left: -2.5%;
+    font-size: 0; }
+  .wpsc-grid .post-type-archive-wpsc-product .wpsc-product {
+    display: inline-block;
+    margin: 0 0 2.5% 2.5%;
+    font-size: initial; }
+  .wpsc-grid .post-type-archive-wpsc-product .wpsc-product-thumbnail {
+    margin: 0 0 10px; }
+    .wpsc-grid .post-type-archive-wpsc-product .wpsc-product-thumbnail img {
+      max-width: 100%;
+      height: auto; }
+  .wpsc-grid .wpsc-column-2 {
+    width: 47.5%; }
+  .wpsc-grid .wpsc-column-3 {
+    width: 30.833%; }
+  .wpsc-grid .wpsc-column-4 {
+    width: 22.5%; }
+  .wpsc-grid .wpsc-column-5 {
+    width: 17.5%; }
+  .wpsc-grid .wpsc-column-6 {
+    width: 14.166%; }
 
-.wpsc-column-2 {
-  width: 47.5%; }
-
-.wpsc-column-3 {
-  width: 30.833%; }
-
-.wpsc-column-4 {
-  width: 22.5%; }
-
-.wpsc-column-5 {
-  width: 17.5%; }
-
-.wpsc-column-6 {
-  width: 14.166%; }
+.wpsc-list {
+  /*****************
+  Product List
+  *****************/ }
 
 /*******************
 Shopping Cart 

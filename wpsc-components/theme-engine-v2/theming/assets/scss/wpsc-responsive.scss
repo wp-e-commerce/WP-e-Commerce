@@ -1,6 +1,12 @@
 @import 'partials/variables';
 
-@import 'partials/product-grid';
+.wpsc-grid {
+	@import 'partials/product-grid';
+}
+
+.wpsc-list {
+	@import 'partials/product-list';
+}
 
 @import 'partials/shopping-cart';
 
