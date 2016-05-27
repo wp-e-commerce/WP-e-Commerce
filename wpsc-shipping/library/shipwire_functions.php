@@ -495,7 +495,7 @@ class WPSC_Shipwire {
 	 * @since 3.8.9
 	 * @return string
 	 */
-	public function get_cache_key() {
+	public static function get_cache_key() {
 		global $wpsc_cart;
 
 		if ( ! is_object( $wpsc_cart ) || empty( $wpsc_cart->cart_items ) )

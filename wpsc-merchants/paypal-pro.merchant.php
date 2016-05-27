@@ -246,7 +246,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 			case 'Failure': /// case 2 is order denied
 			default: /// default is http or unknown error state
-				foreach ( (array)$error_data as $error_row ) {
+				foreach ( (array) $error_data as $error_row ) {
 					$this->set_error_message( $error_row['error_message'] );
 				}
 				$this->return_to_checkout();
