@@ -2,7 +2,9 @@
 
 	'use strict';
 
-	var event_copy = function(e) {
+	var strings = window.WPSC.copyBilling.strings;
+
+	var event_copy = function() {
 		var fields_to_copy = [
 			'firstname',
 			'lastname',
@@ -21,26 +23,28 @@
 			billing = $('#wpsc-checkout-field-billing' + field + '-control');
 			value = billing.val();
 			shipping.val(value);
-			if (field == 'country' || field == 'state') {
+			if ( 'country' === field || 'state' === field ) {
 				shipping.
 					siblings('input.ui-autocomplete-input').
 					val(shipping.find('option[value="' + value + '"]').text());
 
-				if (field == 'state')
+				if ( 'state' === field ) {
 					continue;
+				}
 
 				instance = shipping.data('wpsc_country_field');
 				instance.refresh_state_control({'real-value' : value});
 			}
 		}
-	},
-	set_visibility = function() {
+	};
+
+	var set_visibility = function() {
 
 		if ( $( 'input[name="wpsc_copy_billing_details"]' ).is( ':checked' ) ) {
-			$( '#wpsc-checkout-form-billing h2' ).html( wpsc_checkout_labels.billing_and_shipping );
+			$( '#wpsc-checkout-form-billing h2' ).html( strings.billing_and_shipping );
 			$( '#wpsc-checkout-form-shipping' ).addClass( 'ui-helper-hidden' );
 		} else {
-			$( '#wpsc-checkout-form-billing h2' ).html( wpsc_checkout_labels.billing );
+			$( '#wpsc-checkout-form-billing h2' ).html( strings.billing );
 			$( '#wpsc-checkout-form-shipping' ).removeClass( 'ui-helper-hidden' );
 		}
 	};

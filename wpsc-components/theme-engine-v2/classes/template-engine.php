@@ -52,6 +52,53 @@ class WPSC_Template_Engine {
 	private $view_wrapper_paths = array();
 
 	/**
+	 * Core scripts ready to be enqueued during the wp_enqueue_scripts hook.
+	 *
+	 * @since 4.0
+	 * @var array
+	 */
+	private $queued_scripts = array();
+
+	/**
+	 * Core scripts to register during wp_enqueue_scripts hook.
+	 *
+	 * @since 4.0
+	 * @var array
+	 */
+	private $core_scripts = array(
+		'wpsc-select-autocomplete' => array(
+			'path'         => 'js/jquery.select-to-autocomplete.js',
+			'dependencies' => array( 'jquery-ui-autocomplete' ),
+			'version'      => '1.0.5',
+		),
+		'wpsc-country-region' => array(
+			'path'         => 'js/country-region.js',
+			'dependencies' => array( 'wpsc-select-autocomplete', 'jquery' ),
+			'version'      => WPSC_VERSION,
+		),
+		'wpsc-copy-billing-info' => array(
+			'path'         => 'js/copy-billing-info.js',
+			'dependencies' => array( 'jquery' ),
+			'version'      => WPSC_VERSION,
+		),
+		'wpsc-shipping-price-simulator' => array(
+			'path'         => 'js/shipping-price-simulator.js',
+			'dependencies' => array( 'jquery' ),
+			'version'      => WPSC_VERSION,
+		),
+		'wpsc-checkout-payment' => array(
+			'path'         => 'js/checkout-payment.js',
+			'dependencies' => array( 'jquery' ),
+			'version'      => WPSC_VERSION,
+		),
+		'wpsc-cart-notifications' => array(
+			'path'         => 'js/cart-notifications.js',
+			'dependencies' => array( 'jquery' ),
+			'version'      => WPSC_VERSION,
+		),
+	);
+
+	/**
 	 * Constructor
 	 *
 	 * @since 4.0
@@ -116,6 +163,16 @@ class WPSC_Template_Engine {
 	}
 
 	/**
+	 * Get all the registered core scripts data.
+	 *
+	 * @since  4.0
+	 * @return array
+	 */
+	public function get_core_scripts_data() {
+		return $this->core_scripts;
+	}
+
+	/**
 	 * Register a path where template engine can look for a certain asset file
 	 *
 	 * @since 4.0
@@ -149,6 +206,16 @@ class WPSC_Template_Engine {
 		$this->register_thing( 'view_wrapper_paths', $path, $priority );
 	}
 
+	/**
+	 * Register a path where template engine can look for a certain view wraper
+	 *
+	 * @since 4.0
+	 * @param string $handle      Name of the core script to queue.
+	 * @param array  $script_data (Optional) data to send to wp_localize_script under the WPSC namespace.
+	 */
+	public function register_queued_script( $handle, $script_data = array() ) {
+		$this->queued_scripts[ $handle ] = $script_data;
+	}
 
 	/**
 	 * Deregister a path where template engine can look for a certain asset.
@@ -266,6 +333,16 @@ class WPSC_Template_Engine {
 	 */
 	public function get_view_wrapper_paths() {
 		return $this->get_paths( 'view_wrapper_paths' );
+	}
+
+	/**
+	 * Get all the registered queued scripts.
+	 *
+	 * @since  4.0
+	 * @return array
+	 */
+	public function get_queued_scripts() {
+		return $this->queued_scripts;
 	}
 
 	/**
