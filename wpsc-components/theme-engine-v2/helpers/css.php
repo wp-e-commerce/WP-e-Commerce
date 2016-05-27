@@ -3,8 +3,8 @@
 add_action( 'wp_enqueue_scripts'        , '_wpsc_te2_enqueue_styles', 1 );
 
 function _wpsc_te2_enqueue_styles() {
-	$do_minified = apply_filters( 'wpsc_use_minified_styles', ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) );
-	$suffix = $do_minified ? '' : '.min';
+	$do_minified = apply_filters( 'wpsc_use_minified_styles', ! ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) );
+	$suffix = $do_minified ? '.min' : '';
 
 	wp_register_style( 'wpsc-common', wpsc_locate_asset_uri( "css/common{$suffix}.css" ), array(), WPSC_VERSION );
 	wp_register_style( 'wpsc-responsive', wpsc_locate_asset_uri( "css/wpsc-responsive{$suffix}.css" ), array(), WPSC_VERSION );
