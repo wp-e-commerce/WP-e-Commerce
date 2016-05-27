@@ -182,8 +182,11 @@ add_filter( 'wpsc_customizer_sections', 'wpsc_default_customizer_sections' );
 
 function wpsc_customizer_assets() {
     _wpsc_te2_mvc_init();
+
+    $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
     wp_enqueue_script( 'wpsc-customizer', wpsc_locate_asset_uri( 'js/customizer.js' ), array( 'customize-preview', 'jquery' ), WPSC_VERSION );
-    wp_enqueue_style( 'wpsc-customizer' , wpsc_locate_asset_uri( 'css/customizer.css' ), array(), WPSC_VERSION );
+    wp_enqueue_style( 'wpsc-customizer' , wpsc_locate_asset_uri( "css/customizer{$suffix}.css" ), array(), WPSC_VERSION );
 }
 
 add_action( 'customize_controls_enqueue_scripts', 'wpsc_customizer_assets' );

@@ -17,3 +17,4 @@ node_modules
 .svn
 .git
 release.sh
+*.css.map

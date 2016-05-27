@@ -27,6 +27,49 @@ module.exports = function( grunt ) {
 				'!wpsc-admin/js/jquery-*.js'
 			]
 		},
+
+		sass: {
+			dist: {
+				options: {
+					style: 'expanded',
+					lineNumbers: false
+				},
+				files: [{
+					expand: true,
+					cwd: 'wpsc-components/theme-engine-v2/theming/assets/scss',
+					src: ['**/*.scss'],
+					dest: 'wpsc-components/theme-engine-v2/theming/assets/css/',
+					ext: '.css'
+				}]
+			}
+		},
+
+		cmq: {
+			options: {
+				log: false
+			},
+			dist: {
+				files: [{
+					expand: true,
+					cwd: 'wpsc-components/theme-engine-v2/theming/assets/css',
+					src: ['*.css', '!*.min.css', '!wpsc-components/theme-engine-v2/theming/assets/css/font-awesome-ie7.css'],
+					dest: 'wpsc-components/theme-engine-v2/theming/assets/css/',
+				}]
+			}
+		},
+
+		cssmin: {
+			target: {
+				files: [{
+					expand: true,
+					cwd: 'wpsc-components/theme-engine-v2/theming/assets/css',
+					src: ['*.css', '!*.min.css', '!wpsc-components/theme-engine-v2/theming/assets/css/font-awesome-ie7.css'],
+					dest: 'wpsc-components/theme-engine-v2/theming/assets/css',
+					ext: '.min.css'
+				}]
+			}
+		},
+
 		// Check textdomain errors.
 		checktextdomain: {
 			options:{
@@ -88,6 +131,10 @@ module.exports = function( grunt ) {
 			}
 		},
 		watch: {
+			css: {
+				files: ['<%= sass.dist.files %>'],
+				tasks: ['css']
+			},
 			js: {
 				files: ['<%= jshint.plugin %>'],
 				tasks: ['jshint']
@@ -96,7 +143,8 @@ module.exports = function( grunt ) {
 
 	});
 
-	grunt.registerTask('default', ['jshint', 'watch', 'makepot']);
+	grunt.registerTask('css', ['sass', 'cmq', 'cssmin']);
+	grunt.registerTask('default', ['jshint', 'css', 'makepot']);
 
 	/**
 	 * PHP Code Sniffer using WordPress Coding Standards.
