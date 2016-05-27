@@ -28,14 +28,13 @@ function _wpsc_te2_enqueue_styles() {
  * @return string CSS output
  */
 function _wpsc_get_inline_style() {
-	$archive_width     = get_option( 'product_image_width' );
-	$single_width      = get_option( 'single_view_image_width' );
-	$tax_width         = get_option( 'category_image_width' );
+	$archive_width     = intval( get_option( 'product_image_width' ) );
+	$single_width      = intval( get_option( 'single_view_image_width' ) );
+	$tax_width         = intval( get_option( 'category_image_width' ) );
 	$thumbnail_padding = apply_filters( 'wpsc_thumbnail_padding', 15 );
 
 	ob_start();
-	
-	/*
+	?>
 	.wpsc-page-main-store .wpsc-product-summary {
 		width: -moz-calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
 		width: -webkit-calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
@@ -53,7 +52,6 @@ function _wpsc_get_inline_style() {
 		width: -webkit-calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 		width: calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 	}
-	*/
-
+<?php
 	return ob_get_clean();
 }
