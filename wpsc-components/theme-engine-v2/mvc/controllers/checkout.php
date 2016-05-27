@@ -241,6 +241,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			$purchase_log = new WPSC_Purchase_Log( $purchase_log_id );
 		} else {
 			$purchase_log = new WPSC_Purchase_Log();
+			$purchase_log->save();
 		}
 
 		return $purchase_log;
@@ -317,7 +318,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$purchase_log->save();
 
 		//Check to ensure purchase log row was inserted successfully
-		if(is_null($purchase_log->get( 'id' ))) {
+		if ( is_null( $purchase_log->get( 'id' ) ) ) {
 			$this->message_collection->add(
 				__( 'A database error occurred while processing your request.', 'wp-e-commerce' ),
 				'error'

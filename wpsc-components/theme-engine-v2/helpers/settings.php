@@ -72,10 +72,9 @@ function wpsc_update_option( $option_name, $value ) {
  * @access private
  *
  * @since  0.1
- * @param  string $option Value of the 'transact_url' option
  * @return string The new transaction result URL
  */
-function _wpsc_te2_filter_option_transact_url( $value ) {
+function _wpsc_te2_filter_option_transact_url() {
 	return wpsc_get_checkout_url( 'results' );
 }
 
@@ -89,10 +88,9 @@ function _wpsc_te2_filter_option_transact_url( $value ) {
  * @access private
  *
  * @since  0.1
- * @param  string $option Value of the 'shopping_cart_url' option
  * @return string The new shopping cart URL
  */
-function _wpsc_te2_filter_option_shopping_cart_url( $value ) {
+function _wpsc_te2_filter_option_shopping_cart_url() {
 	return wpsc_get_checkout_url( 'payment' );
 }
 
