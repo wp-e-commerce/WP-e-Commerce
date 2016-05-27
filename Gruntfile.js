@@ -53,7 +53,7 @@ module.exports = function( grunt ) {
 					expand: true,
 					cwd: 'wpsc-components/theme-engine-v2/theming/assets/css',
 					src: ['*.css', '!*.min.css', '!wpsc-components/theme-engine-v2/theming/assets/css/font-awesome-ie7.css'],
-					dest: 'wpsc-components/theme-engine-v2/theming/assets/css/',
+					dest: 'wpsc-components/theme-engine-v2/theming/assets/css/'
 				}]
 			}
 		},
@@ -120,7 +120,7 @@ module.exports = function( grunt ) {
 					},
 					type: 'wp-plugin',    // Type of project (wp-plugin or wp-theme).
 					updateTimestamp: true,    // Whether the POT-Creation-Date should be updated without other changes.
-					processPot: function( pot, options ) {
+					processPot: function( pot ) {
 						pot.headers['report-msgid-bugs-to'] = 'https://wpecommerce.org/';
 						pot.headers['last-translator'] = 'WP-Translations (http://wp-translations.org/)';
 						pot.headers['language-team'] = 'WP-Translations <wpt@wp-translations.org>';
