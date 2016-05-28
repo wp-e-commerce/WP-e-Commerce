@@ -240,7 +240,7 @@ function wpsc_install() {
 	add_option( 'display_pnp', '1', '', 'no' );
 
 	add_option( 'display_specials', '1', '', 'no' );
-	add_option( 'do_not_use_shipping', '0', '', 'no' );
+	add_option( 'do_not_use_shipping', '1', '', 'no' );
 
 	add_option( 'postage_and_packaging', '0','', 'no' );
     add_option( 'shipwire', '0', '', 'no' );

@@ -33,7 +33,6 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['meta'] = (array) $_POST['meta'];
 	}
 
-
 	if ( isset( $post_data['meta']['_wpsc_price'] ) )
 		$post_data['meta']['_wpsc_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_price'] );
 
@@ -246,7 +245,6 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	// and the custom meta
 	wpsc_update_custom_meta($product_id, $post_data);
 
-
 	// Update the alternative currencies
 	if ( isset( $post_data['wpsc-update-currency-layers'] ) && wp_verify_nonce( $post_data['wpsc-update-currency-layers'], 'update-options' ) ) {
 
@@ -276,7 +274,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 }
 
 
-function wpsc_pre_update( $data , $postarr ) {
+function wpsc_pre_update( $data, $postarr ) {
  	if ( (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || $postarr["post_type"] != 'wpsc-product' )
         return $data;
     if( isset( $postarr["additional_description"] ) )
@@ -295,10 +293,6 @@ function wpsc_pre_update( $data , $postarr ) {
 	} else {
 		$data["comment_status"] = "open";
 	}
-
-    //Can anyone explain to me why this is here?
-    if ( isset( $sku ) && ( $sku != '' ) )
-        $data['guid'] = $sku;
 
     return $data;
 }
@@ -375,7 +369,7 @@ function wpsc_sanitise_product_forms($post_data = null) {
 	$post_data['meta']['_wpsc_stock'] = (int)$post_data['meta']['_wpsc_stock'];
 
 	if (!isset($post_data['meta']['_wpsc_limited_stock'])) $post_data['meta']['_wpsc_limited_stock'] = '';
-	if((bool)$post_data['meta']['_wpsc_limited_stock'] != true) {
+	if((bool)$post_data['meta']['_wpsc_limited_stock'] !== true) {
 	  $post_data['meta']['_wpsc_stock'] = false;
 	}
 	unset($post_data['meta']['_wpsc_limited_stock']);
@@ -439,7 +433,6 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 		'thumbnail_image' => null,
 		'thumbnail_state' => null
 	);
-
 
 	foreach ( $product_columns as $column => $default ) {
 		if ( ! isset( $post_data[ $column ] ) ) {
@@ -520,7 +513,6 @@ function term_id_price($term_id, $parent_price) {
 				$percentage = (floatval($price) / 100);
 				$price = $parent_price + ($parent_price * $percentage);
 			}
-
 		} else {
 
 			if ( $var_price_type == 'differential' ) {
@@ -698,7 +690,6 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 				update_product_meta( $child_product_id, 'price', $price );
 		}
 	}
-
 
 	//For reasons unknown, this code did not previously deal with variation deletions.
 	//Basically, we'll just check if any existing term associations are missing from the posted variables, delete if they are.

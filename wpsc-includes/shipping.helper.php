@@ -1,6 +1,6 @@
 <?php
 
-class ASHXML{
+class AshXML {
     /**
      * This function iterates over the keys from an array, if there is any
      * non-numeric keys, it is associative, else it is a "list"
@@ -10,11 +10,11 @@ class ASHXML{
      * @return boolean
      */
 	function _is_list($data){
-	    $is_num = TRUE;
-	    if (!is_array($data)){ return FALSE; }
+	    $is_num = true;
+	    if (!is_array($data)){ return false; }
 	    foreach((array)$data as $key=>$value){
 	        if (!is_numeric($key)){
-	            $is_num = FALSE;
+	            $is_num = false;
 	        }
 	    }
 	    return $is_num;
@@ -119,7 +119,7 @@ class ASHXML{
         if (count($matches) > 1){
             return $matches[1];
         }
-        return FALSE;
+        return false;
 	}
 
 }
@@ -181,9 +181,10 @@ class ASHTools {
      *
      * @since 0.0.1
      * @param int $state_code
-     * @return string|int will be int if wordpress database & wpec are not available
+     *
+     * @return string Region for code.
      */
-    function get_state( $state_code ){
+    function get_state( $state_code ) {
         $state_code = isset( $_POST['region'] ) ? $_POST['region'] : $state_code;
         return wpsc_get_region( $state_code );
     }
@@ -336,7 +337,7 @@ class ASHPackage {
     /**
      * Girth is defined, for a rectangle as G=2(Height+Width)
      * is auto calc'ed when you use set_dimensions
-     * @var decimal
+     * @var float
      */
     var $girth;
     /**
@@ -353,12 +354,12 @@ class ASHPackage {
      * Flag denotes if the package has hazardous material or not
      * @var boolean
      */
-    var $hazard = FALSE;
+    var $hazard = false;
     /**
      * Flag denotes if the package is to have insurance added to the quote
      * @var boolean
      */
-    var $insurance = FALSE;
+    var $insurance = false;
     /**
      * The amount that the package is to be insured for
      * @var decimal
@@ -368,7 +369,7 @@ class ASHPackage {
 	 * The package can't be shipped sideways.
 	 * var boolean
 	 */
-	var $this_side_up = FALSE;
+	var $this_side_up = false;
 
     /**
      * The constructor for the ASHPackage class
@@ -440,7 +441,7 @@ class ASHPackage {
  *
  * @since 0.0.1
  */
-class ASHShipment{
+class ASHShipment {
     /**
      * An array of ASHPackage objects
      * @var array
@@ -450,7 +451,7 @@ class ASHShipment{
      * Flag denotes if there are any hazardous packages in the shipment overall
      * @var boolean
      */
-    var $hazard = FALSE;
+    var $hazard = false;
     /**
      * The amount of packages in the shipment, automatically increments when
      * you use the add_package() function
@@ -493,7 +494,7 @@ class ASHShipment{
      * @param string $internal_name internal name of shipping module
      * @param array $dest optional array if you already know destination.
      */
-    function set_destination($internal_name, $dest=FALSE){
+    function set_destination( $internal_name, $dest = false ){
         if (!$dest){
             $tools = new ASHTools();
             $wpec_ash = wpsc_get_customer_meta( 'shipping_ash' );
@@ -525,10 +526,10 @@ class ASHShipment{
      * @param boolean $flag
      */
     function set_hazard($flag){
-        if ($flag == TRUE){
-            $this->hazard = TRUE;
+        if ($flag === true){
+            $this->hazard = true;
         }else{
-            $this->hazard = FALSE;
+            $this->hazard = false;
         }
     }
 
@@ -559,7 +560,7 @@ class ASHShipment{
  * It is the entrypoint for interaction between ASH and WPEC
  *
  */
-class ASH{
+class ASH {
     /**
      * General constructor for ASH class
      *
@@ -595,14 +596,14 @@ class ASH{
             $package->set_dimensions($dim_array);
 
             /* Set other meta */
-            $package->hazard = ( get_product_meta( $cart_item->product_id, "ship_hazard", TRUE ) === TRUE) ? TRUE : FALSE;			//Fixed ternary evaluation.
-            $package->insurance = ( get_product_meta( $cart_item->product_id, "ship_insurance", TRUE ) === TRUE) ? TRUE : FALSE;	//Fixed ternary evaluation.
-            $package->insured_amount = get_product_meta( $cart_item->product_id,"ship_insured_amount", TRUE );						//Fixed ternary evaluation.
+            $package->hazard = ( get_product_meta( $cart_item->product_id, "ship_hazard", true ) === true) ? true : false;			//Fixed ternary evaluation.
+            $package->insurance = ( get_product_meta( $cart_item->product_id, "ship_insurance", true ) === true) ? true : false;	//Fixed ternary evaluation.
+            $package->insured_amount = get_product_meta( $cart_item->product_id,"ship_insured_amount", true );						//Fixed ternary evaluation.
             $package->value = $cart_item->unit_price;
             $package->contents = $cart_item->product_name;
-			$package->this_side_up = ( get_post_meta( $cart_item->product_id, "h:this_side_up", TRUE ) === TRUE ) ? TRUE : FALSE;	//Prod. page hide, prod. UI display
-            if ($shipment->hazard === FALSE and $package->hazard === TRUE){
-                $shipment->set_hazard(TRUE);
+			$package->this_side_up = ( get_post_meta( $cart_item->product_id, "h:this_side_up", true ) === true ) ? true : false;	//Prod. page hide, prod. UI display
+            if ($shipment->hazard === false and $package->hazard === true){
+                $shipment->set_hazard(true);
             }
             $quantity = (int)$cart_item->quantity;
 			$package->product_id[$cart_item->product_id] = 1; // The product in this package.
@@ -625,10 +626,9 @@ class ASH{
         if ( ! is_array( $wpec_ash ) )
             $wpec_ash = array();
 
-        if ( empty( $wpec_ash[$internal_name] ) || ! is_array( $wpec_ash[$internal_name] ) )
+        if ( empty( $wpec_ash[$internal_name] ) || ! is_array( $wpec_ash[$internal_name] ) ) {
             $wpec_ash[$internal_name] = array();
-
-
+        }
 
         $wpec_ash[$internal_name]["rate_table"] = $rate_table;
         $shipment_vals = array("package_count"=>$shipment->package_count,
@@ -673,13 +673,13 @@ class ASH{
                                "total_weight" =>$shipment->total_weight,
                                "rates_expire" =>$shipment->rates_expire ); //Refresh rates after today.
         if ($cached_shipment["package_count"] != $shipment->package_count){
-            return FALSE;
+            return false;
         }elseif($cached_shipment["destination"] != $shipment_vals["destination"]){
-            return FALSE;
+            return false;
         }elseif($cached_shipment["total_weight"] != $shipment_vals["total_weight"]){
-            return FALSE;
+            return false;
         }elseif($cached_shipment["rates_expire"] != $shipment_vals["rates_expire"]) { //Refresh rates after today.
-           	return FALSE;
+           	return false;
         }else{
             return $wpec_ash[$internal_name];
         }
