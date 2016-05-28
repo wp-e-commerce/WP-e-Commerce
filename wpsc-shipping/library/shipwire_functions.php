@@ -331,9 +331,8 @@ class WPSC_Shipwire {
 	/**
 	 * Hooks into to checkout process. Sends order to shipwire on successful checkout
 	 *
-	 * @param type $object
-	 * @param type $sessionid
-	 * @param type $display
+	 * @param integer $log_id Purchase Log ID
+	 *
 	 * @since 3.8.9
 	 * @return type
 	 */
