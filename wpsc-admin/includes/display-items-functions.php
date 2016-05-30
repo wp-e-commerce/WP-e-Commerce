@@ -930,7 +930,7 @@ function wpsc_product_gallery( $post ) {
 	$output .= '</p>';
 
 	// include a nonce for verification
-	$output .= wp_nonce_field( 'wpec_product_gallery_nonce', 'wpec_product_gallery_nonce', false, false );
+	$output .= wp_nonce_field( 'wpsc_product_gallery_nonce', 'wpsc_product_gallery_nonce', false, false );
 
 	// echo the gallery output
 	echo $output;
