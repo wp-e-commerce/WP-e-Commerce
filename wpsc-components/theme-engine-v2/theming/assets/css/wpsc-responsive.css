@@ -226,17 +226,17 @@ Media Queries
   .wpsc-column-6,
   .wpsc-column-5,
   .wpsc-column-4 {
-    width: 30.833%; }
-
-  .wpsc-list .wpsc-page-main-store .wpsc-thumbnail-wrapper,
-  .wpsc-list .wpsc-page-main-store .wpsc-product-summary {
-    display: block;
-    float: none;
-    width: 100%; } }
+    width: 30.833%; } }
 @media (max-width: 550px) {
   .wpsc-column-6,
   .wpsc-column-5,
   .wpsc-column-4,
   .wpsc-column-3,
   .wpsc-column-2 {
+    width: 100%; }
+
+  .wpsc-list .wpsc-page-main-store .wpsc-thumbnail-wrapper,
+  .wpsc-list .wpsc-page-main-store .wpsc-product-summary {
+    display: block;
+    float: none;
     width: 100%; } }
