@@ -27,11 +27,11 @@ Media Queries
 		width: $full-width;
 	}
 	.wpsc-list {
-		.wpsc-page-main-store .wpsc-thumbnail-wrapper,
+		.wpsc-thumbnail-wrapper,
 		.wpsc-page-main-store .wpsc-product-summary {
 			display: block;
 			float: none;
-			width: 100%;
-		}
+			width: $full-width;
+		}	
 	}
 }
