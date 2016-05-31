@@ -502,6 +502,12 @@ add_filter(
 
 function wpsc_add_products_per_row_class( $classes ) {
 
+	$layout = wpsc_get_option( 'layout' );
+
+	if ( 'grid' !== $layout ) {
+		return $classes;
+	}
+
 	$rows = wpsc_get_option( 'products_per_row' );
 
 	$classes[] = 'wpsc-column-' . $rows;
