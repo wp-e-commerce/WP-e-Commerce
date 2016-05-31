@@ -18,18 +18,7 @@
 .wpsc-cart-cell.quantity:before,
 .wpsc-cart-cell.item-total:before {
 	font-weight: $bold;
-}
-.wpsc-cart-cell.items:before {
-	content: 'Product Description: ';
-}
-.wpsc-cart-cell.unit-price:before {
-	content: 'Unit Price: ';
-}
-.wpsc-cart-cell.quantity:before {
-	content: 'Quantity: ';
-}
-.wpsc-cart-cell.item-total:before {
-	content: 'Item Total: ';
+	content: attr(data-title);
 }
 .wpsc-cart-quantity-input {
 	width: 50%;
