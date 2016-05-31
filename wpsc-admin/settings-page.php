@@ -512,7 +512,7 @@ final class WPSC_Settings_Page {
 				<h2 id="wpsc-settings-page-title">
 					<?php esc_html_e( 'Store Settings', 'wp-e-commerce' ); ?>
 					<?php
-						if ( current_user_can( 'customize' ) ) :
+						if ( current_user_can( 'customize' ) && '2.0' == get_option( 'wpsc_get_active_theme_engine' ) ) :
 							printf(
 							' <a class="page-title-action hide-if-no-customize" href="%1$s">%2$s</a>',
 							esc_url( add_query_arg( array(

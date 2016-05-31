@@ -124,19 +124,8 @@ Shopping Cart
   .quantity.wpsc-cart-cell-header:before,
   .wpsc-cart-cell.item-total:before,
   .item-total.wpsc-cart-cell-header:before {
-    font-weight: 600; }
-
-  .wpsc-cart-cell.items:before, .items.wpsc-cart-cell-header:before {
-    content: 'Product Description: '; }
-
-  .wpsc-cart-cell.unit-price:before, .unit-price.wpsc-cart-cell-header:before {
-    content: 'Unit Price: '; }
-
-  .wpsc-cart-cell.quantity:before, .quantity.wpsc-cart-cell-header:before {
-    content: 'Quantity: '; }
-
-  .wpsc-cart-cell.item-total:before, .item-total.wpsc-cart-cell-header:before {
-    content: 'Item Total: '; }
+    font-weight: 600;
+    content: attr(data-title); }
 
   .wpsc-cart-quantity-input {
     width: 50%; } }
@@ -164,15 +153,8 @@ Shopping Cart
   .widget .quantity.wpsc-cart-cell-header:before,
   .widget .wpsc-cart-cell.item-total:before,
   .widget .item-total.wpsc-cart-cell-header:before {
-    font-weight: 600; }
-  .widget .wpsc-cart-cell.items:before, .widget .items.wpsc-cart-cell-header:before {
-    content: 'Product Description: '; }
-  .widget .wpsc-cart-cell.unit-price:before, .widget .unit-price.wpsc-cart-cell-header:before {
-    content: 'Unit Price: '; }
-  .widget .wpsc-cart-cell.quantity:before, .widget .quantity.wpsc-cart-cell-header:before {
-    content: 'Quantity: '; }
-  .widget .wpsc-cart-cell.item-total:before, .widget .item-total.wpsc-cart-cell-header:before {
-    content: 'Item Total: '; }
+    font-weight: 600;
+    content: attr(data-title); }
   .widget .wpsc-cart-quantity-input {
     width: 50%; }
 
@@ -209,19 +191,8 @@ Media Queries
   .quantity.wpsc-cart-cell-header:before,
   .wpsc-cart-cell.item-total:before,
   .item-total.wpsc-cart-cell-header:before {
-    font-weight: 600; }
-
-  .wpsc-cart-cell.items:before, .items.wpsc-cart-cell-header:before {
-    content: 'Product Description: '; }
-
-  .wpsc-cart-cell.unit-price:before, .unit-price.wpsc-cart-cell-header:before {
-    content: 'Unit Price: '; }
-
-  .wpsc-cart-cell.quantity:before, .quantity.wpsc-cart-cell-header:before {
-    content: 'Quantity: '; }
-
-  .wpsc-cart-cell.item-total:before, .item-total.wpsc-cart-cell-header:before {
-    content: 'Item Total: '; }
+    font-weight: 600;
+    content: attr(data-title); }
 
   .wpsc-cart-quantity-input {
     width: 50%; }

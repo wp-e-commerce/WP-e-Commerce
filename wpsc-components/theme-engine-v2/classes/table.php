@@ -10,30 +10,32 @@ class WPSC_Table {
 	public function print_column_headers() {
 		foreach ( $this->columns as $name => $title ) {
 			$class = str_replace( '_', '-', $name );
-			echo "<div class='wpsc-cart-cell-header {$class}' scope='col'>" . esc_html( $title ) . "</div>";
+			echo "<div class='wpsc-cart-cell-header {$class}' data-title='" . esc_attr( $title ) . "'>" . esc_html( $title ) . "</div>";
 		}
 	}
 
 	public function display_rows() {
 
-		foreach ( $this->items as $key => $item ) {
-			echo '<div class="wpsc-cart-item">';
-			foreach( array_keys( $this->columns ) as $column ) {
-				$class = str_replace( '_', '-', $column );
-				echo '<div class="wpsc-cart-cell ' . $class . '">';
-				$callback = "column_{$column}";
+        foreach ( $this->items as $key => $item ) {
+            $cart_class = isset( $item->product_id ) ? ' wpsc-cart-item-' . $item->product_id : '';
 
-				if ( is_callable( array( $this, "column_{$column}") ) ) {
-					$this->$callback( $item, $key );
-				} else {
-					$this->column_default( $item, $key, $column );
-				}
+            echo '<div class="wpsc-cart-item'. $cart_class .'">';
+            foreach ( $this->columns as $column => $title ) {
+                $class = str_replace( '_', '-', $column );
+                echo '<div class="wpsc-cart-cell ' . $class . '" data-title="' . sprintf( _x( '%s: ', 'The cart column title', 'wp-e-commerce' ), $title ) . '">';
+                $callback = "column_{$column}";
 
-				echo '</div>';
-			}
-			echo '</div>';
-		}
-	}
+                if ( is_callable( array( $this, "column_{$column}") ) ) {
+                    $this->$callback( $item, $key );
+                } else {
+                    $this->column_default( $item, $key, $column );
+                }
+
+                echo '</div>';
+            }
+            echo '</div>';
+        }
+    }
 
 	protected function before_table() {
 		// subclass should override this
