@@ -26,10 +26,8 @@ function _wpsc_te2_register_scripts() {
 		_wpsc_enqueue_and_localize_script( $handle, $script_data );
 	}
 
-	if ( $enqueued ) {
-		// Output our namespace.
-		?><script type='text/javascript'>/* <![CDATA[ */window.WPSC = window.WPSC || {};/* ]]> */</script><?php
-	}
+	// Output our namespace.
+	?><script type='text/javascript'>/* <![CDATA[ */window.WPSC = window.WPSC || {};/* ]]> */</script><?php
 
 	do_action( 'wpsc_register_scripts' );
 	do_action( 'wpsc_enqueue_scripts' );

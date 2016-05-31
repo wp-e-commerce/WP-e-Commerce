@@ -252,8 +252,10 @@ class wpsc_merchant {
 		global $wpdb;
 
 		$messages = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
-		if ( ! is_array( $messages ) )
+
+		if ( ! is_array( $messages ) ) {
 			$messages = array();
+		}
 
 		$messages[] = $error_message;
 		wpsc_update_customer_meta( 'checkout_misc_error_messages', $messages );

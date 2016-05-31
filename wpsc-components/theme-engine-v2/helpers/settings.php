@@ -18,6 +18,11 @@ add_filter(
 );
 
 add_filter(
+	'pre_option_shopping_cart_url',
+	'_wpsc_te2_filter_option_shopping_cart_url'
+);
+
+add_filter(
 	'option_wpsc_category_base_slug',
 	'_wpsc_te2_filter_category_base_slug'
 );
@@ -67,11 +72,26 @@ function wpsc_update_option( $option_name, $value ) {
  * @access private
  *
  * @since  0.1
- * @param  string $option Value of the 'transact_url' option
  * @return string The new transaction result URL
  */
-function _wpsc_te2_filter_option_transact_url( $value ) {
+function _wpsc_te2_filter_option_transact_url() {
 	return wpsc_get_checkout_url( 'results' );
+}
+
+/**
+ * The 'shopping_cart_url' option is still used by other components outside of theme
+ * engine (such as payment gateways). To ensure compatibility, we need to point
+ * this option to the last step of the checkout process.
+ *
+ * Action hook: 'pre_option_shopping_cart_url'.
+ *
+ * @access private
+ *
+ * @since  0.1
+ * @return string The new shopping cart URL
+ */
+function _wpsc_te2_filter_option_shopping_cart_url() {
+	return wpsc_get_checkout_url( 'payment' );
 }
 
 /**

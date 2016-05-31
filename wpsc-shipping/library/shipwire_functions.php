@@ -60,10 +60,12 @@ class WPSC_Shipwire {
 		if ( ! self::is_active() )
 			return;
 
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			self::set_posted_properties();
 
-		add_action( 'wpsc_transaction_results_shutdown', array( $this, 'shipwire_on_checkout' ), 10, 3 );
+		}
+
+		add_action( 'wpsc_update_purchase_log_status', array( $this, 'shipwire_on_checkout' ), 10, 3 );
 
 		//Hooks into ajax handler for Inventory Sync and Tracking API.  Handler is run upon clicking "Update Tracking and Inventory" in Shipping Settings
 		add_action( 'wp_ajax_sync_shipwire_products', array( $this, 'sync_products' ) );
@@ -328,15 +330,21 @@ class WPSC_Shipwire {
 
 	/**
 	 * Hooks into to checkout process. Sends order to shipwire on successful checkout
-	 * @param type $object
-	 * @param type $sessionid
-	 * @param type $display
+	 *
+	 * @param integer $log_id Purchase Log ID
+	 *
 	 * @since 3.8.9
 	 * @return type
 	 */
-	public function shipwire_on_checkout( $purchase_log_object, $sessionid, $display ) {
-		global $wpdb;
-		self::process_order_request( $purchase_log_object->get( 'id' ) );
+	public function shipwire_on_checkout( $log_id ) {
+
+		$log = new WPSC_Purchase_Log( $log_id );
+
+		if ( ! $log->is_transaction_completed() ) {
+			return false;
+		}
+
+		self::process_order_request( $log_id );
 	}
 
 	/**
@@ -495,7 +503,7 @@ class WPSC_Shipwire {
 	 * @since 3.8.9
 	 * @return string
 	 */
-	public function get_cache_key() {
+	public static function get_cache_key() {
 		global $wpsc_cart;
 
 		if ( ! is_object( $wpsc_cart ) || empty( $wpsc_cart->cart_items ) )

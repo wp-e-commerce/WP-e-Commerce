@@ -241,6 +241,15 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			$purchase_log = new WPSC_Purchase_Log( $purchase_log_id );
 		} else {
 			$purchase_log = new WPSC_Purchase_Log();
+
+			$purchase_log->set( array(
+				'user_ID'        => get_current_user_id(),
+				'date'           => time(),
+				'plugin_version' => WPSC_VERSION,
+				'statusno'       => '0',
+			) );
+
+			$purchase_log->save();
 		}
 
 		return $purchase_log;
@@ -255,13 +264,9 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		wpsc_update_customer_meta( 'checkout_session_id', $sessionid );
 
 		$purchase_log->set( array(
-			'user_ID'        => get_current_user_id(),
-			'date'           => time(),
-			'plugin_version' => WPSC_VERSION,
-			'statusno'       => '0',
 			'sessionid'      => $sessionid,
-			'discount_value'   => $wpsc_cart->coupons_amount,
-			'discount_data'    => $wpsc_cart->coupons_name,
+			'discount_value' => $wpsc_cart->coupons_amount,
+			'discount_data'  => $wpsc_cart->coupons_name,
 		) );
 
 		$form   = WPSC_Checkout_Form::get();
@@ -317,7 +322,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$purchase_log->save();
 
 		//Check to ensure purchase log row was inserted successfully
-		if(is_null($purchase_log->get( 'id' ))) {
+		if ( is_null( $purchase_log->get( 'id' ) ) ) {
 			$this->message_collection->add(
 				__( 'A database error occurred while processing your request.', 'wp-e-commerce' ),
 				'error'

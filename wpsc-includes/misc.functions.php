@@ -144,7 +144,7 @@ function wpsc_set_aioseop_keywords( $data ) {
 		$product_id = $wpdb->get_var( "SELECT `product_id` FROM `" . WPSC_TABLE_PRODUCTMETA . "` WHERE `meta_key` IN ( 'url_name' ) AND `meta_value` IN ( '{$wp_query->query_vars['product_url_name']}' ) ORDER BY `id` DESC LIMIT 1" );
 
 		$replacement_data = '';
-		$replacement_data_array = array( );
+		$replacement_data_array = array();
 		if ( $aioseop_options['aiosp_use_categories'] ) {
 			$category_list = $wpdb->get_col( "SELECT `categories`.`name` FROM `" . WPSC_TABLE_ITEM_CATEGORY_ASSOC . "` AS `assoc` , `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` AS `categories` WHERE `assoc`.`product_id` IN ('{$product_id}') AND `assoc`.`category_id` = `categories`.`id` AND `categories`.`active` IN('1')" );
 			$replacement_data_array += $category_list;
@@ -325,15 +325,15 @@ function nzshpcrt_display_preview_image() {
 					// Create temp resized image
 					$bgcolor_default = apply_filters( 'wpsc_preview_image_bgcolor', array( 255, 255, 255 ) );
 					$temp_img = ImageCreateTrueColor( $temp_w, $temp_h );
-					$bgcolor = ImageColorAllocate( $temp_img, $bgcolor_default[0], $bgcolor_default[1], $bgcolor_default[2] ) ;
+					$bgcolor = ImageColorAllocate( $temp_img, $bgcolor_default[0], $bgcolor_default[1], $bgcolor_default[2] );
 					ImageFilledRectangle( $temp_img, 0, 0, $temp_w, $temp_h, $bgcolor );
-					ImageAlphaBlending( $temp_img, TRUE );
+					ImageAlphaBlending( $temp_img, true );
 					ImageCopyResampled( $temp_img, $src_img, 0, 0, 0, 0, $temp_w, $temp_h, $source_w, $source_h );
 
 					$dst_img = ImageCreateTrueColor( $width, $height );
 					$bgcolor = ImageColorAllocate( $dst_img, $bgcolor_default[0], $bgcolor_default[1], $bgcolor_default[2] );
 					ImageFilledRectangle( $dst_img, 0, 0, $width, $height, $bgcolor );
-					ImageAlphaBlending( $dst_img, TRUE );
+					ImageAlphaBlending( $dst_img, true );
 
 					// X & Y Offset to crop image properly
 					if ( $temp_w < $width ) {
@@ -504,7 +504,7 @@ function wpsc_readfile_chunked( $filename, $retbytes = true ) {
  * Retrieve the list of tags for a product.
  *
  * Compatibility layer for themes and plugins. Also an easy layer of abstraction
- * away from the complexity of the taxonomy layer. Copied from the Wordpress posts code
+ * away from the complexity of the taxonomy layer. Copied from the WordPress posts code
  *
  * @since 3.8.0
  *
@@ -514,7 +514,7 @@ function wpsc_readfile_chunked( $filename, $retbytes = true ) {
  * @param array $args Optional. Overwrite the defaults.
  * @return array
  */
-function wp_get_product_tags( $product_id = 0, $args = array( ) ) {
+function wp_get_product_tags( $product_id = 0, $args = array() ) {
 	$product_id = (int)$product_id;
 
 	$defaults = array( 'fields' => 'ids' );
@@ -538,7 +538,7 @@ function wp_get_product_tags( $product_id = 0, $args = array( ) ) {
  * @param array $args Optional. Overwrite the defaults.
  * @return array
  */
-function wp_get_product_categories( $product_id = 0, $args = array( ) ) {
+function wp_get_product_categories( $product_id = 0, $args = array() ) {
 	$product_id = (int)$product_id;
 
 	$defaults = array( 'fields' => 'ids' );
@@ -560,7 +560,7 @@ function wp_get_product_categories( $product_id = 0, $args = array( ) ) {
  * @param array $post_categories Optional. List of categories.
  * @return bool|mixed
  */
-function wp_set_product_categories( $product_id, $post_categories = array( ) ) {
+function wp_set_product_categories( $product_id, $post_categories = array() ) {
 	$product_id = (int)$product_id;
 	// If $post_categories isn't already an array, make it one:
 	if ( !is_array( $post_categories ) || 0 == count( $post_categories ) || empty( $post_categories ) ) {
@@ -594,7 +594,7 @@ function get_the_product_category( $id ) {
 	if ( !empty( $categories ) )
 		usort( $categories, '_usort_terms_by_name' );
 	else
-		$categories = array( );
+		$categories = array();
 
 	foreach ( (array)array_keys( $categories ) as $key ) {
 		_make_cat_compat( $categories[$key] );
@@ -622,7 +622,7 @@ function wpsc_check_memory_limit() {
 		$freeMemory = $memory_limit - memory_get_usage();
 
 		// build the test sizes
-		$sizes = array( );
+		$sizes = array();
 		$sizes[] = array( 'width' => 800, 'height' => 600 );
 		$sizes[] = array( 'width' => 1024, 'height' => 768 );
 		$sizes[] = array( 'width' => 1280, 'height' => 960 );  // 1MP
@@ -869,7 +869,7 @@ function _wpsc_doing_it_wrong( $function, $message, $version ) {
 
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'wpsc_doing_it_wrong_trigger_error', true ) ) {
-		$version =   is_null( $version )
+		$version = is_null( $version )
 		           ? ''
 		           : sprintf( __( '(This message was added in WP eCommerce version %s.)', 'wp-e-commerce' ), $version );
 		$message .= ' ' . __( 'Please see <a href="http://codex.wordpress.org/Debugging_in_WordPress">Debugging in WordPress</a> for more information.', 'wp-e-commerce' );
@@ -1061,5 +1061,3 @@ function _wpsc_get_transient( $transient )  {
 function _wpsc_delete_transient( $transient )  {
 	return delete_transient( $transient );
 }
-
-
