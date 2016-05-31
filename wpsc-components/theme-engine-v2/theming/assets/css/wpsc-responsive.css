@@ -180,8 +180,8 @@ Shopping Cart
 Media Queries
 *****************/
 @media (max-width: 960px) {
-  .wpsc-column-6,
-  .wpsc-column-5 {
+  .wpsc-grid .wpsc-column-6,
+  .wpsc-grid .wpsc-column-5 {
     width: 22.5%; } }
 @media (max-width: 700px) {
   /* Mobile and Sidebar Cart Styling */
@@ -226,16 +226,16 @@ Media Queries
   .wpsc-cart-quantity-input {
     width: 50%; }
 
-  .wpsc-column-6,
-  .wpsc-column-5,
-  .wpsc-column-4 {
+  .wpsc-grid .wpsc-column-6,
+  .wpsc-grid .wpsc-column-5,
+  .wpsc-grid .wpsc-column-4 {
     width: 30.833%; } }
 @media (max-width: 550px) {
-  .wpsc-column-6,
-  .wpsc-column-5,
-  .wpsc-column-4,
-  .wpsc-column-3,
-  .wpsc-column-2 {
+  .wpsc-grid .wpsc-column-6,
+  .wpsc-grid .wpsc-column-5,
+  .wpsc-grid .wpsc-column-4,
+  .wpsc-grid .wpsc-column-3,
+  .wpsc-grid .wpsc-column-2 {
     width: 100%; }
 
   .wpsc-list .wpsc-thumbnail-wrapper,
