@@ -1,3 +1,4 @@
+/*global ajaxurl, WPSC_Term_List_Levels, validateForm, tb_remove, alert, setUserSetting, wpsc_adminL10n, typenow, adminpage */
 (function($){
 	/**
 	 * Wrapper for $.post. Takes care of the 'wpsc_action' and 'action' data arguments.
@@ -7,8 +8,8 @@
 	 * @param  {function} handler Response handler
 	 */
 	$.wpsc_post = function(data, handler) {
-		data['wpsc_action'] = data['action'];
-		data['action'] = 'wpsc_ajax';
+		data.wpsc_action = data.action;
+		data.action      = 'wpsc_ajax';
 
 		return $.post( ajaxurl, data, handler, 'json' );
 	};
@@ -21,87 +22,93 @@
 	 * @param  {function} handler Response handler
 	 */
 	$.wpsc_get = function(data, handler) {
-		data['wpsc_action'] = data['action'];
-		data['action'] = 'wpsc_ajax';
+		data.wpsc_action = data.action;
+		data.action = 'wpsc_ajax';
 
 		return $.get( ajaxurl, data, handler, 'json' );
 	};
 
-	if( pagenow == 'edit-wpsc_product_category' ) {
-		function category_sort(e, ui){
-			var order = $(this).sortable('toArray'),
-				data = {
-				action: 'category_sort_order',
-				sort_order: order,
-				parent_id: 0
-			};
+	var pagenow = pagenow || '';
 
-			jQuery.post( ajaxurl, data );
+	function category_sort(){
+		var order = $(this).sortable('toArray'),
+			data = {
+			action: 'category_sort_order',
+			sort_order: order,
+			parent_id: 0
+		};
+
+		jQuery.post( ajaxurl, data );
+	}
+
+	var submit_handlers = [];
+
+	var disable_ajax_submit = function() {
+		var t = $('#submit');
+
+		if ( t.data( 'events' ) ) {
+			submit_handlers = t.data('events').click;
 		}
 
-		var submit_handlers = [];
+		t.off( 'click' );
 
-		var disable_ajax_submit = function() {
-			var t = $('#submit');
-
-			if (t.data('events'))
-				submit_handlers = t.data('events').click;
-			t.off('click');
-			t.on('click', function() {
-				var form = $(this).parents('form');
-				if (! validateForm( form ) )
-					return false;
-			});
-		};
-
-		var restore_ajax_submit = function() {
-			var t = $('#submit');
-			t.off('click');
-			$.each(submit_handlers, function(index, obj) {
-				t.on('click', obj.handler);
-			});
-		};
-
-		$(function(){
-			if ( 'undefined' === typeof WPSC_Term_List_Levels ) {
-				return;
+		t.on('click', function() {
+			var form = $(this).parents('form');
+			if ( ! validateForm( form ) ) {
+				return false;
 			}
+		});
+	};
 
-			var table = $('body.edit-tags-php .wp-list-table');
-			table.find('tbody tr').each(function(){
-				var t = $(this),
-					id = t.attr('id').replace(/[^0-9]+/g, '');
-				t.data('level', WPSC_Term_List_Levels[id]);
-				t.data('id', id);
-			});
-			table.wpsc_sortable_table({
-				stop : category_sort
-			});
+	var restore_ajax_submit = function() {
+		var t = $('#submit');
+		t.off('click');
+		$.each(submit_handlers, function(index, obj) {
+			t.on('click', obj.handler);
+		});
+	};
 
-			$('#edittag').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
-			$('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
+	$(function(){
 
-			$('[name="image"]').on('change', function() {
-				var t = $(this);
+		if ( 'undefined' === typeof WPSC_Term_List_Levels || pagenow !== 'edit-wpsc_product_category' ) {
+			return;
+		}
 
-				if (t.val())
-					disable_ajax_submit();
-				else
-					restore_ajax_submit();
-			});
+		var table = $('body.edit-tags-php .wp-list-table');
+		table.find('tbody tr').each(function(){
+			var t = $(this),
+				id = t.attr('id').replace(/[^0-9]+/g, '');
+			t.data('level', WPSC_Term_List_Levels[id]);
+			t.data('id', id);
+		});
+		table.wpsc_sortable_table({
+			stop : category_sort
 		});
 
-		$(function() {
-			$('.wpsc_select_all').click(function(){
-				$('input:checkbox', $(this).parent().siblings('.multiple-select') ).each(function(){ this.checked = true; });
-				return false;
-			});
-			$('.wpsc_select_none').click(function(){
-				$('input:checkbox', $(this).parent().siblings('.multiple-select') ).each(function(){ this.checked = false; });
-				return false;
-			});
+		$('#edittag').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
+		$('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
+
+		$('[name="image"]').on('change', function() {
+			var t = $(this);
+
+			if ( t.val() ) {
+				disable_ajax_submit();
+			} else {
+				restore_ajax_submit();
+			}
 		});
-	}
+	});
+
+	$(function() {
+		$('.wpsc_select_all').click(function(){
+			$('input:checkbox', $(this).parent().siblings('.multiple-select') ).each(function(){ this.checked = true; });
+			return false;
+		});
+		$('.wpsc_select_none').click(function(){
+			$('input:checkbox', $(this).parent().siblings('.multiple-select') ).each(function(){ this.checked = false; });
+			return false;
+		});
+	});
 
 	$(document).on( 'click', 'form input.prdfil', function(){
 		var t = $(this);
@@ -111,7 +118,8 @@
 			nonce : t.data('nonce'),
 			action : 'upload_product_file'
 		};
-		var products = jQuery(this).parent("form.product_upload").find('input').serializeArray();
+
+		var products = jQuery(this).parent( 'form.product_upload' ).find( 'input' ).serializeArray();
 
 		for (var index in products) {
 			post_data['select_product_file[]'].push(products[index].value);
@@ -120,7 +128,7 @@
 		jQuery.wpsc_post(post_data, function(response){
 			tb_remove();
 			if (! response.is_successful) {
-				alert(response.error.messages.join("\n"));
+				alert(response.error.messages.join( ' ' ));
 				return;
 			}
 			jQuery('#wpsc_product_download_forms .select_product_file tbody').append(response.obj.content).
@@ -142,7 +150,7 @@
 			},
 			response_handler = function(response) {
 				if (! response.is_successful) {
-					alert(response.error.messages.join("\n"));
+					alert(response.error.messages.join( ' ' ));
 					return;
 				}
 
@@ -175,11 +183,11 @@ jQuery(document).ready(function($){
 			product_gallery_post_id: $(this).parent().parent().find('.product_gallery_post_id').val(),
 			wpsc_gallery_nonce_check: $('.nonce_class').val()
 		};
-		$.post(ajaxurl, product_gallery_image_data, function(response){});
+		$.post(ajaxurl, product_gallery_image_data, function(){});
 		$(this).parent().parent().fadeOut( 'slow' );
 	});
 
-	$( document ).on( 'wp-collapse-menu', function( event, state ) {
+	$( document ).on( 'wp-collapse-menu', function() {
 
 	    if ( $( 'body' ).hasClass( 'folded' ) ) {
 	        $( 'body' ).removeClass( 'folded' );
@@ -203,7 +211,7 @@ jQuery(document).ready(function($){
 		wpsc_push_v2t( '#stock_limit_quantity', '#wpsc_product_stock_metabox_live_title > p > span' );
 	});
 
-	jQuery( 'em.wpsc_metabox_live_title' ).each( function( i, v ) {
+	jQuery( 'em.wpsc_metabox_live_title' ).each( function() {
 		var $em = jQuery( this ), $parent = $em.parents( 'div.postbox' ), $h3 = $parent.find( 'h3' );
 		$em.appendTo( $h3 );
 
@@ -212,6 +220,7 @@ jQuery(document).ready(function($){
 	/* 	Coupon edit functionality */
 	jQuery('.modify_coupon').hide();
 	jQuery('.wpsc_edit_coupon').click(function(){
+		var id;
 		id = jQuery(this).attr('rel');
 		id = 'coupon_box_'+id;
 		if(jQuery('#'+id).hasClass('displaynone')){
@@ -223,8 +232,8 @@ jQuery(document).ready(function($){
 		}
 
 	});
-	jQuery("form[name='add_coupon']").submit(function() {
-		var title = jQuery("form[name='add_coupon'] input[name='add_coupon_code']").val();
+	jQuery('form[name="add_coupon"]').submit(function() {
+		var title = jQuery('form[name="add_coupon"] input[name="add_coupon_code"]').val();
 		if ( title === '' ) {
 			jQuery('<div id="notice" class="error"><p>' + wpsc_adminL10n.empty_coupon + '</p></div>').insertAfter('div.wrap > h2').delay(2500).hide(350);
 			return false;
@@ -277,7 +286,7 @@ jQuery(document).ready(function($){
 	// Add new row to rate table
 	jQuery( '.wpsc-quantity-discounts' ).on( 'click', '.add_level', function( e ) {
 		jQuery( this ).siblings( 'table' ).show();
-		added = jQuery( '.wpsc-quantity-discounts tbody' ).append( qtyRowTemplate.clone() );
+		jQuery( '.wpsc-quantity-discounts tbody' ).append( qtyRowTemplate.clone() );
 		e.preventDefault();
 	});
 
@@ -296,7 +305,9 @@ jQuery(document).ready(function($){
 	As far as I can tell, WP provides no good way of unsetting elements in the bulk edit area...
 	tricky jQuery action will do for now....not ideal whatsoever, nor eternally stable.
 	*/
-	 if( pagenow == 'edit-wpsc-product' ) {
+	var pagenow = pagenow || '';
+
+	 if( pagenow === 'edit-wpsc-product' ) {
 		jQuery('.inline-edit-password-input').closest('.inline-edit-group').css('display', 'none');
 		var vcl = jQuery('.inline-edit-col input[name="tax_input[wpsc-variation][]"]').css('display', 'none');
 		vcl.each(function(){
@@ -308,10 +319,10 @@ jQuery(document).ready(function($){
 		jQuery('.inline-edit-col select[name=post_parent]').parent().css('display', 'none');
 		jQuery('.inline-edit-status').parent().css('display', 'none');
 	}
-		if( wpsc_adminL10n.dragndrop_set == "true" && typenow == "wpsc-product" && adminpage == "edit-php" ) {
+		if ( wpsc_adminL10n.dragndrop_set === 'true' && typenow === 'wpsc-product' && adminpage === 'edit-php' ) {
 			// this makes the product list table sortable
 			jQuery('table.widefat:not(.tags)').sortable({
-		update: function(event, ui) {
+		update: function() {
 			var category_id = jQuery('select#wpsc_product_category option:selected').val(),
 				product_order = jQuery('table.widefat').sortable( 'toArray' ),
 				post_data = {
@@ -321,8 +332,9 @@ jQuery(document).ready(function($){
 					nonce : wpsc_adminL10n.save_product_order_nonce
 				};
 			jQuery.wpsc_post(post_data, function(response) {
-				if (! response.is_successful)
-					alert(response.error.messages.join("\n"));
+				if (! response.is_successful) {
+					alert(response.error.messages.join( ' ' ));
+				}
 			});
 		},
 		items: 'tbody tr',
@@ -351,31 +363,31 @@ jQuery(document).ready(function($){
 		toggle_stock_fields(limited_stock_checkbox.is(':checked'));
 	});
 
-	jQuery("#custom_tax_checkbox").on( 'click', function(){
+	jQuery( '#custom_tax_checkbox' ).on( 'click', function(){
 			if (this.checked) {
-				jQuery("#custom_tax").show();
+				jQuery('#custom_tax').show();
 			} else {
-				jQuery("#custom_tax input").val('');
-				jQuery("#custom_tax").hide();
+				jQuery('#custom_tax input').val('');
+				jQuery('#custom_tax').hide();
 			}
 	});
 
 	jQuery( '.wpsc_featured_product_toggle' ).on( 'click', function(){
-		post_values = {
+		var post_values = {
 			product_id : jQuery( this ).parents( 'tr' ).attr( 'id' ).replace( 'post-', '' ),
 			action : 'update_featured_product'
 		};
 
 		jQuery.post( ajaxurl, post_values, function( response ) {
-			jQuery( '.featured_toggle_' + response.product_id ).html( "<img class='" + response.color + "' src='" + response.image + "' alt='" + response.text + "' title='" + response.text + "' />" );
+			jQuery( '.featured_toggle_' + response.product_id ).html( '<img class="' + response.color + '" src="' + response.image + '" alt="' + response.text + '" title="' + response.text + '" />' );
 		}, 'json' );
 
 		return false;
 	});
 
-	jQuery( 'div.coupon-condition' ).each( function( index, value ){
+	jQuery( 'div.coupon-condition' ).each( function() {
 		if( jQuery( 'select[name="rules[operator][]"]', jQuery( this ) ).length !== 0 ) {
-			margin = jQuery( 'select.ruleprops', jQuery( this ) ).offset().left - jQuery( this ).offset().left;
+			var margin = jQuery( 'select.ruleprops', jQuery( this ) ).offset().left - jQuery( this ).offset().left;
 			margin = parseInt( margin, 10 ) - 1;
 			jQuery( 'select[name="rules[operator][]"]', jQuery( this ) ).css( 'margin-left', '-' + margin + 'px' );
 		}
@@ -383,23 +395,21 @@ jQuery(document).ready(function($){
 
 	jQuery( '.coupon-conditions' ).on( 'click', '.wpsc-button-plus', function() {
 		var parent = jQuery( this ).closest( '.coupon-condition' ),
-			conditions_count = jQuery( '.coupon-condition' ).size(),
-			prototype = parent.clone();
+			prototype = parent.clone(),
+			operator_box = jQuery('<select/>',{name:'rules[operator][]'});
 
-			var operator_box = jQuery('<select/>',{name:'rules[operator][]'});
-
-			if ( jQuery( 'select[name="rules[operator][]"]', prototype ).length === 0 ) {
-				operator_box.append("<option value='and'>" + wpsc_adminL10n.coupons_compare_and +  "</option>");
-				operator_box.append("<option value='or'>" + wpsc_adminL10n.coupons_compare_or + "</option>");
-				prototype.prepend(operator_box);
-			}
+		if ( jQuery( 'select[name="rules[operator][]"]', prototype ).length === 0 ) {
+			operator_box.append('<option value="and">' + wpsc_adminL10n.coupons_compare_and +  '</option>');
+			operator_box.append('<option value="or">' + wpsc_adminL10n.coupons_compare_or + '</option>');
+			prototype.prepend(operator_box);
+		}
 
 		prototype.find('select').val('');
 		prototype.find('input').val('');
 		prototype.css( { 'opacity' : '0' } );
 		prototype.insertAfter(parent);
 
-		margin = jQuery( 'select.ruleprops', prototype ).offset().left - prototype.offset().left;
+		var margin = jQuery( 'select.ruleprops', prototype ).offset().left - prototype.offset().left;
 		margin = parseInt( margin, 10 ) - 1;
 		prototype.find('input').focus();
 
@@ -413,10 +423,11 @@ jQuery(document).ready(function($){
 			conditions_count = jQuery('.coupon-condition').size(),
 			prototype;
 
-		if ( jQuery( this ).index( jQuery( '.wpsc-button-minus' ) ) === 0 )
+		if ( jQuery( this ).index( jQuery( '.wpsc-button-minus' ) ) === 0 ) {
 			return false;
+		}
 
-		if (conditions_count == 1) {
+		if ( conditions_count === 1 ) {
 			prototype = parent.clone();
 			prototype.find('select').val('');
 			prototype.find('input').val('');
@@ -476,7 +487,7 @@ jQuery(document).ready(function($){
 
 
 // Remove new/empty custom meta input row
-function wpsc_remove_empty_meta(caller){
+function wpsc_remove_empty_meta( caller ){
 	jQuery(caller).closest('tr').remove();
 
 	wpsc_update_product_details_metabox_live_title();
@@ -498,7 +509,7 @@ function wpsc_remove_custom_meta(caller, meta_id) {
 
 	var response_handler = function(response) {
 		if (! response.is_successful) {
-			alert(response.error.messages.join("\n"));
+			alert(response.error.messages.join( ' ' ));
 			return;
 		}
 		jQuery(caller).closest('tr').remove();
@@ -562,7 +573,9 @@ function wpsc_update_delivery_metabox_live_title(){
 }
 
 function wpsc_update_product_details_metabox_live_title(){
-	if (jQuery('#wpsc_product_details_forms').length <= 0) return;
+	if ( jQuery('#wpsc_product_details_forms').length <= 0 ){
+		return;
+	}
 
 	var number_of_photos = jQuery('#wpsc_product_gallery img').length;
 	var number_of_meta   = jQuery('#wpsc_product_meta_table tbody tr').not('.no-meta').length;
@@ -606,11 +619,11 @@ var prevElement = null;
 var prevOption = null;
 
 function hideOptionElement(id, option) {
-	if (prevOption == option) {
+	if (prevOption === option) {
 		return;
 	}
 	if (prevElement !== null) {
-		prevElement.style.display = "none";
+		prevElement.style.display = 'none';
 	}
 
 	if (id === null) {
@@ -623,22 +636,20 @@ function hideOptionElement(id, option) {
 }
 
 function hideelement(id) {
-	state = document.getElementById(id).style.display;
-	//alert(document.getElementById(id).style.display);
-	if(state != 'block') {
+	var state = document.getElementById(id).style.display;
+	if(state !== 'block') {
 		document.getElementById(id).style.display = 'block';
 	} else {
 		document.getElementById(id).style.display = 'none';
 	}
 }
 
-function getcurrency(id) {
+function getcurrency() {
 	//ajax.post("index.php",gercurrency,"wpsc_admin_action=change_currency&currencyid="+id);
 }
 
 function hideelement1(id, item_value) {
-	//alert(value);
-	if(item_value == 5) {
+	if(item_value === 5) {
 		jQuery(document.getElementById(id)).css('display', 'block');
 	} else {
 		jQuery(document.getElementById(id)).css('display', 'none');
@@ -647,7 +658,7 @@ function hideelement1(id, item_value) {
 
 function show_status_box(id,image_id) {
 	state = document.getElementById(id).style.display;
-	if(state != 'block') {
+	if(state !== 'block') {
 		document.getElementById(id).style.display = 'block';
 		document.getElementById(image_id).src =  wpsc_adminL10n.wpsc_core_images_url + '/icon_window_collapse.gif';
 	} else {

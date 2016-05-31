@@ -376,6 +376,7 @@ function _wpsc_filter_body_class( $classes ) {
 	$classes[] = 'wpsc-controller';
 	$classes[] = 'wpsc-' . _wpsc_get_current_controller_name();
 	$classes[] = 'wpsc-controller-' . _wpsc_get_current_controller_slug();
+	$classes[] = 'wpsc-' . wpsc_get_option( 'layout' );
 
 	return $classes;
 }
@@ -500,6 +501,12 @@ add_filter(
 );
 
 function wpsc_add_products_per_row_class( $classes ) {
+
+	$layout = wpsc_get_option( 'layout' );
+
+	if ( 'grid' !== $layout ) {
+		return $classes;
+	}
 
 	$rows = wpsc_get_option( 'products_per_row' );
 

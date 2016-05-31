@@ -18,6 +18,11 @@ function wpsc_validate_form( $form_args, &$validated_array = false ) {
 
 	foreach ( $form as $props ) {
 
+		// Handle custom fields.
+		if ( ! isset( $props['fields'] ) ) {
+			$props['fields'] = $props;
+		}
+
 		foreach ( $props['fields'] as $prop ) {
 			if ( empty( $prop['rules'] ) ) {
 				continue;
