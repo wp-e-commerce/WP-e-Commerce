@@ -117,9 +117,7 @@ Shopping Cart
   .item-total.wpsc-cart-cell-header {
     width: 100%; }
 
-  .wpsc-cart-cell.items:before, .items.wpsc-cart-cell-header:before,
-  .wpsc-cart-cell.unit-price:before,
-  .unit-price.wpsc-cart-cell-header:before,
+  .wpsc-cart-cell.unit-price:before, .unit-price.wpsc-cart-cell-header:before,
   .wpsc-cart-cell.quantity:before,
   .quantity.wpsc-cart-cell-header:before,
   .wpsc-cart-cell.item-total:before,
@@ -146,9 +144,7 @@ Shopping Cart
   .widget .wpsc-cart-cell.item-total,
   .widget .item-total.wpsc-cart-cell-header {
     width: 100%; }
-  .widget .wpsc-cart-cell.items:before, .widget .items.wpsc-cart-cell-header:before,
-  .widget .wpsc-cart-cell.unit-price:before,
-  .widget .unit-price.wpsc-cart-cell-header:before,
+  .widget .wpsc-cart-cell.unit-price:before, .widget .unit-price.wpsc-cart-cell-header:before,
   .widget .wpsc-cart-cell.quantity:before,
   .widget .quantity.wpsc-cart-cell-header:before,
   .widget .wpsc-cart-cell.item-total:before,
@@ -184,9 +180,7 @@ Media Queries
   .item-total.wpsc-cart-cell-header {
     width: 100%; }
 
-  .wpsc-cart-cell.items:before, .items.wpsc-cart-cell-header:before,
-  .wpsc-cart-cell.unit-price:before,
-  .unit-price.wpsc-cart-cell-header:before,
+  .wpsc-cart-cell.unit-price:before, .unit-price.wpsc-cart-cell-header:before,
   .wpsc-cart-cell.quantity:before,
   .quantity.wpsc-cart-cell-header:before,
   .wpsc-cart-cell.item-total:before,
