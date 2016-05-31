@@ -1,0 +1,37 @@
+/*******************
+Opinionated Styles
+********************/
+
+/* Product Grid */
+.wpsc-thumbnail-wrapper {
+    margin-bottom: 16px;
+}
+.wpsc-product {
+	font-size: $base-font;
+	text-align: center;
+}
+.wpsc-column-2 {
+	.wpsc-product-title {
+		font-size: $font-size-col-2;
+	}
+}
+.wpsc-column-3 {
+	.wpsc-product-title {
+		font-size: $font-size-col-3;
+	}
+}
+.wpsc-column-4 {
+	.wpsc-product-title {
+		font-size: $font-size-col-4;
+	}
+}
+.wpsc-column-5 {
+	.wpsc-product-title {
+		font-size: $font-size-col-5;
+	}
+}
+.wpsc-column-6 {
+	.wpsc-product-title {
+		font-size: $font-size-col-6;
+	}
+}
