@@ -17,4 +17,7 @@ node_modules
 .svn
 .git
 release.sh
+
+.sass-cache
+*.codekit
 *.css.map

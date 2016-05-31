@@ -26,4 +26,12 @@ Media Queries
 	.wpsc-column-2 {
 		width: $full-width;
 	}
+	.wpsc-list {
+		.wpsc-thumbnail-wrapper,
+		.wpsc-page-main-store .wpsc-product-summary {
+			display: block;
+			float: none;
+			width: $full-width;
+		}	
+	}
 }

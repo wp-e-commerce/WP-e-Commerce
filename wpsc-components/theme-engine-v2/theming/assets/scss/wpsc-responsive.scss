@@ -1,5 +1,13 @@
 @import 'partials/variables';
 
+.wpsc-grid {
+	@import 'partials/product-grid';
+}
+
+.wpsc-list {
+	@import 'partials/product-list';
+}
+
 @import 'partials/shopping-cart';
 
 @import 'partials/media-queries'
