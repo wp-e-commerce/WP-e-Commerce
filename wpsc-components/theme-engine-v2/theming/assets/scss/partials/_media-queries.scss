@@ -16,6 +16,15 @@ Media Queries
 	.wpsc-column-4 {
 		width: $columns-3;
 	}
+	.wpsc-list {
+		.wpsc-page-main-store .wpsc-thumbnail-wrapper,
+		.wpsc-page-main-store .wpsc-product-summary {
+			display: block;
+			float: none;
+			width: 100%;
+		}
+		
+	}
 }
 
 @media (max-width: 550px) {
