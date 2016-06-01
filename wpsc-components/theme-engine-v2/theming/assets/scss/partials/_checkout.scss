@@ -1,0 +1,30 @@
+/*******************
+Checkout
+********************/
+.wpsc-field-textfield input {
+    width: 90%;
+}
+
+#wpsc-checkout-form-shipping {
+    margin-left: 5%;
+}
+
+fieldset{
+	width: 47.5%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#wpsc-checkout-form {
+    text-align: right;
+}
+.wpsc-shipping-method {
+	@extend #wpsc-checkout-form;
+}
+.wpsc-payment-title {
+	@extend #wpsc-checkout-form;
+}
+
+.wpsc-order-preview {
+    margin-bottom: 1.5em;
+}

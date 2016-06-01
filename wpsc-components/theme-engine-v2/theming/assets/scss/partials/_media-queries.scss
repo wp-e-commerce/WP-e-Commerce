@@ -40,4 +40,13 @@ Media Queries
 			width: $full-width;
 		}	
 	}
+	.wpsc-checkout {
+		fieldset{
+			min-width: 100%;
+		    display: block;
+		}
+		#wpsc-checkout-form-shipping {
+			margin-left: 0;
+		}
+	}
 }

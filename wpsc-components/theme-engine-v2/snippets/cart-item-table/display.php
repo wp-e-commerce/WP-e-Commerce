@@ -25,7 +25,7 @@
 		</div>
 
 		<?php endif; ?>
-		<div class="wpsc-row wpsc-cart-aggregate wpsc-cart-subtotal-row">
+		<div class="wpsc-cart-aggregate wpsc-cart-subtotal-row">
 			<div class="wpsc-cart-cell-header" scope="row">
 				<?php esc_html_e( 'Subtotal:' ,'wp-e-commerce' ); ?><br />
 			</div>
@@ -33,7 +33,7 @@
 		</div>
 
 <?php 	if ( wpsc_is_shipping_enabled() ): ?>
-		<div <?php $this->show_shipping_style(); ?> class="wpsc-row wpsc-cart-aggregate wpsc-cart-shipping-row">
+		<div <?php $this->show_shipping_style(); ?> class="wpsc-cart-aggregate wpsc-cart-shipping-row">
 			<div class="wpsc-cart-cell-header" scope="row">
 				<?php esc_html_e( 'Shipping:' ,'wp-e-commerce' ); ?><br />
 			</div>
@@ -43,7 +43,7 @@
 		</div>
 <?php 	endif; ?>
 <?php 	if ( wpsc_is_tax_enabled() ): ?>
-		<div <?php $this->show_tax_style(); ?> class="wpsc-row wpsc-cart-aggregate wpsc-cart-tax-row">
+		<div <?php $this->show_tax_style(); ?> class="wpsc-cart-aggregate wpsc-cart-tax-row">
 			<div class="wpsc-cart-cell-header" scope="row">
 				<?php esc_html_e( 'Tax:' ,'wp-e-commerce' ); ?><br />
 			</div>
@@ -57,7 +57,7 @@
 		</div>
 <?php 	endif; ?>
 	<?php 	if ( wpsc_uses_coupons() && $this->get_total_discount() > 0 ) : ?>
-	<div class="wpsc-row wpsc-cart-aggregate wpsc-cart-discount-row">
+	<div class="wpsc-cart-aggregate wpsc-cart-discount-row">
 			<div class="wpsc-cart-cell-header" scope="row">
 				<?php esc_html_e( 'Discount:' ,'wp-e-commerce' ); ?><br />
 			</div>
@@ -66,7 +66,7 @@
 			</div>
 		</div>
 	<?php 	endif; ?>
-		<div <?php $this->show_total_style(); ?> class="wpsc-row wpsc-cart-aggregate wpsc-cart-total-row">
+		<div <?php $this->show_total_style(); ?> class="wpsc-cart-aggregate wpsc-cart-total-row">
 			<div class="wpsc-cart-cell-header" scope="row">
 				<?php esc_html_e( 'Total:' ,'wp-e-commerce' ); ?><br />
 			</div>

@@ -92,7 +92,7 @@ Shopping Cart
 .wpsc-cart-footer {
   margin-right: 0; }
   .wpsc-cart-footer .wpsc-cart-cell, .wpsc-cart-footer .wpsc-cart-cell-header,
-  .wpsc-cart-footer .wpsc-row {
+  .wpsc-cart-footer .wpsc-cart-aggregate {
     text-align: right;
     margin-right: 0; }
   .wpsc-cart-footer .wpsc-row {
@@ -154,6 +154,23 @@ Shopping Cart
   .widget .wpsc-cart-quantity-input {
     width: 50%; }
 
+.wpsc-checkout {
+  /*******************
+  Checkout
+  ********************/ }
+  .wpsc-checkout .wpsc-field-textfield input {
+    width: 90%; }
+  .wpsc-checkout #wpsc-checkout-form-shipping {
+    margin-left: 5%; }
+  .wpsc-checkout fieldset {
+    width: 47.5%;
+    display: inline-block;
+    vertical-align: top; }
+  .wpsc-checkout #wpsc-checkout-form, .wpsc-checkout .wpsc-shipping-method, .wpsc-checkout .wpsc-payment-title {
+    text-align: right; }
+  .wpsc-checkout .wpsc-order-preview {
+    margin-bottom: 1.5em; }
+
 /*****************
 Media Queries
 *****************/
@@ -207,4 +224,10 @@ Media Queries
   .wpsc-list .wpsc-page-main-store .wpsc-product-summary {
     display: block;
     float: none;
-    width: 100%; } }
+    width: 100%; }
+
+  .wpsc-checkout fieldset {
+    min-width: 100%;
+    display: block; }
+  .wpsc-checkout #wpsc-checkout-form-shipping {
+    margin-left: 0; } }

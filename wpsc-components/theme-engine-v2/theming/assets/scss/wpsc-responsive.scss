@@ -10,4 +10,8 @@
 
 @import 'partials/shopping-cart';
 
-@import 'partials/media-queries'
+.wpsc-checkout {
+	@import 'partials/checkout';
+}
+
+@import 'partials/media-queries';
