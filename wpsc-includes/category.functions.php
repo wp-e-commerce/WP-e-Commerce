@@ -108,9 +108,13 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 
 add_filter( 'get_terms', 'wpsc_get_terms_category_sort_filter', 10, 3 );
 
-function wpsc_get_terms_variation_sort_filter( $terms ) {
+function wpsc_get_terms_variation_sort_filter( $terms, $tax, $qv, $q ) {
 	$new_terms = array();
-	$unsorted = array();
+	$unsorted  = array();
+
+	if ( ! is_array( $terms ) ) {
+		return $terms;
+	}
 
 	foreach ( $terms as $term ) {
 		if ( ! is_object( $term ) ) {
@@ -146,7 +150,7 @@ function wpsc_get_terms_variation_sort_filter( $terms ) {
 	return array_values( $new_terms );
 }
 
-add_filter( 'get_terms','wpsc_get_terms_variation_sort_filter' );
+add_filter( 'get_terms','wpsc_get_terms_variation_sort_filter', 10, 4 );
 
 /**
  * Hide Subcategory Products in Parent Category
