@@ -278,10 +278,7 @@ endif;
       */
       ?>
 
-    <?php if(wpsc_show_user_login_form()):
-          global $current_user;
-          get_currentuserinfo();   ?>
-
+    <?php if(wpsc_show_user_login_form()): ?>
 		<div class="wpsc_registration_form">
 
 	        <fieldset class='wpsc_registration_form wpsc_right_registration'>
