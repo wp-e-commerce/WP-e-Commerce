@@ -97,6 +97,19 @@ Shopping Cart
     margin-right: 0; }
   .wpsc-cart-footer .wpsc-row {
     border: 0; }
+  .wpsc-cart-footer .wpsc-cart-actions-row {
+    text-align: justify;
+    padding-bottom: 0; }
+  .wpsc-cart-footer .wpsc-cart-actions-row:after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 0; }
+  .wpsc-cart-footer .apply-coupon {
+    vertical-align: top;
+    text-align: left; }
+  .wpsc-cart-footer .update-quantity {
+    text-align: right; }
 
 @media (max-width: 700px) {
   /* Mobile and Sidebar Cart Styling */
@@ -158,17 +171,17 @@ Shopping Cart
   /*******************
   Checkout
   ********************/ }
-  .wpsc-checkout .wpsc-field-textfield input {
+  .wpsc-checkout .entry-content .wpsc-field-textfield input {
     width: 90%; }
-  .wpsc-checkout #wpsc-checkout-form-shipping {
+  .wpsc-checkout .entry-content #wpsc-checkout-form-shipping {
     margin-left: 5%; }
-  .wpsc-checkout fieldset {
+  .wpsc-checkout .entry-content fieldset {
     width: 47.5%;
     display: inline-block;
     vertical-align: top; }
-  .wpsc-checkout #wpsc-checkout-form, .wpsc-checkout .wpsc-shipping-method, .wpsc-checkout .wpsc-payment-title {
+  .wpsc-checkout .entry-content .wpsc-field-wpsc_shipping_option, .wpsc-checkout .entry-content .wpsc-shipping-method, .wpsc-checkout .entry-content .wpsc-payment-method, .wpsc-checkout .entry-content #wpsc-checkout-form .wpsc-form-actions {
     text-align: right; }
-  .wpsc-checkout .wpsc-order-preview {
+  .wpsc-checkout .entry-content .wpsc-order-preview {
     margin-bottom: 1.5em; }
 
 /*****************
@@ -226,8 +239,8 @@ Media Queries
     float: none;
     width: 100%; }
 
-  .wpsc-checkout fieldset {
+  .wpsc-checkout .entry-content fieldset {
     min-width: 100%;
     display: block; }
-  .wpsc-checkout #wpsc-checkout-form-shipping {
+  .wpsc-checkout .entry-content #wpsc-checkout-form-shipping {
     margin-left: 0; } }

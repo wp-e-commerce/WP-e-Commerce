@@ -41,12 +41,14 @@ Media Queries
 		}	
 	}
 	.wpsc-checkout {
-		fieldset{
-			min-width: 100%;
-		    display: block;
-		}
-		#wpsc-checkout-form-shipping {
-			margin-left: 0;
+		.entry-content {
+			fieldset{
+				min-width: 100%;
+			    display: block;
+			}
+			#wpsc-checkout-form-shipping {
+			    margin-left: 0;
+			}
 		}
 	}
 }
