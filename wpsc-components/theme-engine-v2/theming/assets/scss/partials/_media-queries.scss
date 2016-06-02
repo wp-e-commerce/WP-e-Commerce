@@ -12,7 +12,6 @@ Media Queries
 }
 
 @media (max-width: 700px) {
-	@import 'mobile-and-sidebar';
 	.wpsc-grid {	
 		.wpsc-column-6,
 		.wpsc-column-5,
@@ -23,6 +22,7 @@ Media Queries
 }
 
 @media (max-width: 550px) {
+	@import 'mobile-and-sidebar';
 	.wpsc-grid {
 		.wpsc-column-6,
 		.wpsc-column-5,
@@ -40,6 +40,21 @@ Media Queries
 			width: $full-width;
 		}	
 	}
+	.wpsc-cart-footer {
+		.wpsc-cart-actions-row {
+			text-align: right;
+			padding-bottom: 20px;
+		}
+		.wpsc-cart-actions-row:after {
+			text-align: right;
+			display: block;
+		    width: 100%;
+		    height: 0;
+		}
+		.update-quantity {
+			display: inline-block;
+		}
+	}
 	.wpsc-checkout {
 		.entry-content {
 			fieldset{
@@ -48,6 +63,11 @@ Media Queries
 			}
 			#wpsc-checkout-form-shipping {
 			    margin-left: 0;
+			}
+
+			.apply-coupon {
+				margin-bottom: 20px;
+				text-align: right;
 			}
 		}
 	}

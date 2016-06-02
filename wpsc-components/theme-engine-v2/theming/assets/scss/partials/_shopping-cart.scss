@@ -5,13 +5,11 @@ Shopping Cart
 .wpsc-cart-table {
 	width: 100%;
 }
-.wpsc-cart-item {
+.wpsc-cart-item,
+.wpsc-row {
     display: block;
     padding: 20px 0;
     border-top: $cart_border;
-}
-.wpsc-row {
-	@extend .wpsc-cart-item;
 }
 .wpsc-cart-item:last-of-type {
 	border-bottom: $cart_border;
@@ -63,6 +61,7 @@ Shopping Cart
 	@extend .wpsc-cart-cell.item-total;
 }
 
+/* Cart Footer */
 .wpsc-cart-footer {
 	margin-right: 0;
 	.wpsc-cart-cell,
@@ -90,10 +89,6 @@ Shopping Cart
 	.update-quantity {
 	    text-align: right;
 	}
-}
-
-@media (max-width: 700px) {
-	@import 'mobile-and-sidebar';
 }
 
 /* Sidebar Cart */

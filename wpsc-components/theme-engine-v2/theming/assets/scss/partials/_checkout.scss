@@ -16,7 +16,7 @@ Checkout
 	    vertical-align: top;
 	}
 	.wpsc-field-wpsc_shipping_option{
-		text-align: right;
+		text-align: left;
 	}
 	.wpsc-shipping-method {
 		@extend .wpsc-field-wpsc_shipping_option;
@@ -30,5 +30,10 @@ Checkout
 
 	.wpsc-order-preview {
 	    margin-bottom: 1.5em;
+	    padding-bottom: 1.5em;
+	    border-bottom: $cart_border;
+	}
+	.wpsc-cart-quantity-input {
+		width: 40px;
 	}
 }
