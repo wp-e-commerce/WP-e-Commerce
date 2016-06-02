@@ -55,6 +55,17 @@ Media Queries
 		.update-quantity {
 			display: inline-block;
 		}
+		.wpsc-cart-aggregate{
+			text-align: left;
+		}
+		.apply-coupon {
+			margin-bottom: 20px;
+			text-align: right;
+		}
+		.wpsc-cart-cell,
+		.wpsc-row {
+			text-align: left;
+		}
 	}
 	.wpsc-checkout {
 		.entry-content {
@@ -64,11 +75,6 @@ Media Queries
 			}
 			#wpsc-checkout-form-shipping {
 			    margin-left: 0;
-			}
-
-			.apply-coupon {
-				margin-bottom: 20px;
-				text-align: right;
 			}
 		}
 	}

@@ -9,10 +9,10 @@ Shopping Cart
 .wpsc-row {
     display: block;
     padding: 20px 0;
-    border-top: $cart_border;
+    border-bottom: $cart_border;
 }
-.wpsc-cart-item:last-of-type {
-	border-bottom: $cart_border;
+.wpsc-cart-header {
+	border-top: $cart_border;
 }
 .wpsc-cart-cell-header {
     font-size: 12px;
@@ -63,7 +63,7 @@ Shopping Cart
 
 /* Cart Footer */
 .wpsc-cart-footer {
-	margin-right: 0;
+	@extend .wpsc-cart-item;
 	.wpsc-cart-cell,
 	.wpsc-cart-aggregate {
 		text-align: right;
@@ -71,6 +71,7 @@ Shopping Cart
 	}
 	.wpsc-row {
 		border: 0;
+		padding: 0;
 	}
 	.wpsc-cart-actions-row {
 	    text-align: justify;
