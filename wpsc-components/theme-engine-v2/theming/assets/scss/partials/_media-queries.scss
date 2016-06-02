@@ -12,7 +12,6 @@ Media Queries
 }
 
 @media (max-width: 700px) {
-	@import 'mobile-and-sidebar';
 	.wpsc-grid {	
 		.wpsc-column-6,
 		.wpsc-column-5,
@@ -23,6 +22,7 @@ Media Queries
 }
 
 @media (max-width: 550px) {
+	@import 'mobile-and-sidebar';
 	.wpsc-grid {
 		.wpsc-column-6,
 		.wpsc-column-5,
@@ -40,5 +40,11 @@ Media Queries
 			float: none;
 			width: $full-width;
 		}	
+	}
+	.wpsc-cart-footer {
+		.wpsc-cart-cell,
+		.wpsc-row {
+			text-align: left;
+		}
 	}
 }

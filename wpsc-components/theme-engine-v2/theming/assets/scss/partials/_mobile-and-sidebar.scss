@@ -1,8 +1,10 @@
 /* Mobile and Sidebar Cart Styling */
-
-.wpsc-cart-cell, .wpsc-cart-cell-header {
-  	display: block;
+.wpsc-cart-body {
+	.wpsc-cart-cell, .wpsc-cart-cell-header {
+	  	display: block;
+	}
 }
+
 .wpsc-cart-header {
 	display: none;
 }
