@@ -538,8 +538,6 @@ function wpsc_product_no_thumbnail_image( $size = false, $attr = '' ) {
 	if ( is_string( $size ) ) {
 		$wp_size = $size;
 
-		var_dump($size);
-
 		if ( in_array( $size, array( 'single', 'taxonomy', 'cart', 'archive' ) ) ) {
 			$wp_size = 'wpsc_product_' . $size . '_thumbnail';
 		}
@@ -566,8 +564,6 @@ function wpsc_product_no_thumbnail_image( $size = false, $attr = '' ) {
 
 	echo $html;
 }
-
-// var_dump(wpsc_product_no_thumbnail_image());
 
 /**
  * Output the description of the current product in the loop.
