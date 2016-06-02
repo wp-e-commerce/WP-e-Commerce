@@ -5,13 +5,11 @@ Shopping Cart
 .wpsc-cart-table {
 	width: 100%;
 }
-.wpsc-cart-item {
+.wpsc-cart-item,
+.wpsc-row {
     display: block;
     padding: 20px 0;
     border-bottom: $cart_border;
-}
-.wpsc-row {
-	@extend .wpsc-cart-item;
 }
 .wpsc-cart-header {
 	border-top: $cart_border;
@@ -63,16 +61,34 @@ Shopping Cart
 	@extend .wpsc-cart-cell.item-total;
 }
 
+/* Cart Footer */
 .wpsc-cart-footer {
 	@extend .wpsc-cart-item;
 	.wpsc-cart-cell,
-	.wpsc-row {
+	.wpsc-cart-aggregate {
 		text-align: right;
 		margin-right: 0;
 	}
 	.wpsc-row {
 		border: 0;
 		padding: 0;
+	}
+	.wpsc-cart-actions-row {
+	    text-align: justify;
+	    padding-bottom: 0;
+    }
+    .wpsc-cart-actions-row:after {
+    	content: '';
+	    display: inline-block;
+	    width: 100%;
+	    height: 0;
+    }
+	.apply-coupon {
+		vertical-align: top;
+		text-align: left;	
+	}
+	.update-quantity {
+	    text-align: right;
 	}
 }
 

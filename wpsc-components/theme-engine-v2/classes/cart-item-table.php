@@ -199,7 +199,7 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 	}
 
 	protected function column_quantity( $item, $key ) {
-		echo $item->quantity;
+		wpsc_form_input( "quantity[{$key}]", $item->quantity, array( 'class' => 'wpsc-cart-quantity-input', 'id' => "wpsc-cart-quantity-input-{$key}" ) );
 	}
 
 	protected function column_unit_price( $item ) {

@@ -1,0 +1,37 @@
+/*******************
+Checkout
+********************/
+.entry-content {
+	.wpsc-field-textfield input {
+    width: 90%;
+	}
+
+	#wpsc-checkout-form-shipping {
+	    margin-left: 5%;
+	}
+
+	fieldset{
+		width: 47.5%;
+	    display: inline-block;
+	    vertical-align: top;
+	}
+	.wpsc-field-wpsc_shipping_option{
+		text-align: left;
+	}
+	.wpsc-shipping-method {
+		@extend .wpsc-field-wpsc_shipping_option;
+	}
+	.wpsc-payment-method {
+		@extend .wpsc-field-wpsc_shipping_option;
+	}
+	#wpsc-checkout-form .wpsc-form-actions {
+	    @extend .wpsc-field-wpsc_shipping_option;
+	}
+
+	.wpsc-order-preview {
+	    margin-bottom: 1.5em;
+	}
+	.wpsc-cart-quantity-input {
+		width: 40px;
+	}
+}

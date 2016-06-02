@@ -21,7 +21,7 @@
 	<div class="wpsc-payment-method">
 
 		<?php if ( ! wpsc_is_free_cart() ) : ?>
-			<p><strong class="wpsc-large"><?php esc_html_e( 'Payment Method', 'wp-e-commerce' ); ?></strong></p>
+			<p class="wpsc-payment-title"><strong class="wpsc-large"><?php esc_html_e( 'Payment Method', 'wp-e-commerce' ); ?></strong></p>
 		<?php endif; ?>
 
 		<?php wpsc_checkout_payment_method_form(); ?>
