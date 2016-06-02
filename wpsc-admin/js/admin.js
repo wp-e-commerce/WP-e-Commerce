@@ -487,7 +487,7 @@ jQuery(document).ready(function($){
 
 
 // Remove new/empty custom meta input row
-function wpsc_remove_empty_meta( caller ){
+function wpsc_remove_empty_meta( caller ) {
 	jQuery(caller).closest('tr').remove();
 
 	wpsc_update_product_details_metabox_live_title();
@@ -657,6 +657,7 @@ function hideelement1(id, item_value) {
 }
 
 function show_status_box(id,image_id) {
+	var state;
 	state = document.getElementById(id).style.display;
 	if(state !== 'block') {
 		document.getElementById(id).style.display = 'block';

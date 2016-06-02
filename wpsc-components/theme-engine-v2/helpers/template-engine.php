@@ -376,7 +376,10 @@ function _wpsc_filter_body_class( $classes ) {
 	$classes[] = 'wpsc-controller';
 	$classes[] = 'wpsc-' . _wpsc_get_current_controller_name();
 	$classes[] = 'wpsc-controller-' . _wpsc_get_current_controller_slug();
-	$classes[] = 'wpsc-' . wpsc_get_option( 'layout' );
+
+	if ( wpsc_is_store() || wpsc_is_store_front_page() || wpsc_is_product_category() || wpsc_is_product_tag() ) {
+		$classes[] = 'wpsc-' . wpsc_get_option( 'layout' );
+	}
 
 	return $classes;
 }
