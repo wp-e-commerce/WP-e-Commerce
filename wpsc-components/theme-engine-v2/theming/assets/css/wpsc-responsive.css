@@ -83,12 +83,10 @@ Shopping Cart
 .wpsc-cart-cell:last-of-type, .wpsc-cart-cell-header:last-of-type, .wpsc-cart-cell-header:last-of-type {
   margin-right: 0; }
 
-.express-checkout-button {
+.top .express-checkout-button, .top .wpsc-begin-checkout {
   display: inline-block;
   vertical-align: bottom; }
-
-.wpsc-begin-checkout {
-  display: inline-block;
+.top .wpsc-begin-checkout {
   margin-left: 20px; }
 
 /* Single Product Row */
@@ -232,6 +230,15 @@ Media Queries
     display: block;
     float: none;
     width: 100%; }
+
+  .top .wpsc-begin-checkout,
+  .top .express-checkout-button,
+  .top .wpsc-begin-checkout {
+    display: block;
+    text-align: left;
+    margin-left: 0; }
+  .top .express-checkout-button, .top .wpsc-begin-checkout {
+    margin-bottom: 20px; }
 
   .wpsc-cart-footer .wpsc-cart-actions-row {
     text-align: right;

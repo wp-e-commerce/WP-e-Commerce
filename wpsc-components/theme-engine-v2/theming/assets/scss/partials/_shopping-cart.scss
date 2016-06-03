@@ -28,13 +28,16 @@ Shopping Cart
 .wpsc-cart-cell:last-of-type, .wpsc-cart-cell-header:last-of-type {
     margin-right: 0;
 }
-.express-checkout-button {
-	display: inline-block;
-    vertical-align: bottom;
-}
-.wpsc-begin-checkout {
-    display: inline-block;
-    margin-left: 20px;
+
+.top {
+	.express-checkout-button {
+		display: inline-block;
+	    vertical-align: bottom;
+	}
+	.wpsc-begin-checkout {
+	    @extend .express-checkout-button;
+	    margin-left: 20px;
+	}
 }
 
 /* Single Product Row */

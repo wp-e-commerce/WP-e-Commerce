@@ -41,6 +41,17 @@ Media Queries
 			width: $full-width;
 		}	
 	}
+	.top {
+		.wpsc-begin-checkout,
+		.express-checkout-button {
+			display: block;
+			text-align: left;
+			margin-left: 0;
+		}	
+		.express-checkout-button {
+			margin-bottom: 20px;
+		}
+	}
 	.wpsc-cart-footer {
 		.wpsc-cart-actions-row {
 			text-align: right;
