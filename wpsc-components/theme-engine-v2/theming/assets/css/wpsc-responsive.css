@@ -83,6 +83,14 @@ Shopping Cart
 .wpsc-cart-cell:last-of-type, .wpsc-cart-cell-header:last-of-type, .wpsc-cart-cell-header:last-of-type {
   margin-right: 0; }
 
+.express-checkout-button {
+  display: inline-block;
+  vertical-align: bottom; }
+
+.wpsc-begin-checkout {
+  display: inline-block;
+  margin-left: 20px; }
+
 /* Single Product Row */
 .wpsc-cart-cell.image, .image.wpsc-cart-cell-header {
   width: 20%; }
