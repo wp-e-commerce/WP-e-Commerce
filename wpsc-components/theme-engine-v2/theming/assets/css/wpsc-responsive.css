@@ -44,6 +44,7 @@ Variables
   .wpsc-list .wpsc-thumbnail-wrapper {
     display: inline-block; }
   .wpsc-list .wpsc-product-summary {
+<<<<<<< HEAD
     display: inline-block;
     float: right; }
 
@@ -54,6 +55,8 @@ Variables
   .wpsc-single .wpsc-thumbnail-wrapper {
     display: inline-block; }
   .wpsc-single .wpsc-product-summary {
+=======
+>>>>>>> d29a63003f81940a56950508d8afb2480d329963
     display: inline-block;
     float: right; }
 
