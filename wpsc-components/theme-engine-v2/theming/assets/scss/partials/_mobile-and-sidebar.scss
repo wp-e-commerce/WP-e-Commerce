@@ -1,8 +1,6 @@
-/* Mobile and Sidebar Cart Styling */
-.wpsc-cart-body {
-	.wpsc-cart-cell, .wpsc-cart-cell-header {
-	  	display: block;
-	}
+/* Mobile and Sidebar Table Styling */
+.wpsc-cart-cell, .wpsc-cart-cell-header {
+  	display: block;
 }
 
 .wpsc-cart-header {
@@ -10,7 +8,7 @@
 }
 
 
-$classes: image items unit-price quantity item-total;
+$classes: image items unit-price quantity item-total id date status tracking-id total;
 
 @each $class in $classes {
 	.wpsc-cart-cell.#{$class} {
@@ -18,7 +16,7 @@ $classes: image items unit-price quantity item-total;
 	}
 }
 
-$titles: unit-price quantity item-total;
+$titles: unit-price quantity item-total id date status tracking-id total;
 @each $title in $titles {
 	.wpsc-cart-cell.#{$title}:before {
 		font-weight: $bold;

@@ -1,0 +1,39 @@
+/**********************
+Accounts Page
+***********************/
+
+.wpsc-cart-cell.id {
+	width: $account_id_width;
+}
+.wpsc-cart-cell.date {
+	width: $account_date_width;
+}
+.wpsc-cart-cell.status {
+	width: $account_status_width;
+}
+.wpsc-cart-cell.tracking-id {
+	width: $account_tracking_width;
+}
+.wpsc-cart-cell.total {
+	width: $account_total_width;
+}
+
+.wpsc-cart-cell-header.id {
+	@extend .wpsc-cart-cell.id;	
+}
+.wpsc-cart-cell-header.date {
+	@extend .wpsc-cart-cell.date;	
+}
+.wpsc-cart-cell-header.status {
+	@extend .wpsc-cart-cell.status;	
+}
+.wpsc-cart-cell-header.tracking-id {
+	@extend .wpsc-cart-cell.tracking-id;	
+}
+.wpsc-cart-cell-header.total {
+	@extend .wpsc-cart-cell.total;	
+}
+
+.wpsc-customer-account-order-details p {
+    margin-bottom: 3px;
+}
