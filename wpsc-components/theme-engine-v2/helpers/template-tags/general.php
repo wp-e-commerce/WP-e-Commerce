@@ -540,14 +540,14 @@ function wpsc_customer_orders_pagination_count() {
 
 	if ( $controller->total_items > 1 ) {
 		if ( $from == $to ) {
-			$output = sprintf( __( 'Viewing product %1$s (of %2$s total)', 'wp-e-commerce' ), $from, $controller->total_items );
+			$output = sprintf( __( 'Viewing order %1$s (of %2$s total)', 'wp-e-commerce' ), $from, $controller->total_items );
 		} elseif ( $controller->total_pages === 1 ) {
-			$output = sprintf( __( 'Viewing %1$s products', 'wp-e-commerce' ), $controller->total_items );
+			$output = sprintf( __( 'Viewing %1$s orders', 'wp-e-commerce' ), $controller->total_items );
 		} else {
-			$output = sprintf( __( 'Viewing %1$s products - %2$s through %3$s (of %4$s total)', 'wp-e-commerce' ), $controller->count_items, $from, $to, $controller->total_items );
+			$output = sprintf( __( 'Viewing %1$s orders - %2$s through %3$s (of %4$s total)', 'wp-e-commerce' ), $controller->count_items, $from, $to, $controller->total_items );
 		}
 	} else {
-		$output = sprintf( __( 'Viewing %1$s product', 'wp-e-commerce' ), $controller->total_items );
+		$output = sprintf( __( 'Viewing %1$s order', 'wp-e-commerce' ), $controller->total_items );
 	}
 
 	// Filter and return
