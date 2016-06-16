@@ -46,7 +46,6 @@ Variables
   .wpsc-list .wpsc-thumbnail-wrapper {
     display: inline-block; }
   .wpsc-list .wpsc-product-summary {
-<<<<<<< HEAD
     display: inline-block;
     float: right; }
 
@@ -57,8 +56,6 @@ Variables
   .wpsc-single .wpsc-thumbnail-wrapper {
     display: inline-block; }
   .wpsc-single .wpsc-product-summary {
-=======
->>>>>>> d29a63003f81940a56950508d8afb2480d329963
     display: inline-block;
     float: right; }
 
@@ -391,6 +388,9 @@ Media Queries
     display: block;
     float: none;
     width: 100%; }
+
+  .wpsc-controller .wpsc-shopping-cart .wpsc-form-actions {
+    text-align: left; }
 
   .top .wpsc-begin-checkout,
   .top .express-checkout-button,

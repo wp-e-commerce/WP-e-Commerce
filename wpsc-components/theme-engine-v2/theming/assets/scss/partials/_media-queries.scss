@@ -65,6 +65,9 @@ Media Queries
 			width: $full-width;
 		}	
 	}
+	.wpsc-controller .wpsc-shopping-cart .wpsc-form-actions {
+		text-align: left;
+	}
 	.top {
 		.wpsc-begin-checkout,
 		.express-checkout-button {
