@@ -57,13 +57,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			return;
 		}
 
-		if ( 'top' == $context ) {
+		if ( 'bottom' == $context ) {
 			return;
 		}
 
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {
 			$url = $this->get_shortcut_url();
-			echo '<a href="'. esc_url( $url ) .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="' . __( 'Check out with PayPal', 'wp-e-commerce' ) . '" /></a>';
+			echo '<a class="express-checkout-button" href="'. esc_url( $url ) .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="' . __( 'Check out with PayPal', 'wp-e-commerce' ) . '" /></a>';
 		}
 	}
 
