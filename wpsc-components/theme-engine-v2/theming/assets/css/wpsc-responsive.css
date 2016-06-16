@@ -10,7 +10,11 @@ Variables
 .wpsc-grid {
   /**********************************
   Product Grid on Archive Store Pages 
-  **********************************/ }
+  **********************************/
+  /*******************
+  Opinionated Styles
+  ********************/
+  /* Typography */ }
   .wpsc-grid .wpsc-product-description {
     display: none; }
   .wpsc-grid #wpsc-products {
@@ -38,6 +42,21 @@ Variables
     width: 17.5%; }
   .wpsc-grid .wpsc-column-6 {
     width: 14.166%; }
+  .wpsc-grid .wpsc-product {
+    font-size: 16px;
+    text-align: center; }
+  .wpsc-grid .wpsc-column-2 .wpsc-product-title {
+    font-size: 2em; }
+  .wpsc-grid .wpsc-column-3 .wpsc-product-title {
+    font-size: 1.75em; }
+  .wpsc-grid .wpsc-column-4 .wpsc-product-title {
+    font-size: 1.5em; }
+  .wpsc-grid .wpsc-column-5 .wpsc-product-title {
+    font-size: 1.25em; }
+  .wpsc-grid .wpsc-column-6 .wpsc-product-title {
+    font-size: 1.15em; }
+  .wpsc-grid .wpsc-thumbnail-wrapper {
+    margin-bottom: 16px; }
 
 .wpsc-list {
   /*****************
