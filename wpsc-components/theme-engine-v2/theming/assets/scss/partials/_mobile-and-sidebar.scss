@@ -1,24 +1,27 @@
-/* Mobile and Sidebar Cart Styling */
-
+/* Mobile and Sidebar Table Styling */
 .wpsc-cart-cell, .wpsc-cart-cell-header {
   	display: block;
 }
+
 .wpsc-cart-header {
 	display: none;
 }
-.wpsc-cart-cell.image,
-.wpsc-cart-cell.items,
-.wpsc-cart-cell.unit-price,
-.wpsc-cart-cell.quantity,
-.wpsc-cart-cell.item-total {
-	width: 100%;
+
+
+$classes: image items unit-price quantity item-total id date status tracking-id total;
+
+@each $class in $classes {
+	.wpsc-cart-cell.#{$class} {
+    	width: 100%;
+	}
 }
-.wpsc-cart-cell.items:before,
-.wpsc-cart-cell.unit-price:before,
-.wpsc-cart-cell.quantity:before,
-.wpsc-cart-cell.item-total:before {
-	font-weight: $bold;
-	content: attr(data-title);
+
+$titles: unit-price quantity item-total id date status tracking-id total;
+@each $title in $titles {
+	.wpsc-cart-cell.#{$title}:before {
+		font-weight: $bold;
+		content: attr(data-title);
+	}
 }
 .wpsc-cart-quantity-input {
 	width: 50%;

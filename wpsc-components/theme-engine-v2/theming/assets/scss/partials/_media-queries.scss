@@ -12,7 +12,6 @@ Media Queries
 }
 
 @media (max-width: 700px) {
-	@import 'mobile-and-sidebar';
 	.wpsc-grid {	
 		.wpsc-column-6,
 		.wpsc-column-5,
@@ -20,9 +19,34 @@ Media Queries
 			width: $columns-3;
 		}
 	}
+
+	$classes: id date status tracking-id total;
+
+	@each $class in $classes {
+		.wpsc-cart-cell.#{$class} {
+	    	width: 100%;
+		}
+	}
+
+	$titles: id date status tracking-id total;
+	@each $title in $titles {
+		.wpsc-cart-cell.#{$title}:before {
+			font-weight: $bold;
+			content: attr(data-title);
+		}
+	}
+
+	.wpsc-customer-account-index {
+		.wpsc-cart-footer,
+		.wpsc-cart-header {
+			display: none;
+		}
+	}
 }
 
 @media (max-width: 550px) {
+	@import 'mobile-and-sidebar';
+
 	.wpsc-grid {
 		.wpsc-column-6,
 		.wpsc-column-5,
@@ -32,12 +56,81 @@ Media Queries
 			width: $full-width;
 		}
 	}
+	.wpsc-single,
 	.wpsc-list {
 		.wpsc-thumbnail-wrapper,
-		.wpsc-page-main-store .wpsc-product-summary {
+		.wpsc-product-summary {
 			display: block;
 			float: none;
 			width: $full-width;
 		}	
+	}
+	.wpsc-cart-footer {
+		.wpsc-cart-actions-row {
+			text-align: right;
+			padding-bottom: 20px;
+		}
+		.wpsc-cart-actions-row:after {
+			text-align: right;
+			display: block;
+		    width: 100%;
+		    height: 0;
+		}
+		.update-quantity {
+			display: inline-block;
+		}
+		.wpsc-cart-aggregate{
+			text-align: left;
+		}
+		.apply-coupon {
+			margin-bottom: 20px;
+			text-align: right;
+		}
+		.wpsc-cart-cell,
+		.wpsc-row {
+			text-align: left;
+		}
+	}
+	.wpsc-checkout {
+		.entry-content {
+			fieldset{
+				min-width: 100%;
+			    display: block;
+			}
+			#wpsc-checkout-form-shipping {
+			    margin-left: 0;
+			}
+		}
+	}
+
+	.wpsc-controller .wpsc-create-account-offer,
+	.wpsc-controller .wpsc-login-form-wrapper  {
+		float: none;
+		
+		width: 100%;
+	}
+	.wpsc-cart-cell.product,
+	.wpsc-cart-cell.contents {
+		width: 100%;
+	}
+
+	.wpsc-cart-cell.contents {
+		margin-top: 1em;
+	}
+
+	.wpsc-customer-account-digital-content .wpsc-cart-footer {
+		display: none;
+	}
+
+	.wpsc-controller .wpsc-tabs > li {
+		display: block;
+	}
+
+	.wpsc-controller .wpsc-tabs > .active > a {
+		border: 0;
+	}
+
+	.wpsc-tab-item {
+		padding: 5px 0;
 	}
 }

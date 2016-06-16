@@ -11,7 +11,6 @@ class WPSC_Cart_Item_Table_Widget_Form extends WPSC_Cart_Item_Table_Form {
 		$this->show_thumbnails   = false;
 		$this->show_coupon_field = false;
 
-		$this->columns['quantity'] = _x( 'Qty', 'quantity abbreviation', 'wp-e-commerce' );
 		unset( $this->columns['unit_price'] );
 	}
 
@@ -50,5 +49,9 @@ class WPSC_Cart_Item_Table_Widget_Form extends WPSC_Cart_Item_Table_Form {
 			</td>
 		</tr>
 		<?php
+	}
+
+	protected function column_quantity( $item, $key ) {
+		echo $item->quantity;
 	}
 }

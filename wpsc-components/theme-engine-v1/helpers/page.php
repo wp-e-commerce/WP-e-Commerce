@@ -386,25 +386,6 @@ function wpsc_enqueue_user_script_and_css() {
 	}
 }
 
-
-function wpsc_legacy_add_mp3_preview( $product_id = '', &$product_data ) {
-
- 	if ( defined( 'WPSC_MP3_MODULE_USES_HOOKS' ) || ! function_exists( 'listen_button' ) ) {
-		return;
-	}
-
-	global $wpdb;
-
-	if ( function_exists( 'listen_button' ) ) {
-		$file_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PRODUCT_FILES . "` WHERE `id` = %d LIMIT 1", $product_data['file'] ), ARRAY_A );
-		if ( $file_data != null ) {
-			echo listen_button( $file_data['idhash'], $file_data['id'] );
-		}
-	}
-}
-
-add_action( 'wpsc_product_before_description', 'wpsc_legacy_add_mp3_preview', 10, 2 );
-
 /**
  * Checks the category slug for a display type, if none set returns default
  * << May need reworking to be more specific to the taxonomy type >>

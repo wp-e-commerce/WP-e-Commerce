@@ -17,6 +17,6 @@
 	<div class="wpsc-order-preview">
 		<?php wpsc_checkout_order_preview(); ?>
 	</div>
-	<p><strong class="wpsc-large"><?php esc_html_e( 'Select a Shipping Method', 'wp-e-commerce' ); ?></strong></p>
+	<p class="wpsc-shipping-method"><strong class="wpsc-large"><?php esc_html_e( 'Select a Shipping Method', 'wp-e-commerce' ); ?></strong></p>
 	<?php wpsc_checkout_shipping_form(); ?>
 </div>

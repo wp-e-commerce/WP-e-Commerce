@@ -185,7 +185,7 @@ function wpsc_customizer_assets() {
 
     $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-    wp_enqueue_script( 'wpsc-customizer', wpsc_locate_asset_uri( 'js/customizer.js' ), array( 'customize-preview', 'jquery' ), WPSC_VERSION );
+    wp_enqueue_script( 'wpsc-customizer', wpsc_locate_asset_uri( 'js/customizer.js' ), array( 'jquery' ), WPSC_VERSION, true );
     wp_enqueue_style( 'wpsc-customizer' , wpsc_locate_asset_uri( "css/customizer{$suffix}.css" ), array(), WPSC_VERSION );
 }
 

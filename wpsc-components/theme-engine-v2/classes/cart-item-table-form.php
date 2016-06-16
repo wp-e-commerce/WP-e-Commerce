@@ -52,11 +52,9 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 
 	protected function tfoot_append() {
 		?>
-		<tr class="wpsc-cart-item-table-actions">
-			<td colspan="<?php echo count( $this->columns ); ?>">
+		<div class="wpsc-row wpsc-cart-item-table-actions">
 				<?php do_action( 'wpsc_cart_item_table_tfoot_actions' ); ?>
-			</td>
-		</tr>
+		</div>
 		<?php
 		parent::tfoot_append();
 	}
