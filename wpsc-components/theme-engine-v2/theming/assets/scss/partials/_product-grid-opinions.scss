@@ -2,10 +2,8 @@
 Opinionated Styles
 ********************/
 
-/* Product Grid */
-.wpsc-thumbnail-wrapper {
-    margin-bottom: 16px;
-}
+/* Typography */
+
 .wpsc-product {
 	font-size: $base-font;
 	text-align: center;
@@ -34,4 +32,8 @@ Opinionated Styles
 	.wpsc-product-title {
 		font-size: $font-size-col-6;
 	}
+}
+
+.wpsc-thumbnail-wrapper {
+    margin-bottom: 16px;
 }
