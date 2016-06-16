@@ -191,7 +191,7 @@ Shopping Cart
   Checkout
   ********************/ }
   .wpsc-checkout .entry-content .wpsc-field-textfield input {
-    width: 90%; }
+    width: 100%; }
   .wpsc-checkout .entry-content #wpsc-checkout-form-shipping {
     margin-left: 5%; }
   .wpsc-checkout .entry-content fieldset {
