@@ -43,6 +43,15 @@ Accounts Page
 	margin-right: $digital_margin;
 }
 
+.wpsc-customer-account-digital-content, 
+.wpsc-page-customer-account {
+	ul {
+		margin: 0 0 10px 0;
+		list-style-position: inside;
+		padding: 0;
+	}
+}
+
 .wpsc-cart-cell.contents {
 	width: $digital_content_width;
 }
@@ -60,6 +69,13 @@ Accounts Page
     text-align: center;
     margin-bottom: 1em;
 }
+
 .wpsc-digital-product-items li:only-of-type {
 	list-style: none;
+}
+
+.wpsc-customer-account-digital-content {
+	.wpsc-cart-header {
+		border-top: 0;
+	}
 }
