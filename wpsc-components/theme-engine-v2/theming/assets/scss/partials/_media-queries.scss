@@ -107,4 +107,14 @@ Media Queries
 		float: none;
 		width: 100%;
 	}
+	.wpsc-cart-cell.product,
+	.wpsc-cart-cell.contents {
+		width: 100%;
+	}
+	.wpsc-cart-cell.contents {
+		margin-top: 1em;
+	}
+	.wpsc-customer-account-digital-content .wpsc-cart-footer {
+		display: none;
+	}
 }

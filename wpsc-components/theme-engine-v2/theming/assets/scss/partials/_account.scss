@@ -37,3 +37,29 @@ Accounts Page
 .wpsc-customer-account-order-details p {
     margin-bottom: 3px;
 }
+
+.wpsc-cart-cell.product {
+	width: $digital_product_width;
+	margin-right: $digital_margin;
+}
+
+.wpsc-cart-cell.contents {
+	width: $digital_content_width;
+}
+
+.wpsc-cart-cell-header.product {
+	@extend .wpsc-cart-cell.product;
+}
+
+.wpsc-cart-cell-header.content {
+	@extend .wpsc-cart-cell.contents;
+}
+
+.wpsc-digital-product-title {
+    font-size: 1.35em;
+    text-align: center;
+    margin-bottom: 1em;
+}
+.wpsc-digital-product-items li:only-of-type {
+	list-style: none;
+}

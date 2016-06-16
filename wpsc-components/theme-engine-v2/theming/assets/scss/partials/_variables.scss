@@ -18,6 +18,8 @@ $cart_unit-price_width: 10%;
 $cart_quantity_width: 10%;
 $cart_item-total_width: 10%;
 
+$cart_border: 1px solid #ccc;
+
 /* Account Orders  */
 $account_id_width: 10%;
 $account_date_width: 20%;
@@ -25,7 +27,10 @@ $account_status_width: 20%;
 $account_tracking_width: 30%;
 $account_total_width: 10%;
 
-$cart_border: 1px solid #ccc;
+/* Digital Orders (Needs to add up to 100%) */
+$digital_product_width: 35%;
+$digital_content_width: 60%;
+$digital_margin: 5%;
 
 /*Product Grid*/
 $grid_margin: 2.5%;
