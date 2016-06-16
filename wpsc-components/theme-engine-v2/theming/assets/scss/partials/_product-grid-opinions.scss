@@ -33,7 +33,14 @@ Opinionated Styles
 		font-size: $font-size-col-6;
 	}
 }
-
 .wpsc-thumbnail-wrapper {
     margin-bottom: 16px;
+}
+
+/* Sale Info */
+.wpsc-field-quantity,
+.wpsc-old-price,
+.wpsc-you-save,
+.wpsc-field {
+	display: none;
 }

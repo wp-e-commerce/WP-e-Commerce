@@ -14,7 +14,8 @@ Variables
   /*******************
   Opinionated Styles
   ********************/
-  /* Typography */ }
+  /* Typography */
+  /* Sale Info */ }
   .wpsc-grid .wpsc-product-description {
     display: none; }
   .wpsc-grid #wpsc-products {
@@ -57,6 +58,11 @@ Variables
     font-size: 1.15em; }
   .wpsc-grid .wpsc-thumbnail-wrapper {
     margin-bottom: 16px; }
+  .wpsc-grid .wpsc-field-quantity,
+  .wpsc-grid .wpsc-old-price,
+  .wpsc-grid .wpsc-you-save,
+  .wpsc-grid .wpsc-field {
+    display: none; }
 
 .wpsc-list {
   /*****************
