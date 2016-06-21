@@ -15,7 +15,7 @@ Variables
   Opinionated Styles
   ********************/
   /* Typography */
-  /* Sale Info */
+  /* Variations and Quantity */
   /* Flexbox */ }
   .wpsc-grid .wpsc-product-description {
     display: none; }
@@ -60,7 +60,6 @@ Variables
   .wpsc-grid .wpsc-thumbnail-wrapper {
     margin-bottom: 16px; }
   .wpsc-grid .wpsc-field-quantity,
-  .wpsc-grid .wpsc-you-save,
   .wpsc-grid .wpsc-field {
     display: none; }
   .wpsc-grid #wpsc-products {
