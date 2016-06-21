@@ -39,7 +39,6 @@ Opinionated Styles
 
 /* Sale Info */
 .wpsc-field-quantity,
-.wpsc-old-price,
 .wpsc-you-save,
 .wpsc-field {
 	display: none;
@@ -54,13 +53,14 @@ Opinionated Styles
 	@include flexbox();
 	@include flex-direction(column);
 }
-
 .wpsc-product-summary {
 	@extend .wpsc-product;
 	@include justify-content(space-between);
 	height: 100%;
 }
 .wpsc-product-header {
+	@extend .wpsc-product;
+	@include justify-content(space-between);
     @include flex(1 0 auto);
 }
 
