@@ -71,7 +71,7 @@ Variables
   .wpsc-grid ins.wpsc-sale-price {
     background: initial;
     margin-left: 5px;
-    wrap: nowrap; }
+    white-space: nowrap; }
   .wpsc-grid #wpsc-products {
     display: -webkit-box;
     display: -moz-box;
