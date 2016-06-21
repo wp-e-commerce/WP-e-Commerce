@@ -49,18 +49,20 @@ Opinionated Styles
 	@include flexbox();
 	@include flex-wrap(wrap);
 }
-.wpsc-product {
+.wpsc-product,
+.wpsc-product-summary,
+.wpsc-product-header {
 	@include flexbox();
 	@include flex-direction(column);
 }
-.wpsc-product-summary {
-	@extend .wpsc-product;
+.wpsc-product-summary,
+.wpsc-product-header {
 	@include justify-content(space-between);
+}
+.wpsc-product-summary {
 	height: 100%;
 }
 .wpsc-product-header {
-	@extend .wpsc-product;
-	@include justify-content(space-between);
     @include flex(1 0 auto);
 }
 
