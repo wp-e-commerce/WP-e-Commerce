@@ -16,6 +16,7 @@ Variables
   ********************/
   /* Typography */
   /* Variations and Quantity */
+  /* Sale Info */
   /* Flexbox */ }
   .wpsc-grid .wpsc-product-description {
     display: none; }
@@ -62,6 +63,15 @@ Variables
   .wpsc-grid .wpsc-field-quantity,
   .wpsc-grid .wpsc-field {
     display: none; }
+  .wpsc-grid .wpsc-product-price br {
+    display: none; }
+  .wpsc-grid .wpsc-old-price {
+    font-size: .8em;
+    color: #666; }
+  .wpsc-grid ins.wpsc-sale-price {
+    background: initial;
+    margin-left: 5px;
+    wrap: nowrap; }
   .wpsc-grid #wpsc-products {
     display: -webkit-box;
     display: -moz-box;

@@ -43,6 +43,20 @@ Opinionated Styles
 	display: none;
 }
 
+/* Sale Info */
+.wpsc-product-price br {
+    display: none;
+}
+.wpsc-old-price {
+    font-size: .8em;
+    color: #666;
+}
+ins.wpsc-sale-price {
+    background: initial;
+    margin-left: 5px;
+    wrap: nowrap;
+}
+
 /* Flexbox */
 #wpsc-products {
 	@include flexbox();
