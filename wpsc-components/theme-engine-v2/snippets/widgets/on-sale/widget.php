@@ -39,7 +39,8 @@ if ( ! empty( $title ) )
 <?php 		if ( $instance['show_normal_price'] ): ?>
 			<li>
 				<ins class="wpsc-sale-price">
-					<strong><?php esc_html_e( 'Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_sale_price(); ?></span>
+					<span class="wpsc-sale"><?php esc_html_e( 'Sale', 'wp-e-commerce' ); ?>: </span>
+					<span class="wpsc-amount"><?php wpsc_product_sale_price(); ?></span>
 				</ins>
 			</li>
 <?php 		endif; ?>
