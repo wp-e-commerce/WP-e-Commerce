@@ -45,7 +45,7 @@
 					<strong><?php esc_html_e( 'You save', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_you_save(); ?></span>
 				</span>
 			<?php else: ?>
-				<strong><?php esc_html_e( 'Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount" itemprop="price"><?php wpsc_product_original_price(); ?></span>
+				<span class="wpsc-amount" itemprop="price"><?php wpsc_product_original_price(); ?></span>
 			<?php endif; ?>
 		</div>
 
