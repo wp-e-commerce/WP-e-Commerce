@@ -4777,16 +4777,6 @@ br.clear {
 	min-width: 50px;
 }
 
-.wpsc-controller .wpsc-add-to-cart-form {
-	padding-top: 19px;
-	margin-bottom: 20px;
-	border-top: 1px solid #eee;
-	border-top: 1px solid rgba(0, 0, 0, 0.05);
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-
 .wpsc-controller .wpsc-add-to-cart-form .wpsc-field > label {
 	width: auto;
 	text-align: left;
