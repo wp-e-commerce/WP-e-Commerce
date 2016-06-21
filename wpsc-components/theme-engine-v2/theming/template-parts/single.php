@@ -33,7 +33,9 @@
 			<meta itemprop="priceCurrency" content="<?php wpsc_base_country_code(); ?>" />
 			<?php if ( wpsc_is_product_on_sale() ): ?>
 				<del class="wpsc-old-price">
-					<strong><?php esc_html_e( 'Old Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
+					<?php /* translators: Reg. means Regular */ 
+					esc_html_e( 'Reg.', 'wp-e-commerce' ); ?>
+					<span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
 				</del><br />
 				<ins class="wpsc-sale-price">
 					<strong><?php esc_html_e( 'Price', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount" itemprop="price"><?php wpsc_product_sale_price(); ?></span>
