@@ -41,9 +41,6 @@
 						<span class="wpsc-sale"><?php esc_html_e( 'Sale', 'wp-e-commerce' ); ?>: </span>
 						<span class="wpsc-amount"><?php wpsc_product_sale_price(); ?></span>
 					</ins><br />
-					<span class="wpsc-you-save">
-						<strong><?php esc_html_e( 'You save', 'wp-e-commerce' ); ?>:</strong> <span class="wpsc-amount"><?php wpsc_product_you_save(); ?></span>
-					</span>
 				<?php else: ?>
 					<span class="wpsc-amount"><?php wpsc_product_original_price(); ?></span>
 				<?php endif; ?>
