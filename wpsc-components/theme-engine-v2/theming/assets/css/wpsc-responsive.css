@@ -15,13 +15,14 @@ Variables
   Opinionated Styles
   ********************/
   /* Typography */
-  /* Sale Info */ }
+  /* Sale Info */
+  /* Flexbox */ }
   .wpsc-grid .wpsc-product-description {
     display: none; }
   .wpsc-grid #wpsc-products {
     margin-left: -2.5%;
     font-size: 0; }
-  .wpsc-grid .wpsc-product {
+  .wpsc-grid .wpsc-product, .wpsc-grid .wpsc-product-summary {
     display: inline-block;
     margin: 0 0 7% 2.5%;
     font-size: initial;
@@ -43,7 +44,7 @@ Variables
     width: 17.5%; }
   .wpsc-grid .wpsc-column-6 {
     width: 14.166%; }
-  .wpsc-grid .wpsc-product {
+  .wpsc-grid .wpsc-product, .wpsc-grid .wpsc-product-summary {
     font-size: 16px;
     text-align: center; }
   .wpsc-grid .wpsc-column-2 .wpsc-product-title {
@@ -63,6 +64,38 @@ Variables
   .wpsc-grid .wpsc-you-save,
   .wpsc-grid .wpsc-field {
     display: none; }
+  .wpsc-grid #wpsc-products {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap; }
+  .wpsc-grid .wpsc-product, .wpsc-grid .wpsc-product-summary {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column; }
+  .wpsc-grid .wpsc-product-summary {
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    justify-content: space-between;
+    height: 100%; }
+  .wpsc-grid .wpsc-product-header {
+    -webkit-box-flex: 1 0 auto;
+    -moz-box-flex: 1 0 auto;
+    -webkit-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto; }
 
 .wpsc-list {
   /*****************

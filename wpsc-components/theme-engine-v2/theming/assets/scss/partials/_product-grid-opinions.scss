@@ -44,3 +44,29 @@ Opinionated Styles
 .wpsc-field {
 	display: none;
 }
+
+/* Flexbox */
+#wpsc-products {
+	@include flexbox();
+	@include flex-wrap(wrap);
+}
+.wpsc-product {
+	@include flexbox();
+	@include flex-direction(column);
+}
+
+.wpsc-product-summary {
+	@extend .wpsc-product;
+	@include justify-content(space-between);
+	height: 100%;
+}
+.wpsc-product-header {
+    @include flex(1 0 auto);
+}
+
+
+
+
+
+
+
