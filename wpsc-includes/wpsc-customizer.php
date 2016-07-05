@@ -142,10 +142,8 @@ function wpsc_default_customizer_settings( $settings ) {
             'section'         => 'wpsc_layout',
             'label'           => __( 'Products Per Row' ),
             'default'         => 'auto',
-            'description'     => __( 'Set the maximum number of products per row. Defaults to showing as many as will fit, up to six products per row', 'wp-e-commerce' ),
+            'description'     => __( 'Set the maximum number of products per row. Defaults to showing 4 per row, up to six products per row', 'wp-e-commerce' ),
             'choices'         => apply_filters( 'wpsc_products_per_row_options', array(
-                'auto' => __( 'Automatic', 'wp-e-commerce' ),
-                '1'    => __( '1', 'wp-e-commerce' ),
                 '2'    => __( '2', 'wp-e-commerce' ),
                 '3'    => __( '3', 'wp-e-commerce' ),
                 '4'    => __( '4', 'wp-e-commerce' ),
