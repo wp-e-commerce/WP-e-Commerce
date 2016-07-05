@@ -8,7 +8,7 @@ Media Queries
 		.wpsc-column-5 {
 			width: $columns-4;
 			.wpsc-product-title {
-				font-size: $font-size-col-4;
+				font-size: $title-size-col-4;
 			}
 		}
 	}
@@ -21,7 +21,7 @@ Media Queries
 		.wpsc-column-4 {
 			width: $columns-3;
 			.wpsc-product-title {
-				font-size: $font-size-col-3;
+				font-size: $title-size-col-3;
 			}
 		}
 	}
@@ -61,7 +61,7 @@ Media Queries
 		.wpsc-column-2 {
 			width: $full-width;
 			.wpsc-product-title {
-				font-size: $font-size-col-2;
+				font-size: $title-size-col-2;
 			}
 		}
 	}

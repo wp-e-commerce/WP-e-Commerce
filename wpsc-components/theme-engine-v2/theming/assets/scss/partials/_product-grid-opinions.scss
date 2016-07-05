@@ -10,27 +10,65 @@ Opinionated Styles
 }
 .wpsc-column-2 {
 	.wpsc-product-title {
-		font-size: $font-size-col-2;
+		font-size: $title-size-col-2;
+	}
+	.wpsc-old-price{
+		font-size: $sml-size-col-2;
+	}
+	.wpsc-sale-price .wpsc-amount,
+	.wpsc-sale {
+		font-size: $price-size-col-2;
 	}
 }
 .wpsc-column-3 {
 	.wpsc-product-title {
-		font-size: $font-size-col-3;
+		font-size: $title-size-col-3;
+	}
+	.wpsc-old-price{
+		font-size: $sml-size-col-3;
+	}
+	.wpsc-sale-price .wpsc-amount,
+	.wpsc-sale {
+		font-size: $price-size-col-3;
 	}
 }
 .wpsc-column-4 {
 	.wpsc-product-title {
-		font-size: $font-size-col-4;
+		font-size: $title-size-col-4;
+	}
+	.wpsc-old-price{
+		font-size: $sml-size-col-4;
+	}
+	.wpsc-sale-price .wpsc-amount,
+	.wpsc-sale {
+		font-size: $price-size-col-4;
 	}
 }
 .wpsc-column-5 {
 	.wpsc-product-title {
-		font-size: $font-size-col-5;
+		font-size: $title-size-col-5;
+	}
+	.wpsc-old-price{
+		font-size: $sml-size-col-5;
+	}
+	.wpsc-sale-price .wpsc-amount,
+	.wpsc-sale {
+		font-size: $price-size-col-5;
 	}
 }
 .wpsc-column-6 {
 	.wpsc-product-title {
-		font-size: $font-size-col-6;
+		font-size: $title-size-col-6;
+	}
+	.wpsc-old-price{
+		font-size: $sml-size-col-6;
+		.wpsc-amount {
+			font-size: inherit;
+		}
+	}
+	.wpsc-sale-price .wpsc-amount,
+	.wpsc-sale {
+		font-size: $price-size-col-6;
 	}
 }
 .wpsc-thumbnail-wrapper {
