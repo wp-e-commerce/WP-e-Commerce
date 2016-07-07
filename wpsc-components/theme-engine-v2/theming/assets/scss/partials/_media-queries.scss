@@ -10,6 +10,10 @@ Media Queries
 			.wpsc-product-title {
 				font-size: $title-size-col-4;
 			}
+			.wpsc-old-price {
+				font-size: $sml-size-col-4;
+			}
+			@include price($price-size-col-4);
 		}
 	}
 }
@@ -23,6 +27,10 @@ Media Queries
 			.wpsc-product-title {
 				font-size: $title-size-col-3;
 			}
+			.wpsc-old-price {
+				font-size: $sml-size-col-3;
+			}
+			@include price($price-size-col-3);
 		}
 	}
 
@@ -63,6 +71,10 @@ Media Queries
 			.wpsc-product-title {
 				font-size: $title-size-col-2;
 			}
+			.wpsc-old-price {
+				font-size: $sml-size-col-2;
+			}
+			@include price($price-size-col-2);
 		}
 	}
 	.wpsc-single,
