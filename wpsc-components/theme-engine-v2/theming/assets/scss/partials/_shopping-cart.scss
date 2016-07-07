@@ -52,6 +52,9 @@ Shopping Cart
 .wpsc-cart-cell.quantity {
     width: $cart_quantity_width;
 }
+.wpsc-cart-quantity-input {
+	width: 100%;
+}
 .wpsc-cart-cell.item-total {
     width: $cart_item-total_width;
 }

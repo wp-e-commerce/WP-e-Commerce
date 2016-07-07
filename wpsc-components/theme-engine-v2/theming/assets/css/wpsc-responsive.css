@@ -207,6 +207,9 @@ Shopping Cart
 .wpsc-cart-cell.quantity, .wpsc-cart-cell-header.quantity {
   width: 10%; }
 
+.wpsc-cart-quantity-input {
+  width: 100%; }
+
 .wpsc-cart-cell.item-total, .wpsc-cart-cell-header.item-total {
   width: 10%; }
 
@@ -285,7 +288,7 @@ Shopping Cart
     font-weight: 600;
     content: attr(data-title); }
   .widget .wpsc-cart-quantity-input {
-    width: 50%; }
+    width: 25%; }
 
 .wpsc-checkout {
   /*******************
@@ -504,7 +507,7 @@ Media Queries
     content: attr(data-title); }
 
   .wpsc-cart-quantity-input {
-    width: 50%; }
+    width: 25%; }
 
   .wpsc-grid .wpsc-column-6,
   .wpsc-grid .wpsc-column-5,
