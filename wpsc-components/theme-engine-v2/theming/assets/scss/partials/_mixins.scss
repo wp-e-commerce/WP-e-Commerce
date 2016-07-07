@@ -1,3 +1,12 @@
+//Price Mixin
+@mixin price($font-size) {
+  .wpsc-sale-price .wpsc-amount,
+  .wpsc-sale,
+  .wpsc-product-price > .wpsc-amount {
+    font-size: $font-size;
+  }
+}
+
 // Flexbox display
 // flex or inline-flex
 @mixin flexbox() {
