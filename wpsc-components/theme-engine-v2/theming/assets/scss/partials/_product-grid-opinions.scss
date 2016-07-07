@@ -8,67 +8,22 @@ Opinionated Styles
 	font-size: $base-font;
 	text-align: center;
 }
-.wpsc-column-2 {
-	.wpsc-product-title {
-		font-size: $title-size-col-2;
-	}
-	.wpsc-old-price{
-		font-size: $sml-size-col-2;
-	}
-	.wpsc-sale-price .wpsc-amount,
-	.wpsc-sale {
-		font-size: $price-size-col-2;
-	}
-}
-.wpsc-column-3 {
-	.wpsc-product-title {
-		font-size: $title-size-col-3;
-	}
-	.wpsc-old-price{
-		font-size: $sml-size-col-3;
-	}
-	.wpsc-sale-price .wpsc-amount,
-	.wpsc-sale {
-		font-size: $price-size-col-3;
-	}
-}
-.wpsc-column-4 {
-	.wpsc-product-title {
-		font-size: $title-size-col-4;
-	}
-	.wpsc-old-price{
-		font-size: $sml-size-col-4;
-	}
-	.wpsc-sale-price .wpsc-amount,
-	.wpsc-sale {
-		font-size: $price-size-col-4;
-	}
-}
-.wpsc-column-5 {
-	.wpsc-product-title {
-		font-size: $title-size-col-5;
-	}
-	.wpsc-old-price{
-		font-size: $sml-size-col-5;
-	}
-	.wpsc-sale-price .wpsc-amount,
-	.wpsc-sale {
-		font-size: $price-size-col-5;
-	}
-}
-.wpsc-column-6 {
-	.wpsc-product-title {
-		font-size: $title-size-col-6;
-	}
-	.wpsc-old-price{
-		font-size: $sml-size-col-6;
-		.wpsc-amount {
-			font-size: inherit;
+//Product Title, Old Price, Sale Price, and Reg Price
+$cols: 2 3 4 5 6;
+$title-size: $title-size-col-2 $title-size-col-3 $title-size-col-4 $title-size-col-5 $title-size-col-6;
+$price-size: $price-size-col-2 $price-size-col-3 $price-size-col-4 $price-size-col-5 $price-size-col-6;
+$sml-size: $sml-size-col-2 $sml-size-col-3 $sml-size-col-4 $sml-size-col-5 $sml-size-col-6;
+
+@each $col in $cols {
+	$i: index($cols, $col);
+	.wpsc-column-#{$col} {
+    	.wpsc-product-title {
+    		font-size: nth($title-size, $i);
+    	}
+    	.wpsc-old-price{
+			font-size: nth($sml-size, $i);
 		}
-	}
-	.wpsc-sale-price .wpsc-amount,
-	.wpsc-sale {
-		font-size: $price-size-col-6;
+		@include price( nth( $price-size, $i) );
 	}
 }
 .wpsc-thumbnail-wrapper {
