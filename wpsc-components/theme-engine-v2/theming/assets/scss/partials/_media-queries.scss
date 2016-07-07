@@ -7,6 +7,13 @@ Media Queries
 		.wpsc-column-6,
 		.wpsc-column-5 {
 			width: $columns-4;
+			.wpsc-product-title {
+				font-size: $title-size-col-4;
+			}
+			.wpsc-old-price {
+				font-size: $sml-size-col-4;
+			}
+			@include price($price-size-col-4);
 		}
 	}
 }
@@ -17,6 +24,13 @@ Media Queries
 		.wpsc-column-5,
 		.wpsc-column-4 {
 			width: $columns-3;
+			.wpsc-product-title {
+				font-size: $title-size-col-3;
+			}
+			.wpsc-old-price {
+				font-size: $sml-size-col-3;
+			}
+			@include price($price-size-col-3);
 		}
 	}
 
@@ -54,6 +68,13 @@ Media Queries
 		.wpsc-column-3,
 		.wpsc-column-2 {
 			width: $full-width;
+			.wpsc-product-title {
+				font-size: $title-size-col-2;
+			}
+			.wpsc-old-price {
+				font-size: $sml-size-col-2;
+			}
+			@include price($price-size-col-2);
 		}
 	}
 	.wpsc-single,

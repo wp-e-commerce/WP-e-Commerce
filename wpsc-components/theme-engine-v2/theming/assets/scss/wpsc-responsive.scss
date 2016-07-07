@@ -1,7 +1,9 @@
 @import 'partials/variables';
+@import 'partials/mixins';
 
 .wpsc-grid {
 	@import 'partials/product-grid';
+	@import 'partials/product-grid-opinions';
 }
 
 .wpsc-list {

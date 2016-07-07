@@ -10,7 +10,14 @@ Variables
 .wpsc-grid {
   /**********************************
   Product Grid on Archive Store Pages 
-  **********************************/ }
+  **********************************/
+  /*******************
+  Opinionated Styles
+  ********************/
+  /* Typography */
+  /* Variations and Quantity */
+  /* Sale Info */
+  /* Flexbox */ }
   .wpsc-grid .wpsc-product-description {
     display: none; }
   .wpsc-grid #wpsc-products {
@@ -38,6 +45,100 @@ Variables
     width: 17.5%; }
   .wpsc-grid .wpsc-column-6 {
     width: 14.166%; }
+  .wpsc-grid .wpsc-product {
+    font-size: 16px;
+    text-align: center; }
+  .wpsc-grid .wpsc-column-2 .wpsc-product-title {
+    font-size: 1.75em; }
+  .wpsc-grid .wpsc-column-2 .wpsc-old-price {
+    font-size: 0.85em; }
+  .wpsc-grid .wpsc-column-2 .wpsc-sale-price .wpsc-amount,
+  .wpsc-grid .wpsc-column-2 .wpsc-sale,
+  .wpsc-grid .wpsc-column-2 .wpsc-product-price > .wpsc-amount {
+    font-size: 1.25em; }
+  .wpsc-grid .wpsc-column-3 .wpsc-product-title {
+    font-size: 1.35em; }
+  .wpsc-grid .wpsc-column-3 .wpsc-old-price {
+    font-size: 0.8em; }
+  .wpsc-grid .wpsc-column-3 .wpsc-sale-price .wpsc-amount,
+  .wpsc-grid .wpsc-column-3 .wpsc-sale,
+  .wpsc-grid .wpsc-column-3 .wpsc-product-price > .wpsc-amount {
+    font-size: 1em; }
+  .wpsc-grid .wpsc-column-4 .wpsc-product-title {
+    font-size: 1.25em; }
+  .wpsc-grid .wpsc-column-4 .wpsc-old-price {
+    font-size: 0.7em; }
+  .wpsc-grid .wpsc-column-4 .wpsc-sale-price .wpsc-amount,
+  .wpsc-grid .wpsc-column-4 .wpsc-sale,
+  .wpsc-grid .wpsc-column-4 .wpsc-product-price > .wpsc-amount {
+    font-size: 0.9em; }
+  .wpsc-grid .wpsc-column-5 .wpsc-product-title {
+    font-size: 1.15em; }
+  .wpsc-grid .wpsc-column-5 .wpsc-old-price {
+    font-size: 0.65em; }
+  .wpsc-grid .wpsc-column-5 .wpsc-sale-price .wpsc-amount,
+  .wpsc-grid .wpsc-column-5 .wpsc-sale,
+  .wpsc-grid .wpsc-column-5 .wpsc-product-price > .wpsc-amount {
+    font-size: 0.85em; }
+  .wpsc-grid .wpsc-column-6 .wpsc-product-title {
+    font-size: 1.05em; }
+  .wpsc-grid .wpsc-column-6 .wpsc-old-price {
+    font-size: 0.6em; }
+  .wpsc-grid .wpsc-column-6 .wpsc-sale-price .wpsc-amount,
+  .wpsc-grid .wpsc-column-6 .wpsc-sale,
+  .wpsc-grid .wpsc-column-6 .wpsc-product-price > .wpsc-amount {
+    font-size: 0.8em; }
+  .wpsc-grid .wpsc-thumbnail-wrapper {
+    margin-bottom: 16px; }
+  .wpsc-grid .wpsc-field-quantity,
+  .wpsc-grid .wpsc-field {
+    display: none; }
+  .wpsc-grid .wpsc-product-price br {
+    display: none; }
+  .wpsc-grid .wpsc-old-price {
+    font-size: .8em;
+    color: #666; }
+  .wpsc-grid ins.wpsc-sale-price {
+    background: initial;
+    margin-left: 5px;
+    white-space: nowrap;
+    color: initial; }
+  .wpsc-grid #wpsc-products {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap; }
+  .wpsc-grid .wpsc-product,
+  .wpsc-grid .wpsc-product-summary,
+  .wpsc-grid .wpsc-product-header {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column; }
+  .wpsc-grid .wpsc-product-summary,
+  .wpsc-grid .wpsc-product-header {
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    justify-content: space-between; }
+  .wpsc-grid .wpsc-product-summary {
+    height: 100%; }
+  .wpsc-grid .wpsc-product-header {
+    -webkit-box-flex: 1 0 auto;
+    -moz-box-flex: 1 0 auto;
+    -webkit-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto; }
 
 .wpsc-list {
   /*****************
@@ -256,12 +357,43 @@ Media Queries
 @media (max-width: 960px) {
   .wpsc-grid .wpsc-column-6,
   .wpsc-grid .wpsc-column-5 {
-    width: 22.5%; } }
+    width: 22.5%; }
+    .wpsc-grid .wpsc-column-6 .wpsc-product-title,
+    .wpsc-grid .wpsc-column-5 .wpsc-product-title {
+      font-size: 1.25em; }
+    .wpsc-grid .wpsc-column-6 .wpsc-old-price,
+    .wpsc-grid .wpsc-column-5 .wpsc-old-price {
+      font-size: 0.7em; }
+    .wpsc-grid .wpsc-column-6 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-6 .wpsc-sale,
+    .wpsc-grid .wpsc-column-6 .wpsc-product-price > .wpsc-amount,
+    .wpsc-grid .wpsc-column-5 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-5 .wpsc-sale,
+    .wpsc-grid .wpsc-column-5 .wpsc-product-price > .wpsc-amount {
+      font-size: 0.9em; } }
 @media (max-width: 700px) {
   .wpsc-grid .wpsc-column-6,
   .wpsc-grid .wpsc-column-5,
   .wpsc-grid .wpsc-column-4 {
     width: 30.833%; }
+    .wpsc-grid .wpsc-column-6 .wpsc-product-title,
+    .wpsc-grid .wpsc-column-5 .wpsc-product-title,
+    .wpsc-grid .wpsc-column-4 .wpsc-product-title {
+      font-size: 1.35em; }
+    .wpsc-grid .wpsc-column-6 .wpsc-old-price,
+    .wpsc-grid .wpsc-column-5 .wpsc-old-price,
+    .wpsc-grid .wpsc-column-4 .wpsc-old-price {
+      font-size: 0.8em; }
+    .wpsc-grid .wpsc-column-6 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-6 .wpsc-sale,
+    .wpsc-grid .wpsc-column-6 .wpsc-product-price > .wpsc-amount,
+    .wpsc-grid .wpsc-column-5 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-5 .wpsc-sale,
+    .wpsc-grid .wpsc-column-5 .wpsc-product-price > .wpsc-amount,
+    .wpsc-grid .wpsc-column-4 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-4 .wpsc-sale,
+    .wpsc-grid .wpsc-column-4 .wpsc-product-price > .wpsc-amount {
+      font-size: 1em; }
 
   .wpsc-cart-cell.id, .wpsc-cart-cell-header.id {
     width: 100%; }
@@ -380,6 +512,34 @@ Media Queries
   .wpsc-grid .wpsc-column-3,
   .wpsc-grid .wpsc-column-2 {
     width: 100%; }
+    .wpsc-grid .wpsc-column-6 .wpsc-product-title,
+    .wpsc-grid .wpsc-column-5 .wpsc-product-title,
+    .wpsc-grid .wpsc-column-4 .wpsc-product-title,
+    .wpsc-grid .wpsc-column-3 .wpsc-product-title,
+    .wpsc-grid .wpsc-column-2 .wpsc-product-title {
+      font-size: 1.75em; }
+    .wpsc-grid .wpsc-column-6 .wpsc-old-price,
+    .wpsc-grid .wpsc-column-5 .wpsc-old-price,
+    .wpsc-grid .wpsc-column-4 .wpsc-old-price,
+    .wpsc-grid .wpsc-column-3 .wpsc-old-price,
+    .wpsc-grid .wpsc-column-2 .wpsc-old-price {
+      font-size: 0.85em; }
+    .wpsc-grid .wpsc-column-6 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-6 .wpsc-sale,
+    .wpsc-grid .wpsc-column-6 .wpsc-product-price > .wpsc-amount,
+    .wpsc-grid .wpsc-column-5 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-5 .wpsc-sale,
+    .wpsc-grid .wpsc-column-5 .wpsc-product-price > .wpsc-amount,
+    .wpsc-grid .wpsc-column-4 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-4 .wpsc-sale,
+    .wpsc-grid .wpsc-column-4 .wpsc-product-price > .wpsc-amount,
+    .wpsc-grid .wpsc-column-3 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-3 .wpsc-sale,
+    .wpsc-grid .wpsc-column-3 .wpsc-product-price > .wpsc-amount,
+    .wpsc-grid .wpsc-column-2 .wpsc-sale-price .wpsc-amount,
+    .wpsc-grid .wpsc-column-2 .wpsc-sale,
+    .wpsc-grid .wpsc-column-2 .wpsc-product-price > .wpsc-amount {
+      font-size: 1.25em; }
 
   .wpsc-single .wpsc-thumbnail-wrapper,
   .wpsc-single .wpsc-product-summary,
