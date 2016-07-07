@@ -318,14 +318,8 @@
 }
 
 .wpsc-controller .wpsc-alert {
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	border-width: 1px;
-	border-style: solid;
-	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 5px rgba(0, 0, 0, 0.3);
-	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 5px rgba(0, 0, 0, 0.3);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 5px rgba(0, 0, 0, 0.3);
+	border-left: 10px solid;
+	background-color: #eee;
 	margin-bottom: 18px;
 	padding: 10px 12px 12px;
 	width: auto;
@@ -339,34 +333,24 @@
 	margin-top: 12px;
 }
 
-.wpsc-controller .wpsc-alert,
-.wpsc-controller .wpsc-alert p {
-	font-size: 13px;
-	text-shadow: rgba(255, 255, 255, 0.6) 0 1px 0;
-}
-
 .wpsc-controller .wpsc-alert-success {
 	border-color: #5cc862;
 	color: #117f17;
-	background-color: #ceffd1;
 }
 
 .wpsc-controller .wpsc-alert-warning {
 	border-color: #ed9434;
 	color: #c47725;
-	background-color: #ffe7cd;
 }
 
 .wpsc-controller .wpsc-alert-error {
 	border-color: #ec6f6f;
 	color: #b32d2d;
-	background-color: #ffd1d1;
 }
 
 .wpsc-controller .wpsc-alert-info {
 	border-color: #0088cc;
 	color: #0778b1;
-	background-color: #b6e7ff;
 }
 
 /*
