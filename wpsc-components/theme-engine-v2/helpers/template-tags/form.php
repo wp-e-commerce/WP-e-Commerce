@@ -22,10 +22,18 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 		$id = wpsc_get_product_id();
 	}
 
+	$product = WPSC_Product::get_instance( $id );
+	$has_variations = $product->has_variations;
+	$classes = get_body_class();
+
+	if ( $has_variations != false && in_array( 'wpsc-grid', $classes ) ) {
+		$select_options = true;
+	}
+
 	$args = array(
 		// attributes of the form
 		'class'  => 'wpsc-form wpsc-form-horizontal wpsc-add-to-cart-form',
-		'action' => wpsc_get_cart_url( "add/{$id}" ),
+		'action' => $select_options ? get_permalink( $id ) : wpsc_get_cart_url( "add/{$id}" ),
 		'id'     => "wpsc-add-to-cart-form-{$id}",
 
 		// array containing form fields
@@ -38,11 +46,9 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 				'value' => 1,
 			),
 		),
-	);
+	);	
 
 	// generate the variation dropdown menus
-	$product = WPSC_Product::get_instance( $id );
-
 	foreach ( $product->variation_sets as $variation_set_id => $title ) {
 		$variation_terms = $product->variation_terms[ $variation_set_id ];
 		$args['fields'][] = array(
@@ -54,21 +60,23 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 	}
 
 	// form action section contains the button and hidden values
-	$args['form_actions'] = array(
-		// Add to Cart button
-		array(
-			'type'         => 'button',
-			'primary'      => true,
-			'button_class' => 'wpsc-add-to-cart',
-			'icon'         => apply_filters(
-				'wpsc_add_to_cart_button_icon',
-				array( 'shopping-cart', 'white' )
-			),
-			'title'        => apply_filters(
-				'wpsc_add_to_cart_button_title',
-				__( 'Add to Cart', 'wp-e-commerce' )
-			),
-		),
+    $args['form_actions'] = array(
+        // Add to Cart button
+        array(
+            'type'         => 'button',
+            'primary'      => true,
+            'button_class' => $select_options ? 'wpsc-select-options' : 'wpsc-add-to-cart',
+            'icon'         => apply_filters(
+                'wpsc_add_to_cart_button_icon',
+                array( $select_options ? '' : 'shopping-cart', 'white' )
+            ),
+            'title'        => apply_filters(
+                'wpsc_add_to_cart_button_title',
+                $select_options ? __( 'Select Options', 'wp-e-commerce' ) : __( 'Add to Cart', 'wp-e-commerce' ), 
+                $select_options
+            ),
+        ),
+
 
 		// set the current page as the referer so that user can be redirected back
 		array(
