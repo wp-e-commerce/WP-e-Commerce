@@ -199,19 +199,19 @@ Shopping Cart
   width: 20%; }
 
 .wpsc-cart-cell.items, .wpsc-cart-cell-header.items {
-  width: 40%; }
+  width: 34%; }
 
 .wpsc-cart-cell.unit-price, .wpsc-cart-cell-header.unit-price {
-  width: 10%; }
+  width: 12%; }
 
 .wpsc-cart-cell.quantity, .wpsc-cart-cell-header.quantity {
-  width: 10%; }
+  width: 12%; }
 
 .wpsc-cart-quantity-input {
   width: 100%; }
 
 .wpsc-cart-cell.item-total, .wpsc-cart-cell-header.item-total {
-  width: 10%; }
+  width: 12%; }
 
 /* Product Headers */
 /* Cart Footer */
