@@ -53,7 +53,16 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	} else {
 		$post_data['meta']['_wpsc_stock'] = isset( $post_data['meta']['_wpsc_stock'] ) ? (int) $post_data['meta']['_wpsc_stock'] : 0;
 	}
-
+	
+	// Update low stock notifications
+	if ( isset( $post_data['meta']['_wpsc_stock'] ) && ( $post_data['meta']['_wpsc_stock'] > $post_data['meta']['_wpsc_product_metadata']['stock_limit_notify'] ) ) {
+		// Check if notification has been sent
+		$notify_sent = get_product_meta( $product_id, 'stock_limit_notify_sent', true );
+		if( ! empty( $notify_sent ) ) {
+			delete_product_meta( $product_id, 'stock_limit_notify_sent' );
+		}
+	}
+	
 	unset($post_data['meta']['_wpsc_limited_stock']);
 	if(!isset($post_data['quantity_limited'])) $post_data['quantity_limited'] = '';
     if(!isset($post_data['special'])) $post_data['special'] = '';
@@ -65,10 +74,8 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	if ( isset( $_POST['wpsc_product_stock_nonce'] ) && wp_verify_nonce( $_POST['wpsc_product_stock_nonce'], 'update' ) ) {
 
 		$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], array(
-			'notify_when_none_left'    => 0,
 			'unpublish_when_none_left' => 0
 		) );
-		$post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'] );
 		$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] );
 
 	}
@@ -185,7 +192,6 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 
 	// Fill in any missing product meta values with existing values.
 	$default_meta_values = wp_parse_args( get_product_meta( $product_id, 'product_metadata', true ), array(
-		'notify_when_none_left'    => 0,
 		'unpublish_when_none_left' => 0,
 		'no_shipping'              => 0,
 		'external_link'            => '',
@@ -373,13 +379,11 @@ function wpsc_sanitise_product_forms($post_data = null) {
 	  $post_data['meta']['_wpsc_stock'] = false;
 	}
 	unset($post_data['meta']['_wpsc_limited_stock']);
-	if(!isset($post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'])) $post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'] = 0;
 	if(!isset($post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'])) $post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] = '';
     if(!isset($post_data['quantity_limited'])) $post_data['quantity_limited'] = '';
     if(!isset($post_data['special'])) $post_data['special'] = '';
     if(!isset($post_data['meta']['_wpsc_product_metadata']['no_shipping'])) $post_data['meta']['_wpsc_product_metadata']['no_shipping'] = '';
 
-	$post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'];
 	$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'];
 	$post_data['meta']['_wpsc_product_metadata']['quantity_limited'] = (int)(bool)$post_data['quantity_limited'];
 	$post_data['meta']['_wpsc_product_metadata']['special'] = (int)(bool)$post_data['special'];
