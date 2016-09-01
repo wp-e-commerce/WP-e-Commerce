@@ -134,19 +134,21 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 					update_product_meta( $product->ID, 'stock', $remaining_stock );
 
 					$product_meta = get_product_meta( $product->ID, 'product_metadata', true );
-
-					if ( $remaining_stock < 1 ) {
-						// this is to make sure after upgrading to 3.8.9, products will have
-						// "notify_when_none_left" enabled by default if "unpublish_when_none_left"
-						// is enabled.
-						if ( ! isset( $product_meta['notify_when_none_left'] ) ) {
-							$product_meta['unpublish_when_none_left'] = 0;
-							if ( ! empty( $product_meta['unpublish_when_none_left'] ) ) {
-								$product_meta['unpublish_when_none_left'] = 1;
-								update_product_meta( $product->ID, 'product_metadata', $product_meta );
-							}
+					$notify_limit = $product_meta['stock_limit_notify'];
+					
+					if ( $notify_limit != 0 && $remaining_stock <= apply_filters( 'wpec_stock_limit_notify', $notify_limit ) ) {
+						// Check if notification has been sent
+						$notify_sent = get_product_meta( $product->ID, 'stock_limit_notify_sent', true );
+						
+						if( empty( $notify_sent ) ) {
+							$email_message = sprintf( __( 'The product "%s" has reached stock level "%s".', 'wp-e-commerce' ), $product->post_title, $remaining_stock );
+							
+							wp_mail( get_option('purch_log_email'), sprintf(__('%s is low on stock', 'wp-e-commerce'), $product->post_title), $email_message );
+							update_product_meta( $product->ID, 'stock_limit_notify_sent', true );							
 						}
-
+					}
+					
+					if ( $remaining_stock < 1 ) {
 						$email_message = sprintf( __( 'The product "%s" is out of stock.', 'wp-e-commerce' ), $product->post_title );
 
 						if ( ! empty( $product_meta["unpublish_when_none_left"] ) ) {
@@ -155,12 +157,11 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 								'post_status' => 'draft',
 							) );
 
-							if ( $result )
+							if ( $result ) {
 								$email_message = sprintf( __( 'The product "%s" is out of stock and has been unpublished.', 'wp-e-commerce' ), $product->post_title );
+								wp_mail( get_option('purch_log_email'), sprintf(__('%s is out of stock', 'wp-e-commerce'), $product->post_title), $email_message );
+							}
 						}
-
-						if ( $product_meta["notify_when_none_left"] == 1 )
-							wp_mail(get_option('purch_log_email'), sprintf(__('%s is out of stock', 'wp-e-commerce'), $product->post_title), $email_message );
 					}
 				}
 			case 6:
