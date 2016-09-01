@@ -287,6 +287,27 @@ function wpsc_product_has_variations( $id = 0 ) {
 }
 
 /**
+* Check whether or not a product is a variation.
+*
+* @param int $product_id Product ID to check.
+* @since 4.0.0
+* @return mixed Returns parent product ID if product is a variation, false otherwise.
+*/
+function wpsc_product_is_variation( $product_id ) {
+    $product = get_post( $product_id );
+    
+    if ( ! is_a( $product, 'WP_Post' ) ) {
+        return false;
+    }
+    
+    if ( 'wpsc-product' !== $product->post_type || ! $product->post_parent ) {
+        return false;
+    }
+    
+    return $product->post_parent;
+}
+
+/**
  * Maybe Get The Parent Product Thumbnail ID
  *
  * If no thumbnail is found and the product is a variation it will
