@@ -126,7 +126,7 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 			case 4:
 			case 5:
 				foreach ( (array) $all_claimed_stock as $claimed_stock ) {
-
+					
 					$product         = get_post( $claimed_stock->product_id );
 					$current_stock   = get_post_meta( $product->ID, '_wpsc_stock', true );
 					$remaining_stock = $current_stock - $claimed_stock->stock_claimed;
@@ -134,7 +134,16 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 					update_product_meta( $product->ID, 'stock', $remaining_stock );
 
 					$product_meta = get_product_meta( $product->ID, 'product_metadata', true );
-					$notify_limit = $product_meta['stock_limit_notify'];
+					
+					$parent_id = wpsc_product_is_variation( $product->ID );
+
+					if( $parent_id ) {
+						// If product is a variatio get the notification threshold from parent product
+						$parent_meta = get_product_meta( $parent_id, 'product_metadata', true );
+						$notify_limit = $parent_meta['stock_limit_notify'];
+					} else {
+						$notify_limit = $product_meta['stock_limit_notify'];
+					}
 					
 					if ( $notify_limit != 0 && $remaining_stock <= apply_filters( 'wpec_stock_limit_notify', $notify_limit ) ) {
 						// Check if notification has been sent
