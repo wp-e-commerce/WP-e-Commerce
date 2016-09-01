@@ -92,6 +92,20 @@ class WPSC_Product_Variations_Page {
 		if ( isset( $data['stock'] ) ) {
 			if ( is_numeric( $data['stock'] ) ) {
 				update_product_meta( $id, 'stock', (int) $data['stock'] );
+				$parent_id = wpsc_product_is_variation( $id );
+
+				if( $parent_id ) {
+					// If product is a variatio get the notification threshold from parent product
+					$parent_meta = get_product_meta( $parent_id, 'product_metadata', true );
+					$notify_limit = $parent_meta['stock_limit_notify'];
+					if ( (int) $data['stock'] > $notify_limit ) {
+						// Check if notification has been sent
+						$notify_sent = get_product_meta( $id, 'stock_limit_notify_sent', true );
+						if( ! empty( $notify_sent ) ) {
+							delete_product_meta( $id, 'stock_limit_notify_sent' );
+						}
+					}
+				}
 			} else {
 				update_product_meta( $id, 'stock', '' );
 			}
