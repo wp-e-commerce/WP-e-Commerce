@@ -98,7 +98,7 @@ final class WPSC_Payment_Gateways {
 		WPSC_Payment_Gateways::register_dir( WPSC_MERCHANT_V3_PATH . '/gateways' );
 
 		// Call the Active Gateways init function
-		self::initialize_gateways();
+		add_action( 'wpsc_ready', array( __CLASS__, 'initialize_gateways' ) );
 
 		if ( isset( $_REQUEST['payment_gateway'] ) && isset( $_REQUEST['payment_gateway_callback'] ) ) {
 			add_action( 'init', array( 'WPSC_Payment_Gateways', 'action_process_callbacks' ) );
@@ -438,7 +438,6 @@ abstract class WPSC_Payment_Gateway {
 	 * @access public
 	 * @var WPSC_Payment_Gateway_Setting
 	 */
-
 	public $setting;
 
 	public $purchase_log;
