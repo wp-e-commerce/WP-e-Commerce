@@ -26,9 +26,7 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 	$has_variations = $product->has_variations;
 	$classes = get_body_class();
 
-	if ( $has_variations != false && in_array( 'wpsc-grid', $classes ) ) {
-		$select_options = true;
-	}
+	$select_options = $has_variations != false && in_array( 'wpsc-grid', $classes );
 
 	$args = array(
 		// attributes of the form
