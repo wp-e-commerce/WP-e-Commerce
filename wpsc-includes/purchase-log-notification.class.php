@@ -263,9 +263,11 @@ abstract class WPSC_Purchase_Log_Notification {
 		$from_email = apply_filters( 'wpsc_purchase_log_notification_from_email', get_option( 'return_email' ), $this );
 		$from_name  = apply_filters( 'wpsc_purchase_log_notification_from_name', get_option( 'return_name' ), $this );
 
-		// don't worry, wp_mail() will automatically assign default values if these options
-		// are not set and empty
-		$headers = 'From: "' . $from_name . '" <' . $from_email . '>';
+	        if ( ! $from_name || ! $from_email) {
+	            $headers = '';
+	        } else {
+	            $headers = 'From: "' . $from_name . '" <' . $from_email . '>';
+	        }
 		return apply_filters( 'wpsc_purchase_log_notification_headers', $headers, $this );
 	}
 
