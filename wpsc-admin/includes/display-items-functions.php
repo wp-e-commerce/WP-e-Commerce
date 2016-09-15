@@ -300,6 +300,10 @@ function wpsc_stock_control_forms() {
 	if ( ! isset( $product_meta['unpublish_when_none_left'] ) ) {
 		$product_meta['unpublish_when_none_left'] = '';
 	}
+	
+	if ( ! isset( $product_meta['stock_limit_notify'] ) ) {
+		$product_meta['stock_limit_notify'] = '';
+	}
 
 	// Display live title if stock is set
 	if ( isset( $product_data['meta']['_wpsc_stock'] ) && is_numeric( $product_data['meta']['_wpsc_stock'] ) ) {
