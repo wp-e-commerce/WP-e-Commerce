@@ -26,6 +26,10 @@ function _wpsc_action_enqueue_media_scripts() {
 			'getGalleryNonce'    => wp_create_nonce( 'wpsc_ajax_get_gallery_' . $id )
 		) );
 	}
+	
+	if ( 'edit-wpsc-product' == $current_screen->id ) {
+		wp_enqueue_script( 'wpsc-quick-edit', WPSC_URL . '/wpsc-admin/js/quick-edit.js', array( 'jquery', 'inline-edit-post' ), WPSC_VERSION, true );
+	}
 }
 
 function _wpsc_action_enqueue_media_styles() {
