@@ -254,7 +254,7 @@ add_action(
 function _wpsc_filter_merchant_v2_after_gateway_hidden_field() {
 	if ( wpsc_have_gateways() ) {
 		wpsc_the_gateway();
-		if ( wpsc_gateway_form_fields() ) : ?>
+		if ( wpsc_gateway_form_fields() && ! wpsc_is_free_cart() ) : ?>
 			<table class='wpsc_checkout_table <?php echo wpsc_gateway_form_field_style();?>'>
 				<?php echo wpsc_gateway_form_fields(); ?>
 			</table>
