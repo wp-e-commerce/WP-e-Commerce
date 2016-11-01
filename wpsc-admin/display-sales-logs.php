@@ -258,10 +258,7 @@ class WPSC_Purchase_Log_Page {
 			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
-		global $purchlogitem;
-
-		// TODO: seriously get rid of all these badly coded purchaselogs.class.php functions in 4.0
-		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
+		$this->log->init_items();
 
 		$columns = array(
 			'title'    => __( 'Name', 'wp-e-commerce' ),
@@ -289,9 +286,7 @@ class WPSC_Purchase_Log_Page {
 			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
-		global $purchlogitem;
-
-		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
+		$this->log->init_items();
 
 		$columns = array(
 			'title'    => __( 'Item Name', 'wp-e-commerce' ),

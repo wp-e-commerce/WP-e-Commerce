@@ -720,6 +720,25 @@ class WPSC_Purchase_Log {
 	}
 
 	/**
+	 * Init the purchase log items for this purchase log.
+	 *
+	 * @since  4.0
+	 *
+	 * @return wpsc_purchaselogs_items|false The purhchase log item object or false.
+	 */
+	public function init_items() {
+		global $purchlogitem;
+		if ( ! $this->get( 'id' ) ) {
+			return false;
+		}
+
+		// TODO: seriously get rid of all these badly coded purchaselogs.functions.php functions and wpsc_purchaselogs/wpsc_purchaselogs_items classes in 4.0
+		$purchlogitem = new wpsc_purchaselogs_items( $this->get( 'id' ) );
+
+		return $purchlogitem;
+	}
+
+	/**
 	 * Returns the whole database row in the form of an associative array
 	 *
 	 * @access public
