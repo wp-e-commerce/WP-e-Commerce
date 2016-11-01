@@ -13,6 +13,20 @@ class WPSC_Purchase_Log_Page {
 	private $output;
 	public $log_id = 0;
 
+	/**
+	 * WPSC_Purchase_Log
+	 *
+	 * @var WPSC_Purchase_Log object.
+	 */
+	public $log = null;
+
+	/**
+	 * Whether the purchase log can be modified.
+	 *
+	 * @var boolean
+	 */
+	protected $can_edit = false;
+
 	public function __construct() {
 		$controller = 'default';
 		$controller_method = 'controller_default';
@@ -20,6 +34,8 @@ class WPSC_Purchase_Log_Page {
 		// If individual purchase log, setup ID and action links.
 		if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
 			$this->log_id = (int) $_REQUEST['id'];
+			$this->log = new WPSC_Purchase_Log( $this->log_id );
+			$this->can_edit = apply_filters( 'wpsc_can_edit_order', ! $this->log->is_transaction_completed(), $this );
 		}
 
 		if ( isset( $_REQUEST['c'] ) && method_exists( $this, 'controller_' . $_REQUEST['c'] ) ) {
@@ -146,7 +162,7 @@ class WPSC_Purchase_Log_Page {
 				$href = $this->get_purchase_log_url( ( $this->log_id - 1 ) );
 				$disabled = '';
 			}
-			
+
 			?>
 			<a href='<?php echo esc_url( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
 			<?php
@@ -233,7 +249,13 @@ class WPSC_Purchase_Log_Page {
 		<tr>
 			<td><?php echo wpsc_purchaselog_details_name(); ?></td> <!-- NAME! -->
 			<td><?php echo wpsc_purchaselog_details_SKU(); ?></td> <!-- SKU! -->
-			<td><?php echo wpsc_purchaselog_details_quantity(); ?></td> <!-- QUANTITY! -->
+			<td>
+				<?php if ( $this->can_edit ) : ?>
+					<input type="number" step="1" min="0" autocomplete="off" name="wpsc_item_qty" class="wpsc_item_qty" placeholder="0" value="<?php echo wpsc_purchaselog_details_quantity(); ?>" size="4" class="quantity">
+				<?php else: ?>
+					<?php echo wpsc_purchaselog_details_quantity(); ?>
+				<?php endif; ?>
+			</td> <!-- QUANTITY! -->
 			<td>
 		 <?php
 		echo wpsc_currency_display( wpsc_purchaselog_details_price() );
@@ -246,6 +268,13 @@ class WPSC_Purchase_Log_Page {
 			<?php endif; ?>
 			<!-- <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_discount() ); ?></td> --> <!-- DISCOUNT! -->
 			<td class="amount"><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); ?></td> <!-- TOTAL! -->
+			<?php if ( $this->can_edit ) : ?>
+				<td class="remove">
+					<div class="wpsc-remove-row">
+						<button type="button" class="wpsc-remove-item-button"><span style="color:#a00;" class="dashicons dashicons-dismiss"></span> <?php esc_html_e( 'Remove Item', 'wp-e-commerce' ); ?></button>
+					</div>
+				</td> <!-- REMOVE! -->
+			<?php endif; ?>
 		</tr>
 		<?php
 		do_action( 'wpsc_additional_sales_item_info', wpsc_purchaselog_details_id() );
@@ -273,6 +302,10 @@ class WPSC_Purchase_Log_Page {
 		}
 
 		$columns['total'] = __( 'Item Total','wp-e-commerce' );
+
+		if ( $this->can_edit ) {
+			$columns['remove'] = '';
+		}
 
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
@@ -328,10 +361,15 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function display_purchase_log() {
-		if ( wpec_display_product_tax() )
-			$cols = 5;
-		else
-			$cols = 4;
+		$cols = 4;
+		if ( wpec_display_product_tax() ) {
+			$cols++;
+		}
+
+		if ( $this->can_edit ) {
+			$cols++;
+		}
+
 		$receipt_sent = ! empty( $_GET['sent'] );
 		$receipt_not_sent = isset( $_GET['sent'] ) && ! $_GET['sent'];
 		include( 'includes/purchase-logs-page/item-details.php' );

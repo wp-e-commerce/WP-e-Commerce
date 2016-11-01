@@ -1,5 +1,4 @@
 <div class="wrap">
-	<div id="icon-users" class="icon32"><br/></div>
 	<h2>
 		<?php esc_html_e( 'Sales Log Details', 'wp-e-commerce' ); ?>
 		<span class="subtitle">#<?php echo $this->log_id; ?> – <?php echo wpsc_purchaselog_details_date_time(); ?></span>
@@ -84,7 +83,7 @@
 			<?php do_action( 'wpsc_billing_details_bottom', $this->log_id ); ?>
 		</div>
 
-		<div id='wpsc_items_ordered'>
+		<form name="wpsc_items_ordered" method="post" id="wpsc_items_ordered">
 			<h3><?php esc_html_e( 'Items Ordered', 'wp-e-commerce' ); ?></h3>
 			<table class="widefat" cellspacing="0">
 				<thead>
@@ -97,6 +96,18 @@
 
 				<tbody>
 					<?php $this->purchase_log_cart_items(); ?>
+
+					<?php if ( $this->can_edit ) : ?>
+						<tr class="wpsc_purchaselog_add_product">
+							<td colspan="<?php echo $cols + 2; ?>">
+								<hr>
+								<p class="wpsc-add-row">
+									<button type="button" class="wpsc-add-row-button button"><?php esc_html_e( 'Add Item', 'wp-e-commerce' ); ?></button>
+								</p>
+								<hr>
+							</td>
+						</tr>
+					<?php endif; ?>
 
 					<tr class="wpsc_purchaselog_start_totals">
 						<td colspan="<?php echo $cols; ?>">
@@ -127,6 +138,18 @@
 						<td><?php echo wpsc_display_purchlog_totalprice(); ?></td>
 					</tr>
 				</tbody>
+				<?php if ( $this->can_edit ) : ?>
+					<tfoot>
+						<tr>
+							<td colspan="<?php echo $cols + 2; ?>">
+								<div class="wpsc-order-data-row wpsc-order-add-item wpsc-order-data-row-toggle">
+									<button type="button" class="button cancel-update-items" data-reload="true"><?php esc_html_e( 'Cancel', 'wp-e-commerce' ); ?></button>
+									<button type="submit" class="button button-primary update-items"><?php esc_html_e( 'Update Items', 'wp-e-commerce' ); ?></button>
+								</div>
+							</td>
+						</tr>
+					</tfoot>
+				<?php endif; ?>
 			</table>
 
 			<?php do_action( 'wpsc_purchlogitem_metabox_start', $this->log_id ); ?>
@@ -149,7 +172,7 @@
 			<?php $this->purchase_logs_checkout_fields(); ?>
 			<?php do_action( 'wpsc_purchlogitem_metabox_end', $this->log_id ); ?>
 
-		</div>
+		</form>
 	</div>
 
 	<div id="wpsc_purchlogitems_links">
