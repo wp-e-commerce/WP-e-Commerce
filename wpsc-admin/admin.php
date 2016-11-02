@@ -418,7 +418,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 
 	_wpsc_enqueue_wp_e_commerce_admin();
 
-	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
+	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION, true );
 	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
 		'nonce'                                  => wp_create_nonce( 'wpsc_purchase_logs' ),
 		'change_purchase_log_status_nonce'       => _wpsc_create_ajax_nonce( 'change_purchase_log_status' ),
@@ -432,7 +432,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 	) );
 
 	// Purchase Log Action Links
-	wp_enqueue_script( 'wpsc-purchase-log-action-links', WPSC_URL . '/wpsc-admin/js/purchase-log-action-links.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
+	wp_enqueue_script( 'wpsc-purchase-log-action-links', WPSC_URL . '/wpsc-admin/js/purchase-log-action-links.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION, true );
 	wp_localize_script( 'wpsc-purchase-log-action-links', 'WPSC_Purchase_Log_Action_Links', array(
 		'purchase_log_action_link_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_action_link' ),
 		'log_id'                         => empty( $_REQUEST['id'] ) ? '' : absint( $_REQUEST['id'] )
