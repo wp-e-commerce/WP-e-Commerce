@@ -55,7 +55,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	}
 	
 	// Update low stock notifications
-	if ( isset( $post_data['meta']['_wpsc_stock'] ) && ( $post_data['meta']['_wpsc_stock'] > $post_data['meta']['_wpsc_product_metadata']['stock_limit_notify'] ) ) {
+	if ( isset( $post_data['meta']['_wpsc_stock'] ) && isset( $post_data['meta']['_wpsc_product_metadata'] ) && ( $post_data['meta']['_wpsc_stock'] > $post_data['meta']['_wpsc_product_metadata']['stock_limit_notify'] ) ) {
 		// Check if notification has been sent
 		$notify_sent = get_product_meta( $product_id, 'stock_limit_notify_sent', true );
 		if( ! empty( $notify_sent ) ) {
