@@ -471,7 +471,6 @@ function _wpsc_ajax_remove_log_item() {
 		$log_id  = absint( $_POST['log_id'] );
 		$log     = new WPSC_Purchase_Log( $log_id );
 
-
 		if ( $log->remove_cart_item( $item_id ) ) {
 			return _wpsc_init_log_items( $log );
 		}
@@ -522,7 +521,11 @@ function _wpsc_ajax_update_log_item_qty() {
 function _wpsc_ajax_add_log_item() {
 	global $wpsc_cart;
 
-	if ( isset( $_POST['product_ids'], $_POST['log_id'] ) && is_array( $_POST['product_ids'] ) ) {
+	if (
+		isset( $_POST['product_ids'], $_POST['log_id'] )
+		&& is_array( $_POST['product_ids'] )
+		&& ! empty( $_POST['product_ids'] )
+	) {
 
 		$item_ids = array();
 
