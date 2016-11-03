@@ -480,6 +480,8 @@ class wpsc_cart_item {
 	 * @access public
 	 *
 	 * @param integer purchase log id
+	 *
+	 * @return int    The inserted cart item ID.
 	 */
 	function save_to_db($purchase_log_id) {
 		global $wpdb, $wpsc_shipping_modules;
