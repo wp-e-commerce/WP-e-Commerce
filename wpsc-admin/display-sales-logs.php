@@ -35,7 +35,7 @@ class WPSC_Purchase_Log_Page {
 		if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
 			$this->log_id = (int) $_REQUEST['id'];
 			$this->log = new WPSC_Purchase_Log( $this->log_id );
-			$this->can_edit = apply_filters( 'wpsc_can_edit_order', ! $this->log->is_transaction_completed(), $this );
+			$this->can_edit = $this->log->can_edit();
 		}
 
 		if ( isset( $_REQUEST['c'] ) && method_exists( $this, 'controller_' . $_REQUEST['c'] ) ) {

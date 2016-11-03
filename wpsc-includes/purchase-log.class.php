@@ -363,6 +363,7 @@ class WPSC_Purchase_Log {
 	private $previous_status   = false;
 
 	private $cart_contents = array();
+	private $can_edit = null;
 
 	/**
 	 * Contains the constructor arguments. This array is necessary because we will
@@ -1014,6 +1015,15 @@ class WPSC_Purchase_Log {
 
 	public function is_transaction_completed() {
 		return WPSC_Purchase_Log::is_order_status_completed( $this->get( 'processed' ) );
+	}
+
+	public function can_edit() {
+		if ( null === $this->can_edit ) {
+			$can_edit = current_user_can( 'edit_others_posts' ) && ! $this->is_transaction_completed();
+			$this->can_edit = apply_filters( 'wpsc_can_edit_order', $can_edit, $this );
+		}
+
+		return $this->can_edit;
 	}
 
 	public function is_order_received() {
