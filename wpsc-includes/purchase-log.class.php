@@ -616,7 +616,7 @@ class WPSC_Purchase_Log {
 
 	public function get_meta() {
 
-		if ( empty( $this->data ) && empty( $this->meta_data ) ) {
+		if ( empty( $this->data ) || empty( $this->meta_data ) ) {
 			$this->fetch();
 		}
 
