@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Verify nonce of an AJAX request
  *
@@ -562,7 +561,6 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 		if ( ! empty( $item_ids ) && in_array( absint( wpsc_purchaselog_details_id() ), $item_ids, true ) ) {
 			$html .= $cart_item;
 		}
-
 	}
 
 	return array(
@@ -605,34 +603,34 @@ function _wpsc_ajax_search_products() {
 	$alt = '';
 	foreach ( $posts as $post ) {
 		$post->title = trim( $post->post_title ) ? $post->post_title : __( '(no title)' );
-		$alt = ( 'alternate' == $alt ) ? '' : 'alternate';
+		$alt = ( 'alternate' === $alt ) ? '' : 'alternate';
 
 		$post->status = $post->post_status;
 
 		switch ( $post->post_status ) {
 			case 'publish' :
 			case 'private' :
-				$post->status = __('Published');
+				$post->status = __( 'Published' );
 				break;
 			case 'future' :
-				$post->status = __('Scheduled');
+				$post->status = __( 'Scheduled' );
 				break;
 			case 'pending' :
-				$post->status = __('Pending Review');
+				$post->status = __( 'Pending Review' );
 				break;
 			case 'draft' :
-				$post->status = __('Draft');
+				$post->status = __( 'Draft' );
 				break;
 			default :
 				$post->status = $post->post_status;
 				break;
 		}
 
-		if ( '0000-00-00 00:00:00' == $post->post_date ) {
+		if ( '0000-00-00 00:00:00' === $post->post_date ) {
 			$post->time = '';
 		} else {
 			/* translators: date format in table columns, see https://secure.php.net/date */
-			$post->time = mysql2date(__('Y/m/d'), $post->post_date);
+			$post->time = mysql2date( __( 'Y/m/d' ), $post->post_date );
 		}
 
 		$post->class = $alt;
