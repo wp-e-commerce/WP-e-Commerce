@@ -233,7 +233,7 @@ class WPSC_Purchase_Log_Page {
 
 	private function purchase_log_cart_items() {
 		while( wpsc_have_purchaselog_details() ) : wpsc_the_purchaselog_item();
-			$this->purchase_log_cart_item( $this->can_edit );
+			self::purchase_log_cart_item( $this->can_edit );
 		endwhile;
 	}
 
