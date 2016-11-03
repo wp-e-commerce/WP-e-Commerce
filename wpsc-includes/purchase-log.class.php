@@ -729,7 +729,7 @@ class WPSC_Purchase_Log {
 	 */
 	public function init_items() {
 		global $purchlogitem;
-		if ( ! $this->get( 'id' ) ) {
+		if ( ! $this->exists() ) {
 			return false;
 		}
 

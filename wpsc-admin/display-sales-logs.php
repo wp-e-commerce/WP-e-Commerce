@@ -265,12 +265,14 @@ class WPSC_Purchase_Log_Page {
 		</tr>
 		<?php
 		do_action( 'wpsc_additional_sales_item_info', wpsc_purchaselog_details_id() );
-		endwhile;
 	}
 
 	public function controller_item_details() {
-
-		if ( ! isset( $_REQUEST['id'] ) || ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) ) ) {
+		if (
+			! isset( $_REQUEST['id'] )
+			|| ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) )
+			|| ! $this->log->exists()
+		) {
 			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
