@@ -239,7 +239,7 @@ class WPSC_Purchase_Log_Page {
 
 	public static function purchase_log_cart_item( $can_edit = false ) {
 		?>
-		<tr class="purchase-log-line-item" id="purchase-log-item-<?php echo wpsc_purchaselog_details_id(); ?>" data-id="<?php echo wpsc_purchaselog_details_id(); ?>">
+		<tr class="purchase-log-line-item" id="purchase-log-item-<?php echo wpsc_purchaselog_details_id(); ?>" data-id="<?php echo wpsc_purchaselog_details_id(); ?>" data-productid="<?php echo wpsc_purchaselog_product_id(); ?>">
 			<td><?php echo wpsc_purchaselog_details_name(); ?></td> <!-- NAME! -->
 			<td><?php echo wpsc_purchaselog_details_SKU(); ?></td> <!-- SKU! -->
 			<td>

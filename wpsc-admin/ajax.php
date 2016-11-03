@@ -526,12 +526,27 @@ function _wpsc_ajax_add_log_item() {
 		&& ! empty( $_POST['product_ids'] )
 	) {
 
+		$existing = isset( $_POST['existing'] ) && is_array( $_POST['existing'] )
+			? array_map( 'absint', $_POST['existing'] )
+			: false;
+
 		$item_ids = array();
 
 		foreach ( $_POST['product_ids'] as $product_id ) {
 			$product_id = absint( $product_id );
-			$log_id  = absint( $_POST['log_id'] );
-			$log     = new WPSC_Purchase_Log( $log_id );
+			$log_id     = absint( $_POST['log_id'] );
+			$log        = new WPSC_Purchase_Log( $log_id );
+
+			// Is product is already in item list?
+			if ( $existing && in_array( $product_id, $existing, true ) ) {
+				$item = $log->get_cart_item_from_product_id( $product_id );
+				if ( $item ) {
+					// Update item quantity...
+					$log->update_cart_item( $item->id, array( 'quantity' => ++$item->quantity ) );
+					// And move on.
+					continue;
+				}
+			}
 
 			$item = new wpsc_cart_item( $product_id, array(), $wpsc_cart );
 			$item_id = $item->save_to_db( $log_id );
@@ -564,6 +579,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 	}
 
 	return array(
+		'quantities'     => wp_list_pluck( $log->get_cart_contents(), 'quantity', 'id' ),
 		'html'           => $html,
 		'discount_data'  => wpsc_purchlog_has_discount_data() ? esc_html__( 'Coupon Code', 'wp-e-commerce' ) . ': ' . wpsc_display_purchlog_discount_data() : '',
 		'discount'       => wpsc_display_purchlog_discount(),

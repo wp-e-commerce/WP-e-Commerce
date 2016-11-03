@@ -282,6 +282,15 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		$c.final_total.find( 'td:last span' ).html( data.final_total );
 
 		$c.spinner.removeClass( 'is-active' );
+
+		$.each( data.quantities, function( id, qty ) {
+			qty = parseInt( qty, 10 );
+			var $input = $c.log.find( '#purchase-log-item-' + id + ' .wpsc_item_qty' );
+			var val = $input.val();
+			if ( parseInt( val, 10 ) !== parseInt( qty, 10 ) ) {
+				$input.val( qty );
+			}
+		} );
 	};
 
 	var SearchView = window.Backbone.View.extend( {
@@ -403,9 +412,14 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		handleSelected: function( checked ) {
 			var that = this;
 
-			var args  = {
+			var existing = $c.log.find( '[data-productid]' ).map( function() {
+				return $( this ).data( 'productid' );
+			} ).get();
+
+			var args = {
 				action      : 'add_log_item',
 				product_ids : checked,
+				existing    : existing,
 				log_id      : $( '[name="purchlog_id"]' ).val(),
 				nonce       : wpsc.add_log_item_nonce
 			};
