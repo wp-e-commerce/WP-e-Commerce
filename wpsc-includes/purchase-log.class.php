@@ -1013,6 +1013,36 @@ class WPSC_Purchase_Log {
 		}
 	}
 
+	public function get_next_log_id() {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		$sql = $wpdb->prepare(
+			"SELECT MIN(id) FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id > %d",
+			$this->get( 'id' )
+		);
+
+		return $wpdb->get_var( $sql );
+	}
+
+	public function get_previous_log_id() {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		$sql = $wpdb->prepare(
+			"SELECT MAX(id) FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id < %d",
+			$this->get( 'id' )
+		);
+
+		return $wpdb->get_var( $sql );
+	}
+
 	public function is_transaction_completed() {
 		return WPSC_Purchase_Log::is_order_status_completed( $this->get( 'processed' ) );
 	}

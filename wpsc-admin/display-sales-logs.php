@@ -153,30 +153,17 @@ class WPSC_Purchase_Log_Page {
 
 	function purchase_logs_pagination() {
 		global $wpdb, $purchlogitem;
+		$prev_id = $this->log->get_previous_log_id();
+		$next_id = $this->log->get_next_log_id();
 		?>
 		<span class='tablenav'><span class='tablenav-pages'><span class='pagination-links'>
-			<?php
-			$href = "#";
-			$disabled = "disabled";
-			if ( $this->log_id > 1 ) {
-				$href = $this->get_purchase_log_url( ( $this->log_id - 1 ) );
-				$disabled = '';
-			}
+			<?php if ( $prev_id ) : ?>
+				<a href='<?php echo esc_url( $this->get_purchase_log_url( $prev_id ) ); ?>' class='prev-page'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
+			<?php endif; ?>
 
-			?>
-			<a href='<?php echo esc_url( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
-			<?php
-
-			$max_purchase_id = wpsc_max_purchase_id();
-			$href = "#";
-			$disabled = "disabled";
-			if ( $max_purchase_id > $this->log_id ) {
-				$href = $this->get_purchase_log_url( ( $this->log_id + 1 ) );
-				$disabled = '';
-			}
-			?>
-			<a href='<?php echo esc_url( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
-
+			<?php if ( $next_id ) : ?>
+				<a href='<?php echo esc_url( $this->get_purchase_log_url( $next_id ) ); ?>' class='next-page'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
+			<?php endif; ?>
 		</span></span></span>
 		<?php
 	}
