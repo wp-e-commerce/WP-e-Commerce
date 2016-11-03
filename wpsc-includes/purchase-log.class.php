@@ -743,6 +743,19 @@ class WPSC_Purchase_Log {
 		return false;
 	}
 
+	public function get_cart_item_from_product_id( $product_id ) {
+		$product_id = absint( $product_id );
+		$cart       = $this->get_cart_contents();
+
+		foreach ( $cart as $item ) {
+			if ( $product_id === absint( $item->prodid ) ) {
+				return $item;
+			}
+		}
+
+		return false;
+	}
+
 	public function update_cart_item( $item_id, $data ) {
 		global $wpdb;
 
