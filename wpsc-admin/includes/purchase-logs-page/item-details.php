@@ -102,14 +102,14 @@
 							<td colspan="<?php echo $cols + 2; ?>">
 								<hr>
 								<p class="wpsc-add-row">
-									<button type="button" class="wpsc-add-row-button button"><?php esc_html_e( 'Add Item', 'wp-e-commerce' ); ?></button>
+									<button type="button" class="wpsc-add-item-button button"><?php esc_html_e( 'Add Item', 'wp-e-commerce' ); ?></button>
 								</p>
 								<hr>
 							</td>
 						</tr>
 					<?php endif; ?>
 
-					<tr class="wpsc_purchaselog_start_totals">
+					<tr class="wpsc_purchaselog_start_totals" id="wpsc_discount_data">
 						<td colspan="<?php echo $cols; ?>">
 							<?php if ( wpsc_purchlog_has_discount_data() ): ?>
 								<?php esc_html_e( 'Coupon Code', 'wp-e-commerce' ); ?>: <?php echo wpsc_display_purchlog_discount_data(); ?>
@@ -120,36 +120,24 @@
 					</tr>
 
 					<?php if( ! wpec_display_product_tax() ): ?>
-						<tr>
+						<tr id="wpsc_total_taxes">
 							<td colspan='<?php echo $cols; ?>'></td>
 							<th class='right-col'><?php esc_html_e( 'Taxes', 'wp-e-commerce' ); ?> </th>
 							<td><?php echo wpsc_display_purchlog_taxes(); ?></td>
 						</tr>
 					<?php endif; ?>
 
-					<tr>
+					<tr id="wpsc_total_shipping">
 						<td colspan='<?php echo $cols; ?>'></td>
 						<th class='right-col'><?php esc_html_e( 'Shipping', 'wp-e-commerce' ); ?> </th>
 						<td><?php echo wpsc_display_purchlog_shipping(); ?></td>
 					</tr>
-					<tr>
+					<tr id="wpsc_final_total">
 						<td colspan='<?php echo $cols; ?>'></td>
 						<th class='right-col'><?php esc_html_e( 'Total', 'wp-e-commerce' ); ?> </th>
-						<td><?php echo wpsc_display_purchlog_totalprice(); ?></td>
+						<td><span><?php echo wpsc_display_purchlog_totalprice(); ?></span> <div class="spinner"></div></td>
 					</tr>
 				</tbody>
-				<?php if ( $this->can_edit ) : ?>
-					<tfoot>
-						<tr>
-							<td colspan="<?php echo $cols + 2; ?>">
-								<div class="wpsc-order-data-row wpsc-order-add-item wpsc-order-data-row-toggle">
-									<button type="button" class="button cancel-update-items" data-reload="true"><?php esc_html_e( 'Cancel', 'wp-e-commerce' ); ?></button>
-									<button type="submit" class="button button-primary update-items"><?php esc_html_e( 'Update Items', 'wp-e-commerce' ); ?></button>
-								</div>
-							</td>
-						</tr>
-					</tfoot>
-				<?php endif; ?>
 			</table>
 
 			<?php do_action( 'wpsc_purchlogitem_metabox_start', $this->log_id ); ?>
@@ -188,3 +176,16 @@
 	</div>
 
 </div>
+
+<script type="text/html" id="tmpl-wpsc-found-products">
+	<table class="widefat"><thead><tr><th class="found-radio"><br /></th><th><?php esc_html_e( 'Title', 'wp-e-commerce' ); ?></th><th class="no-break"><?php esc_html_e( 'Date', 'wp-e-commerce' ); ?></th><th class="no-break"><?php esc_html_e( 'Status', 'wp-e-commerce' ); ?></th></tr></thead><tbody></tbody></table>
+</script>
+
+<script type="text/html" id="tmpl-wpsc-found-product-rows">
+	<# _.each( data.posts, function( post ) { #>
+		<tr class="found-posts {{ post.class }}">
+			<td class="found-radio"><input type="checkbox" id="found-{{ post.ID }}" name="found_post_id" value="{{ post.ID }}"></td>
+			<td><label for="found-{{ post.ID }}">{{ post.title }}</label></td><td class="no-break">{{ post.time }}</td><td class="no-break">{{ post.status }}</td>
+		</tr>
+	<#} ); #>
+</script>

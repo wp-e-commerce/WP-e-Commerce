@@ -232,12 +232,18 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	private function purchase_log_cart_items() {
-		while( wpsc_have_purchaselog_details() ) : wpsc_the_purchaselog_item(); ?>
-		<tr>
+		while( wpsc_have_purchaselog_details() ) : wpsc_the_purchaselog_item();
+			$this->purchase_log_cart_item( $this->can_edit );
+		endwhile;
+	}
+
+	public static function purchase_log_cart_item( $can_edit = false ) {
+		?>
+		<tr class="purchase-log-line-item" id="purchase-log-item-<?php echo wpsc_purchaselog_details_id(); ?>" data-id="<?php echo wpsc_purchaselog_details_id(); ?>">
 			<td><?php echo wpsc_purchaselog_details_name(); ?></td> <!-- NAME! -->
 			<td><?php echo wpsc_purchaselog_details_SKU(); ?></td> <!-- SKU! -->
 			<td>
-				<?php if ( $this->can_edit ) : ?>
+				<?php if ( $can_edit ) : ?>
 					<input type="number" step="1" min="0" autocomplete="off" name="wpsc_item_qty" class="wpsc_item_qty" placeholder="0" value="<?php echo wpsc_purchaselog_details_quantity(); ?>" size="4" class="quantity">
 				<?php else: ?>
 					<?php echo wpsc_purchaselog_details_quantity(); ?>
@@ -255,7 +261,7 @@ class WPSC_Purchase_Log_Page {
 			<?php endif; ?>
 			<!-- <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_discount() ); ?></td> --> <!-- DISCOUNT! -->
 			<td class="amount"><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); ?></td> <!-- TOTAL! -->
-			<?php if ( $this->can_edit ) : ?>
+			<?php if ( $can_edit ) : ?>
 				<td class="remove">
 					<div class="wpsc-remove-row">
 						<button type="button" class="wpsc-remove-item-button"><span style="color:#a00;" class="dashicons dashicons-dismiss"></span> <?php esc_html_e( 'Remove Item', 'wp-e-commerce' ); ?></button>
@@ -362,6 +368,17 @@ class WPSC_Purchase_Log_Page {
 		$receipt_sent = ! empty( $_GET['sent'] );
 		$receipt_not_sent = isset( $_GET['sent'] ) && ! $_GET['sent'];
 		include( 'includes/purchase-logs-page/item-details.php' );
+
+		global $wp_scripts;
+
+		wp_enqueue_script( 'wp-backbone' );
+
+		if ( isset( $wp_scripts->registered['wp-e-commerce-purchase-logs'] ) ) {
+			// JS needed for modal
+			$wp_scripts->registered['wp-e-commerce-purchase-logs']->deps[] = 'wp-backbone';
+		}
+
+		add_action( 'admin_footer', 'find_posts_div' );
 	}
 
 	public function download_csv() {

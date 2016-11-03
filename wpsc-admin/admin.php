@@ -424,11 +424,19 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'change_purchase_log_status_nonce'       => _wpsc_create_ajax_nonce( 'change_purchase_log_status' ),
 		'purchase_log_save_tracking_id_nonce'    => _wpsc_create_ajax_nonce( 'purchase_log_save_tracking_id' ),
 		'purchase_log_send_tracking_email_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_send_tracking_email' ),
+		'remove_log_item_nonce'                  => _wpsc_create_ajax_nonce( 'remove_log_item' ),
+		'update_log_item_qty_nonce'              => _wpsc_create_ajax_nonce( 'update_log_item_qty' ),
+		'add_log_item_nonce'                     => _wpsc_create_ajax_nonce( 'add_log_item' ),
+		'search_products_nonce'                  => _wpsc_create_ajax_nonce( 'search_products' ),
 		'sending_message'                        => _x( 'sending...', 'sending tracking email for purchase log', 'wp-e-commerce' ),
 		'sent_message'                           => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wp-e-commerce' ),
 		'current_view'                           => empty( $_REQUEST['status'] ) ? 'all' : $_REQUEST['status'],
 		'current_filter'                         => empty( $_REQUEST['m'] ) ? '' : $_REQUEST['m'],
 		'current_page'                           => empty( $_REQUEST['paged'] ) ? '' : $_REQUEST['paged'],
+		'strings'                                => array(
+			'confirm_delete' => esc_html__( 'Are you sure you want to remove this item?', 'wp-e-commerce' ),
+			'search_head' => esc_html__( 'Search for Products to Add', 'wp-e-commerce' ),
+		),
 	) );
 
 	// Purchase Log Action Links

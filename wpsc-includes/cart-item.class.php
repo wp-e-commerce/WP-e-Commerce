@@ -599,6 +599,8 @@ class wpsc_cart_item {
 		}
 
 		do_action( 'wpsc_save_cart_item', $cart_item_id, $this->product_id, $this );
+
+		return $cart_item_id;
 	}
 
 }

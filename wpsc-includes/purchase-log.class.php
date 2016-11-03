@@ -363,6 +363,7 @@ class WPSC_Purchase_Log {
 	private $previous_status   = false;
 
 	private $cart_contents = array();
+	private $cart_ids = array();
 	private $can_edit = null;
 
 	/**
@@ -714,10 +715,83 @@ class WPSC_Purchase_Log {
 
 		$id = $this->get( 'id' );
 
+		// Bail if we don't have a log object yet (no id).
+		if ( empty( $id ) ) {
+			return $this->cart_contents;
+		}
+
 		$sql = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $id );
 		$this->cart_contents = $wpdb->get_results( $sql );
 
+		if ( is_array( $this->cart_contents ) ) {
+			foreach ( $this->cart_contents as $index => $item ) {
+				$this->cart_ids[ absint( $item->id ) ] = $index;
+			}
+		}
+
 		return $this->cart_contents;
+	}
+
+	public function get_cart_item( $item_id ) {
+		$item_id = absint( $item_id );
+		$cart    = $this->get_cart_contents();
+
+		if ( isset( $this->cart_ids[ $item_id ] ) ) {
+			return $cart[ $this->cart_ids[ $item_id ] ];
+		}
+
+		return false;
+	}
+
+	public function update_cart_item( $item_id, $data ) {
+		global $wpdb;
+
+		$item_id = absint( $item_id );
+		$item = $this->get_cart_item( $item_id );
+
+		if ( $item ) {
+			do_action( 'wpsc_purchase_log_before_update_cart_item', $item_id );
+
+			$data = wp_unslash( $data );
+			$result = $wpdb->update( WPSC_TABLE_CART_CONTENTS, $data, array( 'id' => $item_id  ) );
+
+			if ( $result ) {
+
+				$this->cart_contents = array();
+				$this->get_cart_item( $item_id );
+
+				do_action( 'wpsc_purchase_log_update_cart_item', $item_id );
+			}
+
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function remove_cart_item( $item_id ) {
+		global $wpdb;
+
+		$item_id = absint( $item_id );
+		$item = $this->get_cart_item( $item_id );
+
+		if ( $item ) {
+			do_action( 'wpsc_purchase_log_before_remove_cart_item', $item_id );
+
+			$result = $wpdb->delete( WPSC_TABLE_CART_CONTENTS, array( 'id' => $item_id ) );
+
+			if ( $result ) {
+
+				unset( $this->cart_contents[ $this->cart_ids[ $item_id ] ] );
+				unset( $this->cart_ids[ $item_id ] );
+
+				do_action( 'wpsc_purchase_log_remove_cart_item', $item_id );
+			}
+
+			return $result;
+		}
+
+		return false;
 	}
 
 	/**
