@@ -1367,16 +1367,10 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @return mixed
 	 */
 	public function shipping( $numeric = false, $include_items = false ) {
-		global $purchlogitem;
-
-		$total_shipping = $purchlogitem->extrainfo->base_shipping;
+		$total_shipping = $this->get( 'base_shipping' );
 
 		if ( $include_items ) {
-			foreach ( (array) $purchlogitem->allcartcontent as $cart_item ) {
-				if ( $cart_item->pnp > 0 ) {
-					$total_shipping += ( $cart_item->pnp );
-				}
-			}
+			$total_shipping = $this->meta_data['total_shipping'];
 		}
 
 		if ( ! $numeric ) {
