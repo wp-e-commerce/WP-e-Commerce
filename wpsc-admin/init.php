@@ -99,151 +99,150 @@ if ( isset( $_GET['wpsc_admin_action'] ) && ( $_GET['wpsc_admin_action'] == 'dup
     add_action( 'admin_init', 'wpsc_duplicate_product' );
 
 function wpsc_purchase_log_csv() {
-
-	if ( ! wpsc_is_store_admin() ) {
-		return;
+	if ( 'key' == $_REQUEST['rss_key'] && wpsc_is_store_admin() ) {
+		_wpsc_download_purchase_log_csv( $_REQUEST );
 	}
+}
 
+function _wpsc_download_purchase_log_csv( $args = array() ) {
 	global $wpdb, $wpsc_gateways;
 	get_currentuserinfo();
 	$count = 0;
 
-	if ( 'key' == $_REQUEST['rss_key'] ) {
-		if ( isset( $_REQUEST['start_timestamp'] ) && isset( $_REQUEST['end_timestamp'] ) ) {
-			$start_timestamp = $_REQUEST['start_timestamp'];
-			$end_timestamp   = $_REQUEST['end_timestamp'];
-			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '%d' AND '%d' ORDER BY `date` DESC";
-			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
-			$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
-			/* translators: %1$s is "start" date, %2$s is "to" date */
-			$csv_name = _x( 'Purchase Log %1$s to %2$s.csv', 'exported purchase log csv file name', 'wp-e-commerce' );
-			$csv_name = sprintf( $csv_name, date( "M-d-Y", $start_timestamp ), date( "M-d-Y", $end_timestamp ) );
-		} elseif ( isset( $_REQUEST['m'] ) ) {
-			$year = (int) substr( $_REQUEST['m'], 0, 4);
-			$month = (int) substr( $_REQUEST['m'], -2 );
-			$month_year_sql = "
-				SELECT *
-				FROM " . WPSC_TABLE_PURCHASE_LOGS . "
-				WHERE YEAR(FROM_UNIXTIME(date)) = %d AND MONTH(FROM_UNIXTIME(date)) = %d
-				ORDER BY `id` DESC
-			";
-			$month_year_sql = apply_filters( 'wpsc_purchase_log_month_year_csv', $month_year_sql );
-			$data = $wpdb->get_results( $wpdb->prepare( $month_year_sql, $year, $month ), ARRAY_A );
-			/* translators: %1$s is month, %2$s is year */
-			$csv_name = _x( 'Purchase Log %1$s/%2$s.csv', 'exported purchase log csv file name', 'wp-e-commerce' );
-			$csv_name = sprintf( $csv_name, $month, $year );
-		} else {
-			$sql = apply_filters( 'wpsc_purchase_log_month_year_csv', "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " ORDER BY `id` DESC" );
-			$data = $wpdb->get_results( $sql, ARRAY_A );
-			$csv_name = _x( "All Purchase Logs.csv", 'exported purchase log csv file name', 'wp-e-commerce' );
-		}
-
-		$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `type` != 'heading' ORDER BY `checkout_order` DESC;";
-		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
-
-		$headers_array = array(
-			_x( 'Purchase ID'   , 'purchase log csv headers', 'wp-e-commerce' ),
-			_x( 'Purchase Total', 'purchase log csv headers', 'wp-e-commerce' ),
-		);
-		$headers2_array = array(
-			_x( 'Payment Gateway', 'purchase log csv headers', 'wp-e-commerce' ),
-			_x( 'Payment Status' , 'purchase log csv headers', 'wp-e-commerce' ),
-			_x( 'Purchase Date'  , 'purchase log csv headers', 'wp-e-commerce' ),
-		);
-		$form_headers_array = array();
-
-		$output = '';
-
-		foreach ( (array) $form_data as $form_field ) {
-			if ( empty ( $form_field['unique_name'] ) ) {
-				$form_headers_array[] = $form_field['name'];
-			} else {
-				$prefix = false === strstr( $form_field['unique_name'], 'billing' ) ? _x( 'Shipping ', 'purchase log csv header field prefix', 'wp-e-commerce' ) : _x( 'Billing ', 'purchase log csv header field prefix', 'wp-e-commerce' );
-				$form_headers_array[] = $prefix . $form_field['name'];
-			}
-		}
-
-		foreach ( (array) $data as $purchase ) {
-			$form_headers = '';
-			$output .= "\"" . $purchase['id'] . "\","; //Purchase ID
-			$output .= "\"" . $purchase['totalprice'] . "\","; //Purchase Total
-			foreach ( (array) $form_data as $form_field ) {
-				$collected_data_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . $form_field['id'] . "' LIMIT 1";
-				$collected_data = $wpdb->get_results( $collected_data_sql, ARRAY_A );
-				$collected_data = $collected_data[0];
-
-				if (  ( 'billingstate' == $form_field['unique_name'] || 'shippingstate' == $form_field['unique_name'] ) && is_numeric( $collected_data['value'] ) )
-					$output .= "\"" . wpsc_get_state_by_id( $collected_data['value'], 'code' ) . "\","; // get form fields
-				else
-					$output .= "\"" . str_replace( array( "\r", "\r\n", "\n" ), ' ', $collected_data['value'] ) . "\","; // get form fields
-			}
-
-			if ( isset( $wpsc_gateways[$purchase['gateway']] ) && isset( $wpsc_gateways[$purchase['gateway']]['display_name'] ) )
-				$output .= "\"" . $wpsc_gateways[$purchase['gateway']]['display_name'] . "\","; //get gateway name
-			else
-				$output .= "\"\",";
-
-
-			$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
-
-			$output .= "\"" . $status_name . "\","; //get purchase status
-			$output .= "\"" . date( apply_filters( 'wpsc_purchase_log_csv_date_format', 'jS M Y' ), $purchase['date'] ) . "\","; //date
-
-			$cartsql = "SELECT `prodid`, `quantity`, `name` FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`=" . $purchase['id'] . "";
-			$cart = $wpdb->get_results( $cartsql, ARRAY_A );
-
-			if ( $count < count( $cart ) )
-			    $count = count( $cart );
-
-			$items = count( $cart );
-			$i     = 1;
-
-			// Go through all products in cart and display quantity and sku
-			foreach ( (array) $cart as $item ) {
-				$skuvalue = get_product_meta( $item['prodid'], 'sku', true );
-				if( empty( $skuvalue ) )
-				    $skuvalue = __( 'N/A', 'wp-e-commerce' );
-				$output .= "\"" . $item['quantity'] . "\",";
-				$output .= "\"" . str_replace( '"', '\"', $item['name'] ) . "\",";
-
-				if ( $items <= 1 )
-					$output .= "\"" . $skuvalue . "\"" ;
-				elseif ( $items > 1 && $i != $items  )
-					$output .= "\"" . $skuvalue . "\"," ;
-				else
-					$output .= "\"" . $skuvalue . "\"" ;
-
-				$i++;
-			}
-
-			$output .= "\n"; // terminates the row/line in the CSV file
-		}
-		// Get the most number of products and create a header for them
-		$headers3 = array();
-		for( $i = 0; $i < $count; $i++ ){
-			$headers3[] = _x( 'Quantity', 'purchase log csv headers', 'wp-e-commerce' );
-			$headers3[] = _x( 'Product Name', 'purchase log csv headers', 'wp-e-commerce' );
-			$headers3[] = _x( 'SKU', 'purchase log csv headers', 'wp-e-commerce' );
-		}
-
-		$headers      = '"' . implode( '","', $headers_array ) . '",';
-		$form_headers = '"' . implode( '","', $form_headers_array ) . '",';
-		$headers2     = '"' . implode( '","', $headers2_array ) . '",';
-		$headers3     = '"' . implode( '","', $headers3 ) . '"';
-
-		$headers      = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
-		$output       = apply_filters( 'wpsc_purchase_log_csv_output' , $output, $data, $form_data );
-
-		/**
-		 * Fires when the WPSC purchase log is exported as a CSV
-		 */
-		do_action( 'wpsc_purchase_log_csv' );
-
-		header( 'Content-Type: text/csv' );
-		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
-		echo $headers . "\n". $output;
-		exit;
+	if ( isset( $args['start_timestamp'] ) && isset( $args['end_timestamp'] ) ) {
+		$start_timestamp = $args['start_timestamp'];
+		$end_timestamp   = $args['end_timestamp'];
+		$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '%d' AND '%d' ORDER BY `date` DESC";
+		$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
+		$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
+		/* translators: %1$s is "start" date, %2$s is "to" date */
+		$csv_name = _x( 'Purchase Log %1$s to %2$s.csv', 'exported purchase log csv file name', 'wp-e-commerce' );
+		$csv_name = sprintf( $csv_name, date( "M-d-Y", $start_timestamp ), date( "M-d-Y", $end_timestamp ) );
+	} elseif ( isset( $args['m'] ) ) {
+		$year = (int) substr( $args['m'], 0, 4);
+		$month = (int) substr( $args['m'], -2 );
+		$month_year_sql = "
+			SELECT *
+			FROM " . WPSC_TABLE_PURCHASE_LOGS . "
+			WHERE YEAR(FROM_UNIXTIME(date)) = %d AND MONTH(FROM_UNIXTIME(date)) = %d
+			ORDER BY `id` DESC
+		";
+		$month_year_sql = apply_filters( 'wpsc_purchase_log_month_year_csv', $month_year_sql );
+		$data = $wpdb->get_results( $wpdb->prepare( $month_year_sql, $year, $month ), ARRAY_A );
+		/* translators: %1$s is month, %2$s is year */
+		$csv_name = _x( 'Purchase Log %1$s/%2$s.csv', 'exported purchase log csv file name', 'wp-e-commerce' );
+		$csv_name = sprintf( $csv_name, $month, $year );
+	} else {
+		$sql = apply_filters( 'wpsc_purchase_log_month_year_csv', "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " ORDER BY `id` DESC" );
+		$data = $wpdb->get_results( $sql, ARRAY_A );
+		$csv_name = _x( "All Purchase Logs.csv", 'exported purchase log csv file name', 'wp-e-commerce' );
 	}
+
+	$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `type` != 'heading' ORDER BY `checkout_order` DESC;";
+	$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
+
+	$headers_array = array(
+		_x( 'Purchase ID'   , 'purchase log csv headers', 'wp-e-commerce' ),
+		_x( 'Purchase Total', 'purchase log csv headers', 'wp-e-commerce' ),
+	);
+	$headers2_array = array(
+		_x( 'Payment Gateway', 'purchase log csv headers', 'wp-e-commerce' ),
+		_x( 'Payment Status' , 'purchase log csv headers', 'wp-e-commerce' ),
+		_x( 'Purchase Date'  , 'purchase log csv headers', 'wp-e-commerce' ),
+	);
+	$form_headers_array = array();
+
+	$output = '';
+
+	foreach ( (array) $form_data as $form_field ) {
+		if ( empty ( $form_field['unique_name'] ) ) {
+			$form_headers_array[] = $form_field['name'];
+		} else {
+			$prefix = false === strstr( $form_field['unique_name'], 'billing' ) ? _x( 'Shipping ', 'purchase log csv header field prefix', 'wp-e-commerce' ) : _x( 'Billing ', 'purchase log csv header field prefix', 'wp-e-commerce' );
+			$form_headers_array[] = $prefix . $form_field['name'];
+		}
+	}
+
+	foreach ( (array) $data as $purchase ) {
+		$form_headers = '';
+		$output .= "\"" . $purchase['id'] . "\","; //Purchase ID
+		$output .= "\"" . $purchase['totalprice'] . "\","; //Purchase Total
+		foreach ( (array) $form_data as $form_field ) {
+			$collected_data_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . $form_field['id'] . "' LIMIT 1";
+			$collected_data = $wpdb->get_results( $collected_data_sql, ARRAY_A );
+			$collected_data = $collected_data[0];
+
+			if (  ( 'billingstate' == $form_field['unique_name'] || 'shippingstate' == $form_field['unique_name'] ) && is_numeric( $collected_data['value'] ) )
+				$output .= "\"" . wpsc_get_state_by_id( $collected_data['value'], 'code' ) . "\","; // get form fields
+			else
+				$output .= "\"" . str_replace( array( "\r", "\r\n", "\n" ), ' ', $collected_data['value'] ) . "\","; // get form fields
+		}
+
+		if ( isset( $wpsc_gateways[$purchase['gateway']] ) && isset( $wpsc_gateways[$purchase['gateway']]['display_name'] ) )
+			$output .= "\"" . $wpsc_gateways[$purchase['gateway']]['display_name'] . "\","; //get gateway name
+		else
+			$output .= "\"\",";
+
+
+		$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
+
+		$output .= "\"" . $status_name . "\","; //get purchase status
+		$output .= "\"" . date( apply_filters( 'wpsc_purchase_log_csv_date_format', 'jS M Y' ), $purchase['date'] ) . "\","; //date
+
+		$cartsql = "SELECT `prodid`, `quantity`, `name` FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`=" . $purchase['id'] . "";
+		$cart = $wpdb->get_results( $cartsql, ARRAY_A );
+
+		if ( $count < count( $cart ) )
+		    $count = count( $cart );
+
+		$items = count( $cart );
+		$i     = 1;
+
+		// Go through all products in cart and display quantity and sku
+		foreach ( (array) $cart as $item ) {
+			$skuvalue = get_product_meta( $item['prodid'], 'sku', true );
+			if( empty( $skuvalue ) )
+			    $skuvalue = __( 'N/A', 'wp-e-commerce' );
+			$output .= "\"" . $item['quantity'] . "\",";
+			$output .= "\"" . str_replace( '"', '\"', $item['name'] ) . "\",";
+
+			if ( $items <= 1 )
+				$output .= "\"" . $skuvalue . "\"" ;
+			elseif ( $items > 1 && $i != $items  )
+				$output .= "\"" . $skuvalue . "\"," ;
+			else
+				$output .= "\"" . $skuvalue . "\"" ;
+
+			$i++;
+		}
+
+		$output .= "\n"; // terminates the row/line in the CSV file
+	}
+	// Get the most number of products and create a header for them
+	$headers3 = array();
+	for( $i = 0; $i < $count; $i++ ){
+		$headers3[] = _x( 'Quantity', 'purchase log csv headers', 'wp-e-commerce' );
+		$headers3[] = _x( 'Product Name', 'purchase log csv headers', 'wp-e-commerce' );
+		$headers3[] = _x( 'SKU', 'purchase log csv headers', 'wp-e-commerce' );
+	}
+
+	$headers      = '"' . implode( '","', $headers_array ) . '",';
+	$form_headers = '"' . implode( '","', $form_headers_array ) . '",';
+	$headers2     = '"' . implode( '","', $headers2_array ) . '",';
+	$headers3     = '"' . implode( '","', $headers3 ) . '"';
+
+	$headers      = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
+	$output       = apply_filters( 'wpsc_purchase_log_csv_output' , $output, $data, $form_data );
+
+	/**
+	 * Fires when the WPSC purchase log is exported as a CSV
+	 */
+	do_action( 'wpsc_purchase_log_csv' );
+
+	header( 'Content-Type: text/csv' );
+	header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
+	echo $headers . "\n". $output;
+	exit;
 }
 
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'wpsc_downloadcsv') ) {

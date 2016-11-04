@@ -382,8 +382,7 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function download_csv() {
-		$_REQUEST['rss_key'] = 'key';
-		wpsc_purchase_log_csv();
+		_wpsc_download_purchase_log_csv();
 	}
 
 	public function process_bulk_action() {
