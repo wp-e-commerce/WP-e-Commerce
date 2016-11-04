@@ -6,7 +6,7 @@ if ( ! defined( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE' ) ) {
 	define( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE', DAY_IN_SECONDS * 2 );
 }
 
-class WPSC_Purchase_Log {
+class WPSC_Purchase_Log extends WPSC_Query_Base {
 	const INCOMPLETE_SALE  		= 1;
 	const ORDER_RECEIVED  	 	= 2;
 	const ACCEPTED_PAYMENT		= 3;
@@ -94,6 +94,31 @@ class WPSC_Purchase_Log {
 		'discount_value',
 		'wpec_taxes_total',
 		'wpec_taxes_rate',
+	);
+
+	private $gateway_data = array();
+
+	private $is_status_changed = false;
+	private $previous_status   = false;
+
+	private $cart_contents = array();
+	private $cart_ids = array();
+	private $can_edit = null;
+
+	/**
+	 * Contains the constructor arguments. This array is necessary because we will
+	 * lazy load the DB row into $this->data whenever necessary. Lazy loading is,
+	 * in turn, necessary because sometimes right after saving a new record, we need
+	 * to fetch a property with the same object.
+	 *
+	 * @access private
+	 * @since 3.8.9
+	 *
+	 * @var array
+	 */
+	private $args = array(
+		'col'   => '',
+		'value' => '',
 	);
 
 	/**
@@ -331,68 +356,6 @@ class WPSC_Purchase_Log {
 	}
 
 	/**
-	 * Contains the values fetched from the DB
-	 *
-	 * @access private
-	 * @since 3.8.9
-	 *
-	 * @var array
-	 */
-	private $data = array();
-
-	/**
-	 * Data that is not directly stored inside the DB but is inferred
-	 *
-	 * @since 3.9
-	 * @var array
-	 */
-	private $meta_data = array();
-
-	private $gateway_data = array();
-
-	/**
-	 * True if the DB row is fetched into $this->data.
-	 *
-	 * @access private
-	 * @since 3.8.9
-	 *
-	 * @var string
-	 */
-	private $fetched           = false;
-	private $is_status_changed = false;
-	private $previous_status   = false;
-
-	private $cart_contents = array();
-	private $cart_ids = array();
-	private $can_edit = null;
-
-	/**
-	 * Contains the constructor arguments. This array is necessary because we will
-	 * lazy load the DB row into $this->data whenever necessary. Lazy loading is,
-	 * in turn, necessary because sometimes right after saving a new record, we need
-	 * to fetch a property with the same object.
-	 *
-	 * @access private
-	 * @since 3.8.9
-	 *
-	 * @var array
-	 */
-	private $args = array(
-		'col'   => '',
-		'value' => '',
-	);
-
-	/**
-	 * True if the row exists in DB
-	 *
-	 * @access private
-	 * @since 3.8.9
-	 *
-	 * @var string
-	 */
-	private $exists = false;
-
-	/**
 	 * Update cache of the passed log object
 	 *
 	 * @access public
@@ -432,7 +395,6 @@ class WPSC_Purchase_Log {
 
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_logs' );
 		wp_cache_delete( $log->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
-		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_meta' );
 
@@ -616,24 +578,15 @@ class WPSC_Purchase_Log {
 		$this->set_shipping_method_names();
 	}
 
-	public function get_meta() {
-
-		if ( empty( $this->data ) && empty( $this->meta_data ) ) {
-			$this->fetch();
-		}
-
-		return (array) apply_filters( 'wpsc_purchase_log_meta_data', $this->meta_data );
-	}
-
 	/**
 	 * Fetches the actual record from the database
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 3.8.9
 	 *
 	 * @return void
 	 */
-	private function fetch() {
+	protected function fetch() {
 		global $wpdb;
 
 		if ( $this->fetched ) {
@@ -668,42 +621,42 @@ class WPSC_Purchase_Log {
 	}
 
 	/**
-	 * Whether the DB row for this purchase log exists
+	 * Prepares the return value for get() (apply_filters, etc).
 	 *
-	 * @access public
-	 * @since 3.8.9
+	 * @access protected
+	 * @since  4.0
 	 *
-	 * @return bool True if it exists. Otherwise false.
+	 * @param  mixed  $value Value fetched
+	 * @param  string $key   Key for $data.
+	 *
+	 * @return mixed
 	 */
-	public function exists() {
-		$this->fetch();
-		return $this->exists;
+	protected function prepare_get( $value, $key ) {
+		return apply_filters( 'wpsc_purchase_log_get_property', $value, $key, $this );
 	}
 
 	/**
-	 * Returns the value of the specified property of the purchase log
+	 * Prepares the return value for get_data() (apply_filters, etc).
 	 *
-	 * @access public
-	 * @since 3.8.9
+	 * @access protected
+	 * @since  4.0
 	 *
-	 * @param string $key Name of the property (column)
 	 * @return mixed
 	 */
-	public function get( $key ) {
-		// lazy load the purchase log row if it's not fetched from the database yet
-		if ( empty( $this->data ) || ! array_key_exists( $key, $this->data ) ) {
-			$this->fetch();
-		}
+	protected function prepare_get_data() {
+		return apply_filters( 'wpsc_purchase_log_get_data', $this->data, $this );
+	}
 
-		if ( isset( $this->data[ $key ] ) ) {
-			$value = $this->data[ $key ];
-		} else if ( isset( $this->meta_data[ $key ] ) ) {
-			$value = $this->meta_data[ $key ];
-		} else {
-			$value = null;
-		}
-
-		return apply_filters( 'wpsc_purchase_log_get_property', $value, $key, $this );
+	/**
+	 * Prepares the return value for get_meta() (apply_filters, etc).
+	 *
+	 * @access protected
+	 * @since  4.0
+	 *
+	 * @return mixed
+	 */
+	protected function prepare_get_meta() {
+		return (array) apply_filters( 'wpsc_purchase_log_meta_data', $this->meta_data );
 	}
 
 	public function get_cart_contents() {
@@ -824,22 +777,6 @@ class WPSC_Purchase_Log {
 		$purchlogitem = new wpsc_purchaselogs_items( $this->get( 'id' ) );
 
 		return $purchlogitem;
-	}
-
-	/**
-	 * Returns the whole database row in the form of an associative array
-	 *
-	 * @access public
-	 * @since 3.8.9
-	 *
-	 * @return array
-	 */
-	public function get_data() {
-		if ( empty( $this->data ) ) {
-			$this->fetch();
-		}
-
-		return apply_filters( 'wpsc_purchase_log_get_data', $this->data, $this );
 	}
 
 	public function get_gateway_data( $from_currency = false, $to_currency = false ) {
@@ -1022,7 +959,7 @@ class WPSC_Purchase_Log {
 		}
 
 		if ( ! empty( $this->meta_data ) ) {
-			$this->save_meta_data();
+			$this->save_meta();
 		}
 
 		do_action( 'wpsc_purchase_log_save', $this );
@@ -1033,10 +970,12 @@ class WPSC_Purchase_Log {
 	/**
 	 * Save meta data for purchase log, if any was set via set().
 	 *
+	 * @access public
 	 * @since  4.0
-	 * @return void
+	 *
+	 * @return WPSC_Query_Base  The current object (for method chaining)
 	 */
-	private function save_meta_data() {
+	public function save_meta() {
 		do_action( 'wpsc_purchase_log_pre_save_meta', $this );
 
 		$meta = $this->get_meta();
@@ -1046,6 +985,8 @@ class WPSC_Purchase_Log {
 		}
 
 		do_action( 'wpsc_purchase_log_save_meta', $this );
+
+		return $this;
 	}
 
 	private function update_downloadable_status() {
