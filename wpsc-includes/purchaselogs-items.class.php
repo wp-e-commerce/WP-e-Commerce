@@ -16,10 +16,12 @@ class wpsc_purchaselogs_items {
    var $customcheckoutfields = array( );
    var $additional_fields = array();
 
+   public $log = null;
 
-   public function __construct( $id ) {
-	  $this->purchlogid = $id;
-	  $this->get_purchlog_details();
+   public function __construct( $id, $wpsc_purchase_log = null ) {
+      $this->purchlogid = $id;
+      $this->log = $wpsc_purchase_log;
+      $this->get_purchlog_details();
    }
 
    function shippingstate( $id ) {
@@ -108,4 +110,13 @@ class wpsc_purchaselogs_items {
 	  $ip_number = $wpdb->get_var( $sql );
 	  return $ip_number;
    }
+
+   public function log() {
+      if ( null === $this->log ) {
+         $this->log = new WPSC_Purchase_Log( $this->purchlogid );
+      }
+
+      return $this->log;
+   }
+
 }
