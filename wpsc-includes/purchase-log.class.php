@@ -1189,8 +1189,9 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		global $purchlogitem;
 
 		if ( null === $this->buyers_state_and_postcode ) {
-			if ( is_numeric( $purchlogitem->extrainfo->billing_region ) ) {
-				$state = wpsc_get_region( $purchlogitem->extrainfo->billing_region );
+
+			if ( is_numeric( $this->get( 'billing_region' ) ) ) {
+				$state = wpsc_get_region( $this->get( 'billing_region' ) );
 			} else {
 				$state = $purchlogitem->userinfo['billingstate']['value'];
 				$state = is_numeric( $state ) ? wpsc_get_region( $state ) : $state;
@@ -1265,8 +1266,8 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		global $purchlogitem;
 
 		if ( null === $this->shipping_state_and_postcode ) {
-			if ( is_numeric( $purchlogitem->extrainfo->shipping_region ) ) {
-				$output = wpsc_get_region( $purchlogitem->extrainfo->shipping_region );
+			if ( is_numeric( $this->get( 'shipping_region' ) ) ) {
+				$output = wpsc_get_region( $this->get( 'shipping_region' ) );
 			} else {
 				$state = $purchlogitem->shippinginfo['shippingstate']['value'];
 				$output = is_numeric( $state ) ? wpsc_get_region( $state ) : $state;
@@ -1299,20 +1300,20 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	}
 
 	public function payment_method() {
-		global $purchlogitem, $nzshpcrt_gateways;
+		global $nzshpcrt_gateways;
 
 		if ( null === $this->payment_method ) {
-			if ( 'wpsc_merchant_testmode' == $purchlogitem->extrainfo->gateway ) {
+			if ( 'wpsc_merchant_testmode' == $this->get( 'gateway' ) ) {
 				$this->payment_method = __( 'Manual Payment', 'wp-e-commerce' );
 			} else {
 				foreach ( (array) $nzshpcrt_gateways as $gateway ) {
-					if ( isset( $gateway['internalname'] ) && $gateway['internalname'] == $purchlogitem->extrainfo->gateway ) {
+					if ( isset( $gateway['internalname'] ) && $gateway['internalname'] == $this->get( 'gateway' ) ) {
 						$this->payment_method = $gateway['name'];
 					}
 				}
 
 				if ( ! $this->payment_method ) {
-					$this->payment_method = $purchlogitem->extrainfo->gateway;
+					$this->payment_method = $this->get( 'gateway' );
 				}
 			}
 		}
@@ -1321,14 +1322,14 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	}
 
 	public function shipping_method() {
-		global $purchlogitem, $wpsc_shipping_modules;
+		global $wpsc_shipping_modules;
 
 		if ( null === $this->shipping_method ) {
 
-			if ( ! empty( $wpsc_shipping_modules[ $purchlogitem->extrainfo->shipping_method ] ) ) {
-				$this->shipping_method = $wpsc_shipping_modules[ $purchlogitem->extrainfo->shipping_method ]->getName();
+			if ( ! empty( $wpsc_shipping_modules[ $this->get( 'shipping_method' ) ] ) ) {
+				$this->shipping_method = $wpsc_shipping_modules[ $this->get( 'shipping_method' ) ]->getName();
 			} else {
-				$this->shipping_method = $purchlogitem->extrainfo->shipping_method;
+				$this->shipping_method = $this->get( 'shipping_method' );
 			}
 
 		}
@@ -1346,9 +1347,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @return mixed
 	 */
 	public function discount( $numeric = false ) {
-		global $purchlogitem;
-
-		$discount = $purchlogitem->extrainfo->discount_value;
+		$discount = $this->get( 'discount_value' );
 		if ( ! $numeric ) {
 			$discount = wpsc_currency_display( $discount, array( 'display_as_html' => false ) );
 		}
@@ -1390,9 +1389,8 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @return mixed
 	 */
 	public function taxes( $numeric = false ) {
-		global $purchlogitem;
+		$taxes = $this->get( 'wpec_taxes_total' );
 
-		$taxes = $purchlogitem->extrainfo->wpec_taxes_total;
 		if ( ! $numeric ) {
 			$taxes = wpsc_currency_display( $taxes, array( 'display_as_html' => false ) );
 		}
