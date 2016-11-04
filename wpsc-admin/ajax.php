@@ -565,6 +565,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
 
 	$html = '';
+	$htmls[] = array();
 
 	while ( wpsc_have_purchaselog_details() ) {
 		wpsc_the_purchaselog_item();
@@ -573,6 +574,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 		WPSC_Purchase_Log_Page::purchase_log_cart_item( $log->can_edit() );
 		$cart_item = ob_get_clean();
 
+		$htmls[ wpsc_purchaselog_details_id() ] = $cart_item;
 		if ( ! empty( $item_ids ) && in_array( absint( wpsc_purchaselog_details_id() ), $item_ids, true ) ) {
 			$html .= $cart_item;
 		}
@@ -581,6 +583,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 	return array(
 		'quantities'     => wp_list_pluck( $log->get_cart_contents(), 'quantity', 'id' ),
 		'html'           => $html,
+		'htmls'          => $htmls,
 		'discount_data'  => wpsc_purchlog_has_discount_data() ? esc_html__( 'Coupon Code', 'wp-e-commerce' ) . ': ' . wpsc_display_purchlog_discount_data() : '',
 		'discount'       => wpsc_display_purchlog_discount(),
 		'total_taxes'    => wpsc_display_purchlog_taxes(),

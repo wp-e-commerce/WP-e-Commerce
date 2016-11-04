@@ -287,8 +287,16 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 			qty = parseInt( qty, 10 );
 			var $input = $c.log.find( '#purchase-log-item-' + id + ' .wpsc_item_qty' );
 			var val = $input.val();
+			var $price, $new_price;
+
 			if ( parseInt( val, 10 ) !== parseInt( qty, 10 ) ) {
 				$input.val( qty );
+			}
+
+			$price = $c.log.find( '#purchase-log-item-' + id + ' .amount .pricedisplay' );
+			$new_price = $( data.htmls[ id ] ).find( '.amount .pricedisplay' );
+			if ( $price.length && $new_price.length ) {
+				$price.text( $new_price.text() );
 			}
 		} );
 	};
