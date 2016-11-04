@@ -44,7 +44,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 
 		if ( $c.log.length ) {
 
-			admin.product_search = new SearchView();
+			admin.product_search = admin.init_search_view();
 
 			$c.log
 				.on( 'click', '.wpsc-remove-item-button', admin.remove_item )
@@ -293,159 +293,164 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		} );
 	};
 
-	var SearchView = window.Backbone.View.extend( {
-		el         : '#find-posts',
-		overlaySet : false,
-		$overlay   : false,
-		$checked   : false,
-		$table     : false,
-		template   : wp.template( 'wpsc-found-product-rows' ),
+	admin.init_search_view = function() {
+		var SearchView = window.Backbone.View.extend( {
+			el         : '#find-posts',
+			overlaySet : false,
+			$overlay   : false,
+			$checked   : false,
+			$table     : false,
+			template   : wp.template( 'wpsc-found-product-rows' ),
 
-		events : {
-			'keypress .find-box-search :input' : 'maybeStartSearch',
-			'keyup #find-posts-input'  : 'escClose',
-			'click #find-posts-submit' : 'selectPost',
-			'click #find-posts-search' : 'send',
-			'click #find-posts-close'  : 'close'
-		},
+			events : {
+				'keypress .find-box-search :input' : 'maybeStartSearch',
+				'keyup #find-posts-input'  : 'escClose',
+				'click #find-posts-submit' : 'selectPost',
+				'click #find-posts-search' : 'send',
+				'click #find-posts-close'  : 'close'
+			},
 
-		initialize: function() {
-			this.$spinner  = this.$el.find( '.find-box-search .spinner' );
-			this.$input    = this.$el.find( '#find-posts-input' );
-			this.$response = this.$el.find( '#find-posts-response' );
-			this.$overlay  = $( '.ui-find-overlay' );
-			this.$table = $( $id( 'tmpl-wpsc-found-products' ).html() );
-
-			this.listenTo( this, 'open', this.open );
-			this.listenTo( this, 'close', this.close );
-		},
-
-		escClose: function( evt ) {
-			var code = evt.keyCode ? evt.keyCode : evt.which;
-			if ( ESCAPE === code ) {
-				this.close();
-			}
-		},
-
-		close: function() {
-			this.$overlay.hide();
-			this.$el.hide();
-		},
-
-		open: function() {
-			this.$response.html('');
-
-			// WP, why you gotta be like that? (why isn't text in its own dom node?)
-			this.$el.show().find( '#find-posts-head' ).html( wpsc.strings.search_head + '<div id="find-posts-close"></div>' );
-
-			this.$input.focus();
-
-			if ( ! this.$overlay.length ) {
-				$( 'body' ).append( '<div class="ui-find-overlay"></div>' );
+			initialize: function() {
+				this.$spinner  = this.$el.find( '.find-box-search .spinner' );
+				this.$input    = this.$el.find( '#find-posts-input' );
+				this.$response = this.$el.find( '#find-posts-response' );
 				this.$overlay  = $( '.ui-find-overlay' );
-			}
+				this.$table = $( $id( 'tmpl-wpsc-found-products' ).html() );
 
-			this.$overlay.show();
+				this.listenTo( this, 'open', this.open );
+				this.listenTo( this, 'close', this.close );
+			},
 
-			// Pull some results up by default
-			this.send();
+			escClose: function( evt ) {
+				var code = evt.keyCode ? evt.keyCode : evt.which;
+				if ( ESCAPE === code ) {
+					this.close();
+				}
+			},
 
-			return false;
-		},
+			close: function() {
+				this.$overlay.hide();
+				this.$el.hide();
+			},
 
-		maybeStartSearch: function( evt ) {
-			var code = evt.keyCode ? evt.keyCode : evt.which;
-			if ( ENTER === code ) {
+			open: function() {
+				this.$response.html('');
+
+				// WP, why you gotta be like that? (why isn't text in its own dom node?)
+				this.$el.show().find( '#find-posts-head' ).html( wpsc.strings.search_head + '<div id="find-posts-close"></div>' );
+
+				this.$input.focus();
+
+				if ( ! this.$overlay.length ) {
+					$( 'body' ).append( '<div class="ui-find-overlay"></div>' );
+					this.$overlay  = $( '.ui-find-overlay' );
+				}
+
+				this.$overlay.show();
+
+				// Pull some results up by default
 				this.send();
+
 				return false;
-			}
-		},
+			},
 
-		send: function() {
+			maybeStartSearch: function( evt ) {
+				var code = evt.keyCode ? evt.keyCode : evt.which;
+				if ( ENTER === code ) {
+					this.send();
+					return false;
+				}
+			},
 
-			var that = this;
-			that.$spinner.addClass( 'is-active' );
+			send: function() {
 
-			var args  = {
-				action  : 'search_products',
-				search : that.$input.val(),
-				nonce   : wpsc.search_products_nonce
-			};
+				var that = this;
+				that.$spinner.addClass( 'is-active' );
 
-			$.wpsc_post( args )
-				.always( function() {
+				var args  = {
+					action  : 'search_products',
+					search : that.$input.val(),
+					nonce   : wpsc.search_products_nonce
+				};
 
-					that.$spinner.removeClass('is-active');
+				$.wpsc_post( args )
+					.always( function() {
 
-				} ).done( function( response ) {
+						that.$spinner.removeClass('is-active');
 
-					if ( ! response.is_successful ) {
-						if ( response.error ) {
-							that.$response.text( response.error.messages.join( BR ) );
+					} ).done( function( response ) {
+
+						if ( ! response.is_successful ) {
+							if ( response.error ) {
+								that.$response.text( response.error.messages.join( BR ) );
+							}
+							return;
 						}
-						return;
-					}
 
-					that.$table.children( 'tbody' ).html( that.template( { posts : response.obj } ) );
-					that.$response.html( that.$table );
+						that.$table.children( 'tbody' ).html( that.template( { posts : response.obj } ) );
+						that.$response.html( that.$table );
 
-				} ).fail( function() {
-					that.$response.text( that.errortxt );
-				} );
-		},
+					} ).fail( function() {
+						that.$response.text( that.errortxt );
+					} );
+			},
 
-		selectPost: function( evt ) {
-			evt.preventDefault();
+			selectPost: function( evt ) {
+				evt.preventDefault();
 
-			this.$checked = $( '#find-posts-response input[type="checkbox"]:checked' );
+				this.$checked = $( '#find-posts-response input[type="checkbox"]:checked' );
 
-			var checked = this.$checked.map(function() { return this.value; }).get();
+				var checked = this.$checked.map(function() { return this.value; }).get();
 
-			if ( ! checked.length ) {
-				this.close();
-				return;
-			}
-
-			this.handleSelected( checked );
-		},
-
-		handleSelected: function( checked ) {
-			var that = this;
-
-			var existing = $c.log.find( '[data-productid]' ).map( function() {
-				return $( this ).data( 'productid' );
-			} ).get();
-
-			var args = {
-				action      : 'add_log_item',
-				product_ids : checked,
-				existing    : existing,
-				log_id      : $( '[name="purchlog_id"]' ).val(),
-				nonce       : wpsc.add_log_item_nonce
-			};
-
-			var ajax_callback = function(response) {
-				if ( ! response.is_successful ) {
-					if ( response.error ) {
-						window.alert( response.error.messages.join( BR ) );
-					}
-
+				if ( ! checked.length ) {
+					this.close();
 					return;
 				}
 
-				$c.log.find( '.wpsc_purchaselog_add_product' ).before( response.obj.html );
+				this.handleSelected( checked );
+			},
 
-				admin.update_totals( response.obj );
+			handleSelected: function( checked ) {
+				var that = this;
 
-				that.close();
-			};
+				var existing = $c.log.find( '[data-productid]' ).map( function() {
+					return $( this ).data( 'productid' );
+				} ).get();
 
-			$c.spinner.addClass( 'is-active' );
+				var args = {
+					action      : 'add_log_item',
+					product_ids : checked,
+					existing    : existing,
+					log_id      : $( '[name="purchlog_id"]' ).val(),
+					nonce       : wpsc.add_log_item_nonce
+				};
 
-			$.wpsc_post( args, ajax_callback );
-		}
+				var ajax_callback = function(response) {
+					if ( ! response.is_successful ) {
+						if ( response.error ) {
+							window.alert( response.error.messages.join( BR ) );
+						}
 
-	} );
+						return;
+					}
+
+					$c.log.find( '.wpsc_purchaselog_add_product' ).before( response.obj.html );
+
+					admin.update_totals( response.obj );
+
+					that.close();
+				};
+
+				$c.spinner.addClass( 'is-active' );
+
+				$.wpsc_post( args, ajax_callback );
+			}
+
+		} );
+
+		return new SearchView();
+	};
+
 
 	$.extend( wpsc, admin );
 
