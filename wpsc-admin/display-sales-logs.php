@@ -46,6 +46,11 @@ class WPSC_Purchase_Log_Page {
 			$controller_method = 'controller_item_details';
 		}
 
+		// Can only edit in the item details view.
+		if ( 'controller_item_details' !== $controller_method {
+			$this->can_edit = false;
+		}
+
 		$this->$controller_method();
 	}
 
@@ -145,8 +150,9 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function controller_upgrade_purchase_logs_3_8() {
-		if ( $this->needs_update() )
+		if ( $this->needs_update() ) {
 			wpsc_update_purchase_logs();
+		}
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_upgrade_purchase_logs_3_8' ) );
 	}
@@ -348,7 +354,7 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function controller_default() {
-		//Create an instance of our package class...
+		// Create an instance of our package class...
 		$this->list_table = new WPSC_Purchase_Log_List_Table();
 		$this->process_bulk_action();
 		$this->list_table->prepare_items();
