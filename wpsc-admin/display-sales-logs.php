@@ -47,7 +47,7 @@ class WPSC_Purchase_Log_Page {
 		}
 
 		// Can only edit in the item details view.
-		if ( 'controller_item_details' !== $controller_method {
+		if ( 'controller_item_details' !== $controller_method ) {
 			$this->can_edit = false;
 		}
 
