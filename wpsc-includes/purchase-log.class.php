@@ -401,13 +401,16 @@ class WPSC_Purchase_Log {
 	 * @return void
 	 */
 	public static function update_cache( &$log ) {
+		
 		// wpsc_purchase_logs stores the data array, while wpsc_purchase_logs_sessionid stores the
 		// log id that's associated with the sessionid
-
 		$id = $log->get( 'id' );
 		wp_cache_set( $id, $log->data, 'wpsc_purchase_logs' );
-		if ( $sessionid = $log->get( 'sessionid' ) )
+
+		if ( $sessionid = $log->get( 'sessionid' ) ) {
 			wp_cache_set( $sessionid, $id, 'wpsc_purchase_logs_sessionid' );
+		}
+
 		wp_cache_set( $id, $log->cart_contents, 'wpsc_purchase_log_cart_contents' );
 		do_action( 'wpsc_purchase_log_update_cache', $log );
 	}
@@ -533,8 +536,9 @@ class WPSC_Purchase_Log {
 
 		global $wpdb;
 
-		if ( ! in_array( $col, array( 'id', 'sessionid' ) ) )
+		if ( ! in_array( $col, array( 'id', 'sessionid' ) ) ) {
 			return;
+		}
 
 		// store the constructor args into an array so that later we can lazy load the data
 		$this->args = array(
@@ -556,6 +560,7 @@ class WPSC_Purchase_Log {
 
 		// cache exists
 		if ( $this->data ) {
+			$this->set_meta_props();
 			$this->fetched = true;
 			$this->exists  = true;
 			return;
