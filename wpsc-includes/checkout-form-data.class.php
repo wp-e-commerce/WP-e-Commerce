@@ -7,10 +7,11 @@
  */
 
 class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
-	private $raw_data       = array();
-	private $gateway_data   = array();
-	private $submitted_data = array();
-	private $log_id;
+	protected $raw_data       = array();
+	protected $segmented_data = array();
+	protected $gateway_data   = array();
+	protected $submitted_data = array();
+	protected $log_id = 0;
 
 	/**
 	 * An array of arrays of cache keys. Allows versioning the cached values,
@@ -66,10 +67,24 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 			$this->cache_set( $this->log_id, $this->raw_data, 'raw_data' );
 		}
 
-		// At the moment, only core fields have unique_name. In the future, all fields will have
-		// a unique name rather than just IDs.
-		foreach ( $this->raw_data as $field ) {
+		$this->segmented_data = array(
+			'shipping' => array(),
+			'billing'  => array(),
+		);
+
+		// At the moment, only core fields have unique_name. In the future,
+		// all fields will have a unique name rather than just IDs.
+		foreach ( $this->raw_data as $index => $field ) {
 			if ( ! empty( $field->unique_name ) ) {
+
+				$is_shipping = false !== strpos( $field->unique_name, 'shipping' );
+
+				if ( $is_shipping ) {
+					$this->segmented_data['shipping'][ str_replace( 'shipping', '', $field->unique_name ) ] = $index;
+				} else {
+					$this->segmented_data['billing'][ str_replace( 'billing', '', $field->unique_name ) ] = $index;
+				}
+
 				$this->data[ $field->unique_name ] = $field->value;
 			}
 		}
@@ -79,6 +94,82 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 		$this->fetched = true;
 	}
 
+	/**
+	 * Get the raw data indexed by the 'id' column.
+	 *
+	 * @since  4.0
+	 *
+	 * @return array
+	 */
+	public function get_indexed_raw_data() {
+		$data = array();
+		foreach ( $this->raw_data as $field ) {
+			$data[ $field->id ] = $field;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Determines if values in shipping fields matches values in billing fields.
+	 *
+	 * @since  4.0
+	 *
+	 * @return bool  Whether shipping values match billing values.
+	 */
+	public function shipping_matches_billing() {
+		foreach ( $this->segmented_data['shipping'] as $id => $index ) {
+			// If we're missing data from any of these arrays, something's wrong (and they don't match).
+			if ( ! isset(
+				$this->raw_data[ $index ],
+				$this->segmented_data['billing'][ $id ],
+				$this->raw_data[ $this->segmented_data['billing'][ $id ] ]
+			) ) {
+				return false;
+			}
+
+			// Now we can get the values for the fields.
+			$ship_val    = $this->raw_data[ $index ]->value;
+			$billing_val = $this->raw_data[ $this->segmented_data['billing'][ $id ] ]->value;
+
+			// Do they match?
+			if ( $ship_val !== $billing_val ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the segmented billing info.
+	 *
+	 * @since  4.0
+	 *
+	 * @return array
+	 */
+	public function get_billing_data() {
+		return $this->segmented_data['billing'];
+	}
+
+	/**
+	 * Get the segmented shipping info.
+	 *
+	 * @since  4.0
+	 *
+	 * @return array
+	 */
+	public function get_shipping_data() {
+		return $this->segmented_data['shipping'];
+	}
+
+	/**
+	 * Gets the raw data array.
+	 *
+	 * @since  4.0
+	 *
+	 * @return array
+	 */
 	public function get_raw_data() {
 		return $this->raw_data;
 	}
@@ -247,6 +338,17 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 		}
 
 		wpsc_save_customer_details( $customer_details );
+	}
+
+	/**
+	 * Returns the log id property.
+	 *
+	 * @since  4.0
+	 *
+	 * @return int  The log id.
+	 */
+	public function get_log_id() {
+		return $this->log_id;
 	}
 
 }
