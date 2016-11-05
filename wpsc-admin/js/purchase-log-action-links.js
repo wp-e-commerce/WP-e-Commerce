@@ -18,7 +18,7 @@
 
 				// Add spinners to AJAX links
 				wrapper.find( 'a.wpsc-purchlog-action-link.is-ajax' ).each( function() {
-					$( this ).prepend( $( '<span class="spinner" />' ) );
+					$( this ).prepend( $( '<span class="spinner is-active" />' ) );
 				} );
 
 				wrapper.on( 'click', 'a.wpsc-purchlog-action-link.is-ajax', WPSC_Purchase_Log_Action_Links.event_ajax_link_clicked );

@@ -18,7 +18,9 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/save-data.functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/duplicate-product-class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/updating-functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-coupons.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/purchaselogs.functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchaselogs.class.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/purchaselogs-items.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/theming.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/ajax.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/init.php' );
@@ -416,21 +418,29 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 
 	_wpsc_enqueue_wp_e_commerce_admin();
 
-	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
+	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION, true );
 	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
 		'nonce'                                  => wp_create_nonce( 'wpsc_purchase_logs' ),
 		'change_purchase_log_status_nonce'       => _wpsc_create_ajax_nonce( 'change_purchase_log_status' ),
 		'purchase_log_save_tracking_id_nonce'    => _wpsc_create_ajax_nonce( 'purchase_log_save_tracking_id' ),
 		'purchase_log_send_tracking_email_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_send_tracking_email' ),
+		'remove_log_item_nonce'                  => _wpsc_create_ajax_nonce( 'remove_log_item' ),
+		'update_log_item_qty_nonce'              => _wpsc_create_ajax_nonce( 'update_log_item_qty' ),
+		'add_log_item_nonce'                     => _wpsc_create_ajax_nonce( 'add_log_item' ),
+		'search_products_nonce'                  => _wpsc_create_ajax_nonce( 'search_products' ),
 		'sending_message'                        => _x( 'sending...', 'sending tracking email for purchase log', 'wp-e-commerce' ),
 		'sent_message'                           => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wp-e-commerce' ),
 		'current_view'                           => empty( $_REQUEST['status'] ) ? 'all' : $_REQUEST['status'],
 		'current_filter'                         => empty( $_REQUEST['m'] ) ? '' : $_REQUEST['m'],
 		'current_page'                           => empty( $_REQUEST['paged'] ) ? '' : $_REQUEST['paged'],
+		'strings'                                => array(
+			'confirm_delete' => esc_html__( 'Are you sure you want to remove this item?', 'wp-e-commerce' ),
+			'search_head' => esc_html__( 'Search for Products to Add', 'wp-e-commerce' ),
+		),
 	) );
 
 	// Purchase Log Action Links
-	wp_enqueue_script( 'wpsc-purchase-log-action-links', WPSC_URL . '/wpsc-admin/js/purchase-log-action-links.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
+	wp_enqueue_script( 'wpsc-purchase-log-action-links', WPSC_URL . '/wpsc-admin/js/purchase-log-action-links.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION, true );
 	wp_localize_script( 'wpsc-purchase-log-action-links', 'WPSC_Purchase_Log_Action_Links', array(
 		'purchase_log_action_link_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_action_link' ),
 		'log_id'                         => empty( $_REQUEST['id'] ) ? '' : absint( $_REQUEST['id'] )

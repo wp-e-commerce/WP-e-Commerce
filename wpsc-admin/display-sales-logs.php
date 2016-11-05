@@ -13,6 +13,20 @@ class WPSC_Purchase_Log_Page {
 	private $output;
 	public $log_id = 0;
 
+	/**
+	 * WPSC_Purchase_Log
+	 *
+	 * @var WPSC_Purchase_Log object.
+	 */
+	public $log = null;
+
+	/**
+	 * Whether the purchase log can be modified.
+	 *
+	 * @var boolean
+	 */
+	protected $can_edit = false;
+
 	public function __construct() {
 		$controller = 'default';
 		$controller_method = 'controller_default';
@@ -20,6 +34,8 @@ class WPSC_Purchase_Log_Page {
 		// If individual purchase log, setup ID and action links.
 		if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
 			$this->log_id = (int) $_REQUEST['id'];
+			$this->log = new WPSC_Purchase_Log( $this->log_id );
+			$this->can_edit = $this->log->can_edit();
 		}
 
 		if ( isset( $_REQUEST['c'] ) && method_exists( $this, 'controller_' . $_REQUEST['c'] ) ) {
@@ -28,6 +44,11 @@ class WPSC_Purchase_Log_Page {
 		} elseif ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
 			$controller = 'item_details';
 			$controller_method = 'controller_item_details';
+		}
+
+		// Can only edit in the item details view.
+		if ( 'controller_item_details' !== $controller_method ) {
+			$this->can_edit = false;
 		}
 
 		$this->$controller_method();
@@ -129,38 +150,26 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function controller_upgrade_purchase_logs_3_8() {
-		if ( $this->needs_update() )
+		if ( $this->needs_update() ) {
 			wpsc_update_purchase_logs();
+		}
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_upgrade_purchase_logs_3_8' ) );
 	}
 
 	function purchase_logs_pagination() {
 		global $wpdb, $purchlogitem;
+		$prev_id = $this->log->get_previous_log_id();
+		$next_id = $this->log->get_next_log_id();
 		?>
 		<span class='tablenav'><span class='tablenav-pages'><span class='pagination-links'>
-			<?php
-			$href = "#";
-			$disabled = "disabled";
-			if ( $this->log_id > 1 ) {
-				$href = $this->get_purchase_log_url( ( $this->log_id - 1 ) );
-				$disabled = '';
-			}
-			
-			?>
-			<a href='<?php echo esc_url( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
-			<?php
+			<?php if ( $prev_id ) : ?>
+				<a href='<?php echo esc_url( $this->get_purchase_log_url( $prev_id ) ); ?>' class='prev-page'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
+			<?php endif; ?>
 
-			$max_purchase_id = wpsc_max_purchase_id();
-			$href = "#";
-			$disabled = "disabled";
-			if ( $max_purchase_id > $this->log_id ) {
-				$href = $this->get_purchase_log_url( ( $this->log_id + 1 ) );
-				$disabled = '';
-			}
-			?>
-			<a href='<?php echo esc_url( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
-
+			<?php if ( $next_id ) : ?>
+				<a href='<?php echo esc_url( $this->get_purchase_log_url( $next_id ) ); ?>' class='next-page'><?php _e( 'Next', 'wp-e-commerce' ); ?> &rsaquo;</a>
+			<?php endif; ?>
 		</span></span></span>
 		<?php
 	}
@@ -229,11 +238,23 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	private function purchase_log_cart_items() {
-		while( wpsc_have_purchaselog_details() ) : wpsc_the_purchaselog_item(); ?>
-		<tr>
+		while( wpsc_have_purchaselog_details() ) : wpsc_the_purchaselog_item();
+			self::purchase_log_cart_item( $this->can_edit );
+		endwhile;
+	}
+
+	public static function purchase_log_cart_item( $can_edit = false ) {
+		?>
+		<tr class="purchase-log-line-item" id="purchase-log-item-<?php echo wpsc_purchaselog_details_id(); ?>" data-id="<?php echo wpsc_purchaselog_details_id(); ?>" data-productid="<?php echo wpsc_purchaselog_product_id(); ?>">
 			<td><?php echo wpsc_purchaselog_details_name(); ?></td> <!-- NAME! -->
 			<td><?php echo wpsc_purchaselog_details_SKU(); ?></td> <!-- SKU! -->
-			<td><?php echo wpsc_purchaselog_details_quantity(); ?></td> <!-- QUANTITY! -->
+			<td>
+				<?php if ( $can_edit ) : ?>
+					<input type="number" step="1" min="0" autocomplete="off" name="wpsc_item_qty" class="wpsc_item_qty" placeholder="0" value="<?php echo wpsc_purchaselog_details_quantity(); ?>" size="4" class="quantity">
+				<?php else: ?>
+					<?php echo wpsc_purchaselog_details_quantity(); ?>
+				<?php endif; ?>
+			</td> <!-- QUANTITY! -->
 			<td>
 		 <?php
 		echo wpsc_currency_display( wpsc_purchaselog_details_price() );
@@ -246,22 +267,28 @@ class WPSC_Purchase_Log_Page {
 			<?php endif; ?>
 			<!-- <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_discount() ); ?></td> --> <!-- DISCOUNT! -->
 			<td class="amount"><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); ?></td> <!-- TOTAL! -->
+			<?php if ( $can_edit ) : ?>
+				<td class="remove">
+					<div class="wpsc-remove-row">
+						<button type="button" class="wpsc-remove-item-button"><span style="color:#a00;" class="dashicons dashicons-dismiss"></span> <?php esc_html_e( 'Remove Item', 'wp-e-commerce' ); ?></button>
+					</div>
+				</td> <!-- REMOVE! -->
+			<?php endif; ?>
 		</tr>
 		<?php
 		do_action( 'wpsc_additional_sales_item_info', wpsc_purchaselog_details_id() );
-		endwhile;
 	}
 
 	public function controller_item_details() {
-
-		if ( ! isset( $_REQUEST['id'] ) || ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) ) ) {
+		if (
+			! isset( $_REQUEST['id'] )
+			|| ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) )
+			|| ! $this->log->exists()
+		) {
 			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
-		global $purchlogitem;
-
-		// TODO: seriously get rid of all these badly coded purchaselogs.class.php functions in 4.0
-		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
+		$this->log->init_items();
 
 		$columns = array(
 			'title'    => __( 'Name', 'wp-e-commerce' ),
@@ -277,6 +304,10 @@ class WPSC_Purchase_Log_Page {
 
 		$columns['total'] = __( 'Item Total','wp-e-commerce' );
 
+		if ( $this->can_edit ) {
+			$columns['remove'] = '';
+		}
+
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
@@ -289,9 +320,7 @@ class WPSC_Purchase_Log_Page {
 			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
-		global $purchlogitem;
-
-		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
+		$this->log->init_items();
 
 		$columns = array(
 			'title'    => __( 'Item Name', 'wp-e-commerce' ),
@@ -325,7 +354,7 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function controller_default() {
-		//Create an instance of our package class...
+		// Create an instance of our package class...
 		$this->list_table = new WPSC_Purchase_Log_List_Table();
 		$this->process_bulk_action();
 		$this->list_table->prepare_items();
@@ -333,18 +362,33 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function display_purchase_log() {
-		if ( wpec_display_product_tax() )
-			$cols = 5;
-		else
-			$cols = 4;
+		$cols = 4;
+		if ( wpec_display_product_tax() ) {
+			$cols++;
+		}
+
+		if ( $this->can_edit ) {
+			$cols++;
+		}
+
 		$receipt_sent = ! empty( $_GET['sent'] );
 		$receipt_not_sent = isset( $_GET['sent'] ) && ! $_GET['sent'];
 		include( 'includes/purchase-logs-page/item-details.php' );
+
+		global $wp_scripts;
+
+		wp_enqueue_script( 'wp-backbone' );
+
+		if ( isset( $wp_scripts->registered['wp-e-commerce-purchase-logs'] ) ) {
+			// JS needed for modal
+			$wp_scripts->registered['wp-e-commerce-purchase-logs']->deps[] = 'wp-backbone';
+		}
+
+		add_action( 'admin_footer', 'find_posts_div' );
 	}
 
 	public function download_csv() {
-		$_REQUEST['rss_key'] = 'key';
-		wpsc_purchase_log_csv();
+		_wpsc_download_purchase_log_csv();
 	}
 
 	public function process_bulk_action() {

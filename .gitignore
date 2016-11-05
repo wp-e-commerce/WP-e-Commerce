@@ -20,3 +20,5 @@ release.sh
 
 .sass-cache
 *.codekit
+
+notes.md

@@ -213,6 +213,16 @@ th#status {
 	clear: both;
 }
 
+.wpsc-remove-item-button {
+	background: none;
+	border: none;
+	line-height: 1.60em;
+}
+
+.wpsc_item_qty {
+	width: 4em;
+}
+
 .wpsc_pushdown_img {
 	float: left;
 }

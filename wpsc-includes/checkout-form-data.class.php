@@ -6,32 +6,64 @@
  * @since 3.8
  */
 
-class WPSC_Checkout_Form_Data {
-	private $data           = array();
+class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	private $raw_data       = array();
 	private $gateway_data   = array();
 	private $submitted_data = array();
 	private $log_id;
 
+	/**
+	 * An array of arrays of cache keys. Allows versioning the cached values,
+	 * and busting cache for a group if needed (by incrementing the version).
+	 *
+	 * @var array
+	 */
+	protected $group_ids = array(
+		'raw_data' => array(
+			'group'     => 'wpsc_checkout_form_raw_data',
+			'version' => 1,
+		),
+		'gateway_data' => array(
+			'group'     => 'wpsc_checkout_form_gateway_data',
+			'version' => 0,
+		),
+	);
+
 	public function __construct( $log_id ) {
+		$this->log_id = absint( $log_id );
+		$this->fetch();
+	}
+
+	/**
+	 * Fetches the actual $data array.
+	 *
+	 * @access protected
+	 * @since 4.0
+	 *
+	 * @return void
+	 */
+	protected function fetch() {
+		if ( $this->fetched ) {
+			return;
+		}
+
 		global $wpdb;
 
-		$this->log_id = $log_id;
-
-		if ( ! $this->raw_data = wp_cache_get( $log_id, 'wpsc_checkout_form_raw_data' ) ) {
+		if ( ! $this->raw_data = $this->cache_get( $this->log_id, 'raw_data' ) ) {
 			$sql = "
-				SELECT c.id, c.name, c.unique_name, s.value
+				SELECT c.id, c.name, c.type, c.mandatory, c.unique_name, c.checkout_set as form_group, s.id as data_id, s.value
 				FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " AS s
 				INNER JOIN " . WPSC_TABLE_CHECKOUT_FORMS . " AS c
 					ON c.id = s.form_id
 				WHERE s.log_id = %d AND active = '1'
 			";
 
-			$sql = $wpdb->prepare( $sql, $log_id );
+			$sql = $wpdb->prepare( $sql, $this->log_id );
 			$this->raw_data = $wpdb->get_results( $sql );
+			$this->exists   = ! empty( $this->raw_data );
 
-			//Set the cache for raw checkout for data
-			wp_cache_set( $log_id, $this->raw_data, 'wpsc_checkout_form_raw_data' );
+			// Set the cache for raw checkout for data
+			$this->cache_set( $this->log_id, $this->raw_data, 'raw_data' );
 		}
 
 		// At the moment, only core fields have unique_name. In the future, all fields will have
@@ -41,23 +73,45 @@ class WPSC_Checkout_Form_Data {
 				$this->data[ $field->unique_name ] = $field->value;
 			}
 		}
+
+		do_action( 'wpsc_checkout_form_data_fetched', $this );
+
+		$this->fetched = true;
 	}
 
 	public function get_raw_data() {
 		return $this->raw_data;
 	}
 
-	public function get( $key ) {
-		$value = isset( $this->data[ $key ] ) ? $this->data[ $key ] : null;
+	/**
+	 * Prepares the return value for get() (apply_filters, etc).
+	 *
+	 * @access protected
+	 * @since  4.0
+	 *
+	 * @param  mixed  $value Value fetched
+	 * @param  string $key   Key for $data.
+	 *
+	 * @return mixed
+	 */
+	protected function prepare_get( $value, $key ) {
 		return apply_filters( 'wpsc_checkout_form_data_get_property', $value, $key, $this );
 	}
 
-	public function get_data() {
-		return apply_filters( 'wpsc_checkout_form_get_data', $this->data, $this->log_id );
+	/**
+	 * Prepares the return value for get_data() (apply_filters, etc).
+	 *
+	 * @access protected
+	 * @since  4.0
+	 *
+	 * @return mixed
+	 */
+	protected function prepare_get_data() {
+		return apply_filters( 'wpsc_checkout_form_get_data', $this->data, $this->log_id, $this );
 	}
 
 	public function get_gateway_data() {
-		if ( ! $this->gateway_data = wp_cache_get( $this->log_id, 'wpsc_checkout_form_gateway_data' ) ) {
+		if ( ! $this->gateway_data = $this->cache_get( $this->log_id, 'gateway_data' ) ) {
 			$map = array(
 				'firstname' => 'first_name',
 				'lastname'  => 'last_name',
@@ -94,8 +148,8 @@ class WPSC_Checkout_Form_Data {
 				$this->gateway_data[ $data_key ]['name'] = trim( $name );
 			}
 
-			//Sets the cache for checkout form gateway data
-			wp_cache_set( $this->log_id, $this->gateway_data, 'wpsc_checkout_form_gateway_data' );
+			// Sets the cache for checkout form gateway data
+			$this->cache_set( $this->log_id, $this->gateway_data, 'gateway_data' );
 		}
 
 		return apply_filters( 'wpsc_checkout_form_gateway_data', $this->gateway_data, $this->log_id );
@@ -194,4 +248,5 @@ class WPSC_Checkout_Form_Data {
 
 		wpsc_save_customer_details( $customer_details );
 	}
+
 }

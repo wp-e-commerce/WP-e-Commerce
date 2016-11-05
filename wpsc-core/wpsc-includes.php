@@ -5,9 +5,10 @@ if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
 }
 
 // Start including the rest of the plugin here
-require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-logging.class.php'				);
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-logging.class.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-util.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-deprecated-meta.php'            );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/query-base.class.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/customer.php'                        );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'               );

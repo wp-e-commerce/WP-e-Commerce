@@ -6,7 +6,7 @@ if ( ! defined( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE' ) ) {
 	define( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE', DAY_IN_SECONDS * 2 );
 }
 
-class WPSC_Purchase_Log {
+class WPSC_Purchase_Log extends WPSC_Query_Base {
 	const INCOMPLETE_SALE  		= 1;
 	const ORDER_RECEIVED  	 	= 2;
 	const ACCEPTED_PAYMENT		= 3;
@@ -95,6 +95,46 @@ class WPSC_Purchase_Log {
 		'wpec_taxes_total',
 		'wpec_taxes_rate',
 	);
+
+	private $gateway_data = array();
+
+	private $is_status_changed = false;
+	private $previous_status   = false;
+
+	private $cart_contents = array();
+	private $cart_ids = array();
+	private $can_edit = null;
+
+	/**
+	 * Contains the constructor arguments. This array is necessary because we will
+	 * lazy load the DB row into $this->data whenever necessary. Lazy loading is,
+	 * in turn, necessary because sometimes right after saving a new record, we need
+	 * to fetch a property with the same object.
+	 *
+	 * @access private
+	 * @since 3.8.9
+	 *
+	 * @var array
+	 */
+	private $args = array(
+		'col'   => '',
+		'value' => '',
+	);
+
+   protected $buyers_name = null;
+   protected $buyers_city = null;
+   protected $buyers_email = null;
+   protected $buyers_address = null;
+   protected $buyers_state_and_postcode = null;
+   protected $buyers_country = null;
+   protected $buyers_phone = null;
+   protected $shipping_name = null;
+   protected $shipping_address = null;
+   protected $shipping_city = null;
+   protected $shipping_state_and_postcode = null;
+   protected $shipping_country = null;
+   protected $payment_method = null;
+   protected $shipping_method = null;
 
 	/**
 	 * Get the SQL query format for a column
@@ -331,66 +371,6 @@ class WPSC_Purchase_Log {
 	}
 
 	/**
-	 * Contains the values fetched from the DB
-	 *
-	 * @access private
-	 * @since 3.8.9
-	 *
-	 * @var array
-	 */
-	private $data = array();
-
-	/**
-	 * Data that is not directly stored inside the DB but is inferred
-	 *
-	 * @since 3.9
-	 * @var array
-	 */
-	private $meta_data = array();
-
-	private $gateway_data = array();
-
-	/**
-	 * True if the DB row is fetched into $this->data.
-	 *
-	 * @access private
-	 * @since 3.8.9
-	 *
-	 * @var string
-	 */
-	private $fetched           = false;
-	private $is_status_changed = false;
-	private $previous_status   = false;
-
-	private $cart_contents = array();
-
-	/**
-	 * Contains the constructor arguments. This array is necessary because we will
-	 * lazy load the DB row into $this->data whenever necessary. Lazy loading is,
-	 * in turn, necessary because sometimes right after saving a new record, we need
-	 * to fetch a property with the same object.
-	 *
-	 * @access private
-	 * @since 3.8.9
-	 *
-	 * @var array
-	 */
-	private $args = array(
-		'col'   => '',
-		'value' => '',
-	);
-
-	/**
-	 * True if the row exists in DB
-	 *
-	 * @access private
-	 * @since 3.8.9
-	 *
-	 * @var string
-	 */
-	private $exists = false;
-
-	/**
 	 * Update cache of the passed log object
 	 *
 	 * @access public
@@ -401,7 +381,7 @@ class WPSC_Purchase_Log {
 	 * @return void
 	 */
 	public static function update_cache( &$log ) {
-		
+
 		// wpsc_purchase_logs stores the data array, while wpsc_purchase_logs_sessionid stores the
 		// log id that's associated with the sessionid
 		$id = $log->get( 'id' );
@@ -433,7 +413,6 @@ class WPSC_Purchase_Log {
 
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_logs' );
 		wp_cache_delete( $log->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
-		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_meta' );
 
@@ -619,7 +598,7 @@ class WPSC_Purchase_Log {
 		$this->set_shipping_method_names();
 	}
 
-	public function get_meta() {
+public function get_meta() {
 
 		if ( empty( $this->data ) || empty( $this->meta_data ) ) {
 			$this->fetch();
@@ -631,12 +610,12 @@ class WPSC_Purchase_Log {
 	/**
 	 * Fetches the actual record from the database
 	 *
-	 * @access private
+	 * @access protected
 	 * @since 3.8.9
 	 *
 	 * @return void
 	 */
-	private function fetch() {
+	protected function fetch() {
 		global $wpdb;
 
 		if ( $this->fetched ) {
@@ -671,42 +650,42 @@ class WPSC_Purchase_Log {
 	}
 
 	/**
-	 * Whether the DB row for this purchase log exists
+	 * Prepares the return value for get() (apply_filters, etc).
 	 *
-	 * @access public
-	 * @since 3.8.9
+	 * @access protected
+	 * @since  4.0
 	 *
-	 * @return bool True if it exists. Otherwise false.
+	 * @param  mixed  $value Value fetched
+	 * @param  string $key   Key for $data.
+	 *
+	 * @return mixed
 	 */
-	public function exists() {
-		$this->fetch();
-		return $this->exists;
+	protected function prepare_get( $value, $key ) {
+		return apply_filters( 'wpsc_purchase_log_get_property', $value, $key, $this );
 	}
 
 	/**
-	 * Returns the value of the specified property of the purchase log
+	 * Prepares the return value for get_data() (apply_filters, etc).
 	 *
-	 * @access public
-	 * @since 3.8.9
+	 * @access protected
+	 * @since  4.0
 	 *
-	 * @param string $key Name of the property (column)
 	 * @return mixed
 	 */
-	public function get( $key ) {
-		// lazy load the purchase log row if it's not fetched from the database yet
-		if ( empty( $this->data ) || ! array_key_exists( $key, $this->data ) ) {
-			$this->fetch();
-		}
+	protected function prepare_get_data() {
+		return apply_filters( 'wpsc_purchase_log_get_data', $this->data, $this );
+	}
 
-		if ( isset( $this->data[ $key ] ) ) {
-			$value = $this->data[ $key ];
-		} else if ( isset( $this->meta_data[ $key ] ) ) {
-			$value = $this->meta_data[ $key ];
-		} else {
-			$value = null;
-		}
-
-		return apply_filters( 'wpsc_purchase_log_get_property', $value, $key, $this );
+	/**
+	 * Prepares the return value for get_meta() (apply_filters, etc).
+	 *
+	 * @access protected
+	 * @since  4.0
+	 *
+	 * @return mixed
+	 */
+	protected function prepare_get_meta() {
+		return (array) apply_filters( 'wpsc_purchase_log_meta_data', $this->meta_data );
 	}
 
 	public function get_cart_contents() {
@@ -718,26 +697,96 @@ class WPSC_Purchase_Log {
 
 		$id = $this->get( 'id' );
 
+		// Bail if we don't have a log object yet (no id).
+		if ( empty( $id ) ) {
+			return $this->cart_contents;
+		}
+
 		$sql = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $id );
 		$this->cart_contents = $wpdb->get_results( $sql );
+
+		if ( is_array( $this->cart_contents ) ) {
+			foreach ( $this->cart_contents as $index => $item ) {
+				$this->cart_ids[ absint( $item->id ) ] = $index;
+			}
+		}
 
 		return $this->cart_contents;
 	}
 
-	/**
-	 * Returns the whole database row in the form of an associative array
-	 *
-	 * @access public
-	 * @since 3.8.9
-	 *
-	 * @return array
-	 */
-	public function get_data() {
-		if ( empty( $this->data ) ) {
-			$this->fetch();
+	public function get_cart_item( $item_id ) {
+		$item_id = absint( $item_id );
+		$cart    = $this->get_cart_contents();
+
+		if ( isset( $this->cart_ids[ $item_id ] ) ) {
+			return $cart[ $this->cart_ids[ $item_id ] ];
 		}
 
-		return apply_filters( 'wpsc_purchase_log_get_data', $this->data, $this );
+		return false;
+	}
+
+	public function get_cart_item_from_product_id( $product_id ) {
+		$product_id = absint( $product_id );
+		$cart       = $this->get_cart_contents();
+
+		foreach ( $cart as $item ) {
+			if ( $product_id === absint( $item->prodid ) ) {
+				return $item;
+			}
+		}
+
+		return false;
+	}
+
+	public function update_cart_item( $item_id, $data ) {
+		global $wpdb;
+
+		$item_id = absint( $item_id );
+		$item = $this->get_cart_item( $item_id );
+
+		if ( $item ) {
+			do_action( 'wpsc_purchase_log_before_update_cart_item', $item_id );
+
+			$data = wp_unslash( $data );
+			$result = $wpdb->update( WPSC_TABLE_CART_CONTENTS, $data, array( 'id' => $item_id  ) );
+
+			if ( $result ) {
+
+				$this->cart_contents = array();
+				$this->get_cart_item( $item_id );
+
+				do_action( 'wpsc_purchase_log_update_cart_item', $item_id );
+			}
+
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function remove_cart_item( $item_id ) {
+		global $wpdb;
+
+		$item_id = absint( $item_id );
+		$item = $this->get_cart_item( $item_id );
+
+		if ( $item ) {
+			do_action( 'wpsc_purchase_log_before_remove_cart_item', $item_id );
+
+			$result = $wpdb->delete( WPSC_TABLE_CART_CONTENTS, array( 'id' => $item_id ) );
+
+			if ( $result ) {
+
+				unset( $this->cart_contents[ $this->cart_ids[ $item_id ] ] );
+				unset( $this->cart_ids[ $item_id ] );
+
+				do_action( 'wpsc_purchase_log_remove_cart_item', $item_id );
+			}
+
+			return $result;
+		}
+
+		return false;
 	}
 
 	public function get_gateway_data( $from_currency = false, $to_currency = false ) {
@@ -920,7 +969,7 @@ class WPSC_Purchase_Log {
 		}
 
 		if ( ! empty( $this->meta_data ) ) {
-			$this->save_meta_data();
+			$this->save_meta();
 		}
 
 		do_action( 'wpsc_purchase_log_save', $this );
@@ -931,10 +980,12 @@ class WPSC_Purchase_Log {
 	/**
 	 * Save meta data for purchase log, if any was set via set().
 	 *
+	 * @access public
 	 * @since  4.0
-	 * @return void
+	 *
+	 * @return WPSC_Query_Base  The current object (for method chaining)
 	 */
-	private function save_meta_data() {
+	public function save_meta() {
 		do_action( 'wpsc_purchase_log_pre_save_meta', $this );
 
 		$meta = $this->get_meta();
@@ -944,6 +995,8 @@ class WPSC_Purchase_Log {
 		}
 
 		do_action( 'wpsc_purchase_log_save_meta', $this );
+
+		return $this;
 	}
 
 	private function update_downloadable_status() {
@@ -998,8 +1051,47 @@ class WPSC_Purchase_Log {
 		}
 	}
 
+	public function get_next_log_id() {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		$sql = $wpdb->prepare(
+			"SELECT MIN(id) FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id > %d",
+			$this->get( 'id' )
+		);
+
+		return $wpdb->get_var( $sql );
+	}
+
+	public function get_previous_log_id() {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		$sql = $wpdb->prepare(
+			"SELECT MAX(id) FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id < %d",
+			$this->get( 'id' )
+		);
+
+		return $wpdb->get_var( $sql );
+	}
+
 	public function is_transaction_completed() {
 		return WPSC_Purchase_Log::is_order_status_completed( $this->get( 'processed' ) );
+	}
+
+	public function can_edit() {
+		if ( null === $this->can_edit ) {
+			$can_edit = current_user_can( 'edit_others_posts' ) && ! $this->is_transaction_completed();
+			$this->can_edit = apply_filters( 'wpsc_can_edit_order', $can_edit, $this );
+		}
+
+		return $this->can_edit;
 	}
 
 	public function is_order_received() {
@@ -1033,4 +1125,300 @@ class WPSC_Purchase_Log {
 	public function is_refund_pending() {
 		return $this->get( 'processed' ) == self::REFUND_PENDING;
 	}
+
+	/*
+	 * Utility methods using the $purchlogitem global.. Global usage to be replaced in the future.
+	 *
+	 * TODO: seriously get rid of all these badly coded purchaselogs.functions.php functions
+	 * and wpsc_purchaselogs/wpsc_purchaselogs_items classes.
+	 */
+
+	/**
+	 * Init the purchase log items for this purchase log.
+	 *
+	 * @since  4.0
+	 *
+	 * @return wpsc_purchaselogs_items|false The purhchase log item object or false.
+	 */
+	public function init_items() {
+		global $purchlogitem;
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		$purchlogitem = new wpsc_purchaselogs_items( $this->get( 'id' ), $this );
+	}
+
+	public function buyers_name() {
+		global $purchlogitem;
+
+		if ( null === $this->buyers_name ) {
+			$first_name = $last_name = '';
+
+			if ( isset( $purchlogitem->userinfo['billingfirstname'] ) ) {
+				$first_name = $purchlogitem->userinfo['billingfirstname']['value'];
+			}
+
+			if ( isset( $purchlogitem->userinfo['billinglastname'] ) ) {
+				$last_name = ' ' . $purchlogitem->userinfo['billinglastname']['value'];
+			}
+
+			$this->buyers_name = trim( $first_name . $last_name );
+		}
+
+		return $this->buyers_name;
+	}
+
+	public function buyers_city() {
+		global $purchlogitem;
+
+		if ( null === $this->buyers_city ) {
+			$this->buyers_city = isset( $purchlogitem->userinfo['billingcity']['value'] ) ? $purchlogitem->userinfo['billingcity']['value'] : '';
+		}
+
+		return $this->buyers_city;
+	}
+
+	public function buyers_email() {
+		global $purchlogitem;
+
+		if ( null === $this->buyers_email ) {
+			$this->buyers_email = isset( $purchlogitem->userinfo['billingemail']['value'] ) ? $purchlogitem->userinfo['billingemail']['value'] : '';
+		}
+
+		return $this->buyers_email;
+	}
+
+	public function buyers_address() {
+		global $purchlogitem;
+
+		if ( null === $this->buyers_address ) {
+			$this->buyers_address = isset( $purchlogitem->userinfo['billingaddress']['value'] ) ? nl2br( esc_html( $purchlogitem->userinfo['billingaddress']['value'] ) ) : '';
+		}
+
+		return $this->buyers_address;
+	}
+
+	public function buyers_state_and_postcode() {
+		global $purchlogitem;
+
+		if ( null === $this->buyers_state_and_postcode ) {
+			if ( is_numeric( $purchlogitem->extrainfo->billing_region ) ) {
+				$state = wpsc_get_region( $purchlogitem->extrainfo->billing_region );
+			} else {
+				$state = $purchlogitem->userinfo['billingstate']['value'];
+				$state = is_numeric( $state ) ? wpsc_get_region( $state ) : $state;
+			}
+
+			$output = esc_html( $state );
+
+			if ( isset( $purchlogitem->userinfo['billingpostcode']['value'] ) && ! empty( $purchlogitem->userinfo['billingpostcode']['value'] ) ) {
+				if ( $output ) {
+					$output .= ', '; // TODO determine if it's ok to make this a space only (like shipping_state_and_postcode)
+				}
+				$output .= $purchlogitem->userinfo['billingpostcode']['value'];
+			}
+
+			$this->buyers_state_and_postcode = $output;
+		}
+
+		return $this->buyers_state_and_postcode;
+	}
+
+	public function buyers_country() {
+		global $purchlogitem;
+
+		if ( null === $this->buyers_country ) {
+			$this->buyers_country = isset( $purchlogitem->userinfo['billingcountry']['value'] ) ? wpsc_get_country( $purchlogitem->userinfo['billingcountry']['value'] ) : '';
+		}
+
+		return $this->buyers_country;
+	}
+
+	public function buyers_phone() {
+		global $purchlogitem;
+
+		if ( null === $this->buyers_phone ) {
+			$this->buyers_phone = isset( $purchlogitem->userinfo['billingphone']['value'] ) ? $purchlogitem->userinfo['billingphone']['value'] : '';
+		}
+
+		return $this->buyers_phone;
+	}
+
+	public function shipping_name() {
+		global $purchlogitem;
+
+		if ( null === $this->shipping_name ) {
+			$this->shipping_name = isset( $purchlogitem->shippinginfo['shippingfirstname']['value'] ) ? $purchlogitem->shippinginfo['shippingfirstname']['value'] : '';
+		}
+
+		return $this->shipping_name;
+	}
+
+	public function shipping_city() {
+		global $purchlogitem;
+
+		if ( null === $this->shipping_city ) {
+			$this->shipping_city = isset( $purchlogitem->shippinginfo['shippingcity']['value'] ) ? $purchlogitem->shippinginfo['shippingcity']['value'] : '';
+		}
+
+		return $this->shipping_city;
+	}
+
+	public function shipping_address() {
+		global $purchlogitem;
+
+		if ( null === $this->shipping_address ) {
+			$this->shipping_address = isset( $purchlogitem->shippinginfo['shippingaddress']['value'] ) ? nl2br( esc_html( $purchlogitem->shippinginfo['shippingaddress']['value'] ) ) : '';
+		}
+
+		return $this->shipping_address;
+	}
+
+	public function shipping_state_and_postcode() {
+		global $purchlogitem;
+
+		if ( null === $this->shipping_state_and_postcode ) {
+			if ( is_numeric( $purchlogitem->extrainfo->shipping_region ) ) {
+				$output = wpsc_get_region( $purchlogitem->extrainfo->shipping_region );
+			} else {
+				$state = $purchlogitem->shippinginfo['shippingstate']['value'];
+				$output = is_numeric( $state ) ? wpsc_get_region( $state ) : $state;
+			}
+
+			if ( !empty( $purchlogitem->shippinginfo['shippingpostcode']['value'] ) ){
+				if ( $output ) {
+					$output .= ' ';
+				}
+
+				$output .= $purchlogitem->shippinginfo['shippingpostcode']['value'];
+			}
+
+			$this->shipping_state_and_postcode = $output;
+		}
+
+		return $this->shipping_state_and_postcode;
+	}
+
+	public function shipping_country() {
+		global $purchlogitem;
+
+		if ( null === $this->shipping_country ) {
+			$this->shipping_country = isset( $purchlogitem->shippinginfo['shippingcountry'] )
+				? wpsc_get_country( $purchlogitem->shippinginfo['shippingcountry']['value'] )
+				: '';
+		}
+
+		return $this->shipping_country;
+	}
+
+	public function payment_method() {
+		global $purchlogitem, $nzshpcrt_gateways;
+
+		if ( null === $this->payment_method ) {
+			if ( 'wpsc_merchant_testmode' == $purchlogitem->extrainfo->gateway ) {
+				$this->payment_method = __( 'Manual Payment', 'wp-e-commerce' );
+			} else {
+				foreach ( (array) $nzshpcrt_gateways as $gateway ) {
+					if ( isset( $gateway['internalname'] ) && $gateway['internalname'] == $purchlogitem->extrainfo->gateway ) {
+						$this->payment_method = $gateway['name'];
+					}
+				}
+
+				if ( ! $this->payment_method ) {
+					$this->payment_method = $purchlogitem->extrainfo->gateway;
+				}
+			}
+		}
+
+		return $this->payment_method;
+	}
+
+	public function shipping_method() {
+		global $purchlogitem, $wpsc_shipping_modules;
+
+		if ( null === $this->shipping_method ) {
+
+			if ( ! empty( $wpsc_shipping_modules[ $purchlogitem->extrainfo->shipping_method ] ) ) {
+				$this->shipping_method = $wpsc_shipping_modules[ $purchlogitem->extrainfo->shipping_method ]->getName();
+			} else {
+				$this->shipping_method = $purchlogitem->extrainfo->shipping_method;
+			}
+
+		}
+
+		return $this->shipping_method;
+	}
+
+	/**
+	 * Returns base shipping should make a function to calculate items shipping as well
+	 *
+	 * @since  4.0
+	 *
+	 * @param  boolean $numeric Return numeric value.
+	 *
+	 * @return mixed
+	 */
+	public function discount( $numeric = false ) {
+		global $purchlogitem;
+
+		$discount = $purchlogitem->extrainfo->discount_value;
+		if ( ! $numeric ) {
+			$discount = wpsc_currency_display( $discount, array( 'display_as_html' => false ) );
+		}
+
+		return $discount;
+	}
+
+	/**
+	 * Returns base shipping should make a function to calculate items shipping as well
+	 *
+	 * @since  4.0
+	 *
+	 * @param  boolean $numeric       Return numeric value.
+	 * @param  boolean $include_items Whether to calculate per-item-shipping.
+	 *
+	 * @return mixed
+	 */
+	public function shipping( $numeric = false, $include_items = false ) {
+		$total_shipping = $this->get( 'base_shipping' );
+
+		if ( $include_items ) {
+			$total_shipping = $this->meta_data['total_shipping'];
+		}
+
+		if ( ! $numeric ) {
+			$total_shipping = wpsc_currency_display( $total_shipping, array( 'display_as_html' => false ) );
+		}
+
+		return $total_shipping;
+	}
+
+	/**
+	 * Returns taxes total.
+	 *
+	 * @since  4.0
+	 *
+	 * @param  boolean $numeric Return numeric value.
+	 *
+	 * @return mixed
+	 */
+	public function taxes( $numeric = false ) {
+		global $purchlogitem;
+
+		$taxes = $purchlogitem->extrainfo->wpec_taxes_total;
+		if ( ! $numeric ) {
+			$taxes = wpsc_currency_display( $taxes, array( 'display_as_html' => false ) );
+		}
+
+		return $taxes;
+	}
+
+	public function total_price() {
+		global $purchlogitem;
+
+		$total = $purchlogitem->totalAmount - $this->discount( true ) + $this->shipping( true ) + $this->taxes( true );
+		return wpsc_currency_display( $total, array( 'display_as_html' => false ) );
+	}
+
 }
