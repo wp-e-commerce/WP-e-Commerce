@@ -1016,6 +1016,15 @@ public function get_meta() {
 		}
 	}
 
+	public function have_downloads_locked() {
+		global $wpdb;
+
+		$sql = $wpdb->prepare( "SELECT `ip_number` FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d ", $this->get( 'id' ) );
+		$ip_number = $wpdb->get_var( $sql );
+
+		return $ip_number;
+	}
+
 	/**
 	 * Adds ability to retrieve a purchase log by a meta key or value.
 	 *
@@ -1146,7 +1155,8 @@ public function get_meta() {
 			return false;
 		}
 
-		$purchlogitem = new wpsc_purchaselogs_items( $this->get( 'id' ), $this );
+		$form_data_obj = new WPSC_Checkout_Form_Data( $this->get( 'id' ) );
+		$purchlogitem = new wpsc_purchaselogs_items( $this->get( 'id' ), $this, $form_data_obj );
 	}
 
 	public function buyers_name() {
