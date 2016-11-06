@@ -42,7 +42,7 @@ class wpsc_purchaselogs_items {
 	}
 
 	function get_purchlog_details() {
-		$this->allcartcontent = $this->log->get_cart_contents();
+		$this->allcartcontent = $this->log->get_items();
 		$this->extrainfo      = (object) $this->log->get_data();
 
 		// Need to manipulate the data array to match the previously expected style.

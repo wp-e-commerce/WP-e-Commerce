@@ -581,7 +581,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 	}
 
 	return array(
-		'quantities'     => wp_list_pluck( $log->get_cart_contents(), 'quantity', 'id' ),
+		'quantities'     => wp_list_pluck( $log->get_items(), 'quantity', 'id' ),
 		'html'           => $html,
 		'htmls'          => $htmls,
 		'discount_data'  => wpsc_purchlog_has_discount_data() ? esc_html__( 'Coupon Code', 'wp-e-commerce' ) . ': ' . wpsc_display_purchlog_discount_data() : '',

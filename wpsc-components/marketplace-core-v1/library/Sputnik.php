@@ -105,7 +105,7 @@ class Sputnik {
 	}
 
 	public static function add_download_link( $message, $notification ) {
-		$cart_contents = $notification->get_purchase_log()->get_cart_contents();
+		$cart_contents = $notification->get_purchase_log()->get_items();
 
 		$products = '';
 
@@ -149,7 +149,7 @@ class Sputnik {
 		if ( ! $display_to_screen )
 			return;
 
-		$cart_contents = $purchase_log_object->get_cart_contents();
+		$cart_contents = $purchase_log_object->get_items();
 
 		$products = '';
 
@@ -307,7 +307,7 @@ class Sputnik {
 			if ( empty( $pushed_to_saas ) ) {
 
 				$data          = $purchase_log->get_data();
-				$cart_contents = $purchase_log->get_cart_contents();
+				$cart_contents = $purchase_log->get_items();
 
 				// We want to push sales data - but naturally, IDs will differ, even names could potentially.
 				// So we add the slug to the object we POST

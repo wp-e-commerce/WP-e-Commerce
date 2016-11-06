@@ -164,7 +164,7 @@ class WPSC_Google_Analytics {
 
 		$state   = ! empty( $state ) ? wpsc_get_state_by_id( $state, 'name' ) : '';
 
-		$cart_items = $purchase->get_cart_contents();
+		$cart_items = $purchase->get_items();
 
 		$total_shipping = wpsc_get_total_shipping( $purchase_id );
 		$total_tax      = $total_price = 0;

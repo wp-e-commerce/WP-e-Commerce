@@ -549,7 +549,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	private function set_total_shipping() {
 
 		$base_shipping  = $this->get( 'base_shipping' );
-		$item_shipping  = wp_list_pluck( $this->get_cart_contents(), 'pnp' );
+		$item_shipping  = wp_list_pluck( $this->get_items(), 'pnp' );
 
 		$this->meta_data['total_shipping'] = $base_shipping + array_sum( $item_shipping );
 
@@ -638,7 +638,7 @@ public function get_meta() {
 		if ( $data = $wpdb->get_row( $sql, ARRAY_A ) ) {
 			$this->exists        = true;
 			$this->data          = apply_filters( 'wpsc_purchase_log_data', $data );
-			$this->cart_contents = $this->get_cart_contents();
+			$this->cart_contents = $this->get_items();
 
 			$this->set_meta_props();
 			self::update_cache( $this );
@@ -689,6 +689,11 @@ public function get_meta() {
 	}
 
 	public function get_cart_contents() {
+		_wpsc_doing_it_wrong( __FUNCTION__, __( 'This function has been deprecated in favor of the get_items() method.', 'wp-e-commerce' ), '4.0' )
+		return $this->get_items();
+	}
+
+	public function get_items() {
 		global $wpdb;
 
 		if ( ! empty( $this->cart_contents ) && $this->fetched ) {
@@ -714,9 +719,11 @@ public function get_meta() {
 		return $this->cart_contents;
 	}
 
+
+
 	public function get_cart_item( $item_id ) {
 		$item_id = absint( $item_id );
-		$cart    = $this->get_cart_contents();
+		$cart    = $this->get_items();
 
 		if ( isset( $this->cart_ids[ $item_id ] ) ) {
 			return $cart[ $this->cart_ids[ $item_id ] ];
@@ -727,7 +734,7 @@ public function get_meta() {
 
 	public function get_cart_item_from_product_id( $product_id ) {
 		$product_id = absint( $product_id );
-		$cart       = $this->get_cart_contents();
+		$cart       = $this->get_items();
 
 		foreach ( $cart as $item ) {
 			if ( $product_id === absint( $item->prodid ) ) {
@@ -1002,7 +1009,7 @@ public function get_meta() {
 	private function update_downloadable_status() {
 		global $wpdb;
 
-		foreach ( $this->get_cart_contents() as $item ) {
+		foreach ( $this->get_items() as $item ) {
 			$wpdb->update(
 				WPSC_TABLE_DOWNLOAD_STATUS,
 				array(
