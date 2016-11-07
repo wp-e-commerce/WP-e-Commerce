@@ -381,17 +381,30 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @return void
 	 */
 	public static function update_cache( &$log ) {
+		return $log->update_caches();
+	}
+
+	/**
+	 * Update caches.
+	 *
+	 * @access public
+	 * @static
+	 * @since 4.0
+	 *
+	 * @return void
+	 */
+	public function update_caches() {
 
 		// wpsc_purchase_logs stores the data array, while wpsc_purchase_logs_sessionid stores the
 		// log id that's associated with the sessionid
-		$id = $log->get( 'id' );
-		wp_cache_set( $id, $log->data, 'wpsc_purchase_logs' );
+		$id = $this->get( 'id' );
+		wp_cache_set( $id, $this->data, 'wpsc_purchase_logs' );
 
-		if ( $sessionid = $log->get( 'sessionid' ) ) {
+		if ( $sessionid = $this->get( 'sessionid' ) ) {
 			wp_cache_set( $sessionid, $id, 'wpsc_purchase_logs_sessionid' );
 		}
 
-		wp_cache_set( $id, $log->cart_contents, 'wpsc_purchase_log_cart_contents' );
+		wp_cache_set( $id, $this->cart_contents, 'wpsc_purchase_log_cart_contents' );
 		do_action( 'wpsc_purchase_log_update_cache', $log );
 	}
 
@@ -641,7 +654,7 @@ public function get_meta() {
 			$this->cart_contents = $this->get_items();
 
 			$this->set_meta_props();
-			self::update_cache( $this );
+			$this->update_caches( $this );
 		}
 
 		do_action( 'wpsc_purchase_log_fetched', $this );
