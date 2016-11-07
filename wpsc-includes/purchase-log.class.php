@@ -405,7 +405,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		}
 
 		wp_cache_set( $id, $this->cart_contents, 'wpsc_purchase_log_cart_contents' );
-		do_action( 'wpsc_purchase_log_update_cache', $log );
+		do_action( 'wpsc_purchase_log_update_cache', $this );
 	}
 
 	/**
@@ -725,7 +725,7 @@ public function get_meta() {
 	}
 
 	public function get_cart_contents() {
-		_wpsc_doing_it_wrong( __FUNCTION__, __( 'This function has been deprecated in favor of the get_items() method.', 'wp-e-commerce' ), '4.0' )
+		_wpsc_doing_it_wrong( __FUNCTION__, __( 'This function has been deprecated in favor of the get_items() method.', 'wp-e-commerce' ), '4.0' );
 		return $this->get_items();
 	}
 
