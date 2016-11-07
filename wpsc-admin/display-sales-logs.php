@@ -308,14 +308,23 @@ class WPSC_Purchase_Log_Page {
 			$columns['remove'] = '';
 		}
 
+		add_filter( 'admin_title', array( $this, 'doc_title' ), 10, 2 );
+
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
 		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'purchase_log_custom_fields' ) );
 	}
 
-	public function controller_packing_slip() {
+	public function doc_title( $admin_title, $title ) {
+		/* translators: #%d represents the sales log id. */
+		$this_title = sprintf( esc_html__( 'Sales Log #%d', 'wp-e-commerce' ), $this->log_id );
+		$admin_title = str_replace( $title, $this_title, $admin_title );
 
+		return $admin_title;
+	}
+
+	public function controller_packing_slip() {
 		if ( ! isset( $_REQUEST['id'] ) || ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) ) ) {
 			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
