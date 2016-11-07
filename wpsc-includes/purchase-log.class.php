@@ -433,8 +433,8 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @static
 	 * @since 4.0
 	 *
-	 * @param string|null $value Optional. The value which was queried.
-	 * @param string|null $col   Optional. The column used as the identifier.
+	 * @param string|null $value Optional (left for back-compatibility). The value which was queried.
+	 * @param string|null $col   Optional (left for back-compatibility). The column used as the identifier.
 	 *
 	 * @return void
 	 */
