@@ -423,13 +423,36 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	public static function delete_cache( $value, $col = 'id' ) {
 		// this will pull from the old cache, so no worries there
 		$log = new WPSC_Purchase_Log( $value, $col );
+		$log->delete_caches( $value, $col );
+	}
 
-		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_logs' );
-		wp_cache_delete( $log->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
-		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
-		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_meta' );
+	/**
+	 * Deletes caches.
+	 *
+	 * @access public
+	 * @static
+	 * @since 4.0
+	 *
+	 * @param string|null $value Optional. The value which was queried.
+	 * @param string|null $col   Optional. The column used as the identifier.
+	 *
+	 * @return void
+	 */
+	public function delete_caches( $value = null, $col = null ) {
+		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_logs' );
+		wp_cache_delete( $this->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
+		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
+		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_meta' );
 
-		do_action( 'wpsc_purchase_log_delete_cache', $log, $value, $col );
+		if ( null === $value ) {
+			$value = $this->args['value'];
+		}
+
+		if ( null === $col ) {
+			$col = $this->args['col'];
+		}
+
+		do_action( 'wpsc_purchase_log_delete_cache', $this, $value, $col );
 	}
 
 	/**
@@ -468,7 +491,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 
 			do_action( 'wpsc_purchase_log_before_delete', $log_id );
 
-			self::delete_cache( $log_id );
+			$this->delete_caches();
 
 			// Delete claimed stock
 			$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $log_id ) );
