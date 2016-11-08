@@ -677,7 +677,7 @@ public function get_meta() {
 			$this->cart_contents = $this->get_items();
 
 			$this->set_meta_props();
-			$this->update_caches( $this );
+			$this->update_caches();
 		}
 
 		do_action( 'wpsc_purchase_log_fetched', $this );
