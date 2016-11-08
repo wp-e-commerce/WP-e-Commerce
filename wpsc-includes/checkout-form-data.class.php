@@ -41,7 +41,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @access protected
 	 * @since 4.0
 	 *
-	 * @return WPSC_Query_Base
+	 * @return WPSC_Checkout_Form_Data
 	 */
 	protected function fetch() {
 		if ( $this->fetched ) {

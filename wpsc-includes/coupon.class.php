@@ -208,7 +208,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * @access  private
 	 * @since   4.0
 	 *
-	 * @return WPSC_Query_Base
+	 * @return WPSC_Coupon
 	 */
 	protected function fetch() {
 		global $wpdb;

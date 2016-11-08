@@ -650,7 +650,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @access protected
 	 * @since 3.8.9
 	 *
-	 * @return WPSC_Query_Base
+	 * @return WPSC_Purchase_Log
 	 */
 	protected function fetch() {
 		global $wpdb;
