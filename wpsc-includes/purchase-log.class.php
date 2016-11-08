@@ -102,8 +102,8 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	private $is_status_changed = false;
 	private $previous_status   = false;
 
-	private $cart_contents = array();
-	private $cart_ids = array();
+	private $log_items = array();
+	private $log_item_ids = array();
 	private $can_edit = null;
 
 	/**
@@ -405,7 +405,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			wp_cache_set( $sessionid, $id, 'wpsc_purchase_logs_sessionid' );
 		}
 
-		wp_cache_set( $id, $this->cart_contents, 'wpsc_purchase_log_cart_contents' );
+		wp_cache_set( $id, $this->log_items, 'wpsc_purchase_log_items' );
 		do_action( 'wpsc_purchase_log_update_cache', $this );
 	}
 
@@ -442,7 +442,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	public function delete_caches( $value = null, $col = null ) {
 		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_logs' );
 		wp_cache_delete( $this->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
-		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
+		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_log_items' );
 		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_meta' );
 
 		if ( null === $value ) {
@@ -571,7 +571,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		// if the id is specified, try to get from cache
 		if ( $col == 'id' ) {
 			$this->data = wp_cache_get( $value, 'wpsc_purchase_logs' );
-			$this->cart_contents = wp_cache_get( $value, 'wpsc_purchase_log_cart_contents' );
+			$this->log_items = wp_cache_get( $value, 'wpsc_purchase_log_items' );
 		}
 
 		// cache exists
@@ -675,7 +675,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		if ( $data = $wpdb->get_row( $sql, ARRAY_A ) ) {
 			$this->exists        = true;
 			$this->data          = apply_filters( 'wpsc_purchase_log_data', $data );
-			$this->cart_contents = $this->get_items();
+			$this->log_items = $this->get_items();
 
 			$this->set_meta_props();
 			$this->update_caches();
@@ -735,45 +735,45 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	public function get_items() {
 		global $wpdb;
 
-		if ( ! empty( $this->cart_contents ) && $this->fetched ) {
-			return $this->cart_contents;
+		if ( ! empty( $this->log_items ) && $this->fetched ) {
+			return $this->log_items;
 		}
 
 		$id = $this->get( 'id' );
 
 		// Bail if we don't have a log object yet (no id).
 		if ( empty( $id ) ) {
-			return $this->cart_contents;
+			return $this->log_items;
 		}
 
 		$sql = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $id );
-		$this->cart_contents = $wpdb->get_results( $sql );
+		$this->log_items = $wpdb->get_results( $sql );
 
-		if ( is_array( $this->cart_contents ) ) {
-			foreach ( $this->cart_contents as $index => $item ) {
-				$this->cart_ids[ absint( $item->id ) ] = $index;
+		if ( is_array( $this->log_items ) ) {
+			foreach ( $this->log_items as $index => $item ) {
+				$this->log_item_ids[ absint( $item->id ) ] = $index;
 			}
 		}
 
-		return $this->cart_contents;
+		return $this->log_items;
 	}
 
-	public function get_cart_item( $item_id ) {
+	public function get_item( $item_id ) {
 		$item_id = absint( $item_id );
-		$cart    = $this->get_items();
+		$items   = $this->get_items();
 
-		if ( isset( $this->cart_ids[ $item_id ] ) ) {
-			return $cart[ $this->cart_ids[ $item_id ] ];
+		if ( isset( $this->log_item_ids[ $item_id ] ) ) {
+			return $items[ $this->log_item_ids[ $item_id ] ];
 		}
 
 		return false;
 	}
 
-	public function get_cart_item_from_product_id( $product_id ) {
+	public function get_item_from_product_id( $product_id ) {
 		$product_id = absint( $product_id );
-		$cart       = $this->get_items();
+		$items      = $this->get_items();
 
-		foreach ( $cart as $item ) {
+		foreach ( $items as $item ) {
 			if ( $product_id === absint( $item->prodid ) ) {
 				return $item;
 			}
@@ -782,24 +782,24 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		return false;
 	}
 
-	public function update_cart_item( $item_id, $data ) {
+	public function update_item( $item_id, $data ) {
 		global $wpdb;
 
 		$item_id = absint( $item_id );
-		$item = $this->get_cart_item( $item_id );
+		$item = $this->get_item( $item_id );
 
 		if ( $item ) {
-			do_action( 'wpsc_purchase_log_before_update_cart_item', $item_id );
+			do_action( 'wpsc_purchase_log_before_update_item', $item_id );
 
 			$data = wp_unslash( $data );
 			$result = $wpdb->update( WPSC_TABLE_CART_CONTENTS, $data, array( 'id' => $item_id  ) );
 
 			if ( $result ) {
 
-				$this->cart_contents = array();
-				$this->get_cart_item( $item_id );
+				$this->log_items = array();
+				$this->get_item( $item_id );
 
-				do_action( 'wpsc_purchase_log_update_cart_item', $item_id );
+				do_action( 'wpsc_purchase_log_update_item', $item_id );
 			}
 
 			return $result;
@@ -808,23 +808,23 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		return false;
 	}
 
-	public function remove_cart_item( $item_id ) {
+	public function remove_item( $item_id ) {
 		global $wpdb;
 
 		$item_id = absint( $item_id );
-		$item = $this->get_cart_item( $item_id );
+		$item = $this->get_item( $item_id );
 
 		if ( $item ) {
-			do_action( 'wpsc_purchase_log_before_remove_cart_item', $item_id );
+			do_action( 'wpsc_purchase_log_before_remove_item', $item_id );
 
 			$result = $wpdb->delete( WPSC_TABLE_CART_CONTENTS, array( 'id' => $item_id ) );
 
 			if ( $result ) {
 
-				unset( $this->cart_contents[ $this->cart_ids[ $item_id ] ] );
-				unset( $this->cart_ids[ $item_id ] );
+				unset( $this->log_items[ $this->log_item_ids[ $item_id ] ] );
+				unset( $this->log_item_ids[ $item_id ] );
 
-				do_action( 'wpsc_purchase_log_remove_cart_item', $item_id );
+				do_action( 'wpsc_purchase_log_remove_item', $item_id );
 			}
 
 			return $result;
@@ -856,7 +856,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			'tax'     => wpsc_convert_currency( $this->get( 'wpec_taxes_total' ), $from_currency, $to_currency ),
 		);
 
-		foreach ( $this->cart_contents as $item ) {
+		foreach ( $this->log_items as $item ) {
 			$item_price = wpsc_convert_currency( $item->price, $from_currency, $to_currency );
 			$items[] = array(
 				'name'     => $item->name,
