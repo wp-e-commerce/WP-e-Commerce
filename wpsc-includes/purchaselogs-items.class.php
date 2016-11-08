@@ -17,18 +17,13 @@ class wpsc_purchaselogs_items {
 	var $additional_fields = array();
 
 	private $log = null;
-	private $form_data = null;
 
-	public function __construct( $id, $purchase_log = null, $checkout_form_data = null ) {
+	public function __construct( $id, $purchase_log = null ) {
 		$this->purchlogid = $id;
 
 		$this->log = $purchase_log instanceof WPSC_Purchase_Log
 			? $purchase_log
 			: new WPSC_Purchase_Log( $this->purchlogid );
-
-		$this->form_data = $checkout_form_data instanceof WPSC_Checkout_Form_Data
-			? $checkout_form_data
-			: new WPSC_Checkout_Form_Data( $this->purchlogid );
 
 		$this->get_purchlog_details();
 	}
@@ -46,7 +41,7 @@ class wpsc_purchaselogs_items {
 		$this->extrainfo      = (object) $this->log->get_data();
 
 		// Need to manipulate the data array to match the previously expected style.
-		$userinfo = $this->form_data->get_raw_data();
+		$userinfo = $this->log->form_data()->get_raw_data();
 
 		foreach ( $userinfo as $index => $field ) {
 			$field->form_field_id = $field->id;

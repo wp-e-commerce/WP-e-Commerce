@@ -97,6 +97,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	);
 
 	private $gateway_data = array();
+	private $form_data_obj = null;
 
 	private $is_status_changed = false;
 	private $previous_status   = false;
@@ -634,7 +635,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$this->set_shipping_method_names();
 	}
 
-public function get_meta() {
+	public function get_meta() {
 
 		if ( empty( $this->data ) || empty( $this->meta_data ) ) {
 			$this->fetch();
@@ -649,7 +650,7 @@ public function get_meta() {
 	 * @access protected
 	 * @since 3.8.9
 	 *
-	 * @return void
+	 * @return WPSC_Query_Base
 	 */
 	protected function fetch() {
 		global $wpdb;
@@ -683,6 +684,8 @@ public function get_meta() {
 		do_action( 'wpsc_purchase_log_fetched', $this );
 
 		$this->fetched = true;
+
+		return $this;
 	}
 
 	/**
@@ -754,8 +757,6 @@ public function get_meta() {
 
 		return $this->cart_contents;
 	}
-
-
 
 	public function get_cart_item( $item_id ) {
 		$item_id = absint( $item_id );
@@ -830,6 +831,14 @@ public function get_meta() {
 		}
 
 		return false;
+	}
+
+	public function form_data() {
+		if ( null === $this->form_data_obj ) {
+			$this->form_data_obj = new WPSC_Checkout_Form_Data( $this->get( 'id' ), false );
+		}
+
+		return $this->form_data_obj;
 	}
 
 	public function get_gateway_data( $from_currency = false, $to_currency = false ) {
@@ -1197,8 +1206,7 @@ public function get_meta() {
 			return false;
 		}
 
-		$form_data_obj = new WPSC_Checkout_Form_Data( $this->get( 'id' ) );
-		$purchlogitem = new wpsc_purchaselogs_items( $this->get( 'id' ), $this, $form_data_obj );
+		$purchlogitem = new wpsc_purchaselogs_items( $this->get( 'id' ), $this );
 	}
 
 	public function buyers_name() {
