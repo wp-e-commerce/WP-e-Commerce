@@ -531,6 +531,7 @@ function _wpsc_ajax_add_log_item() {
 			: false;
 
 		$item_ids = array();
+		$log      = null;
 
 		foreach ( $_POST['product_ids'] as $product_id ) {
 			$product_id = absint( $product_id );
@@ -548,8 +549,8 @@ function _wpsc_ajax_add_log_item() {
 				}
 			}
 
-			$item = new wpsc_cart_item( $product_id, array(), $wpsc_cart );
-			$item_id = $item->save_to_db( $log_id );
+			$item       = new wpsc_cart_item( $product_id, array(), $wpsc_cart );
+			$item_id    = $item->save_to_db( $log_id );
 			$item_ids[] = absint( $item_id );
 		}
 
@@ -565,6 +566,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
 
 	$html = '';
+	$htmls = array();
 	$htmls[] = array();
 
 	while ( wpsc_have_purchaselog_details() ) {

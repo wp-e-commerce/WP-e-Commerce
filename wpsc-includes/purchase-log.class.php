@@ -922,7 +922,6 @@ public function get_meta() {
 				$this->meta_data[ $key ] = $value;
 				unset( $properties[ $key ] );
 			}
-
 		}
 
 		$this->data = array_merge( $this->data, $properties );
@@ -1398,7 +1397,6 @@ public function get_meta() {
 			} else {
 				$this->shipping_method = $this->get( 'shipping_method' );
 			}
-
 		}
 
 		return $this->shipping_method;
