@@ -22,7 +22,7 @@ class wpsc_purchaselogs_items {
 	public function __construct( $id, $purchase_log = null, $checkout_form_data = null ) {
 		$this->purchlogid = $id;
 
-		$this->log = $purchase_log instanceof WPSC_Checkout_Form_Data
+		$this->log = $purchase_log instanceof WPSC_Purchase_Log
 			? $purchase_log
 			: new WPSC_Purchase_Log( $this->purchlogid );
 
