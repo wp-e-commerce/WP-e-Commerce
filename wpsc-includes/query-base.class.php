@@ -77,11 +77,13 @@ abstract class WPSC_Query_Base {
 
 	/**
 	 * Fetches the actual $data array.
+	 * Should set $this->fetched to true, and $this->exists if row is found.
+	 * Should return $this;
 	 *
 	 * @access protected
 	 * @since 4.0
 	 *
-	 * @return void
+	 * @return WPSC_Query_Base
 	 */
 	abstract protected function fetch();
 
@@ -96,6 +98,19 @@ abstract class WPSC_Query_Base {
 	public function exists() {
 		$this->fetch();
 		return $this->exists;
+	}
+
+	/**
+	 * Resets properties so any subsequent requests will be refreshed.
+	 *
+	 * @since  4.0
+	 *
+	 * @return void
+	 */
+	protected function reset() {
+		$this->data = array();
+		$this->fetched = false;
+		$this->exists = false;
 	}
 
 	/**
