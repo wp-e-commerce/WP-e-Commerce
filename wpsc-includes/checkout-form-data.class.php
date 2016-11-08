@@ -41,7 +41,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @access protected
 	 * @since 4.0
 	 *
-	 * @return void
+	 * @return WPSC_Query_Base
 	 */
 	protected function fetch() {
 		if ( $this->fetched ) {
@@ -61,12 +61,12 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 
 			$sql = $wpdb->prepare( $sql, $this->log_id );
 			$this->raw_data = $wpdb->get_results( $sql );
-			$this->exists   = ! empty( $this->raw_data );
 
 			// Set the cache for raw checkout for data
 			$this->cache_set( $this->log_id, $this->raw_data, 'raw_data' );
 		}
 
+		$this->exists = ! empty( $this->raw_data );
 		$this->segmented_data = array(
 			'shipping' => array(),
 			'billing'  => array(),
@@ -92,6 +92,8 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 		do_action( 'wpsc_checkout_form_data_fetched', $this );
 
 		$this->fetched = true;
+
+		return $this;
 	}
 
 	/**
@@ -102,6 +104,8 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @return array
 	 */
 	public function get_indexed_raw_data() {
+		$this->fetch();
+
 		$data = array();
 		foreach ( $this->raw_data as $field ) {
 			$data[ $field->id ] = $field;
@@ -118,6 +122,8 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @return bool  Whether shipping values match billing values.
 	 */
 	public function shipping_matches_billing() {
+		$this->fetch();
+
 		foreach ( $this->segmented_data['shipping'] as $id => $index ) {
 			// If we're missing data from any of these arrays, something's wrong (and they don't match).
 			if ( ! isset(
@@ -149,6 +155,8 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @return array
 	 */
 	public function get_billing_data() {
+		$this->fetch();
+
 		return $this->segmented_data['billing'];
 	}
 
@@ -160,6 +168,8 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @return array
 	 */
 	public function get_shipping_data() {
+		$this->fetch();
+
 		return $this->segmented_data['shipping'];
 	}
 
@@ -171,6 +181,8 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @return array
 	 */
 	public function get_raw_data() {
+		$this->fetch();
+
 		return $this->raw_data;
 	}
 
