@@ -1025,7 +1025,7 @@ public function get_meta() {
 	 * @access public
 	 * @since  4.0
 	 *
-	 * @return WPSC_Query_Base  The current object (for method chaining)
+	 * @return WPSC_Purchase_Log  The current object (for method chaining)
 	 */
 	public function save_meta() {
 		do_action( 'wpsc_purchase_log_pre_save_meta', $this );
