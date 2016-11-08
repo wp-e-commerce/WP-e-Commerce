@@ -1311,6 +1311,10 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 
 		if ( null === $this->shipping_name ) {
 			$this->shipping_name = isset( $purchlogitem->shippinginfo['shippingfirstname']['value'] ) ? $purchlogitem->shippinginfo['shippingfirstname']['value'] : '';
+
+			if ( isset( $purchlogitem->shippinginfo['shippinglastname']['value'] ) ) {
+				$this->shipping_name .= ' ' . $purchlogitem->shippinginfo['shippinglastname']['value'];
+			}
 		}
 
 		return $this->shipping_name;
