@@ -321,3 +321,13 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 
 	return $output;
 }
+
+/**
+ * Returns a purchase log.
+ *
+ * @param int $order_id Order ID.
+ * @since 4.0
+ */
+function wpsc_get_order( $order_id ) {
+	return new WPSC_Purchase_Log( $order_id );
+}
