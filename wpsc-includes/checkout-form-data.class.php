@@ -30,9 +30,11 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 		),
 	);
 
-	public function __construct( $log_id ) {
+	public function __construct( $log_id, $pre_fetch = true ) {
 		$this->log_id = absint( $log_id );
-		$this->fetch();
+		if ( $pre_fetch ) {
+			$this->fetch();
+		}
 	}
 
 	/**
@@ -303,9 +305,11 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 *
 	 * @param WPSC_Purchase_Log $purchase_log
 	 * @param array $fields
+	 * @param array $data
+	 * @param bool  $update_customer
 	 * @return void
 	 */
-	public static function save_form( $purchase_log, $fields, $data = array() ) {
+	public static function save_form( $purchase_log, $fields, $data = array(), $update_customer = true ) {
 		global $wpdb;
 
 		$log_id = $purchase_log->get( 'id' );
@@ -349,7 +353,9 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 			);
 		}
 
-		wpsc_save_customer_details( $customer_details );
+		if ( $update_customer ) {
+			wpsc_save_customer_details( $customer_details );
+		}
 	}
 
 	/**

@@ -17,8 +17,13 @@
 	<div id='post-body'>
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
 		<?php do_action( 'wpsc_shipping_details_top', $this->log_id ); ?>
-			<div id='wpsc_shipping_details_box'>
-				<h3><?php esc_html_e( 'Shipping Address', 'wp-e-commerce' ); ?></h3>
+			<div id="wpsc_shipping_details_box" class="log-details-box">
+				<h3>
+					<?php esc_html_e( 'Shipping Address', 'wp-e-commerce' ); ?>
+					<?php if ( $this->can_edit ) : ?>
+						<a class="edit-log-details edit-shipping-details" href="#edit-shipping-address"><?php _e( 'Edit', 'wp-e-commerce' ); ?></a>
+					<?php endif; ?>
+				</h3>
 				<blockquote>
 					<strong>
 						<?php echo ( wpsc_display_purchlog_shipping_name() != ""           ) ? wpsc_display_purchlog_shipping_name() . "<br />"               : '<span class="field-blank">' . __( 'Anonymous', 'wp-e-commerce' ) . '</span>' ; ?>
@@ -28,6 +33,7 @@
 					<?php echo ( wpsc_display_purchlog_shipping_state_and_postcode() != "" ) ? wpsc_display_purchlog_shipping_state_and_postcode() . "<br />" : '' ; ?>
 					<?php echo ( wpsc_display_purchlog_shipping_country() != ""            ) ? wpsc_display_purchlog_shipping_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wp-e-commerce' ) . '</span>' ; ?>
 				</blockquote>
+
 				<h4><?php esc_html_e( 'Shipping Details', 'wp-e-commerce' ); ?></h4>
 				<blockquote>
 					<strong><?php esc_html_e( 'Shipping Method:', 'wp-e-commerce' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_method(); ?><br />
@@ -55,15 +61,20 @@
 			</div>
 		<?php endif ?>
 
-		<div id='wpsc_billing_details_box'>
+		<div id="wpsc_billing_details_box" class="log-details-box">
 			<?php do_action( 'wpsc_billing_details_top', $this->log_id ); ?>
-			<h3><?php esc_html_e( 'Billing Details', 'wp-e-commerce' ); ?></h3>
+			<h3>
+				<?php esc_html_e( 'Billing Details', 'wp-e-commerce' ); ?>
+				<?php if ( $this->can_edit ) : ?>
+					<a class="edit-log-details edit-billing-details" href="#edit-billing-address"><?php _e( 'Edit', 'wp-e-commerce' ); ?></a>
+				<?php endif; ?>
+			</h3>
 			<blockquote>
 				<strong>
 					<?php echo ( wpsc_display_purchlog_buyers_name() != ""           ) ? wpsc_display_purchlog_buyers_name() . "<br />"               : '<span class="field-blank">' . __( 'Anonymous', 'wp-e-commerce' ) . '</span>' ; ?>
 				</strong>
 				<?php echo ( wpsc_display_purchlog_buyers_address() != ""            ) ? wpsc_display_purchlog_buyers_address() . "<br />"            : '' ; ?>
-				<?php echo ( wpsc_display_purchlog_buyers_city() != ""               ) ? wpsc_display_purchlog_buyers_city() . "<br />"               : '' ; ?>
+				<?php echo ( wpsc_display_purchlog_buyers_city() != ""               ) ? wpsc_display_purchlog_buyers_city() . ", "               : '' ; ?>
 				<?php echo ( wpsc_display_purchlog_buyers_state_and_postcode() != "" ) ? wpsc_display_purchlog_buyers_state_and_postcode() . "<br />" : '' ; ?>
 				<?php echo ( wpsc_display_purchlog_buyers_country() != ""            ) ? wpsc_display_purchlog_buyers_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wp-e-commerce' ) . '</span>' ; ?>
 			</blockquote>
@@ -82,6 +93,12 @@
 			</blockquote>
 			<?php do_action( 'wpsc_billing_details_bottom', $this->log_id ); ?>
 		</div>
+
+		<?php if ( $this->can_edit ) : ?>
+			<div class="wpsc-controller" id="edit-shipping-billing" style="display:none;">
+				<?php $this->edit_contact_details_form(); ?>
+			</div>
+		<?php endif; ?>
 
 		<form name="wpsc_items_ordered" method="post" id="wpsc_items_ordered">
 			<h3><?php esc_html_e( 'Items Ordered', 'wp-e-commerce' ); ?></h3>

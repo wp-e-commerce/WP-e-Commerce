@@ -433,6 +433,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'current_view'                           => empty( $_REQUEST['status'] ) ? 'all' : $_REQUEST['status'],
 		'current_filter'                         => empty( $_REQUEST['m'] ) ? '' : $_REQUEST['m'],
 		'current_page'                           => empty( $_REQUEST['paged'] ) ? '' : $_REQUEST['paged'],
+		'log_id'                                 => isset( $_REQUEST['id'] ) ? absint( $_REQUEST['id'] ) : 0,
 		'strings'                                => array(
 			'confirm_delete' => esc_html__( 'Are you sure you want to remove this item?', 'wp-e-commerce' ),
 			'search_head' => esc_html__( 'Search for Products to Add', 'wp-e-commerce' ),

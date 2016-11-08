@@ -237,6 +237,13 @@ class WPSC_Purchase_Log_Page {
 		}
 	}
 
+	private function edit_contact_details_form() {
+		$args = wpsc_get_customer_settings_form_args( $this->log->form_data() );
+		$args['form_actions'][0]['class'] = 'button';
+		$args['form_actions'][0]['title'] = __( 'Update', 'wp-e-commerce' );
+		echo wpsc_get_form_output( $args );
+	}
+
 	private function purchase_log_cart_items() {
 		while( wpsc_have_purchaselog_details() ) : wpsc_the_purchaselog_item();
 			self::purchase_log_cart_item( $this->can_edit );
@@ -288,6 +295,10 @@ class WPSC_Purchase_Log_Page {
 			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
+		if ( isset( $_POST['_wp_nonce'] ) && wp_verify_nonce( $_POST['_wp_nonce'], 'wpsc-customer-settings-form' ) ) {
+			self::maybe_update_contact_details_for_log( $this->log );
+		}
+
 		$this->log->init_items();
 
 		$columns = array(
@@ -306,6 +317,9 @@ class WPSC_Purchase_Log_Page {
 
 		if ( $this->can_edit ) {
 			$columns['remove'] = '';
+
+			$this->include_te_v2_resources();
+			$this->enqueue_te_v2_resources();
 		}
 
 		add_filter( 'admin_title', array( $this, 'doc_title' ), 10, 2 );
@@ -314,6 +328,62 @@ class WPSC_Purchase_Log_Page {
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
 		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'purchase_log_custom_fields' ) );
+	}
+
+	public static function maybe_update_contact_details_for_log( WPSC_Purchase_Log $log ) {
+		if ( isset( $_POST['wpsc_checkout_details'] ) && is_array( $_POST['wpsc_checkout_details'] ) ) {
+			WPSC_Checkout_Form_Data::save_form(
+				$log,
+				WPSC_Checkout_Form::get()->get_fields(),
+				array_map( 'sanitize_text_field', $_POST['wpsc_checkout_details'] ),
+				false
+			);
+		}
+	}
+
+	public function include_te_v2_resources() {
+		if ( ! defined( 'WPSC_TE_V2_CLASSES_PATH' ) ) {
+			require_once WPSC_FILE_PATH . '/wpsc-components/theme-engine-v2/core.php';
+			_wpsc_te_v2_includes();
+		}
+
+		require_once( WPSC_TE_V2_CLASSES_PATH . '/message-collection.php' );
+		require_once( WPSC_TE_V2_HELPERS_PATH . '/message-collection.php' );
+		require_once( WPSC_TE_V2_HELPERS_PATH . '/template-tags/form.php' );
+	}
+
+	public function enqueue_te_v2_resources() {
+		_wpsc_te2_register_styles();
+		wp_enqueue_style( 'wpsc-common' );
+
+		$engine     = WPSC_Template_Engine::get_instance();
+		$scripts    = $engine->get_core_scripts_data();
+		$to_enqueue = array(
+			'wpsc-select-autocomplete',
+			'wpsc-country-region',
+			'wpsc-copy-billing-info'
+		);
+
+		foreach ( $to_enqueue as $handle ) {
+			wp_register_script(
+				$handle,
+				WPSC_TE_V2_URL . '/theming/assets/' . $scripts[ $handle ]['path'],
+				$scripts[ $handle ]['dependencies'],
+				$scripts[ $handle ]['version'],
+				true
+			);
+			wpsc_enqueue_script( $handle );
+		}
+
+		wp_localize_script( 'wpsc-copy-billing-info', 'WPSC', array(
+			'is_admin' => true,
+		) );
+
+		_wpsc_action_enqueue_shipping_billing_scripts();
+
+		foreach ( $engine->get_queued_scripts() as $handle => $data ) {
+			_wpsc_enqueue_and_localize_script( $handle, $data );
+		}
 	}
 
 	public function doc_title( $admin_title, $title ) {
@@ -418,7 +488,6 @@ class WPSC_Purchase_Log_Page {
 
 		if ( 'download_csv' == $current_action ) {
 			$this->download_csv();
-			exit;
 		}
 
 		$sendback = remove_query_arg( array(

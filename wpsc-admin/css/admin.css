@@ -328,6 +328,38 @@ th#status {
 	text-align: right;
 }
 
+.edit-log-details {
+	font-size: .8em;
+	padding-left: 5px;
+}
+
+@media screen and ( min-width: 620px ) {
+	#wpsc-customer-settings-form fieldset {
+		float: left;
+		min-width: 300px;
+		margin-right: 10px;
+	}
+	#wpsc-customer-settings-form fieldset [type="text"] {
+		min-width: 280px;
+	}
+}
+
+.wpsc-form-actions {
+	clear: both;
+}
+
+#edit-shipping-billing {
+	padding: 18px 18px 0;
+	background: #fff;
+	border: 1px solid #e5e5e5;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	clear: both;
+}
+
+#edit-shipping-billing .wpsc-form-actions {
+	margin-bottom: 0;
+}
 
 /**
  * Display Products CSS starts here

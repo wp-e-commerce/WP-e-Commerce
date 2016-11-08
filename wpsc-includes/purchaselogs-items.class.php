@@ -44,9 +44,10 @@ class wpsc_purchaselogs_items {
 		$userinfo = $this->log->form_data()->get_raw_data();
 
 		foreach ( $userinfo as $index => $field ) {
-			$field->form_field_id = $field->id;
-			$field->id = $field->data_id;
-			$userinfo[ $index ] = (array) $field;
+			$field = (array) $field;
+			$field['form_field_id'] = $field['id'];
+			$field['id'] = $field['data_id'];
+			$userinfo[ $index ] = $field;
 		}
 
 		usort( $userinfo, array( $this, 'by_id' ) );

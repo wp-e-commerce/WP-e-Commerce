@@ -19,12 +19,17 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 	admin.cache = function() {
 		$c.body           = $( document.body );
 		$c.wrapper        = $( 'table.purchase-logs' );
+		$c.details        = $( '.log-details-box' );
+		$c.editDetails    = $id( 'edit-shipping-billing' );
 		$c.log            = $id( 'wpsc_items_ordered' );
 		$c.discount_data  = $id( 'wpsc_discount_data' );
 		$c.total_taxes    = $id( 'wpsc_total_taxes' );
 		$c.total_shipping = $id( 'wpsc_total_shipping' );
 		$c.final_total    = $id( 'wpsc_final_total' );
 		$c.spinner        = $c.final_total.find( 'td:last .spinner' );
+		$c.billingForm    = $id( 'wpsc-checkout-form-billing' );
+		$c.shippingForm   = $id( 'wpsc-checkout-form-shipping' );
+		$c.copyForm       = $id( 'wpsc-terms-and-conditions-control' );
 	};
 
 	admin.init = function() {
@@ -52,6 +57,8 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'change', '.wpsc_item_qty', admin.update_qty )
 				.on( 'click', '.wpsc-add-item-button', function() { admin.product_search.trigger( 'open' ); } );
 			$c.body.on( 'click', '.ui-find-overlay', function() { admin.product_search.trigger( 'close' ); } );
+
+			$c.details.on( 'click', '.edit-log-details', admin.toggleEditDetails );
 		}
 
 	};
@@ -193,10 +200,9 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		var $this = $( this );
 		var $row  = $this.parents( '.purchase-log-line-item' );
 		var args  = {
-			action  : 'remove_log_item',
-			log_id : $( '[name="purchlog_id"]' ).val(),
-			item_id : $row.data( 'id' ),
-			nonce   : wpsc.remove_log_item_nonce
+			action : 'remove_log_item',
+			log_id : wpsc.log_id,
+			nonce  : wpsc.remove_log_item_nonce
 		};
 
 		var ajax_callback = function(response) {
@@ -242,7 +248,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		var $row  = $this.parents( '.purchase-log-line-item' );
 		var args  = {
 			action  : 'update_log_item_qty',
-			log_id  : $( '[name="purchlog_id"]' ).val(),
+			log_id  : wpsc.log_id,
 			item_id : $row.data( 'id' ),
 			qty     : $this.val(),
 			nonce   : wpsc.update_log_item_qty_nonce
@@ -297,6 +303,23 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 			$new_price = $( data.htmls[ id ] ).find( '.amount .pricedisplay' );
 			if ( $price.length && $new_price.length ) {
 				$price.text( $new_price.text() );
+			}
+		} );
+	};
+
+	admin.toggleEditDetails = function( evt ) {
+		evt.preventDefault();
+
+		var strings = window.WPSC.copyBilling.strings;
+
+		$c.editDetails.slideToggle( 400, function() {
+			if ( $( evt.target ).hasClass( 'edit-shipping-details' ) ) {
+				$c.billingForm.find( 'h2' ).html( strings.billing );
+				$c.shippingForm.removeClass( 'ui-helper-hidden' );
+
+			} else if ( $c.copyForm.is( ':checked' ) ) {
+				$c.billingForm.find( 'h2' ).html( strings.billing_and_shipping );
+				$c.shippingForm.addClass( 'ui-helper-hidden' );
 			}
 		} );
 	};
@@ -429,7 +452,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 					action      : 'add_log_item',
 					product_ids : checked,
 					existing    : existing,
-					log_id      : $( '[name="purchlog_id"]' ).val(),
+					log_id      : wpsc.log_id,
 					nonce       : wpsc.add_log_item_nonce
 				};
 
