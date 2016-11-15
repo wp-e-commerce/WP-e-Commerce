@@ -207,7 +207,8 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		var $row  = $this.parents( '.purchase-log-line-item' );
 		var args  = {
 			action : 'remove_log_item',
-			log_id : wpsc.log_id,
+			log_id  : wpsc.log_id,
+			item_id : $row.data( 'id' ),
 			nonce  : wpsc.remove_log_item_nonce
 		};
 
