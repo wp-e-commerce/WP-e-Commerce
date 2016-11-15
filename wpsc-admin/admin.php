@@ -427,6 +427,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'remove_log_item_nonce'                  => _wpsc_create_ajax_nonce( 'remove_log_item' ),
 		'update_log_item_qty_nonce'              => _wpsc_create_ajax_nonce( 'update_log_item_qty' ),
 		'add_log_item_nonce'                     => _wpsc_create_ajax_nonce( 'add_log_item' ),
+		'edit_contact_details_nonce'             => _wpsc_create_ajax_nonce( 'edit_contact_details' ),
 		'add_note_nonce'                         => _wpsc_create_ajax_nonce( 'add_note' ),
 		'delete_note_nonce'                      => _wpsc_create_ajax_nonce( 'delete_note' ),
 		'search_products_nonce'                  => _wpsc_create_ajax_nonce( 'search_products' ),

@@ -59,6 +59,9 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'click', '.wpsc-add-item-button', function() { admin.product_search.trigger( 'open' ); } );
 			$c.body.on( 'click', '.ui-find-overlay', function() { admin.product_search.trigger( 'close' ); } );
 
+			$c.editDetails
+				.on( 'submit', 'form', admin.handleEditDetails );
+
 			$c.details.on( 'click', '.edit-log-details', admin.toggleEditDetails );
 
 			$c.notes
@@ -329,6 +332,39 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				$c.shippingForm.addClass( 'ui-helper-hidden' );
 			}
 		} );
+	};
+
+	admin.handleEditDetails = function( evt ) {
+		evt.preventDefault();
+
+		var args = {
+			action : 'edit_contact_details',
+			log_id : wpsc.log_id,
+			nonce  : wpsc.edit_contact_details_nonce,
+			fields : $c.editDetails.find( 'form' ).serialize()
+		};
+
+		var ajax_callback = function( response ) {
+			$c.editDetails.find( '.wpsc-form-actions .spinner' ).remove();
+
+			if ( ! response.is_successful ) {
+				if ( response.error ) {
+					window.alert( response.error.messages.join( BR ) );
+				}
+
+				return;
+			}
+
+			$id( 'wpsc-shipping-details' ).html( response.obj.shipping );
+			$id( 'wpsc-billing-details' ).html( response.obj.billing );
+
+			// Trigger the edit form to slide closed.
+			admin.toggleEditDetails( evt );
+		};
+
+		$c.editDetails.find( '.wpsc-form-actions' ).prepend( '<div class="spinner is-active"></div>' );
+
+		$.wpsc_post( args, ajax_callback );
 	};
 
 	admin.addNote = function( evt ) {

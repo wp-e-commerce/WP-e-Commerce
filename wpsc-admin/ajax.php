@@ -595,6 +595,59 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 }
 
 /**
+ * Edit log contact details.
+ *
+ * @since   4.0
+ * @access  private
+ *
+ * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_edit_contact_details() {
+
+	if ( isset( $_POST['log_id'], $_POST['fields'] ) && ! empty( $_POST['fields'] ) ) {
+
+		// Parse the URL query string of the fields array.
+		parse_str( $_POST['fields'], $fields );
+
+		$log_id = absint( $_POST['log_id'] );
+		$log    = new WPSC_Purchase_Log( $log_id );
+
+		if ( isset( $fields['wpsc_checkout_details'] ) && is_array( $fields['wpsc_checkout_details'] ) ) {
+			$details = wp_unslash( $fields['wpsc_checkout_details'] );
+
+			// Save the new/updated contact details.
+			WPSC_Checkout_Form_Data::save_form(
+				$log,
+				WPSC_Checkout_Form::get()->get_fields(),
+				array_map( 'sanitize_text_field', $details ),
+				false
+			);
+
+			require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
+
+			$log->init_items();
+
+			// Fetch the shipping/billing formatted output.
+
+			ob_start();
+			WPSC_Purchase_Log_Page::shipping_address_output();
+			$shipping = ob_get_clean();
+
+
+			ob_start();
+			WPSC_Purchase_Log_Page::billing_address_output();
+			$billing = ob_get_clean();
+
+			return compact( 'shipping', 'billing' );
+
+		}
+
+	}
+
+	return new WP_Error( 'wpsc_ajax_invalid_edit_contact_details', __( 'Failed to update contact details for log.', 'wp-e-commerce' ) );
+}
+
+/**
  * Add a note to a log.
  *
  * @since   4.0
