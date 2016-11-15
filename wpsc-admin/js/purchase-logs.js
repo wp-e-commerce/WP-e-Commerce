@@ -357,6 +357,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 
 			$id( 'wpsc-shipping-details' ).html( response.obj.shipping );
 			$id( 'wpsc-billing-details' ).html( response.obj.billing );
+			$id( 'wpsc-payment-details' ).html( response.obj.payment );
 
 			// Trigger the edit form to slide closed.
 			admin.toggleEditDetails( evt );

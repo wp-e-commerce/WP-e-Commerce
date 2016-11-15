@@ -332,6 +332,21 @@ class WPSC_Purchase_Log_Page {
 		<?php
 	}
 
+	public static function payment_details_output() {
+		?>
+		<strong><?php esc_html_e( 'Phone:', 'wp-e-commerce' ); ?> </strong><?php echo ( wpsc_display_purchlog_buyers_phone() != "" ) ? wpsc_display_purchlog_buyers_phone() : __( '<em class="field-blank">not provided</em>', 'wp-e-commerce' ); ?><br />
+		<strong><?php esc_html_e( 'Email:', 'wp-e-commerce' ); ?> </strong>
+			<a href="mailto:<?php echo wpsc_display_purchlog_buyers_email(); ?>?subject=<?php echo rawurlencode( sprintf( __( 'Message from %s', 'wp-e-commerce' ), site_url() ) ); ?>">
+				<?php echo ( wpsc_display_purchlog_buyers_email() != "" ) ? wpsc_display_purchlog_buyers_email() : __( '<em class="field-blank">not provided</em>', 'wp-e-commerce' ); ?>
+			</a>
+		<br />
+		<strong><?php esc_html_e( 'Payment Method:', 'wp-e-commerce' ); ?> </strong><?php echo wpsc_display_purchlog_paymentmethod(); ?><br />
+		<?php if ( wpsc_display_purchlog_display_howtheyfoundus() ) : ?>
+			<strong><?php esc_html_e( 'How User Found Us:', 'wp-e-commerce' ); ?> </strong><?php echo wpsc_display_purchlog_howtheyfoundus(); ?><br />
+		<?php endif; ?>
+		<?php
+	}
+
 	public function controller_item_details() {
 		if (
 			! isset( $_REQUEST['id'] )

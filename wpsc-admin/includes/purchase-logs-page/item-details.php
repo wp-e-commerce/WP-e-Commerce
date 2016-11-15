@@ -67,17 +67,8 @@
 				<?php self::billing_address_output(); ?>
 			</blockquote>
 			<h4><?php esc_html_e( 'Payment Details', 'wp-e-commerce' ); ?></h4>
-			<blockquote>
-				<strong><?php esc_html_e( 'Phone:', 'wp-e-commerce' ); ?> </strong><?php echo ( wpsc_display_purchlog_buyers_phone() != "" ) ? wpsc_display_purchlog_buyers_phone() : __( '<em class="field-blank">not provided</em>', 'wp-e-commerce' ); ?><br />
-				<strong><?php esc_html_e( 'Email:', 'wp-e-commerce' ); ?> </strong>
-					<a href="mailto:<?php echo wpsc_display_purchlog_buyers_email(); ?>?subject=<?php echo rawurlencode( sprintf( __( 'Message from %s', 'wp-e-commerce' ), site_url() ) ); ?>">
-						<?php echo ( wpsc_display_purchlog_buyers_email() != "" ) ? wpsc_display_purchlog_buyers_email() : __( '<em class="field-blank">not provided</em>', 'wp-e-commerce' ); ?>
-					</a>
-				<br />
-				<strong><?php esc_html_e( 'Payment Method:', 'wp-e-commerce' ); ?> </strong><?php echo wpsc_display_purchlog_paymentmethod(); ?><br />
-				<?php if ( wpsc_display_purchlog_display_howtheyfoundus() ) : ?>
-					<strong><?php esc_html_e( 'How User Found Us:', 'wp-e-commerce' ); ?> </strong><?php echo wpsc_display_purchlog_howtheyfoundus(); ?><br />
-				<?php endif; ?>
+			<blockquote id="wpsc-payment-details">
+				<?php self::payment_details_output(); ?>
 			</blockquote>
 			<?php do_action( 'wpsc_billing_details_bottom', $this->log_id ); ?>
 		</div>
