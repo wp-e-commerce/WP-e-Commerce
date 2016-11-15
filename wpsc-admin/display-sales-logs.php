@@ -35,6 +35,7 @@ class WPSC_Purchase_Log_Page {
 		if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
 			$this->log_id = (int) $_REQUEST['id'];
 			$this->log = new WPSC_Purchase_Log( $this->log_id );
+			$this->notes = new WPSC_Purchase_Log_Notes( $this->log );
 			$this->can_edit = $this->log->can_edit();
 		}
 
@@ -277,13 +278,34 @@ class WPSC_Purchase_Log_Page {
 			<?php if ( $can_edit ) : ?>
 				<td class="remove">
 					<div class="wpsc-remove-row">
-						<button type="button" class="wpsc-remove-item-button"><span style="color:#a00;" class="dashicons dashicons-dismiss"></span> <?php esc_html_e( 'Remove Item', 'wp-e-commerce' ); ?></button>
+						<button type="button" class="wpsc-remove-button wpsc-remove-item-button"><span class="dashicons dashicons-dismiss"></span> <?php esc_html_e( 'Remove Item', 'wp-e-commerce' ); ?></button>
 					</div>
 				</td> <!-- REMOVE! -->
 			<?php endif; ?>
 		</tr>
 		<?php
 		do_action( 'wpsc_additional_sales_item_info', wpsc_purchaselog_details_id() );
+	}
+
+	public function notes_output() {
+		foreach ( $this->notes as $note_id => $note_args ) : ?>
+			<?php self::note_output( $this->notes, $note_id, $note_args ); ?>
+		<?php endforeach;
+	}
+
+	public static function note_output( WPSC_Purchase_Log_Notes $notes, $note_id, array $note_args ) {
+		?>
+		<div class="wpsc-note" id="wpsc-note-<?php echo absint( $note_id ); ?>" data-id="<?php echo absint( $note_id ); ?>">
+			<p>
+				<strong class="note-date"><?php echo $notes->get_formatted_date( $note_args ); ?></strong>
+				<a href="#wpsc-note-<?php echo absint( $note_id ); ?>" class="note-number">#<?php echo ( $note_id ); ?></a>
+				<a href="<?php echo wp_nonce_url( add_query_arg( 'note', absint( $note_id ) ), 'delete-note', 'delete-note' ); ?>" class="wpsc-remove-button wpsc-remove-note-button"><span class="dashicons dashicons-dismiss"></span> <?php esc_html_e( 'Delete Note', 'wp-e-commerce' ); ?></a>
+			</p>
+			<div class="wpsc-note-content">
+				<?php echo wpautop( $note_args['content'] ); ?>
+			</div>
+		</div>
+		<?php
 	}
 
 	public function controller_item_details() {
@@ -295,8 +317,16 @@ class WPSC_Purchase_Log_Page {
 			wp_die( __( 'Invalid sales log ID', 'wp-e-commerce'  ) );
 		}
 
-		if ( isset( $_POST['_wp_nonce'] ) && wp_verify_nonce( $_POST['_wp_nonce'], 'wpsc-customer-settings-form' ) ) {
-			self::maybe_update_contact_details_for_log( $this->log );
+		if ( isset( $_POST['wpsc_checkout_details'], $_POST['_wp_nonce'] ) ) {
+			self::maybe_update_contact_details_for_log( $this->log, wp_unslash( $_POST['wpsc_checkout_details'] ) );
+		}
+
+		if ( isset( $_POST['wpsc_log_add_notes_nonce'], $_POST['purchlog_notes'] ) ) {
+			self::maybe_add_note_to_log( $this->log, wp_unslash( $_POST['purchlog_notes'] ) );
+		}
+
+		if ( isset( $_REQUEST['delete-note'], $_REQUEST['note'] ) ) {
+			self::maybe_delete_note_from_log( $this->log, absint( $_REQUEST['note'] ) );
 		}
 
 		$this->log->init_items();
@@ -330,14 +360,46 @@ class WPSC_Purchase_Log_Page {
 		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'purchase_log_custom_fields' ) );
 	}
 
-	public static function maybe_update_contact_details_for_log( WPSC_Purchase_Log $log ) {
-		if ( isset( $_POST['wpsc_checkout_details'] ) && is_array( $_POST['wpsc_checkout_details'] ) ) {
-			WPSC_Checkout_Form_Data::save_form(
+	public static function maybe_update_contact_details_for_log( WPSC_Purchase_Log $log, $details ) {
+		if ( is_array( $details ) ) {
+
+			check_admin_referer( 'wpsc-customer-settings-form', '_wp_nonce' );
+
+			return WPSC_Checkout_Form_Data::save_form(
 				$log,
 				WPSC_Checkout_Form::get()->get_fields(),
-				array_map( 'sanitize_text_field', $_POST['wpsc_checkout_details'] ),
+				array_map( 'sanitize_text_field', $details ),
 				false
 			);
+		}
+	}
+
+	/**
+	 * Update Purchase Log Notes
+	 *
+	 * @param  WPSC_Purchase_Log  $log log object.
+	 */
+	public static function maybe_add_note_to_log( WPSC_Purchase_Log $log, $note ) {
+		if ( $note ) {
+			check_admin_referer( 'wpsc_log_add_notes_nonce', 'wpsc_log_add_notes_nonce' );
+
+			wpsc_purchlogs_update_notes( $log, wp_kses_post( $note ) );
+
+			wp_safe_redirect( esc_url_raw( remove_query_arg( 'wpsc_log_add_notes_nonce' ) ) );
+			exit;
+		}
+	}
+
+	public static function maybe_delete_note_from_log( WPSC_Purchase_Log $log, $note_id ) {
+		if ( is_numeric( $note_id ) ) {
+			check_admin_referer( 'delete-note', 'delete-note' );
+
+			$notes = new WPSC_Purchase_Log_Notes( $log );
+
+			$notes->remove( $note_id )->save();
+
+			wp_safe_redirect( esc_url_raw( remove_query_arg( 'delete-note', remove_query_arg( 'note' ) ) ) . '#purchlogs_notes' );
+			exit;
 		}
 	}
 

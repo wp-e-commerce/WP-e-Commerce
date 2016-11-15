@@ -331,3 +331,13 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 function wpsc_get_order( $order_id ) {
 	return new WPSC_Purchase_Log( $order_id );
 }
+
+/**
+ * Returns a purchase log's notes object.
+ *
+ * @param int $order_id Order ID or WPSC_Purchase_Log object.
+ * @since 4.0
+ */
+function wpsc_get_order_notes( $order_id ) {
+	return new WPSC_Purchase_Log_Notes( $order_id );
+}

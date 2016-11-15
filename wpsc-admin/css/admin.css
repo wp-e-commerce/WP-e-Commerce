@@ -213,10 +213,21 @@ th#status {
 	clear: both;
 }
 
-.wpsc-remove-item-button {
+.wpsc-remove-button {
 	background: none;
 	border: none;
 	line-height: 1.60em;
+}
+
+.wpsc-remove-button .dashicons {
+	color:#a00;
+}
+
+.wpsc-add-row {
+	border: 1px solid #ddd;
+	padding: 10px 0;
+	border-left: 0;
+	border-right: 0;
 }
 
 .wpsc_item_qty {
@@ -225,6 +236,52 @@ th#status {
 
 .wpsc_pushdown_img {
 	float: left;
+}
+
+.wpsc-notes {
+	margin: 5px 0 20px;
+}
+
+.wpsc-note {
+	position: relative;
+	padding: 1px 1em 1px;
+	margin: 8px 0;
+}
+
+.wpsc-note > p {
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 1em;
+	height: 1.5em;
+}
+
+.wpsc-note .note-number {
+	opacity: .5;
+	padding-left: 5px;
+}
+
+.wpsc-note:nth-child( 2n ) {
+	background: #f7f7f7;
+}
+
+.wpsc-note .wpsc-remove-button {
+	float: right;
+	margin-top: -3px;
+	text-decoration: none;
+	color: #444;
+}
+
+.wpsc-note .wpsc-remove-button .spinner {
+	float: left;
+	margin-top: 0;
+}
+
+.note-submit {
+	display: inline-block;
+}
+
+#purchlogs_notes .inside {
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 #wpsc_purchlogitems_links {

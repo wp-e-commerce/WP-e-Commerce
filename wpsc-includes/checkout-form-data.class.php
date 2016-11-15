@@ -319,7 +319,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 		$wpdb->query( $sql );
 
 		if ( empty( $data ) && isset( $_POST['wpsc_checkout_details'] ) ) {
-			$data = $_POST['wpsc_checkout_details'];
+			$data = wp_unslash( $_POST['wpsc_checkout_details'] );
 		}
 
 		$customer_details = array();
@@ -333,7 +333,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 			$value = '';
 
 			if ( isset( $data[ $field->id ] ) ) {
-				$value = wp_unslash( $data[ $field->id ] );
+				$value = $data[ $field->id ];
 			}
 
 			$customer_details[ $field->id ] = $value;

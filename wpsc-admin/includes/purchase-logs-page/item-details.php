@@ -100,75 +100,90 @@
 			</div>
 		<?php endif; ?>
 
-		<form name="wpsc_items_ordered" method="post" id="wpsc_items_ordered">
-			<h3><?php esc_html_e( 'Items Ordered', 'wp-e-commerce' ); ?></h3>
-			<table class="widefat" cellspacing="0">
-				<thead>
-				<tr>
-					<?php
-						print_column_headers( 'wpsc_purchase_log_item_details' );
-					 ?>
-				</tr>
-				</thead>
+		<div id="wpsc_items_ordered">
+			<form name="wpsc_items_ordered_form" method="post">
 
-				<tbody>
-					<?php $this->purchase_log_cart_items(); ?>
+				<h3><?php esc_html_e( 'Items Ordered', 'wp-e-commerce' ); ?></h3>
+				<table class="widefat" cellspacing="0">
+					<thead>
+					<tr>
+						<?php
+							print_column_headers( 'wpsc_purchase_log_item_details' );
+						 ?>
+					</tr>
+					</thead>
 
-					<?php if ( $this->can_edit ) : ?>
-						<tr class="wpsc_purchaselog_add_product">
-							<td colspan="<?php echo $cols + 2; ?>">
-								<hr>
-								<p class="wpsc-add-row">
-									<button type="button" class="wpsc-add-item-button button"><?php esc_html_e( 'Add Item', 'wp-e-commerce' ); ?></button>
-								</p>
-								<hr>
+					<tbody>
+						<?php $this->purchase_log_cart_items(); ?>
+
+						<?php if ( $this->can_edit ) : ?>
+							<tr class="wpsc_purchaselog_add_product">
+								<td colspan="<?php echo $cols + 2; ?>">
+									<p class="wpsc-add-row">
+										<button type="button" class="wpsc-add-item-button button"><?php esc_html_e( 'Add Item', 'wp-e-commerce' ); ?></button>
+									</p>
+								</td>
+							</tr>
+						<?php endif; ?>
+
+						<tr class="wpsc_purchaselog_start_totals" id="wpsc_discount_data">
+							<td colspan="<?php echo $cols; ?>">
+								<?php if ( wpsc_purchlog_has_discount_data() ): ?>
+									<?php esc_html_e( 'Coupon Code', 'wp-e-commerce' ); ?>: <?php echo wpsc_display_purchlog_discount_data(); ?>
+								<?php endif; ?>
 							</td>
+							<th class='right-col'><?php esc_html_e( 'Discount', 'wp-e-commerce' ); ?> </th>
+							<td><?php echo wpsc_display_purchlog_discount(); ?></td>
 						</tr>
-					<?php endif; ?>
 
-					<tr class="wpsc_purchaselog_start_totals" id="wpsc_discount_data">
-						<td colspan="<?php echo $cols; ?>">
-							<?php if ( wpsc_purchlog_has_discount_data() ): ?>
-								<?php esc_html_e( 'Coupon Code', 'wp-e-commerce' ); ?>: <?php echo wpsc_display_purchlog_discount_data(); ?>
-							<?php endif; ?>
-						</td>
-						<th class='right-col'><?php esc_html_e( 'Discount', 'wp-e-commerce' ); ?> </th>
-						<td><?php echo wpsc_display_purchlog_discount(); ?></td>
-					</tr>
+						<?php if( ! wpec_display_product_tax() ): ?>
+							<tr id="wpsc_total_taxes">
+								<td colspan='<?php echo $cols; ?>'></td>
+								<th class='right-col'><?php esc_html_e( 'Taxes', 'wp-e-commerce' ); ?> </th>
+								<td><?php echo wpsc_display_purchlog_taxes(); ?></td>
+							</tr>
+						<?php endif; ?>
 
-					<?php if( ! wpec_display_product_tax() ): ?>
-						<tr id="wpsc_total_taxes">
+						<tr id="wpsc_total_shipping">
 							<td colspan='<?php echo $cols; ?>'></td>
-							<th class='right-col'><?php esc_html_e( 'Taxes', 'wp-e-commerce' ); ?> </th>
-							<td><?php echo wpsc_display_purchlog_taxes(); ?></td>
+							<th class='right-col'><?php esc_html_e( 'Shipping', 'wp-e-commerce' ); ?> </th>
+							<td><?php echo wpsc_display_purchlog_shipping(); ?></td>
 						</tr>
-					<?php endif; ?>
+						<tr id="wpsc_final_total">
+							<td colspan='<?php echo $cols; ?>'></td>
+							<th class='right-col'><?php esc_html_e( 'Total', 'wp-e-commerce' ); ?> </th>
+							<td><span><?php echo wpsc_display_purchlog_totalprice(); ?></span> <div class="spinner"></div></td>
+						</tr>
+					</tbody>
+				</table>
 
-					<tr id="wpsc_total_shipping">
-						<td colspan='<?php echo $cols; ?>'></td>
-						<th class='right-col'><?php esc_html_e( 'Shipping', 'wp-e-commerce' ); ?> </th>
-						<td><?php echo wpsc_display_purchlog_shipping(); ?></td>
-					</tr>
-					<tr id="wpsc_final_total">
-						<td colspan='<?php echo $cols; ?>'></td>
-						<th class='right-col'><?php esc_html_e( 'Total', 'wp-e-commerce' ); ?> </th>
-						<td><span><?php echo wpsc_display_purchlog_totalprice(); ?></span> <div class="spinner"></div></td>
-					</tr>
-				</tbody>
-			</table>
+			</form>
 
 			<?php do_action( 'wpsc_purchlogitem_metabox_start', $this->log_id ); ?>
 
 			<div class="metabox-holder">
 				<div id="purchlogs_notes" class="postbox">
-					<h3 class='hndle'><?php _e( 'Order Notes' , 'wp-e-commerce' ); ?></h3>
-					<div class='inside'>
-						<form method="post" action="">
-							<input type='hidden' name='wpsc_admin_action' value='purchlogs_update_notes' />
-							<input type="hidden" name="wpsc_purchlogs_update_notes_nonce" id="wpsc_purchlogs_update_notes_nonce" value="<?php echo wp_create_nonce( 'wpsc_purchlogs_update_notes' ); ?>" />
+					<h3 class="hndle"><?php _e( 'Order Notes' , 'wp-e-commerce' ); ?></h3>
+					<div class="inside">
+						<div class="wpsc-notes">
+							<?php $this->notes_output(); ?>
+						</div>
+						<form method="post" action="" id="note-submit-form">
+							<?php wp_nonce_field( 'wpsc_log_add_notes_nonce', 'wpsc_log_add_notes_nonce' ); ?>
 							<input type='hidden' name='purchlog_id' value='<?php echo $this->log_id; ?>' />
-							<p><textarea name="purchlog_notes" rows="3" wrap="virtual" id="purchlog_notes" style="width:100%;"><?php echo esc_textarea( wpsc_display_purchlog_notes() ); ?></textarea></p>
-							<div><input class="button" type="submit" name="button" id="button" value="<?php _e( 'Update Notes', 'wp-e-commerce' ); ?>" /></div>
+							<p>
+							<?php wp_editor( '', 'purchlog_notes', array(
+								'textarea_name' => 'purchlog_notes',
+								'textarea_rows' => 3,
+								'teeny'         => true,
+								'tinymce' => false,
+								'media_buttons' => false,
+							) ); ?>
+							</p>
+							<div class="note-submit">
+								<input class="button" type="submit" value="<?php _e( 'Add Note', 'wp-e-commerce' ); ?>" />
+								<div class="spinner"></div>
+							</div>
 						</form>
 					</div>
 				</div>
@@ -177,7 +192,7 @@
 			<?php $this->purchase_logs_checkout_fields(); ?>
 			<?php do_action( 'wpsc_purchlogitem_metabox_end', $this->log_id ); ?>
 
-		</form>
+		</div>
 	</div>
 
 	<div id="wpsc_purchlogitems_links">
