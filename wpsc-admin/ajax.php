@@ -595,6 +595,63 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 }
 
 /**
+ * Add a note to a log.
+ *
+ * @since   4.0
+ * @access  private
+ *
+ * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_add_note() {
+
+	if ( isset( $_POST['log_id'], $_POST['note'] ) && ! empty( $_POST['note'] ) ) {
+
+		$result = wpsc_purchlogs_update_notes(
+			absint( $_POST['log_id'] ),
+			wp_kses_post( wp_unslash( $_POST['note'] ) )
+		);
+
+		if ( $result instanceof WPSC_Purchase_Log_Notes ) {
+			require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
+
+			$data      = $result->get_data();
+			$keys      = array_keys( $data );
+			$note_id   = end( $keys );
+			$note_args = end( $data );
+
+			ob_start();
+			WPSC_Purchase_Log_Page::note_output( $result, $note_id, $note_args );
+			$row = ob_get_clean();
+
+			return $row;
+		}
+	}
+
+	return new WP_Error( 'wpsc_ajax_invalid_add_note', __( 'Failed adding log note.', 'wp-e-commerce' ) );
+}
+
+/**
+ * Delete a note from a log.
+ *
+ * @since   4.0
+ * @access  private
+ *
+ * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_delete_note() {
+
+	if ( isset( $_POST['log_id'], $_POST['note'] ) && is_numeric( $_POST['note'] ) ) {
+
+		$notes = wpsc_get_order_notes( absint( $_POST['log_id'] ) );
+		$notes->remove( absint( $_POST['note'] ) )->save();
+
+		return true;
+	}
+
+	return new WP_Error( 'wpsc_ajax_invalid_delete_note', __( 'Failed to delete log note.', 'wp-e-commerce' ) );
+}
+
+/**
  * Search for products.
  *
  * @since   4.0

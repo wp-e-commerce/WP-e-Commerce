@@ -427,6 +427,8 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'remove_log_item_nonce'                  => _wpsc_create_ajax_nonce( 'remove_log_item' ),
 		'update_log_item_qty_nonce'              => _wpsc_create_ajax_nonce( 'update_log_item_qty' ),
 		'add_log_item_nonce'                     => _wpsc_create_ajax_nonce( 'add_log_item' ),
+		'add_note_nonce'                         => _wpsc_create_ajax_nonce( 'add_note' ),
+		'delete_note_nonce'                      => _wpsc_create_ajax_nonce( 'delete_note' ),
 		'search_products_nonce'                  => _wpsc_create_ajax_nonce( 'search_products' ),
 		'sending_message'                        => _x( 'sending...', 'sending tracking email for purchase log', 'wp-e-commerce' ),
 		'sent_message'                           => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wp-e-commerce' ),
@@ -435,7 +437,8 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'current_page'                           => empty( $_REQUEST['paged'] ) ? '' : $_REQUEST['paged'],
 		'log_id'                                 => isset( $_REQUEST['id'] ) ? absint( $_REQUEST['id'] ) : 0,
 		'strings'                                => array(
-			'confirm_delete' => esc_html__( 'Are you sure you want to remove this item?', 'wp-e-commerce' ),
+			'confirm_delete_item' => esc_html__( 'Are you sure you want to remove this item?', 'wp-e-commerce' ),
+			'confirm_delete_note' => esc_html__( 'Are you sure you want to delete this note?', 'wp-e-commerce' ),
 			'search_head' => esc_html__( 'Search for Products to Add', 'wp-e-commerce' ),
 		),
 	) );

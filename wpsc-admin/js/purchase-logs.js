@@ -30,6 +30,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		$c.billingForm    = $id( 'wpsc-checkout-form-billing' );
 		$c.shippingForm   = $id( 'wpsc-checkout-form-shipping' );
 		$c.copyForm       = $id( 'wpsc-terms-and-conditions-control' );
+		$c.notes          = $id( 'purchlogs_notes' );
 	};
 
 	admin.init = function() {
@@ -59,6 +60,11 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 			$c.body.on( 'click', '.ui-find-overlay', function() { admin.product_search.trigger( 'close' ); } );
 
 			$c.details.on( 'click', '.edit-log-details', admin.toggleEditDetails );
+
+			$c.notes
+				.on( 'submit', '#note-submit-form', admin.addNote )
+				.on( 'click', '.wpsc-remove-note-button', admin.deleteNote );
+
 		}
 
 	};
@@ -193,7 +199,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 	};
 
 	admin.remove_item = function() {
-		if ( ! window.confirm( wpsc.strings.confirm_delete ) ) {
+		if ( ! window.confirm( wpsc.strings.confirm_delete_item ) ) {
 			return;
 		}
 
@@ -322,6 +328,73 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				$c.shippingForm.addClass( 'ui-helper-hidden' );
 			}
 		} );
+	};
+
+	admin.addNote = function( evt ) {
+		evt.preventDefault();
+
+		$c.notesText = $c.notesText || $id( 'purchlog_notes' );
+		var args = {
+			action : 'add_note',
+			log_id : wpsc.log_id,
+			nonce  : wpsc.add_note_nonce,
+			note   : $c.notesText.val()
+		};
+
+		var ajax_callback = function(response) {
+			$c.notes.find( '.spinner' ).removeClass( 'is-active' );
+
+			if ( ! response.is_successful ) {
+				if ( response.error ) {
+					window.alert( response.error.messages.join( BR ) );
+				}
+
+				return;
+			}
+
+			$c.notes.find( '.wpsc-notes' ).append( response.obj );
+			$c.notesText.val( '' );
+		};
+
+		$c.notes.find( '.spinner' ).addClass( 'is-active' );
+
+		$.wpsc_post( args, ajax_callback );
+	};
+
+	admin.deleteNote = function( evt ) {
+		evt.preventDefault();
+
+		if ( ! window.confirm( wpsc.strings.confirm_delete_note ) ) {
+			return;
+		}
+
+		var $this = $( this );
+		var $row  = $this.parents( '.wpsc-note' );
+		var args  = {
+			action : 'delete_note',
+			log_id : wpsc.log_id,
+			nonce  : wpsc.delete_note_nonce,
+			note   : $row.data( 'id' )
+		};
+
+		var ajax_callback = function(response) {
+			if ( ! response.is_successful ) {
+				if ( response.error ) {
+					$this.find( '.spinner' ).remove();
+					window.alert( response.error.messages.join( BR ) );
+				}
+
+				return;
+			}
+
+			$row.slideUp( 600, function() {
+				$( this ).remove();
+			} );
+		};
+
+		$this.prepend( '<div class="spinner is-active"></div>' );
+
+		$.wpsc_post( args, ajax_callback );
 	};
 
 	admin.init_search_view = function() {
