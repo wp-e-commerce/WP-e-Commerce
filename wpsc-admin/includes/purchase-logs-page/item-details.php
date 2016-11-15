@@ -24,14 +24,8 @@
 						<a class="edit-log-details edit-shipping-details" href="#edit-shipping-address"><?php _e( 'Edit', 'wp-e-commerce' ); ?></a>
 					<?php endif; ?>
 				</h3>
-				<blockquote>
-					<strong>
-						<?php echo ( wpsc_display_purchlog_shipping_name() != ""           ) ? wpsc_display_purchlog_shipping_name() . "<br />"               : '<span class="field-blank">' . __( 'Anonymous', 'wp-e-commerce' ) . '</span>' ; ?>
-					</strong>
-					<?php echo ( wpsc_display_purchlog_shipping_address() != ""            ) ? wpsc_display_purchlog_shipping_address() . "<br />"            : '' ; ?>
-					<?php echo ( wpsc_display_purchlog_shipping_city() != ""               ) ? wpsc_display_purchlog_shipping_city() . ", "               : '' ; ?>
-					<?php echo ( wpsc_display_purchlog_shipping_state_and_postcode() != "" ) ? wpsc_display_purchlog_shipping_state_and_postcode() . "<br />" : '' ; ?>
-					<?php echo ( wpsc_display_purchlog_shipping_country() != ""            ) ? wpsc_display_purchlog_shipping_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wp-e-commerce' ) . '</span>' ; ?>
+				<blockquote id="wpsc-shipping-details">
+					<?php self::shipping_address_output(); ?>
 				</blockquote>
 
 				<h4><?php esc_html_e( 'Shipping Details', 'wp-e-commerce' ); ?></h4>
@@ -69,14 +63,8 @@
 					<a class="edit-log-details edit-billing-details" href="#edit-billing-address"><?php _e( 'Edit', 'wp-e-commerce' ); ?></a>
 				<?php endif; ?>
 			</h3>
-			<blockquote>
-				<strong>
-					<?php echo ( wpsc_display_purchlog_buyers_name() != ""           ) ? wpsc_display_purchlog_buyers_name() . "<br />"               : '<span class="field-blank">' . __( 'Anonymous', 'wp-e-commerce' ) . '</span>' ; ?>
-				</strong>
-				<?php echo ( wpsc_display_purchlog_buyers_address() != ""            ) ? wpsc_display_purchlog_buyers_address() . "<br />"            : '' ; ?>
-				<?php echo ( wpsc_display_purchlog_buyers_city() != ""               ) ? wpsc_display_purchlog_buyers_city() . ", "               : '' ; ?>
-				<?php echo ( wpsc_display_purchlog_buyers_state_and_postcode() != "" ) ? wpsc_display_purchlog_buyers_state_and_postcode() . "<br />" : '' ; ?>
-				<?php echo ( wpsc_display_purchlog_buyers_country() != ""            ) ? wpsc_display_purchlog_buyers_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wp-e-commerce' ) . '</span>' ; ?>
+			<blockquote id="wpsc-billing-details">
+				<?php self::billing_address_output(); ?>
 			</blockquote>
 			<h4><?php esc_html_e( 'Payment Details', 'wp-e-commerce' ); ?></h4>
 			<blockquote>
