@@ -209,8 +209,20 @@ th#status {
 	width: 200px;
 }
 
+#wpsc-customer-settings-form h2 {
+	padding: 0 !important;
+}
+
+#wpsc-customer-settings-form label {
+	display: block;
+}
+
 #wpsc_items_ordered {
 	clear: both;
+}
+
+#wpsc_items_ordered .widefat {
+	border: 0;
 }
 
 .wpsc-remove-button {

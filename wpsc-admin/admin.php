@@ -418,7 +418,14 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 
 	_wpsc_enqueue_wp_e_commerce_admin();
 
-	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION, true );
+	$dependencies = array( 'jquery' );
+
+	if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
+		wp_enqueue_style( 'wp-admin' );
+		$dependencies[] = 'postbox';
+	}
+
+	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', $dependencies, WPSC_VERSION . '.' . WPSC_MINOR_VERSION, true );
 	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
 		'nonce'                                  => wp_create_nonce( 'wpsc_purchase_logs' ),
 		'change_purchase_log_status_nonce'       => _wpsc_create_ajax_nonce( 'change_purchase_log_status' ),

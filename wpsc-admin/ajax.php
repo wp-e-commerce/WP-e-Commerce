@@ -633,7 +633,6 @@ function _wpsc_ajax_edit_contact_details() {
 			WPSC_Purchase_Log_Page::shipping_address_output();
 			$shipping = ob_get_clean();
 
-
 			ob_start();
 			WPSC_Purchase_Log_Page::billing_address_output();
 			$billing = ob_get_clean();

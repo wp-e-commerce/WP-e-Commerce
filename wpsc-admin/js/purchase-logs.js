@@ -68,6 +68,8 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'submit', '#note-submit-form', admin.addNote )
 				.on( 'click', '.wpsc-remove-note-button', admin.deleteNote );
 
+			window.postboxes.add_postbox_toggles( window.pagenow );
+
 		}
 
 	};
@@ -324,11 +326,11 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 
 		$c.editDetails.slideToggle( 400, function() {
 			if ( $( evt.target ).hasClass( 'edit-shipping-details' ) ) {
-				$c.billingForm.find( 'h2' ).html( strings.billing );
+				$c.billingForm.find( 'h2' ).replaceWith( strings.billing );
 				$c.shippingForm.removeClass( 'ui-helper-hidden' );
 
 			} else if ( $c.copyForm.is( ':checked' ) ) {
-				$c.billingForm.find( 'h2' ).html( strings.billing_and_shipping );
+				$c.billingForm.find( 'h2' ).replaceWith( strings.billing_and_shipping );
 				$c.shippingForm.addClass( 'ui-helper-hidden' );
 			}
 		} );
