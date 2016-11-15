@@ -213,6 +213,10 @@ th#status {
 	clear: both;
 }
 
+#wpsc_items_ordered .widefat {
+	border: 0;
+}
+
 .wpsc-remove-button {
 	background: none;
 	border: none;

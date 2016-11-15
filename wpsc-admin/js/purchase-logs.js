@@ -68,6 +68,8 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'submit', '#note-submit-form', admin.addNote )
 				.on( 'click', '.wpsc-remove-note-button', admin.deleteNote );
 
+			window.postboxes.add_postbox_toggles( window.pagenow );
+
 		}
 
 	};
