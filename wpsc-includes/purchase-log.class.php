@@ -105,6 +105,9 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	private $log_items = array();
 	private $log_item_ids = array();
 	private $can_edit = null;
+	private static $multiple_meta = array(
+		'notes' => 1,
+	);
 
 	/**
 	 * Contains the constructor arguments. This array is necessary because we will
@@ -627,7 +630,8 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	private function set_meta_props() {
 
 		foreach ( wpsc_get_purchase_custom( $this->get( 'id' ) ) as $key => $value  ) {
-			$this->meta_data[ $key ] = wpsc_get_purchase_meta( $this->get( 'id' ), $key, true );
+			$is_multiple_meta = isset( self::$multiple_meta[ $key ] );
+			$this->meta_data[ $key ] = wpsc_get_purchase_meta( $this->get( 'id' ), $key, ! $is_multiple_meta );
 		}
 
 		$this->set_total_shipping();
@@ -665,16 +669,16 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			return;
 		}
 
-		extract( $this->args );
+		$col = $this->args['col'];
 
 		$format = self::get_column_format( $col );
-		$sql    = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE {$col} = {$format}", $value );
+		$sql    = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE {$col} = {$format}", $this->args['value'] );
 
 		$this->exists = false;
 
 		if ( $data = $wpdb->get_row( $sql, ARRAY_A ) ) {
-			$this->exists        = true;
-			$this->data          = apply_filters( 'wpsc_purchase_log_data', $data );
+			$this->exists    = true;
+			$this->data      = apply_filters( 'wpsc_purchase_log_data', $data );
 			$this->log_items = $this->get_items();
 
 			$this->set_meta_props();
@@ -686,6 +690,23 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$this->fetched = true;
 
 		return $this;
+	}
+
+	/**
+	 * Returns the value of the specified property of the $data array if it exists.
+	 *
+	 * @access public
+	 * @since  4.0
+	 *
+	 * @param  string $key Name of the property (column)
+	 * @return mixed
+	 */
+	public function get( $key ) {
+		if ( 'notes' === $key ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Getting notes from the Log object has been deprecated in favor of the wpsc_get_order_notes() function.', 'wp-e-commerce' ), '4.0' );
+		}
+
+		return parent::get( $key );
 	}
 
 	/**
@@ -1042,7 +1063,19 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$meta = $this->get_meta();
 
 		foreach ( $meta as $key => $value ) {
-			wpsc_update_purchase_meta( $this->get( 'id' ), $key, $value );
+			$is_multiple_meta = isset( self::$multiple_meta[ $key ] );
+
+			if ( $is_multiple_meta ) {
+
+				if ( is_array( $value ) ) {
+					foreach ( $value as $val ) {
+						wpsc_add_purchase_meta( $this->get( 'id' ), $key, $val );
+					}
+				}
+
+			} else {
+				wpsc_update_purchase_meta( $this->get( 'id' ), $key, $value );
+			}
 		}
 
 		do_action( 'wpsc_purchase_log_save_meta', $this );
