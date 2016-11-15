@@ -262,7 +262,7 @@ class WPSC_Purchase_Log_Page {
 					<tr id="wpsc_total_shipping">
 						<td colspan='<?php echo $this->cols; ?>'></td>
 						<th class='right-col'><?php esc_html_e( 'Shipping', 'wp-e-commerce' ); ?> </th>
-						<td><?php echo wpsc_display_purchlog_shipping(); ?></td>
+						<td><?php echo wpsc_display_purchlog_shipping( false, true ); ?></td>
 					</tr>
 					<tr id="wpsc_final_total">
 						<td colspan='<?php echo $this->cols; ?>'></td>

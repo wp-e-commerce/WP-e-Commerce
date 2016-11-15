@@ -589,7 +589,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 		'discount_data'  => wpsc_purchlog_has_discount_data() ? esc_html__( 'Coupon Code', 'wp-e-commerce' ) . ': ' . wpsc_display_purchlog_discount_data() : '',
 		'discount'       => wpsc_display_purchlog_discount(),
 		'total_taxes'    => wpsc_display_purchlog_taxes(),
-		'total_shipping' => wpsc_display_purchlog_shipping(),
+		'total_shipping' => wpsc_display_purchlog_shipping( false, true ),
 		'final_total'    => wpsc_display_purchlog_totalprice(),
 	);
 }
