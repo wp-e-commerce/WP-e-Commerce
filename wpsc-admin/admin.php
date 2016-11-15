@@ -448,6 +448,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 			'confirm_delete_item' => esc_html__( 'Are you sure you want to remove this item?', 'wp-e-commerce' ),
 			'confirm_delete_note' => esc_html__( 'Are you sure you want to delete this note?', 'wp-e-commerce' ),
 			'search_head' => esc_html__( 'Search for Products to Add', 'wp-e-commerce' ),
+			'cancel_btn' => esc_html__( 'Cancel', 'wp-e-commerce' ),
 		),
 	) );
 

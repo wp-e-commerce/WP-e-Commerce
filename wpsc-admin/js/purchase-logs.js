@@ -21,6 +21,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		$c.wrapper        = $( 'table.purchase-logs' );
 		$c.details        = $( '.log-details-box' );
 		$c.editDetails    = $id( 'edit-shipping-billing' );
+		$c.editActions    = $c.editDetails.find( '.wpsc-form-actions' );
 		$c.log            = $id( 'wpsc_items_ordered' );
 		$c.discount_data  = $id( 'wpsc_discount_data' );
 		$c.total_taxes    = $id( 'wpsc_total_taxes' );
@@ -60,9 +61,11 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 			$c.body.on( 'click', '.ui-find-overlay', function() { admin.product_search.trigger( 'close' ); } );
 
 			$c.editDetails
-				.on( 'submit', 'form', admin.handleEditDetails );
+				.on( 'submit', 'form', admin.handleEditDetails )
+				.on( 'click', '.button-secondary', admin.toggleEditDetails );
 
-			$c.details.on( 'click', '.edit-log-details', admin.toggleEditDetails );
+			$c.details
+				.on( 'click', '.edit-log-details', admin.toggleEditDetails );
 
 			$c.notes
 				.on( 'submit', '#note-submit-form', admin.addNote )
@@ -70,6 +73,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 
 			window.postboxes.add_postbox_toggles( window.pagenow );
 
+			$c.editActions.prepend( '<button type="button" class="button-secondary">'+ wpsc.strings.cancel_btn +'</button>' );
 		}
 
 	};
@@ -347,7 +351,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		};
 
 		var ajax_callback = function( response ) {
-			$c.editDetails.find( '.wpsc-form-actions .spinner' ).remove();
+			$c.editActions.find( '.spinner' ).remove();
 
 			if ( ! response.is_successful ) {
 				if ( response.error ) {
@@ -365,7 +369,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 			admin.toggleEditDetails( evt );
 		};
 
-		$c.editDetails.find( '.wpsc-form-actions' ).prepend( '<div class="spinner is-active"></div>' );
+		$c.editActions.prepend( '<div class="spinner is-active"></div>' );
 
 		$.wpsc_post( args, ajax_callback );
 	};

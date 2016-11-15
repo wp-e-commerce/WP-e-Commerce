@@ -217,6 +217,10 @@ th#status {
 	display: block;
 }
 
+#wpsc-customer-settings-form .button-secondary {
+	margin-right: 10px;
+}
+
 #wpsc_items_ordered {
 	clear: both;
 }
