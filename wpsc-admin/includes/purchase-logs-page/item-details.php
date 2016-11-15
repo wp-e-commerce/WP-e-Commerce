@@ -1,7 +1,9 @@
 <div class="wrap" id="poststuff">
-	<h2>
-		<?php esc_html_e( 'Sales Log Details', 'wp-e-commerce' ); ?>
-		<span class="subtitle">#<?php echo $this->log_id; ?> – <?php echo wpsc_purchaselog_details_date_time(); ?></span>
+	<h2 class="log-details-title-area">
+		<span class="log-title-details">
+			<?php esc_html_e( 'Sales Log Details', 'wp-e-commerce' ); ?>
+			<span class="subtitle">#<?php echo $this->log_id; ?> – <?php echo wpsc_purchaselog_details_date_time(); ?></span>
+		</span>
  		<?php $this->purchase_logs_pagination() ?>
  	</h2>
 	<?php if ( $receipt_sent ): ?>

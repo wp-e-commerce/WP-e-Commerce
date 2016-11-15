@@ -181,6 +181,26 @@ p.quarterly {
  * Display Purchase log Details CSS is HERE
  */
 
+.log-details-title-area {
+}
+.log-details-title-area .tablenav {
+	float: right;
+	clear: both;
+	margin: 0;
+}
+
+.log-details-title-area .pagination-links a {
+	padding: 0 0 0 8px;
+}
+
+.log-title-details {
+	float: left;
+	clear: none;
+	margin-top: -10px;
+	color: #23282d;
+	font-size: 23px;
+}
+
 #purchlogs_customfields {
 	clear: both;
 }

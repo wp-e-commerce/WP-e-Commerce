@@ -164,7 +164,7 @@ class WPSC_Purchase_Log_Page {
 		$prev_id = $this->log->get_previous_log_id();
 		$next_id = $this->log->get_next_log_id();
 		?>
-		<span class='tablenav'><span class='tablenav-pages'><span class='pagination-links'>
+		<span class='tablenav'><span class='tablenav-logs'><span class='pagination-links'>
 			<?php if ( $prev_id ) : ?>
 				<a href='<?php echo esc_url( $this->get_purchase_log_url( $prev_id ) ); ?>' class='prev-page'>&lsaquo; <?php _e( 'Previous', 'wp-e-commerce' ); ?></a>
 			<?php endif; ?>
