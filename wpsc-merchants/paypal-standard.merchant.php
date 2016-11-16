@@ -137,15 +137,16 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				'notify_url' => $notify_url,
 			);
 		}
+		
 		// Customer details
 		$paypal_vars += array(
 			'email'      => $this->cart_data['email_address'],
 			'first_name' => $this->cart_data['billing_address']['first_name'],
 			'last_name'  => $this->cart_data['billing_address']['last_name'],
-			'address1'   => $this->cart_data['billing_address']['address'],
-			'city'       => $this->cart_data['billing_address']['city'],
+			'address1'   => isset( $this->cart_data['billing_address']['address'] ) ? $this->cart_data['billing_address']['address'] : '',
+			'city'       => isset( $this->cart_data['billing_address']['city'] ) ? $this->cart_data['billing_address']['city'] : '',
 			'state'      => isset( $this->cart_data['billing_address']['state'] ) ? $this->cart_data['billing_address']['state'] : '',
-			'zip'        => $this->cart_data['billing_address']['post_code'],
+			'zip'        => isset( $this->cart_data['billing_address']['post_code'] ) ? $this->cart_data['billing_address']['post_code'] : '',
 			'country'    => isset( $this->cart_data['billing_address']['country'] ) ? $this->cart_data['billing_address']['country'] : '',
 		);
 
