@@ -604,7 +604,10 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	$pages              = array( 'index.php', 'options-general.php', 'edit.php', 'post.php', 'post-new.php' );
 
 	_wpsc_enqueue_wp_e_commerce_admin();
-	wp_enqueue_script( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/js/admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
+
+	if ( ! is_customize_preview() ) {
+		wp_enqueue_script( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/js/admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
+	}
 
 	if ( 'dashboard_page_wpsc-sales-logs' == $current_screen->id ) {
 		// jQuery
