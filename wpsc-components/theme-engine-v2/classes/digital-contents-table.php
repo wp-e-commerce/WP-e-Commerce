@@ -44,6 +44,11 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 
 		$downloadables = $wpdb->get_results( $sql );
 
+		if ( empty( $downloadables ) ) {
+			$this->digital_items = array();
+			return;
+		}
+		
 		$product_ids = wp_list_pluck( $downloadables, 'product_id' );
 		$product_ids = array_unique( array_map( 'absint', $product_ids ) );
 		$this->items = get_posts( array(
