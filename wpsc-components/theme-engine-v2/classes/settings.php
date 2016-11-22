@@ -44,6 +44,7 @@ class WPSC_Settings {
 				'thousands_separator'               => ',',
 				'display_pagination'                => 1,
 				'default_style'                     => 1,
+				'layout'			    => 'grid',
 				'store_title'                       => _x( 'Store', 'main store page title', 'wp-e-commerce' ),
 				'cart_page_title'                   => _x( 'Shopping Cart', 'shopping cart page title', 'wp-e-commerce' ),
 				'checkout_page_title'               => _x( 'Checkout', 'checkout page title', 'wp-e-commerce' ),
