@@ -37,13 +37,23 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'cart_logo'		   => $this->setting->get( 'cart_logo' ),
             'cart_border'	   => $this->setting->get( 'cart_border' ),
         ) );
-
-		// Express Checkout for DG Button
-		add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_ecs_button' ), 2, 2 );
-
-        // Filter Digital Goods option on checkout
-        add_filter( 'wpsc_payment_method_form_fields', array( &$this, 'dg_option_removal' ), 100 );
     }
+
+    /**
+  	 * Run the gateway hooks
+  	 *
+  	 * @access public
+  	 * @since 4.0
+  	 *
+  	 * @return void
+  	 */
+  	public function init() {
+      // Express Checkout for DG Button
+      add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_ecs_button' ), 2, 2 );
+
+      // Filter Digital Goods option on checkout
+      add_filter( 'wpsc_payment_method_form_fields', array( &$this, 'dg_option_removal' ), 100 );
+  	}
 
     /**
      * Toggles Digital Goods option based on whether or not shipping is being used on the given cart.
