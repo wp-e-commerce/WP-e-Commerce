@@ -412,7 +412,7 @@ function _wpsc_filter_control_submit( $output, $field, $args ) {
 		$class .= ' wpsc-button-primary';
 	}
 
-	$output .= wpsc_form_submit( $name, $title, array( 'class' => $class ), false );
+	$output .= wpsc_form_submit( $name, $title, array( 'class' => $class, 'id' => $id ), false );
 
 	return $output;
 }
