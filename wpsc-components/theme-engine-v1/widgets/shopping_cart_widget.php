@@ -36,7 +36,7 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 
 		// Create fancy collapser
 		$fancy_collapser = '';
-		if ( $instance['show_sliding_cart'] == 1 ) {
+		if ( isset( $instance['show_sliding_cart'] ) && $instance['show_sliding_cart'] == 1 ) {
 			if ( isset($_SESSION['slider_state']) && is_numeric( $_SESSION['slider_state'] ) ) {
 				if ( $_SESSION['slider_state'] == 0 ) {
 					$collapser_image = 'plus.png';
