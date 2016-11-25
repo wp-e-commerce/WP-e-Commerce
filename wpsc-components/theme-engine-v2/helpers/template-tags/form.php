@@ -754,6 +754,7 @@ function wpsc_get_checkout_payment_method_form_args() {
 		),
 		'form_actions' => array(
 			array(
+				'id'	  => 'wpsc_submit_checkout',
 				'type'    => 'submit',
 				'primary' => true,
 				'title'   => apply_filters( 'wpsc_checkout_payment_method_form_button_title', __( 'Place Your Order', 'wp-e-commerce' ) ),
