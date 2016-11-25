@@ -696,15 +696,15 @@ abstract class WPSC_Payment_Gateway {
 		switch ( $this->purchase_log->get( 'processed' ) ) {
 			case 3:
 				// payment worked
-				do_action('wpsc_payment_successful');
+				do_action( 'wpsc_payment_successful' );
 				break;
 			case 1:
 				// payment declined
-				do_action('wpsc_payment_failed');
+				do_action( 'wpsc_payment_failed' );
 				break;
 			case 2:
 				// something happened with the payment
-				do_action('wpsc_payment_incomplete');
+				do_action( 'wpsc_payment_incomplete' );
 				break;
 		}
 
@@ -738,6 +738,23 @@ abstract class WPSC_Payment_Gateway {
 	 * @return void
 	 */
 	public function init() {}
+
+	/**
+	 * Process refund
+	 *
+	 * If the gateway declares 'refunds' support, this will allow it to refund
+	 * a passed in amount.
+	 *
+	 * @param  int $order_id
+	 * @param  float $amount
+	 * @param  string $reason
+	 *
+	 * @since 4.0.0
+	 * @return bool|WP_Error True or false based on success, or a WP_Error object
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		return false;
+	}
 }
 
 class WPSC_Payment_Gateway_Setting {
