@@ -34,7 +34,7 @@ class WPSC_Purchase_Log_Page {
 
 		// If individual purchase log, setup ID and action links.
 		if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
-			$this->log_id = (int) $_REQUEST['id'];
+			$this->log_id   = (int) $_REQUEST['id'];
 			$this->log      = new WPSC_Purchase_Log( $this->log_id );
 			$this->notes    = new WPSC_Purchase_Log_Notes( $this->log );
 			$this->can_edit = $this->log->can_edit();
@@ -128,7 +128,7 @@ class WPSC_Purchase_Log_Page {
 				 );
 				}
 				$numChanged++;
-				$numQueries ++;
+				$numQueries++;
 			}
 
 			$sql = "UPDATE `".WPSC_TABLE_CHECKOUT_FORMS."` SET `unique_name`='delivertoafriend' WHERE `name` = '2. Shipping details'";
@@ -160,8 +160,8 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	function purchase_logs_pagination() {
-		global $wpdb, $purchlogitem;
-		$prev_id = $this->log->get_previous_log_id();
+
+ 		$prev_id = $this->log->get_previous_log_id();
 		$next_id = $this->log->get_next_log_id();
 		?>
 		<span class='tablenav'><span class='tablenav-logs'><span class='pagination-links'>
@@ -176,11 +176,11 @@ class WPSC_Purchase_Log_Page {
 		<?php
 	}
 
-	function purchase_logs_checkout_fields() {
+	public function purchase_logs_checkout_fields() {
 		global $purchlogitem;
 
 		foreach( (array) $purchlogitem->additional_fields as $value ) {
-			$value['value'] = maybe_unserialize ( $value['value'] );
+			$value['value'] = maybe_unserialize( $value['value'] );
 			if ( is_array( $value['value'] ) ) {
 				?>
 					<p><strong><?php echo $value['name']; ?> :</strong> <?php echo implode( stripslashes( $value['value'] ), ',' ); ?></p>
@@ -199,7 +199,8 @@ class WPSC_Purchase_Log_Page {
 
 	public function purchase_log_custom_fields() {
 		$messages = wpsc_purchlogs_custommessages();
-		$files = wpsc_purchlogs_customfiles();
+		$files    = wpsc_purchlogs_customfiles();
+
 		if ( count( $files ) > 0 ) { ?>
 			<h4><?php esc_html_e( 'Cart Items with Custom Files' , 'wp-e-commerce' ); ?>:</h4>
 			<?php
@@ -294,7 +295,7 @@ class WPSC_Purchase_Log_Page {
 				'textarea_name' => 'purchlog_notes',
 				'textarea_rows' => 3,
 				'teeny'         => true,
-				'tinymce' => false,
+				'tinymce'       => false,
 				'media_buttons' => false,
 			) ); ?>
 			</p>
@@ -464,7 +465,7 @@ class WPSC_Purchase_Log_Page {
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
-		add_action( 'wpsc_purchlog_before_metaboxes', array( $this, 'register_metaboxes' ) );
+		add_action( 'wpsc_purchlog_before_metaboxes' , array( $this, 'register_metaboxes' ) );
 	}
 
 	public function register_metaboxes() {
@@ -481,8 +482,9 @@ class WPSC_Purchase_Log_Page {
 		if ( ! empty( $purchlogitem->additional_fields ) ) {
 			add_meta_box( 'custom_checkout_fields', esc_html__( 'Additional Checkout Fields' , 'wp-e-commerce' ), array( $this, 'purchase_logs_checkout_fields' ), get_current_screen()->id, 'normal' );
 		}
-	}
 
+		do_action( 'wpsc_purchase_logs_register_metaboxes', get_current_screen(), $this );
+	}
 
 	public static function maybe_update_contact_details_for_log( WPSC_Purchase_Log $log, $details ) {
 		if ( is_array( $details ) ) {
