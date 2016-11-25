@@ -307,7 +307,7 @@ final class WPSC_Payment_Gateways {
 	 *               returns false.
 	 */
 	public static function get_meta( $gateway ) {
-		return isset( self::$gateways[$gateway] ) ? self::$gateways[$gateway] : false;
+		return isset( self::$gateways[ $gateway ] ) ? self::$gateways[ $gateway ] : false;
 	}
 
 	/**
@@ -334,8 +334,8 @@ final class WPSC_Payment_Gateways {
 	 */
 	public static function get_active_gateways() {
 		if ( empty( self::$active_gateways ) ) {
-			$selected_gateways = get_option( 'custom_gateway_options', array() );
-			$registered_gateways = self::get_gateways();
+			$selected_gateways     = get_option( 'custom_gateway_options', array() );
+			$registered_gateways   = self::get_gateways();
 			self::$active_gateways = array_intersect( $selected_gateways, $registered_gateways );
 		}
 
@@ -532,7 +532,7 @@ abstract class WPSC_Payment_Gateway {
 	 *
 	 * @param string $feature string The name of a feature to test support for.
 	 * @return bool True if the gateway supports the feature, false otherwise.
-	 * @since
+	 * @since 4.0
 	 */
 	public function supports( $feature ) {
 		return apply_filters( 'wpsc_payment_gateway_supports', in_array( $feature, $this->supports ) ? true : false, $feature, $this );
