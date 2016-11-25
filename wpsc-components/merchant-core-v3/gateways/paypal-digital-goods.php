@@ -94,9 +94,9 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			return;
 		}
 
-        if ( 'bottom' == $context ) {
-            return;
-        }
+    if ( 'bottom' == $context ) {
+        return;
+    }
 
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {
 			$url = $this->get_shortcut_url();
