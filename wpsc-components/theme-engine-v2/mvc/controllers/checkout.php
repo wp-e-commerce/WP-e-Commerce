@@ -237,9 +237,16 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		// otherwise create one
 		$purchase_log_id = (int) wpsc_get_customer_meta( 'current_purchase_log_id' );
 
+		$create = true;
+
 		if ( $purchase_log_id ) {
 			$purchase_log = new WPSC_Purchase_Log( $purchase_log_id );
-		} else {
+			$create       = ! $purchase_log->exists();
+		}
+
+		if ( $create ) {
+			wpsc_delete_customer_meta( 'current_purchase_log_id' );
+
 			$purchase_log = new WPSC_Purchase_Log();
 
 			$purchase_log->set( array(
@@ -247,9 +254,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 				'date'           => time(),
 				'plugin_version' => WPSC_VERSION,
 				'statusno'       => '0',
-			) );
-
-			$purchase_log->save();
+			) )->save();
 		}
 
 		return $purchase_log;
