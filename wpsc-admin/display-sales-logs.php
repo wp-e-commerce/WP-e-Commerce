@@ -9,9 +9,10 @@
  */
 
 class WPSC_Purchase_Log_Page {
+
 	private $list_table;
 	private $output;
-	private $cols = 0;
+	private $cols  = 0;
 	public $log_id = 0;
 
 	/**
@@ -29,7 +30,7 @@ class WPSC_Purchase_Log_Page {
 	protected $can_edit = false;
 
 	public function __construct() {
-		$controller = 'default';
+		$controller        = 'default';
 		$controller_method = 'controller_default';
 
 		// If individual purchase log, setup ID and action links.
@@ -41,10 +42,10 @@ class WPSC_Purchase_Log_Page {
 		}
 
 		if ( isset( $_REQUEST['c'] ) && method_exists( $this, 'controller_' . $_REQUEST['c'] ) ) {
-			$controller = $_REQUEST['c'];
+			$controller        = $_REQUEST['c'];
 			$controller_method = 'controller_' . $controller;
 		} elseif ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
-			$controller = 'item_details';
+			$controller        = 'item_details';
 			$controller_method = 'controller_item_details';
 		}
 
@@ -59,12 +60,15 @@ class WPSC_Purchase_Log_Page {
 	private function needs_update() {
 		global $wpdb;
 
-		if ( get_option( '_wpsc_purchlogs_3.8_updated' ) )
+		if ( get_option( '_wpsc_purchlogs_3.8_updated' ) ) {
 			return false;
+		}
 
 		$c = $wpdb->get_var( "SELECT COUNT(*) FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE plugin_version IN ('3.6', '3.7')" );
-		if ( $c > 0 )
+
+		if ( $c > 0 ) {
 			return true;
+		}
 
 		update_option( '_wpsc_purchlogs_3.8_updated', true );
 		return false;

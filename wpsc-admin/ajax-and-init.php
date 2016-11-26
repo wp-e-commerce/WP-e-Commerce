@@ -6,7 +6,7 @@
  * These are the WPSC Admin AJAX functions
  *
  * @package wp-e-commerce
- * @since 3.7
+ * @since 3.7.0
  *
  * @uses update_option()                              Updates option in the database given key and value
  * @uses wp_delete_term()                             Removes term from the database
@@ -80,7 +80,7 @@ if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['aj
 
 /**
  * The function that changes the main currency in the DB
- * 
+ *
  * @uses $wpdb  WordPress database object for queries
  */
 function wpsc_change_currency() {
@@ -219,5 +219,3 @@ function wpsc_clean_categories() {
 }
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clean_categories') )
 	add_action( 'admin_init', 'wpsc_clean_categories' );
-
-
