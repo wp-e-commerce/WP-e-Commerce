@@ -61,9 +61,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			)
 		);
 		wp_enqueue_script( 'ec-incontext' );
-		wp_enqueue_script( 'ppincontext', 'http://www.paypalobjects.com/api/checkout.js', array(), null, true );
+		wp_enqueue_script( 'ppincontext', 'https://www.paypalobjects.com/api/checkout.js', array(), null, true );
 	}
-	
+
 	/**
 	 * Insert the ExpessCheckout Shortcut Button
 	 *
