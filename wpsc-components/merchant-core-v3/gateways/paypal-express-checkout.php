@@ -39,13 +39,31 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				'solution_type'    => 'mark',
 				'cart_logo'        => $this->setting->get( 'cart_logo' ),
 				'cart_border'      => $this->setting->get( 'cart_border' ),
+				'incontext'        => (bool) $this->setting->get( 'incontext' ),
 			) );
 
 			// Express Checkout Button
-			add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_ecs_button' ), 2, 2 );
+			if ( (bool) $this->setting->get( 'shortcut' ) && ! (bool) $this->setting->get( 'incontext' ) ) {
+				add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_ecs_button' ), 2, 2 );
+			}
+			// Incontext Checkout Scripts
+			if ( (bool) $this->setting->get( 'incontext' ) && ! (bool) $this->setting->get( 'shortcut' ) ) {
+				add_action( 'wp_enqueue_scripts', array ( $this, 'incontext_load_scripts' ) );
+			}
 		}
 	}
 
+	public function incontext_load_scripts() {
+		wp_register_script( 'ec-incontext', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/ec-incontext.js', '', null, true );
+		wp_localize_script( 'ec-incontext', 'wpec_ppic', array(
+			'mid' => esc_attr( $this->setting->get( 'api_merchantid' ) ),
+			'env' => (bool) $this->setting->get( 'sandbox_mode' ) === true ? 'sandbox' : 'production',
+			)
+		);
+		wp_enqueue_script( 'ec-incontext' );
+		wp_enqueue_script( 'ppincontext', 'http://www.paypalobjects.com/api/checkout.js', array(), null, true );
+	}
+	
 	/**
 	 * Insert the ExpessCheckout Shortcut Button
 	 *
@@ -56,12 +74,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		if ( ! wpsc_uses_shipping() && wpsc_is_gateway_active( 'paypal-digital-goods' ) || ! wpsc_is_gateway_active( 'paypal-express-checkout' ) ) {
 			return;
 		}
-
+		
 		if ( 'bottom' == $context ) {
-			return;
-		}
-
-		if ( ! (bool) $this->setting->get( 'shortcut' ) ) {
 			return;
 		}
 
@@ -809,6 +823,14 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 </tr>
 <tr>
 	<td>
+		<label for="wpsc-paypal-express-api-username"><?php _e( 'Merchant ID', 'wp-e-commerce' ); ?></label>
+	</td>
+	<td>
+		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_merchantid' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_merchantid' ) ); ?>" id="wpsc-paypal-express-api-username" />
+	</td>
+</tr>
+<tr>
+	<td>
 		<label><?php _e( 'Sandbox Mode', 'wp-e-commerce' ); ?></label>
 	</td>
 	<td>
@@ -846,6 +868,15 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	</td>
 	<td>
 		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_border' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_border' ) ); ?>" id="wpsc-paypal-express-cart-border" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="wpsc-paypal-express-cart-border"><?php _e( 'Enable In-Context Checkout', 'wp-e-commerce' ); ?></label>
+	</td>
+	<td>
+		<label><input <?php checked( $this->setting->get( 'incontext' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'incontext' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+		<label><input <?php checked( (bool) $this->setting->get( 'incontext' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'incontext' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 	</td>
 </tr>
 
