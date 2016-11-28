@@ -405,7 +405,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		$digital = 0;
 
 		$log = new WPSC_Purchase_Log( $log_id );
-		$cart = $log->get_cart_contents();
+		$cart = $log->get_items();
 
 		foreach ( $cart as $cartitem ) {
 			$product_meta = get_post_meta( $cartitem->prodid, '_wpsc_product_metadata' );

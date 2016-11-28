@@ -429,11 +429,9 @@ function wpsc_purchlog_resend_email( $log_id = '' ) {
 			$purchase_log = new WPSC_Purchase_Log( $log_id );
 			return wpsc_send_customer_email( $purchase_log );
 		}
-
 	}
 
 	return false;
-
 }
 
 // Deprecate resending purchase log email receipt via URL query
@@ -512,7 +510,6 @@ function wpsc_purchlog_bulk_modify() {
 				if ( $deleted_log ) {
 					$deleted++;
 				}
-
 			}
 		}
 	}
@@ -540,25 +537,31 @@ if ( isset( $_REQUEST['wpsc_admin_action2'] ) && ($_REQUEST['wpsc_admin_action2'
 /**
  * Update Purchase Log Notes
  *
- * @param  int     $purchlog_id     Purchase log ID.
- * @param  string  $purchlog_notes  Notes.
+ * @param  int     $purchlog_id    Purchase log ID.
+ * @param  string  $purchlog_notes Notes.
+ *
+ * @return mixed                   Result of save.
  */
 function wpsc_purchlogs_update_notes( $purchlog_id = 0, $purchlog_notes = '' ) {
-	if ( isset( $_POST['wpsc_purchlogs_update_notes_nonce'] ) && wp_verify_nonce( $_POST['wpsc_purchlogs_update_notes_nonce'], 'wpsc_purchlogs_update_notes' ) ) {
-		if ( 0 == $purchlog_id && isset( $_POST['purchlog_id'] ) && '' == $purchlog_notes ) {
-			$purchlog_id = absint( $_POST['purchlog_id'] );
-			$purchlog_notes = stripslashes( $_POST['purchlog_notes'] );
-		}
+	if ( empty( $purchlog_id ) && isset( $_POST['purchlog_id'] ) && '' == $purchlog_notes ) {
+		$purchlog_id = absint( $_POST['purchlog_id'] );
 
-		if ( $purchlog_id > 0 ) {
-			$purchase_log = new WPSC_Purchase_Log( $purchlog_id );
-			$purchase_log->set( 'notes', $purchlog_notes );
-			$purchase_log->save();
+		if ( isset( $_POST['purchlog_notes'] ) ) {
+			$purchlog_notes = wp_unslash( $_POST['purchlog_notes'] );
 		}
 	}
-}
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && $_REQUEST['wpsc_admin_action'] == 'purchlogs_update_notes' ) {
-	add_action( 'admin_init', 'wpsc_purchlogs_update_notes' );
+
+	if ( ! $purchlog_id ) {
+		return;
+	}
+
+	$purchase_log = $purchlog_id instanceof WPSC_Purchase_Log
+		? $purchlog_id
+		: wpsc_get_order( $purchlog_id );
+
+	$notes = wpsc_get_order_notes( $purchase_log );
+
+	return $notes->add( $purchlog_notes )->save();
 }
 
 /**
@@ -763,8 +766,6 @@ function wpsc_product_files_existing() {
 	$output .= "var select_min_height = " . (25 * 3) . ";\n\r";
 	$output .= "var select_max_height = " . (25 * ($num + 1)) . ";\n\r";
 	$output .= "</script>";
-
-
 	echo $output;
 }
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'product_files_existing') )
@@ -795,13 +796,12 @@ function wpsc_delete_variation_set() {
 
 		$variation_set = get_term( $variation_id, 'wpsc-variation', ARRAY_A );
 
-
 		$variations = get_terms( 'wpsc-variation', array(
 					'hide_empty' => 0,
 					'parent' => $variation_id
 				) );
 
-		foreach ( (array)$variations as $variation ) {
+		foreach ( (array) $variations as $variation ) {
 			$return_value = wp_delete_term( $variation->term_id, 'wpsc-variation' );
 		}
 

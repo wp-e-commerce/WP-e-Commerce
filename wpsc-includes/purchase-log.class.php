@@ -97,13 +97,17 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	);
 
 	private $gateway_data = array();
+	private $form_data_obj = null;
 
 	private $is_status_changed = false;
 	private $previous_status   = false;
 
-	private $cart_contents = array();
-	private $cart_ids = array();
+	private $log_items = array();
+	private $log_item_ids = array();
 	private $can_edit = null;
+	private static $multiple_meta = array(
+		'notes' => 1,
+	);
 
 	/**
 	 * Contains the constructor arguments. This array is necessary because we will
@@ -381,18 +385,31 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @return void
 	 */
 	public static function update_cache( &$log ) {
+		return $log->update_caches();
+	}
+
+	/**
+	 * Update caches.
+	 *
+	 * @access public
+	 * @static
+	 * @since 4.0
+	 *
+	 * @return void
+	 */
+	public function update_caches() {
 
 		// wpsc_purchase_logs stores the data array, while wpsc_purchase_logs_sessionid stores the
 		// log id that's associated with the sessionid
-		$id = $log->get( 'id' );
-		wp_cache_set( $id, $log->data, 'wpsc_purchase_logs' );
+		$id = $this->get( 'id' );
+		wp_cache_set( $id, $this->data, 'wpsc_purchase_logs' );
 
-		if ( $sessionid = $log->get( 'sessionid' ) ) {
+		if ( $sessionid = $this->get( 'sessionid' ) ) {
 			wp_cache_set( $sessionid, $id, 'wpsc_purchase_logs_sessionid' );
 		}
 
-		wp_cache_set( $id, $log->cart_contents, 'wpsc_purchase_log_cart_contents' );
-		do_action( 'wpsc_purchase_log_update_cache', $log );
+		wp_cache_set( $id, $this->log_items, 'wpsc_purchase_log_items' );
+		do_action( 'wpsc_purchase_log_update_cache', $this );
 	}
 
 	/**
@@ -410,13 +427,36 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	public static function delete_cache( $value, $col = 'id' ) {
 		// this will pull from the old cache, so no worries there
 		$log = new WPSC_Purchase_Log( $value, $col );
+		$log->delete_caches( $value, $col );
+	}
 
-		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_logs' );
-		wp_cache_delete( $log->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
-		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
-		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_meta' );
+	/**
+	 * Deletes caches.
+	 *
+	 * @access public
+	 * @static
+	 * @since 4.0
+	 *
+	 * @param string|null $value Optional (left for back-compatibility). The value which was queried.
+	 * @param string|null $col   Optional (left for back-compatibility). The column used as the identifier.
+	 *
+	 * @return void
+	 */
+	public function delete_caches( $value = null, $col = null ) {
+		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_logs' );
+		wp_cache_delete( $this->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
+		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_log_items' );
+		wp_cache_delete( $this->get( 'id' ), 'wpsc_purchase_meta' );
 
-		do_action( 'wpsc_purchase_log_delete_cache', $log, $value, $col );
+		if ( null === $value ) {
+			$value = $this->args['value'];
+		}
+
+		if ( null === $col ) {
+			$col = $this->args['col'];
+		}
+
+		do_action( 'wpsc_purchase_log_delete_cache', $this, $value, $col );
 	}
 
 	/**
@@ -455,7 +495,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 
 			do_action( 'wpsc_purchase_log_before_delete', $log_id );
 
-			self::delete_cache( $log_id );
+			$this->delete_caches();
 
 			// Delete claimed stock
 			$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $log_id ) );
@@ -534,7 +574,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		// if the id is specified, try to get from cache
 		if ( $col == 'id' ) {
 			$this->data = wp_cache_get( $value, 'wpsc_purchase_logs' );
-			$this->cart_contents = wp_cache_get( $value, 'wpsc_purchase_log_cart_contents' );
+			$this->log_items = wp_cache_get( $value, 'wpsc_purchase_log_items' );
 		}
 
 		// cache exists
@@ -549,7 +589,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	private function set_total_shipping() {
 
 		$base_shipping  = $this->get( 'base_shipping' );
-		$item_shipping  = wp_list_pluck( $this->get_cart_contents(), 'pnp' );
+		$item_shipping  = wp_list_pluck( $this->get_items(), 'pnp' );
 
 		$this->meta_data['total_shipping'] = $base_shipping + array_sum( $item_shipping );
 
@@ -590,7 +630,8 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	private function set_meta_props() {
 
 		foreach ( wpsc_get_purchase_custom( $this->get( 'id' ) ) as $key => $value  ) {
-			$this->meta_data[ $key ] = wpsc_get_purchase_meta( $this->get( 'id' ), $key, true );
+			$is_multiple_meta = isset( self::$multiple_meta[ $key ] );
+			$this->meta_data[ $key ] = wpsc_get_purchase_meta( $this->get( 'id' ), $key, ! $is_multiple_meta );
 		}
 
 		$this->set_total_shipping();
@@ -598,7 +639,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$this->set_shipping_method_names();
 	}
 
-public function get_meta() {
+	public function get_meta() {
 
 		if ( empty( $this->data ) || empty( $this->meta_data ) ) {
 			$this->fetch();
@@ -613,7 +654,7 @@ public function get_meta() {
 	 * @access protected
 	 * @since 3.8.9
 	 *
-	 * @return void
+	 * @return WPSC_Purchase_Log
 	 */
 	protected function fetch() {
 		global $wpdb;
@@ -628,25 +669,44 @@ public function get_meta() {
 			return;
 		}
 
-		extract( $this->args );
+		$col = $this->args['col'];
 
 		$format = self::get_column_format( $col );
-		$sql    = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE {$col} = {$format}", $value );
+		$sql    = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE {$col} = {$format}", $this->args['value'] );
 
 		$this->exists = false;
 
 		if ( $data = $wpdb->get_row( $sql, ARRAY_A ) ) {
-			$this->exists        = true;
-			$this->data          = apply_filters( 'wpsc_purchase_log_data', $data );
-			$this->cart_contents = $this->get_cart_contents();
+			$this->exists    = true;
+			$this->data      = apply_filters( 'wpsc_purchase_log_data', $data );
+			$this->log_items = $this->get_items();
 
 			$this->set_meta_props();
-			self::update_cache( $this );
+			$this->update_caches();
 		}
 
 		do_action( 'wpsc_purchase_log_fetched', $this );
 
 		$this->fetched = true;
+
+		return $this;
+	}
+
+	/**
+	 * Returns the value of the specified property of the $data array if it exists.
+	 *
+	 * @access public
+	 * @since  4.0
+	 *
+	 * @param  string $key Name of the property (column)
+	 * @return mixed
+	 */
+	public function get( $key ) {
+		if ( 'notes' === $key ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Getting notes from the Log object has been deprecated in favor of the wpsc_get_order_notes() function.', 'wp-e-commerce' ), '4.0' );
+		}
+
+		return parent::get( $key );
 	}
 
 	/**
@@ -689,47 +749,52 @@ public function get_meta() {
 	}
 
 	public function get_cart_contents() {
+		_wpsc_doing_it_wrong( __FUNCTION__, __( 'This function has been deprecated in favor of the get_items() method.', 'wp-e-commerce' ), '4.0' );
+		return $this->get_items();
+	}
+
+	public function get_items() {
 		global $wpdb;
 
-		if ( ! empty( $this->cart_contents ) && $this->fetched ) {
-			return $this->cart_contents;
+		if ( ! empty( $this->log_items ) && $this->fetched ) {
+			return $this->log_items;
 		}
 
 		$id = $this->get( 'id' );
 
 		// Bail if we don't have a log object yet (no id).
 		if ( empty( $id ) ) {
-			return $this->cart_contents;
+			return $this->log_items;
 		}
 
 		$sql = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $id );
-		$this->cart_contents = $wpdb->get_results( $sql );
+		$this->log_items = $wpdb->get_results( $sql );
 
-		if ( is_array( $this->cart_contents ) ) {
-			foreach ( $this->cart_contents as $index => $item ) {
-				$this->cart_ids[ absint( $item->id ) ] = $index;
+		if ( is_array( $this->log_items ) ) {
+			foreach ( $this->log_items as $index => $item ) {
+				$this->log_item_ids[ absint( $item->id ) ] = $index;
 			}
 		}
 
-		return $this->cart_contents;
+		return $this->log_items;
 	}
 
-	public function get_cart_item( $item_id ) {
+	public function get_item( $item_id ) {
 		$item_id = absint( $item_id );
-		$cart    = $this->get_cart_contents();
+		$items   = $this->get_items();
 
-		if ( isset( $this->cart_ids[ $item_id ] ) ) {
-			return $cart[ $this->cart_ids[ $item_id ] ];
+		if ( isset( $this->log_item_ids[ $item_id ] ) ) {
+			return $items[ $this->log_item_ids[ $item_id ] ];
 		}
 
 		return false;
 	}
 
-	public function get_cart_item_from_product_id( $product_id ) {
+	public function get_item_from_product_id( $product_id ) {
 		$product_id = absint( $product_id );
-		$cart       = $this->get_cart_contents();
+		$items      = $this->get_items();
 
-		foreach ( $cart as $item ) {
+		foreach ( $items as $item ) {
 			if ( $product_id === absint( $item->prodid ) ) {
 				return $item;
 			}
@@ -738,24 +803,24 @@ public function get_meta() {
 		return false;
 	}
 
-	public function update_cart_item( $item_id, $data ) {
+	public function update_item( $item_id, $data ) {
 		global $wpdb;
 
 		$item_id = absint( $item_id );
-		$item = $this->get_cart_item( $item_id );
+		$item = $this->get_item( $item_id );
 
 		if ( $item ) {
-			do_action( 'wpsc_purchase_log_before_update_cart_item', $item_id );
+			do_action( 'wpsc_purchase_log_before_update_item', $item_id );
 
 			$data = wp_unslash( $data );
 			$result = $wpdb->update( WPSC_TABLE_CART_CONTENTS, $data, array( 'id' => $item_id  ) );
 
 			if ( $result ) {
 
-				$this->cart_contents = array();
-				$this->get_cart_item( $item_id );
+				$this->log_items = array();
+				$this->get_item( $item_id );
 
-				do_action( 'wpsc_purchase_log_update_cart_item', $item_id );
+				do_action( 'wpsc_purchase_log_update_item', $item_id );
 			}
 
 			return $result;
@@ -764,29 +829,37 @@ public function get_meta() {
 		return false;
 	}
 
-	public function remove_cart_item( $item_id ) {
+	public function remove_item( $item_id ) {
 		global $wpdb;
 
 		$item_id = absint( $item_id );
-		$item = $this->get_cart_item( $item_id );
+		$item = $this->get_item( $item_id );
 
 		if ( $item ) {
-			do_action( 'wpsc_purchase_log_before_remove_cart_item', $item_id );
+			do_action( 'wpsc_purchase_log_before_remove_item', $item_id );
 
 			$result = $wpdb->delete( WPSC_TABLE_CART_CONTENTS, array( 'id' => $item_id ) );
 
 			if ( $result ) {
 
-				unset( $this->cart_contents[ $this->cart_ids[ $item_id ] ] );
-				unset( $this->cart_ids[ $item_id ] );
+				unset( $this->log_items[ $this->log_item_ids[ $item_id ] ] );
+				unset( $this->log_item_ids[ $item_id ] );
 
-				do_action( 'wpsc_purchase_log_remove_cart_item', $item_id );
+				do_action( 'wpsc_purchase_log_remove_item', $item_id );
 			}
 
 			return $result;
 		}
 
 		return false;
+	}
+
+	public function form_data() {
+		if ( null === $this->form_data_obj ) {
+			$this->form_data_obj = new WPSC_Checkout_Form_Data( $this->get( 'id' ), false );
+		}
+
+		return $this->form_data_obj;
 	}
 
 	public function get_gateway_data( $from_currency = false, $to_currency = false ) {
@@ -804,7 +877,7 @@ public function get_meta() {
 			'tax'     => wpsc_convert_currency( $this->get( 'wpec_taxes_total' ), $from_currency, $to_currency ),
 		);
 
-		foreach ( $this->cart_contents as $item ) {
+		foreach ( $this->log_items as $item ) {
 			$item_price = wpsc_convert_currency( $item->price, $from_currency, $to_currency );
 			$items[] = array(
 				'name'     => $item->name,
@@ -879,7 +952,6 @@ public function get_meta() {
 				$this->meta_data[ $key ] = $value;
 				unset( $properties[ $key ] );
 			}
-
 		}
 
 		$this->data = array_merge( $this->data, $properties );
@@ -983,7 +1055,7 @@ public function get_meta() {
 	 * @access public
 	 * @since  4.0
 	 *
-	 * @return WPSC_Query_Base  The current object (for method chaining)
+	 * @return WPSC_Purchase_Log  The current object (for method chaining)
 	 */
 	public function save_meta() {
 		do_action( 'wpsc_purchase_log_pre_save_meta', $this );
@@ -991,7 +1063,19 @@ public function get_meta() {
 		$meta = $this->get_meta();
 
 		foreach ( $meta as $key => $value ) {
-			wpsc_update_purchase_meta( $this->get( 'id' ), $key, $value );
+			$is_multiple_meta = isset( self::$multiple_meta[ $key ] );
+
+			if ( $is_multiple_meta ) {
+
+				if ( is_array( $value ) ) {
+					foreach ( $value as $val ) {
+						wpsc_add_purchase_meta( $this->get( 'id' ), $key, $val );
+					}
+				}
+
+			} else {
+				wpsc_update_purchase_meta( $this->get( 'id' ), $key, $value );
+			}
 		}
 
 		do_action( 'wpsc_purchase_log_save_meta', $this );
@@ -1002,7 +1086,7 @@ public function get_meta() {
 	private function update_downloadable_status() {
 		global $wpdb;
 
-		foreach ( $this->get_cart_contents() as $item ) {
+		foreach ( $this->get_items() as $item ) {
 			$wpdb->update(
 				WPSC_TABLE_DOWNLOAD_STATUS,
 				array(
@@ -1014,6 +1098,15 @@ public function get_meta() {
 				)
 			);
 		}
+	}
+
+	public function have_downloads_locked() {
+		global $wpdb;
+
+		$sql = $wpdb->prepare( "SELECT `ip_number` FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d ", $this->get( 'id' ) );
+		$ip_number = $wpdb->get_var( $sql );
+
+		return $ip_number;
 	}
 
 	/**
@@ -1203,8 +1296,9 @@ public function get_meta() {
 		global $purchlogitem;
 
 		if ( null === $this->buyers_state_and_postcode ) {
-			if ( is_numeric( $purchlogitem->extrainfo->billing_region ) ) {
-				$state = wpsc_get_region( $purchlogitem->extrainfo->billing_region );
+
+			if ( is_numeric( $this->get( 'billing_region' ) ) ) {
+				$state = wpsc_get_region( $this->get( 'billing_region' ) );
 			} else {
 				$state = $purchlogitem->userinfo['billingstate']['value'];
 				$state = is_numeric( $state ) ? wpsc_get_region( $state ) : $state;
@@ -1250,6 +1344,10 @@ public function get_meta() {
 
 		if ( null === $this->shipping_name ) {
 			$this->shipping_name = isset( $purchlogitem->shippinginfo['shippingfirstname']['value'] ) ? $purchlogitem->shippinginfo['shippingfirstname']['value'] : '';
+
+			if ( isset( $purchlogitem->shippinginfo['shippinglastname']['value'] ) ) {
+				$this->shipping_name .= ' ' . $purchlogitem->shippinginfo['shippinglastname']['value'];
+			}
 		}
 
 		return $this->shipping_name;
@@ -1279,8 +1377,8 @@ public function get_meta() {
 		global $purchlogitem;
 
 		if ( null === $this->shipping_state_and_postcode ) {
-			if ( is_numeric( $purchlogitem->extrainfo->shipping_region ) ) {
-				$output = wpsc_get_region( $purchlogitem->extrainfo->shipping_region );
+			if ( is_numeric( $this->get( 'shipping_region' ) ) ) {
+				$output = wpsc_get_region( $this->get( 'shipping_region' ) );
 			} else {
 				$state = $purchlogitem->shippinginfo['shippingstate']['value'];
 				$output = is_numeric( $state ) ? wpsc_get_region( $state ) : $state;
@@ -1313,20 +1411,20 @@ public function get_meta() {
 	}
 
 	public function payment_method() {
-		global $purchlogitem, $nzshpcrt_gateways;
+		global $nzshpcrt_gateways;
 
 		if ( null === $this->payment_method ) {
-			if ( 'wpsc_merchant_testmode' == $purchlogitem->extrainfo->gateway ) {
+			if ( 'wpsc_merchant_testmode' == $this->get( 'gateway' ) ) {
 				$this->payment_method = __( 'Manual Payment', 'wp-e-commerce' );
 			} else {
 				foreach ( (array) $nzshpcrt_gateways as $gateway ) {
-					if ( isset( $gateway['internalname'] ) && $gateway['internalname'] == $purchlogitem->extrainfo->gateway ) {
+					if ( isset( $gateway['internalname'] ) && $gateway['internalname'] == $this->get( 'gateway' ) ) {
 						$this->payment_method = $gateway['name'];
 					}
 				}
 
 				if ( ! $this->payment_method ) {
-					$this->payment_method = $purchlogitem->extrainfo->gateway;
+					$this->payment_method = $this->get( 'gateway' );
 				}
 			}
 		}
@@ -1335,16 +1433,15 @@ public function get_meta() {
 	}
 
 	public function shipping_method() {
-		global $purchlogitem, $wpsc_shipping_modules;
+		global $wpsc_shipping_modules;
 
 		if ( null === $this->shipping_method ) {
 
-			if ( ! empty( $wpsc_shipping_modules[ $purchlogitem->extrainfo->shipping_method ] ) ) {
-				$this->shipping_method = $wpsc_shipping_modules[ $purchlogitem->extrainfo->shipping_method ]->getName();
+			if ( ! empty( $wpsc_shipping_modules[ $this->get( 'shipping_method' ) ] ) ) {
+				$this->shipping_method = $wpsc_shipping_modules[ $this->get( 'shipping_method' ) ]->getName();
 			} else {
-				$this->shipping_method = $purchlogitem->extrainfo->shipping_method;
+				$this->shipping_method = $this->get( 'shipping_method' );
 			}
-
 		}
 
 		return $this->shipping_method;
@@ -1360,9 +1457,7 @@ public function get_meta() {
 	 * @return mixed
 	 */
 	public function discount( $numeric = false ) {
-		global $purchlogitem;
-
-		$discount = $purchlogitem->extrainfo->discount_value;
+		$discount = $this->get( 'discount_value' );
 		if ( ! $numeric ) {
 			$discount = wpsc_currency_display( $discount, array( 'display_as_html' => false ) );
 		}
@@ -1404,9 +1499,8 @@ public function get_meta() {
 	 * @return mixed
 	 */
 	public function taxes( $numeric = false ) {
-		global $purchlogitem;
+		$taxes = $this->get( 'wpec_taxes_total' );
 
-		$taxes = $purchlogitem->extrainfo->wpec_taxes_total;
 		if ( ! $numeric ) {
 			$taxes = wpsc_currency_display( $taxes, array( 'display_as_html' => false ) );
 		}

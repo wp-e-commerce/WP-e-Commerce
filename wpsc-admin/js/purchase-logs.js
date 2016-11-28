@@ -19,12 +19,19 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 	admin.cache = function() {
 		$c.body           = $( document.body );
 		$c.wrapper        = $( 'table.purchase-logs' );
+		$c.details        = $( '.log-details-box' );
+		$c.editDetails    = $id( 'edit-shipping-billing' );
+		$c.editActions    = $c.editDetails.find( '.wpsc-form-actions' );
 		$c.log            = $id( 'wpsc_items_ordered' );
 		$c.discount_data  = $id( 'wpsc_discount_data' );
 		$c.total_taxes    = $id( 'wpsc_total_taxes' );
 		$c.total_shipping = $id( 'wpsc_total_shipping' );
 		$c.final_total    = $id( 'wpsc_final_total' );
 		$c.spinner        = $c.final_total.find( 'td:last .spinner' );
+		$c.billingForm    = $id( 'wpsc-checkout-form-billing' );
+		$c.shippingForm   = $id( 'wpsc-checkout-form-shipping' );
+		$c.copyForm       = $id( 'wpsc-terms-and-conditions-control' );
+		$c.notes          = $id( 'purchlogs_notes' );
 	};
 
 	admin.init = function() {
@@ -52,6 +59,21 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'change', '.wpsc_item_qty', admin.update_qty )
 				.on( 'click', '.wpsc-add-item-button', function() { admin.product_search.trigger( 'open' ); } );
 			$c.body.on( 'click', '.ui-find-overlay', function() { admin.product_search.trigger( 'close' ); } );
+
+			$c.editDetails
+				.on( 'submit', 'form', admin.handleEditDetails )
+				.on( 'click', '.button-secondary', admin.toggleEditDetails );
+
+			$c.details
+				.on( 'click', '.edit-log-details', admin.toggleEditDetails );
+
+			$c.notes
+				.on( 'submit', '#note-submit-form', admin.addNote )
+				.on( 'click', '.wpsc-remove-note-button', admin.deleteNote );
+
+			window.postboxes.add_postbox_toggles( window.pagenow );
+
+			$c.editActions.prepend( '<button type="button" class="button-secondary">'+ wpsc.strings.cancel_btn +'</button>' );
 		}
 
 	};
@@ -186,17 +208,17 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 	};
 
 	admin.remove_item = function() {
-		if ( ! window.confirm( wpsc.strings.confirm_delete ) ) {
+		if ( ! window.confirm( wpsc.strings.confirm_delete_item ) ) {
 			return;
 		}
 
 		var $this = $( this );
 		var $row  = $this.parents( '.purchase-log-line-item' );
 		var args  = {
-			action  : 'remove_log_item',
-			log_id : $( '[name="purchlog_id"]' ).val(),
+			action : 'remove_log_item',
+			log_id  : wpsc.log_id,
 			item_id : $row.data( 'id' ),
-			nonce   : wpsc.remove_log_item_nonce
+			nonce  : wpsc.remove_log_item_nonce
 		};
 
 		var ajax_callback = function(response) {
@@ -242,7 +264,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		var $row  = $this.parents( '.purchase-log-line-item' );
 		var args  = {
 			action  : 'update_log_item_qty',
-			log_id  : $( '[name="purchlog_id"]' ).val(),
+			log_id  : wpsc.log_id,
 			item_id : $row.data( 'id' ),
 			qty     : $this.val(),
 			nonce   : wpsc.update_log_item_qty_nonce
@@ -299,6 +321,124 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				$price.text( $new_price.text() );
 			}
 		} );
+	};
+
+	admin.toggleEditDetails = function( evt ) {
+		evt.preventDefault();
+
+		var strings = window.WPSC.copyBilling.strings;
+
+		$c.editDetails.slideToggle( 400, function() {
+			if ( $( evt.target ).hasClass( 'edit-shipping-details' ) ) {
+				$c.billingForm.find( 'h2' ).replaceWith( strings.billing );
+				$c.shippingForm.removeClass( 'ui-helper-hidden' );
+
+			} else if ( $c.copyForm.is( ':checked' ) ) {
+				$c.billingForm.find( 'h2' ).replaceWith( strings.billing_and_shipping );
+				$c.shippingForm.addClass( 'ui-helper-hidden' );
+			}
+		} );
+	};
+
+	admin.handleEditDetails = function( evt ) {
+		evt.preventDefault();
+
+		var args = {
+			action : 'edit_contact_details',
+			log_id : wpsc.log_id,
+			nonce  : wpsc.edit_contact_details_nonce,
+			fields : $c.editDetails.find( 'form' ).serialize()
+		};
+
+		var ajax_callback = function( response ) {
+			$c.editActions.find( '.spinner' ).remove();
+
+			if ( ! response.is_successful ) {
+				if ( response.error ) {
+					window.alert( response.error.messages.join( BR ) );
+				}
+
+				return;
+			}
+
+			$id( 'wpsc-shipping-details' ).html( response.obj.shipping );
+			$id( 'wpsc-billing-details' ).html( response.obj.billing );
+			$id( 'wpsc-payment-details' ).html( response.obj.payment );
+
+			// Trigger the edit form to slide closed.
+			admin.toggleEditDetails( evt );
+		};
+
+		$c.editActions.prepend( '<div class="spinner is-active"></div>' );
+
+		$.wpsc_post( args, ajax_callback );
+	};
+
+	admin.addNote = function( evt ) {
+		evt.preventDefault();
+
+		$c.notesText = $c.notesText || $id( 'purchlog_notes' );
+		var args = {
+			action : 'add_note',
+			log_id : wpsc.log_id,
+			nonce  : wpsc.add_note_nonce,
+			note   : $c.notesText.val()
+		};
+
+		var ajax_callback = function(response) {
+			$c.notes.find( '.spinner' ).removeClass( 'is-active' );
+
+			if ( ! response.is_successful ) {
+				if ( response.error ) {
+					window.alert( response.error.messages.join( BR ) );
+				}
+
+				return;
+			}
+
+			$c.notes.find( '.wpsc-notes' ).append( response.obj );
+			$c.notesText.val( '' );
+		};
+
+		$c.notes.find( '.spinner' ).addClass( 'is-active' );
+
+		$.wpsc_post( args, ajax_callback );
+	};
+
+	admin.deleteNote = function( evt ) {
+		evt.preventDefault();
+
+		if ( ! window.confirm( wpsc.strings.confirm_delete_note ) ) {
+			return;
+		}
+
+		var $this = $( this );
+		var $row  = $this.parents( '.wpsc-note' );
+		var args  = {
+			action : 'delete_note',
+			log_id : wpsc.log_id,
+			nonce  : wpsc.delete_note_nonce,
+			note   : $row.data( 'id' )
+		};
+
+		var ajax_callback = function(response) {
+			if ( ! response.is_successful ) {
+				if ( response.error ) {
+					$this.find( '.spinner' ).remove();
+					window.alert( response.error.messages.join( BR ) );
+				}
+
+				return;
+			}
+
+			$row.slideUp( 600, function() {
+				$( this ).remove();
+			} );
+		};
+
+		$this.prepend( '<div class="spinner is-active"></div>' );
+
+		$.wpsc_post( args, ajax_callback );
 	};
 
 	admin.init_search_view = function() {
@@ -429,7 +569,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 					action      : 'add_log_item',
 					product_ids : checked,
 					existing    : existing,
-					log_id      : $( '[name="purchlog_id"]' ).val(),
+					log_id      : wpsc.log_id,
 					nonce       : wpsc.add_log_item_nonce
 				};
 

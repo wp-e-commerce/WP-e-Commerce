@@ -61,7 +61,7 @@ abstract class WPSC_Query_Base {
 	 * @access protected
 	 * @since 4.0
 	 *
-	 * @var string
+	 * @var boolean
 	 */
 	protected $fetched = false;
 
@@ -71,17 +71,19 @@ abstract class WPSC_Query_Base {
 	 * @access protected
 	 * @since 4.0
 	 *
-	 * @var string
+	 * @var boolean
 	 */
 	protected $exists = false;
 
 	/**
 	 * Fetches the actual $data array.
+	 * Should set $this->fetched to true, and $this->exists if row is found.
+	 * Should return $this;
 	 *
 	 * @access protected
 	 * @since 4.0
 	 *
-	 * @return void
+	 * @return WPSC_Query_Base
 	 */
 	abstract protected function fetch();
 
@@ -96,6 +98,19 @@ abstract class WPSC_Query_Base {
 	public function exists() {
 		$this->fetch();
 		return $this->exists;
+	}
+
+	/**
+	 * Resets properties so any subsequent requests will be refreshed.
+	 *
+	 * @since  4.0
+	 *
+	 * @return void
+	 */
+	protected function reset() {
+		$this->data = array();
+		$this->fetched = false;
+		$this->exists = false;
 	}
 
 	/**
@@ -201,11 +216,11 @@ abstract class WPSC_Query_Base {
 	 * @access public
 	 * @since  4.0
 	 *
-	 * @param mixed $key        Name of the property (column), or an array containing
-	 *                          key value pairs
-	 * @param string|int $value Optional. Defaults to null. In case $key is a string,
-	 *                          this should be specified.
-	 * @return WPSC_Query_Base  The current object (for method chaining)
+	 * @param mixed $key             Name of the property (column), or an array containing
+	 *                               key value pairs
+	 * @param string|int|null $value Optional. Defaults to null. In case $key is a string,
+	 *                               this should be specified.
+	 * @return WPSC_Query_Base       The current object (for method chaining)
 	 */
 	abstract public function set( $key, $value = null );
 
@@ -226,11 +241,11 @@ abstract class WPSC_Query_Base {
 	 * @access public
 	 * @since  4.0
 	 *
-	 * @param mixed $key        Name of the property (column), or an array containing
-	 *                          key value pairs
-	 * @param string|int $value Optional. Defaults to null. In case $key is a string,
-	 *                          this should be specified.
-	 * @return WPSC_Query_Base  The current object (for method chaining)
+	 * @param mixed $key             Name of the property (column), or an array containing
+	 *                               key value pairs
+	 * @param string|int|null $value Optional. Defaults to null. In case $key is a string,
+	 *                               this should be specified.
+	 * @return WPSC_Query_Base       The current object (for method chaining)
 	 */
 	public function set_meta( $key, $value = null ) {
 		if ( is_array( $key ) ) {
@@ -274,7 +289,8 @@ abstract class WPSC_Query_Base {
 	 * @param string     $group_id The key for the group_ids array to compile the group
 	 *                             from version/key.
 	 *                             Default 0 (no expiration).
-	 * @return bool False on failure, true on success
+	 * @return bool|mixed         False on failure to retrieve contents or the cache
+	 *                            contents on success
 	 */
 	public function cache_get( $key, $group_id ) {
 		return wp_cache_get( $key, $this->get_group_id( $group_id ) );

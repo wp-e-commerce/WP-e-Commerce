@@ -1,15 +1,16 @@
 <?php
 
-add_action( 'wp_enqueue_scripts'        , '_wpsc_te2_enqueue_styles', 1 );
+function _wpsc_te2_register_styles() {
+	$suffix = _wpsc_te2_asset_suffix();
 
-function _wpsc_te2_enqueue_styles() {
-	$do_minified = apply_filters( 'wpsc_use_minified_styles', ! ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) );
-	$suffix = $do_minified ? '.min' : '';
-
-	wp_register_style( 'wpsc-common', wpsc_locate_asset_uri( "css/common{$suffix}.css" ), array(), WPSC_VERSION );
-	wp_register_style( 'wpsc-responsive', wpsc_locate_asset_uri( "css/wpsc-responsive{$suffix}.css" ), array(), WPSC_VERSION );
+	wpsc_te2_register_style( 'wpsc-common', "common{$suffix}.css" );
+	wpsc_te2_register_style( 'wpsc-responsive', "wpsc-responsive{$suffix}.css" );
 
 	do_action( 'wpsc_register_styles' );
+}
+
+function _wpsc_te2_enqueue_styles() {
+	_wpsc_te2_register_styles();
 
 	wp_enqueue_style( 'wpsc-common' );
 	wp_enqueue_style( 'wpsc-responsive' );
@@ -20,6 +21,7 @@ function _wpsc_te2_enqueue_styles() {
 
 	do_action( 'wpsc_enqueue_styles' );
 }
+add_action( 'wp_enqueue_scripts' , '_wpsc_te2_enqueue_styles', 1 );
 
 /**
  * Inline style that ensure the product summary's width take the thumbnail width
@@ -58,4 +60,20 @@ function _wpsc_get_inline_style() {
 	}
 <?php
 	return ob_get_clean();
+}
+
+function _wpsc_te2_asset_suffix() {
+	$do_minified = apply_filters( 'wpsc_use_minified_styles', ! ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) );
+	return $do_minified ? '.min' : '';
+}
+
+function wpsc_te2_register_style( $handle, $relative_src, $deps = array(), $ver = WPSC_VERSION, $media = 'all' ) {
+
+	if ( is_admin() ) {
+		$src = WPSC_TE_V2_URL . '/theming/assets/css/' . $relative_src;
+	} else {
+		$src = wpsc_locate_asset_uri( 'css/' . $relative_src );
+	}
+
+	return wp_register_style( $handle, $src, $deps, $ver, $media );
 }

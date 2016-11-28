@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Coupon {
+class WPSC_Coupon extends WPSC_Query_Base {
 
 	const IS_PERCENTAGE    = 1;
 	const IS_FREE_SHIPPING = 2;
@@ -17,36 +17,6 @@ class WPSC_Coupon {
 	 * @var  int
 	 */
 	private $id = 0;
-
-	/**
-	 * Contains the values fetched from the DB.
-	 *
-	 * @access  private
-	 * @since   4.0
-	 *
-	 * @var  array
-	 */
-	private $data = array();
-
-	/**
-	 * True if the DB row is fetched into $this->data.
-	 *
-	 * @access  private
-	 * @since   4.0
-	 *
-	 * @var  boolean
-	 */
-	private $fetched = false;
-
-	/**
-	 * True if the row exists in DB.
-	 *
-	 * @access  private
-	 * @since   4.0
-	 *
-	 * @var  boolean
-	 */
-	private $exists = false;
 
 	/**
 	 * Names of columns that requires escaping values as integers before being inserted
@@ -77,6 +47,19 @@ class WPSC_Coupon {
 	);
 
 	/**
+	 * An array of arrays of cache keys. Allows versioning the cached values,
+	 * and busting cache for a group if needed (by incrementing the version).
+	 *
+	 * @var array
+	 */
+	protected $group_ids = array(
+		'coupons' => array(
+			'group'   => 'wpsc_coupons',
+			'version' => 0,
+		),
+	);
+
+	/**
 	 * Constructor of the coupon object. If no argument is passed, this simply
 	 * create a new empty object. If an array is passed it will populate the empty
 	 * object with the array data. Otherwise, this will get the coupon log from the
@@ -103,13 +86,12 @@ class WPSC_Coupon {
 		$this->id = is_numeric( $value ) && $value > 0 ? absint( $value ) : 0;
 
 		// If the ID is specified, try to get from cache.
-		$this->data = wp_cache_get( $this->id, 'wpsc_coupons' );
+		$this->data = $this->cache_get( $this->id, 'coupons' );
 
 		// Cache exists
 		if ( ! empty( $this->data ) ) {
 			$this->fetched = true;
-			$this->exists = true;
-			return;
+			$this->exists  = true;
 		}
 
 	}
@@ -149,47 +131,30 @@ class WPSC_Coupon {
 	}
 
 	/**
-	 * Returns the value of the specified property of the coupon.
+	 * Prepares the return value for get() (apply_filters, etc).
 	 *
-	 * @access  public
-	 * @since   4.0
+	 * @access protected
+	 * @since  4.0
 	 *
-	 * @param   string  $key  Name of the property (column).
-	 * @return  mixed
+	 * @param  mixed  $value Value fetched
+	 * @param  string $key   Key for $data.
+	 *
+	 * @return mixed
 	 */
-	public function get( $key ) {
-
-		// Lazy load the purchase log row if it's not fetched from the database yet.
-		if ( empty( $this->data ) || ! array_key_exists( $key, $this->data ) ) {
-			$this->fetch();
-		}
-
-		if ( isset( $this->data[ $key ] ) ) {
-			$value = $this->data[ $key ];
-		} else {
-			$value = null;
-		}
-
+	protected function prepare_get( $value, $key ) {
 		return apply_filters( 'wpsc_coupon_get_property', $value, $key, $this );
-
 	}
 
 	/**
-	 * Returns the whole database row in the form of an associative array.
+	 * Prepares the return value for get_data() (apply_filters, etc).
 	 *
-	 * @access  public
-	 * @since   4.0
+	 * @access protected
+	 * @since  4.0
 	 *
-	 * @return  array
+	 * @return mixed
 	 */
-	public function get_data() {
-
-		if ( empty( $this->data ) ) {
-			$this->fetch();
-		}
-
+	protected function prepare_get_data() {
 		return apply_filters( 'wpsc_coupon_get_data', $this->data, $this );
-
 	}
 
 	/**
@@ -242,9 +207,10 @@ class WPSC_Coupon {
 	 *
 	 * @access  private
 	 * @since   4.0
+	 *
+	 * @return WPSC_Coupon
 	 */
-	private function fetch() {
-
+	protected function fetch() {
 		global $wpdb;
 
 		if ( $this->fetched ) {
@@ -285,21 +251,7 @@ class WPSC_Coupon {
 
 		$this->fetched = true;
 
-	}
-
-	/**
-	 * Whether the DB row for this coupon exists.
-	 *
-	 * @access  public
-	 * @since   4.0
-	 *
-	 * @return  boolean  True if it exists. Otherwise false.
-	 */
-	public function exists() {
-
-		$this->fetch();
-		return $this->exists;
-
+		return $this;
 	}
 
 	/**
@@ -310,9 +262,7 @@ class WPSC_Coupon {
 	 */
 	public function update_cache() {
 
-		$id = $this->get( 'id' );
-
-		wp_cache_set( $id, $this->data, 'wpsc_coupons' );
+		$this->cache_set( $this->get( 'id' ), $this->data, 'coupons' );
 		do_action( 'wpsc_coupon_update_cache', $this );
 
 	}
@@ -325,7 +275,7 @@ class WPSC_Coupon {
 	 */
 	public function delete_cache() {
 
-		wp_cache_delete( $this->get( 'id' ), 'wpsc_coupons' );
+		$this->cache_delete( $this->get( 'id' ), 'coupons' );
 		do_action( 'wpsc_coupon_delete_cache', $this );
 
 		$this->reset();
@@ -409,20 +359,6 @@ class WPSC_Coupon {
 		do_action( 'wpsc_coupon_delete', $this->id );
 
 		return $deleted;
-
-	}
-
-	/**
-	 * Reset Coupon
-	 *
-	 * Clears all the coupon data apart from the ID so any subsequent requests
-	 * will be refreshed.
-	 */
-	private function reset() {
-
-		$this->data = array();
-		$this->fetched = false;
-		$this->exists = false;
 
 	}
 

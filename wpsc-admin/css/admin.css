@@ -181,6 +181,26 @@ p.quarterly {
  * Display Purchase log Details CSS is HERE
  */
 
+.log-details-title-area {
+}
+.log-details-title-area .tablenav {
+	float: right;
+	clear: both;
+	margin: 0;
+}
+
+.log-details-title-area .pagination-links a {
+	padding: 0 0 0 8px;
+}
+
+.log-title-details {
+	float: left;
+	clear: none;
+	margin-top: -10px;
+	color: #23282d;
+	font-size: 23px;
+}
+
 #purchlogs_customfields {
 	clear: both;
 }
@@ -209,14 +229,41 @@ th#status {
 	width: 200px;
 }
 
+#wpsc-customer-settings-form h2 {
+	padding: 0 !important;
+}
+
+#wpsc-customer-settings-form label {
+	display: block;
+}
+
+#wpsc-customer-settings-form .button-secondary {
+	margin-right: 10px;
+}
+
 #wpsc_items_ordered {
 	clear: both;
 }
 
-.wpsc-remove-item-button {
+#wpsc_items_ordered .widefat {
+	border: 0;
+}
+
+.wpsc-remove-button {
 	background: none;
 	border: none;
 	line-height: 1.60em;
+}
+
+.wpsc-remove-button .dashicons {
+	color:#a00;
+}
+
+.wpsc-add-row {
+	border: 1px solid #ddd;
+	padding: 10px 0;
+	border-left: 0;
+	border-right: 0;
 }
 
 .wpsc_item_qty {
@@ -225,6 +272,52 @@ th#status {
 
 .wpsc_pushdown_img {
 	float: left;
+}
+
+.wpsc-notes {
+	margin: 5px 0 20px;
+}
+
+.wpsc-note {
+	position: relative;
+	padding: 1px 1em 1px;
+	margin: 8px 0;
+}
+
+.wpsc-note > p {
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 1em;
+	height: 1.5em;
+}
+
+.wpsc-note .note-number {
+	opacity: .5;
+	padding-left: 5px;
+}
+
+.wpsc-note:nth-child( 2n ) {
+	background: #f7f7f7;
+}
+
+.wpsc-note .wpsc-remove-button {
+	float: right;
+	margin-top: -3px;
+	text-decoration: none;
+	color: #444;
+}
+
+.wpsc-note .wpsc-remove-button .spinner {
+	float: left;
+	margin-top: 0;
+}
+
+.note-submit {
+	display: inline-block;
+}
+
+#purchlogs_notes .inside {
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 #wpsc_purchlogitems_links {
@@ -328,6 +421,38 @@ th#status {
 	text-align: right;
 }
 
+.edit-log-details {
+	font-size: .8em;
+	padding-left: 5px;
+}
+
+@media screen and ( min-width: 620px ) {
+	#wpsc-customer-settings-form fieldset {
+		float: left;
+		min-width: 300px;
+		margin-right: 10px;
+	}
+	#wpsc-customer-settings-form fieldset [type="text"] {
+		min-width: 280px;
+	}
+}
+
+.wpsc-form-actions {
+	clear: both;
+}
+
+#edit-shipping-billing {
+	padding: 18px 18px 0;
+	background: #fff;
+	border: 1px solid #e5e5e5;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	clear: both;
+}
+
+#edit-shipping-billing .wpsc-form-actions {
+	margin-bottom: 0;
+}
 
 /**
  * Display Products CSS starts here

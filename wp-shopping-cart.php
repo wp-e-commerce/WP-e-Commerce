@@ -143,7 +143,7 @@ class WP_eCommerce {
 	/**
 	 * Sets table names as WPDB properties.
 	 *
-	 * @since  4.0
+	 * @since  4.0.0
 	 * @return array Array of custom tables
 	 */
 	public function setup_table_names() {

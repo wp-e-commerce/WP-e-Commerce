@@ -7,10 +7,11 @@
  */
 
 class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
-	private $raw_data       = array();
-	private $gateway_data   = array();
-	private $submitted_data = array();
-	private $log_id;
+	protected $raw_data       = array();
+	protected $segmented_data = array();
+	protected $gateway_data   = array();
+	protected $submitted_data = array();
+	protected $log_id = 0;
 
 	/**
 	 * An array of arrays of cache keys. Allows versioning the cached values,
@@ -29,9 +30,11 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 		),
 	);
 
-	public function __construct( $log_id ) {
+	public function __construct( $log_id, $pre_fetch = true ) {
 		$this->log_id = absint( $log_id );
-		$this->fetch();
+		if ( $pre_fetch ) {
+			$this->fetch();
+		}
 	}
 
 	/**
@@ -40,7 +43,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @access protected
 	 * @since 4.0
 	 *
-	 * @return void
+	 * @return WPSC_Checkout_Form_Data
 	 */
 	protected function fetch() {
 		if ( $this->fetched ) {
@@ -60,16 +63,30 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 
 			$sql = $wpdb->prepare( $sql, $this->log_id );
 			$this->raw_data = $wpdb->get_results( $sql );
-			$this->exists   = ! empty( $this->raw_data );
 
 			// Set the cache for raw checkout for data
 			$this->cache_set( $this->log_id, $this->raw_data, 'raw_data' );
 		}
 
-		// At the moment, only core fields have unique_name. In the future, all fields will have
-		// a unique name rather than just IDs.
-		foreach ( $this->raw_data as $field ) {
+		$this->exists = ! empty( $this->raw_data );
+		$this->segmented_data = array(
+			'shipping' => array(),
+			'billing'  => array(),
+		);
+
+		// At the moment, only core fields have unique_name. In the future,
+		// all fields will have a unique name rather than just IDs.
+		foreach ( $this->raw_data as $index => $field ) {
 			if ( ! empty( $field->unique_name ) ) {
+
+				$is_shipping = false !== strpos( $field->unique_name, 'shipping' );
+
+				if ( $is_shipping ) {
+					$this->segmented_data['shipping'][ str_replace( 'shipping', '', $field->unique_name ) ] = $index;
+				} else {
+					$this->segmented_data['billing'][ str_replace( 'billing', '', $field->unique_name ) ] = $index;
+				}
+
 				$this->data[ $field->unique_name ] = $field->value;
 			}
 		}
@@ -77,9 +94,97 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 		do_action( 'wpsc_checkout_form_data_fetched', $this );
 
 		$this->fetched = true;
+
+		return $this;
 	}
 
+	/**
+	 * Get the raw data indexed by the 'id' column.
+	 *
+	 * @since  4.0
+	 *
+	 * @return array
+	 */
+	public function get_indexed_raw_data() {
+		$this->fetch();
+
+		$data = array();
+		foreach ( $this->raw_data as $field ) {
+			$data[ $field->id ] = $field;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Determines if values in shipping fields matches values in billing fields.
+	 *
+	 * @since  4.0
+	 *
+	 * @return bool  Whether shipping values match billing values.
+	 */
+	public function shipping_matches_billing() {
+		$this->fetch();
+
+		foreach ( $this->segmented_data['shipping'] as $id => $index ) {
+			// If we're missing data from any of these arrays, something's wrong (and they don't match).
+			if ( ! isset(
+				$this->raw_data[ $index ],
+				$this->segmented_data['billing'][ $id ],
+				$this->raw_data[ $this->segmented_data['billing'][ $id ] ]
+			) ) {
+				return false;
+			}
+
+			// Now we can get the values for the fields.
+			$ship_val    = $this->raw_data[ $index ]->value;
+			$billing_val = $this->raw_data[ $this->segmented_data['billing'][ $id ] ]->value;
+
+			// Do they match?
+			if ( $ship_val !== $billing_val ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the segmented billing info.
+	 *
+	 * @since  4.0
+	 *
+	 * @return array
+	 */
+	public function get_billing_data() {
+		$this->fetch();
+
+		return $this->segmented_data['billing'];
+	}
+
+	/**
+	 * Get the segmented shipping info.
+	 *
+	 * @since  4.0
+	 *
+	 * @return array
+	 */
+	public function get_shipping_data() {
+		$this->fetch();
+
+		return $this->segmented_data['shipping'];
+	}
+
+	/**
+	 * Gets the raw data array.
+	 *
+	 * @since  4.0
+	 *
+	 * @return array
+	 */
 	public function get_raw_data() {
+		$this->fetch();
+
 		return $this->raw_data;
 	}
 
@@ -200,9 +305,11 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 *
 	 * @param WPSC_Purchase_Log $purchase_log
 	 * @param array $fields
+	 * @param array $data
+	 * @param bool  $update_customer
 	 * @return void
 	 */
-	public static function save_form( $purchase_log, $fields, $data = array() ) {
+	public static function save_form( $purchase_log, $fields, $data = array(), $update_customer = true ) {
 		global $wpdb;
 
 		$log_id = $purchase_log->get( 'id' );
@@ -212,7 +319,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 		$wpdb->query( $sql );
 
 		if ( empty( $data ) && isset( $_POST['wpsc_checkout_details'] ) ) {
-			$data = $_POST['wpsc_checkout_details'];
+			$data = wp_unslash( $_POST['wpsc_checkout_details'] );
 		}
 
 		$customer_details = array();
@@ -226,7 +333,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 			$value = '';
 
 			if ( isset( $data[ $field->id ] ) ) {
-				$value = wp_unslash( $data[ $field->id ] );
+				$value = $data[ $field->id ];
 			}
 
 			$customer_details[ $field->id ] = $value;
@@ -246,7 +353,20 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 			);
 		}
 
-		wpsc_save_customer_details( $customer_details );
+		if ( $update_customer ) {
+			wpsc_save_customer_details( $customer_details );
+		}
+	}
+
+	/**
+	 * Returns the log id property.
+	 *
+	 * @since  4.0
+	 *
+	 * @return int  The log id.
+	 */
+	public function get_log_id() {
+		return $this->log_id;
 	}
 
 }

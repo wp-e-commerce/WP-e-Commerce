@@ -60,7 +60,7 @@ class WPSC_Purchase_Log_Action_Links {
 	private function _create_links() {
 
 		// Add default links.
-		if ( wpsc_purchlogs_have_downloads_locked() != false ) {
+		if ( wpsc_purchlogs_have_downloads_locked() !== false ) {
 			$this->links[] = $this->get_downloads_lock_link();
 		}
 		$this->links[] = $this->get_packing_slip_link();

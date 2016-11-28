@@ -34,7 +34,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-template-api.php' );
 /**
  * The WPSC Cart class
  */
-class wpsc_cart {
+class WPSC_Cart {
 	public $delivery_country;
 	public $selected_country;
 	public $delivery_region;

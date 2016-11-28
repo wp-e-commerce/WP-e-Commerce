@@ -44,7 +44,7 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 				'value' => 1,
 			),
 		),
-	);	
+	);
 
 	// generate the variation dropdown menus
 	foreach ( $product->variation_sets as $variation_set_id => $title ) {
@@ -70,7 +70,7 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
             ),
             'title'        => apply_filters(
                 'wpsc_add_to_cart_button_title',
-                $select_options ? __( 'Select Options', 'wp-e-commerce' ) : __( 'Add to Cart', 'wp-e-commerce' ), 
+                $select_options ? __( 'Select Options', 'wp-e-commerce' ) : __( 'Add to Cart', 'wp-e-commerce' ),
                 $select_options
             ),
         ),
@@ -390,7 +390,7 @@ function wpsc_get_checkout_form_args() {
 	return apply_filters( 'wpsc_get_checkout_form_args', $args );
 }
 
-function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
+function _wpsc_convert_checkout_form_fields( $customer_settings = false, $purchase_log_id = 0 ) {
 	$form   = WPSC_Checkout_Form::get();
 	$fields = $form->get_fields();
 
@@ -419,16 +419,37 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 
 	if ( ! $customer_settings ) {
 
-		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
+		$form_data_obj = null;
+
+		if ( $purchase_log_id ) {
+
+			if ( $purchase_log_id instanceof WPSC_Checkout_Form_Data ) {
+				$id = $purchase_log_id->get_log_id();
+				$form_data_obj = $purchase_log_id;
+				$purchase_log_id = $id;
+			} elseif ( is_numeric( $purchase_log_id ) ) {
+				$purchase_log_id = absint( $purchase_log_id );
+			}
+
+		}
+
+		if ( ! $purchase_log_id ) {
+			$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
+		}
 
 		$purchase_log_exists = (bool) $purchase_log_id;
 
 		if ( $purchase_log_exists ) {
-			$form_data_obj = new WPSC_Checkout_Form_Data( $purchase_log_id );
-			$form_raw_data = $form_data_obj->get_raw_data();
-			$form_data = array();
-			foreach ( $form_raw_data as $data ) {
-				$form_data[ $data->id ] = $data;
+			$form_data       = array();
+
+			if ( ! $form_data_obj ) {
+				$form_data_obj = new WPSC_Checkout_Form_Data( $purchase_log_id );
+			}
+
+			$purchase_log_exists = $form_data_obj->exists();
+
+			if ( $purchase_log_exists ) {
+				$form_data = $form_data_obj->get_indexed_raw_data();
 			}
 		}
 	}
@@ -452,9 +473,9 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 		$is_shipping = false !== strpos( $field->unique_name, 'shipping' );
 		$is_billing  = false !== strpos( $field->unique_name, 'billing' );
 
-		$default_value =   array_key_exists( $field->id, $customer_details )
-		                 ? $customer_details[ $field->id ]
-		                 : '';
+		$default_value = array_key_exists( $field->id, $customer_details )
+			? $customer_details[ $field->id ]
+			: '';
 
 		/* Doing our college-best to check for one of the two original headings */
 		if ( 'heading' == $field->type && ( 'delivertoafriend' == $field->unique_name || '1' === $field->id ) ) {
@@ -586,7 +607,15 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 	/* Add 'shipping same as billing' box to end of billing, rather than shipping header. */
 	if ( ! empty( $fieldsets['billing']['fields'] ) && ! empty( $fieldsets['shipping']['fields'] ) ) {
 
-		$checked = 	wpsc_get_customer_meta( 'wpsc_copy_billing_details' );
+		$checked = wpsc_get_customer_meta( 'wpsc_copy_billing_details' );
+		$checked = empty( $checked ) || '1' == $checked;
+
+		if ( $purchase_log_exists ) {
+			// If we have a purchase log object, we need to compare the
+			// shipping and billing values to see if they match.
+			// If not, checked should be false.
+			$checked = $form_data_obj->shipping_matches_billing();
+		}
 
 		$fieldsets['billing']['fields'][ $i++ ] = array(
 			'type'  => 'checkbox',
@@ -594,7 +623,7 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 			'title' => apply_filters( 'wpsc_shipping_same_as_billing', __( 'Shipping address is same as billing', 'wp-e-commerce' ) ),
 			'value'   => 1,
 			'name'    => 'wpsc_copy_billing_details',
-			'checked' => empty( $checked ) || '1' == $checked
+			'checked' => $checked,
 		);
 	}
 
@@ -609,7 +638,7 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 	return $fieldsets + $args;
 }
 
-function wpsc_get_customer_settings_form_args() {
+function wpsc_get_customer_settings_form_args( $purchase_log_id = 0 ) {
 	$args = array(
 		'inline_validation_errors' => true,
 		'class'  => 'wpsc-form wpsc-form-horizontal wpsc-customer-settings-form',
@@ -636,17 +665,17 @@ function wpsc_get_customer_settings_form_args() {
 		),
 	);
 
-	$args['fields'] = _wpsc_convert_checkout_form_fields( true );
+	$args['fields'] = _wpsc_convert_checkout_form_fields( $purchase_log_id ? false : true, $purchase_log_id );
 	return $args;
 }
 
-function wpsc_get_customer_settings_form() {
-	$args = wpsc_get_customer_settings_form_args();
+function wpsc_get_customer_settings_form( $purchase_log_id = 0 ) {
+	$args = wpsc_get_customer_settings_form_args( $purchase_log_id );
 	return apply_filters( 'wpsc_get_checkout_form', wpsc_get_form_output( $args ) );
 }
 
-function wpsc_customer_settings_form() {
-	echo wpsc_get_customer_settings_form();
+function wpsc_customer_settings_form( $purchase_log_id = 0 ) {
+	echo wpsc_get_customer_settings_form( $purchase_log_id );
 }
 
 function wpsc_get_checkout_form() {
@@ -772,7 +801,7 @@ function wpsc_get_checkout_payment_method_form_args() {
 			),
 		),
 	);
-	
+
 	$args = apply_filters( 'wpsc_get_checkout_payment_method_form_args', _wpsc_convert_checkout_payment_method_form_args( $args ) );
 	return $args;
 }

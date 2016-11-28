@@ -18,7 +18,7 @@ class WPSC_Cart_Item_Table_Order extends WPSC_Cart_Item_Table {
 	}
 
 	private function get_items() {
-		$cart = $this->log->get_cart_contents();
+		$cart = $this->log->get_items();
 
 		$items = array();
 

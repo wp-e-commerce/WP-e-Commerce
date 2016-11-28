@@ -13,7 +13,7 @@
 /**
  * The WPSC Cart Items class
  */
-class wpsc_cart_item {
+class WPSC_Cart_Item {
 
 	// Variation Cache
 	private static $variation_cache;

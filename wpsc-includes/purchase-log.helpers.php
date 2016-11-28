@@ -67,7 +67,7 @@ function wpsc_get_downloadable_links( $purchase_log ) {
 	if ( ! $purchase_log->is_transaction_completed() )
 		return array();
 
-	$cart_contents = $purchase_log->get_cart_contents();
+	$cart_contents = $purchase_log->get_items();
 	$links = array();
 	foreach ( $cart_contents as $item ) {
 		$item_links = _wpsc_get_cart_item_downloadable_links( $item, $purchase_log );
@@ -320,4 +320,24 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 	}
 
 	return $output;
+}
+
+/**
+ * Returns a purchase log.
+ *
+ * @param int $order_id Order ID.
+ * @since 4.0
+ */
+function wpsc_get_order( $order_id ) {
+	return new WPSC_Purchase_Log( $order_id );
+}
+
+/**
+ * Returns a purchase log's notes object.
+ *
+ * @param int $order_id Order ID or WPSC_Purchase_Log object.
+ * @since 4.0
+ */
+function wpsc_get_order_notes( $order_id ) {
+	return new WPSC_Purchase_Log_Notes( $order_id );
 }
