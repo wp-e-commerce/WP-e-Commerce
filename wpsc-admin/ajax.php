@@ -11,7 +11,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 		$order_id               = absint( $_POST['order_id'] );
 		$refund_reason          = isset( $_POST['refund_reason'] ) ? sanitize_text_field( $_POST['refund_reason'] ) : '';
 		$refund_amount          = isset( $_POST['refund_amount'] ) ? sanitize_text_field( $_POST['refund_amount'] ) : false;
-		$api_refund             = $_POST['api_refund'] === 'true' ? true : false;
+		$manual                 = $_POST['api_refund'] === 'true' ? false : true;
 		$refund                 = false;
 		$response_data          = array();
 
@@ -21,19 +21,16 @@ function _wpsc_ajax_purchase_log_refund_items() {
 			$order_items    = $log->get_items();
 			$refund_amount  = $refund_amount ? $refund_amount : $log->get( 'totalprice' );
 
-			// Refund via API
-			if ( $api_refund ) {
-					if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) ) {
-						// Send api request to process refund. Returns Refund transaction ID
-						$result = wpsc_get_payment_gateway( $log->get( 'gateway' ) )->process_refund( $order_id, $refund_amount, $refund_reason );
+			if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) ) {
+				// Send api request to process refund. Returns Refund transaction ID
+				$result = wpsc_get_payment_gateway( $log->get( 'gateway' ) )->process_refund( $order_id, $refund_amount, $refund_reason, $manual );
 
-						do_action( 'wpec_refund_processed', $log, $result );
+				do_action( 'wpec_refund_processed', $log, $result );
 
-						if ( is_wp_error( $result ) ) {
-							throw new Exception( $result->get_error_message() );
-						} elseif ( ! $result ) {
-							throw new Exception( __( 'Refund failed', 'wp-e-commerce' ) );
-						}
+				if ( is_wp_error( $result ) ) {
+					throw new Exception( $result->get_error_message() );
+				} elseif ( ! $result ) {
+					throw new Exception( __( 'Refund failed', 'wp-e-commerce' ) );
 				}
 			}
 
