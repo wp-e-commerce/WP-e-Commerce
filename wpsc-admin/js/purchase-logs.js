@@ -87,11 +87,13 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		}
 		
 		var refund_reason = $( 'input#refund_reason' ).val();
+		var refund_amount = $( 'input#refund_amount' ).val();
 
 		var data = {
 			action:                 'purchase_log_refund_items',
 			order_id:               wpsc.log_id,
 			refund_reason:          refund_reason,
+			refund_amount:          refund_amount,
 			api_refund:             $( this ).is( '.do-gtw-refund' ),
 			nonce:                  wpsc.purchase_log_refund_items_nonce
 		};

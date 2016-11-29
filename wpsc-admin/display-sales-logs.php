@@ -277,7 +277,7 @@ class WPSC_Purchase_Log_Page {
 						<td><span><?php echo wpsc_display_purchlog_totalprice(); ?></span> <div class="spinner"></div></td>
 					</tr>
 					
-					
+					<?php if( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'refunds' ) ) : ?>
 					<tr class="wpsc_purchaselog_refunds">
 						<td colspan="<?php echo $this->cols + 2; ?>">
 							<p class="wpsc-add-row">
@@ -285,13 +285,21 @@ class WPSC_Purchase_Log_Page {
 							</p>
 						</td>
 					</tr>
-					
 					<div>
 					<tr class="wpsc_purchaselog_refund">
 							<tr>
 								<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
-								<td class="total"><?php echo $this->log->get( 'is_order_refunded' );?></td>
+								<td class="total"><?php echo $this->log->get( 'total_order_refunded' );?></td>
 							</tr>
+							<?php if( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
+							<tr>
+								<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'woocommerce' ); ?>:</label></td>
+								<td class="total">
+									<input type="text" class="text" id="refund_amount" name="refund_amount" class="wc_input_price" />
+									<div class="clear"></div>
+								</td>
+							</tr>
+							<?php endif; ?>
 							<tr>
 								<td class="label"><label for="refund_reason"><?php _e( 'Reason for refund (optional)', 'wp-e-commerce' ); ?>:</label></td>
 								<td class="total">
@@ -310,6 +318,7 @@ class WPSC_Purchase_Log_Page {
 							</tr>
 					</tr>
 					</div>
+					<?php endif; ?>
 				</tbody>
 			</table>
 

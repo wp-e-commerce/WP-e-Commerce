@@ -28,7 +28,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		if ( ! $child ) {
 			$this->title = __( 'PayPal Express Checkout 3.0', 'wp-e-commerce' );
-			$this->supports = array( 'refunds' );
+			$this->supports = array( 'refunds', 'partial-refunds' );
 			$this->gateway->set_options( array(
 				'api_username'     => $this->setting->get( 'api_username' ),
 				'api_password'     => $this->setting->get( 'api_password' ),
@@ -1097,7 +1097,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			if ( 'Success' == $params['ACK'] || 'SuccessWithWarning' == $params['ACK'] ) {
 				$this->log_error( $response );
 				// Set a log meta entry
-				$log->set( 'is_order_refunded' , $amount )->save();
+				$log->set( 'total_order_refunded' , $amount )->save();
 				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'woocommerce' ), $params['GROSSREFUNDAMT'], $params['REFUNDTRANSACTIONID'] ) );
 
 				return true;				

@@ -10,6 +10,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 	
 		$order_id               = absint( $_POST['order_id'] );
 		$refund_reason          = isset( $_POST['refund_reason'] ) ? sanitize_text_field( $_POST['refund_reason'] ) : '';
+		$refund_amount          = isset( $_POST['refund_amount'] ) ? sanitize_text_field( $_POST['refund_amount'] ) : false;
 		$api_refund             = $_POST['api_refund'] === 'true' ? true : false;
 		$refund                 = false;
 		$response_data          = array();
