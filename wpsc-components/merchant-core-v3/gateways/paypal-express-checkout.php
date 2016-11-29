@@ -1065,39 +1065,48 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		}
 	}
 
-	public function process_refund( $order_id, $amount = 0.00, $reason = '' ) {
+	public function process_refund( $order_id, $amount = 0.00, $reason = '', $manual = false ) {
 
 		if ( 0.00 == $amount ) {
 			return new WP_Error( 'paypal_refund_error', __( 'Refund Error: You need to specify a refund amount.', 'wp-e-commerce' ) );
 		}
-		
+
 		$log = new WPSC_Purchase_Log( $order_id );
-		
+
 		if ( ! $log->get( 'transactid' ) ) {
 			return new WP_Error( 'error', __( 'Refund Failed: No transaction ID', 'wp-e-commerce' ) );
-		}		
-		
+		}
+
 		$max_refund  = $log->get( 'totalprice' ) - $this->get_total_refunded( $log );
-		
+
 		if ( $amount && $max_refund < $amount || 0 > $amount ) {
-			throw new exception( __( 'Invalid refund amount', 'woocommerce' ) );
+			throw new Exception( __( 'Invalid refund amount', 'wp-e-commerce' ) );
+		}
+
+		if ( $manual ) {
+			$current_refund = $this->get_total_refunded( $log );
+			$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
+
+			wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), $amount ) );
+
+			return true;
 		}
 
 		// If refund is full amount is not needed
 		// add refund params
 		$options = array(
-			'transaction_id'         => $log->get( 'transactid' ),
-			'invoice'                => $log->get( 'sessionid' ),
-			'note'                   => $reason,
+			'transaction_id' => $log->get( 'transactid' ),
+			'invoice'        => $log->get( 'sessionid' ),
+			'note'           => $reason,
 		);
 
 		if( $amount && $amount <= $this->get_remaining_refund( $log ) ) {
 			$options['refund_type'] = 'Partial';
-			$options['amount'] = $amount;
+			$options['amount']      = $amount;
 		} else {
 			$options['refund_type'] = 'Full';
 		}
-		
+
 		// do API call
 		$response = $this->gateway->credit( $options );
 
@@ -1110,11 +1119,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		if ( $response->is_successful() ) {
 			$params = $response->get_params();
 			if ( 'Success' == $params['ACK'] || 'SuccessWithWarning' == $params['ACK'] ) {
+
 				$this->log_error( $response );
 				// Set a log meta entry
 				$current_refund = $this->get_total_refunded( $log );
 				$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
-				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'woocommerce' ), $params['GROSSREFUNDAMT'], $params['REFUNDTRANSACTIONID'] ) );
+
+				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), $params['GROSSREFUNDAMT'], $params['REFUNDTRANSACTIONID'] ) );
 
 				return true;
 			}
@@ -1122,7 +1133,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			return false;
 		}
 	}
-	
+
 	public function get_total_refunded( $log ) {
 		return $log->get( 'total_order_refunded' );
 	}
