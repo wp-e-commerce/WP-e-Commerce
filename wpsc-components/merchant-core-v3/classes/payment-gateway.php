@@ -752,7 +752,7 @@ abstract class WPSC_Payment_Gateway {
 	 * @since 4.0.0
 	 * @return bool|WP_Error True or false based on success, or a WP_Error object
 	 */
-	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+	public function process_refund( $order_id, $amount = 0.00, $reason = '' ) {
 		return false;
 	}
 }
