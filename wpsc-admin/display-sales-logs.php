@@ -290,7 +290,7 @@ class WPSC_Purchase_Log_Page {
 					<tr class="wpsc_purchaselog_refund" style="display: none;">
 							<tr>
 								<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
-								<td class="total">-XX</td>
+								<td class="total"><?php $this->log->get( 'is_order_refunded' );?></td>
 							</tr>
 							<tr>
 								<td class="label"><label for="refund_reason"><?php _e( 'Reason for refund (optional)', 'wp-e-commerce' ); ?>:</label></td>

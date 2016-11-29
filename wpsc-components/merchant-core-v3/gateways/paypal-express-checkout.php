@@ -1087,14 +1087,23 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$response = $this->gateway->credit( $options );
 		
 		// look at ACK to see if success or failure
-		// if success return the transaction ID of the refund
-		// if failure then do 'throw new PayPal_API_Exception( $response );'
-		if ( 'Success' == $response['ACK'] || 'SuccessWithWarning' == $response['ACK'] ) {
-			echo $response['REFUNDTRANSACTIONID'];
-		} else {
-			throw new PayPal_API_Exception( $response );
+		if ( $response->has_errors() ) {
+			// WE could use $response->get_errors() and return the errors in an alert message ?
+			return false;
 		}
 		
-		exit;
+		if ( $response->is_successful() ) {
+			$params = $response->get_params();
+			if ( 'Success' == $params['ACK'] || 'SuccessWithWarning' == $params['ACK'] ) {
+				$this->log_error( $response );
+				// Set a log meta entry
+				$log->set( 'is_order_refunded' , $amount )->save();
+				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'woocommerce' ), $params['GROSSREFUNDAMT'], $params['REFUNDTRANSACTIONID'] ) );
+
+				return true;				
+			}
+		} else {
+			return false;
+		}
 	}
 }

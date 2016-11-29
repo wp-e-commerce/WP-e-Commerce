@@ -23,6 +23,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 			// Refund via API
 			if ( $api_refund ) {
 					if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) ) {
+						// Send api request to process refund. Returns Refund transaction ID
 						$result = wpsc_get_payment_gateway( $log->get( 'gateway' ) )->process_refund( $order_id, $refund_amount, $refund_reason );
 
 						do_action( 'wpec_refund_processed', $log, $result );
