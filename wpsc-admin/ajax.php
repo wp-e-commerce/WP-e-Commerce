@@ -1,4 +1,56 @@
 <?php
+function _wpsc_ajax_purchase_log_refund_items() {
+	if ( isset( $_POST['order_id'] ) ) {
+		
+		_wpsc_ajax_verify_nonce( 'purchase_log_refund_items' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die(-1);
+		}
+	
+		$order_id               = absint( $_POST['order_id'] );
+		$refund_reason          = isset( $_POST['refund_reason'] ) ? sanitize_text_field( $_POST['refund_reason'] ) : '';
+		$api_refund             = $_POST['api_refund'] === 'true' ? true : false;
+		$refund                 = false;
+		$response_data          = array();
+
+		try {
+			// Validate that the refund can occur
+			$log            = new WPSC_Purchase_Log( $order_id );
+			$order_items    = $log->get_items();
+			$refund_amount  = $log->get( 'totalprice' );
+
+			// Refund via API
+			if ( $api_refund ) {
+					if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) ) {
+						$result = wpsc_get_payment_gateway( $log->get( 'gateway' ) )->process_refund( $order_id, $refund_amount, $refund_reason );
+
+						do_action( 'wpec_refund_processed', $log, $result );
+
+						if ( is_wp_error( $result ) ) {
+							throw new Exception( $result->get_error_message() );
+						} elseif ( ! $result ) {
+							throw new Exception( __( 'Refund failed', 'wp-e-commerce' ) );
+						}
+				}
+			}
+
+			// Trigger notifications and status changes
+			do_action( 'wpec_order_fully_refunded', $order_id );
+
+			$response_data['status'] = 'fully_refunded';
+
+			do_action( 'wpec_order_refunded', $order_id );
+
+			wp_send_json_success( $response_data );
+
+		} catch ( Exception $e ) {
+			wp_send_json_error( array( 'error' => $e->getMessage() ) );
+		}
+	}
+	return new WP_Error( 'wpsc_ajax_invalid_purchase_log_refund_items', __( 'Refund failed.', 'wp-e-commerce' ) );	
+}
+
 /**
  * Verify nonce of an AJAX request
  *

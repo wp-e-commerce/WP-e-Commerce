@@ -28,6 +28,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		if ( ! $child ) {
 			$this->title = __( 'PayPal Express Checkout 3.0', 'wp-e-commerce' );
+			$this->supports = array( 'refunds' );
 			$this->gateway->set_options( array(
 				'api_username'     => $this->setting->get( 'api_username' ),
 				'api_password'     => $this->setting->get( 'api_password' ),
@@ -1062,5 +1063,38 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 			$log_entry = WPSC_Logging::insert_log( $log_data, $log_meta );
 		}
+	}
+	
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		
+		if ( 0 == $amount || null == $amount ) {
+			return new WP_Error( 'paypal_refund_error', __( 'Refund Error: You need to specify a refund amount.', 'wp-e-commerce' ) );
+		}
+		
+		$log = new WPSC_Purchase_Log( $order_id );
+		$refundType = 'Full';
+
+		// If refund is full amount is not needed
+		// add refund params
+		$options = array(
+			'transaction_id'         => $log->get( 'transactid' ),
+			'invoice'                => $log->get( 'sessionid' ),
+			'refund_type'            => $refundType,
+			'note'                   => $reason,
+		);
+
+		// do API call
+		$response = $this->gateway->credit( $options );
+		
+		// look at ACK to see if success or failure
+		// if success return the transaction ID of the refund
+		// if failure then do 'throw new PayPal_API_Exception( $response );'
+		if ( 'Success' == $response['ACK'] || 'SuccessWithWarning' == $response['ACK'] ) {
+			echo $response['REFUNDTRANSACTIONID'];
+		} else {
+			throw new PayPal_API_Exception( $response );
+		}
+		
+		exit;
 	}
 }

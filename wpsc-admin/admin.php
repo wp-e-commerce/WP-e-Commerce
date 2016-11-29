@@ -431,6 +431,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'change_purchase_log_status_nonce'       => _wpsc_create_ajax_nonce( 'change_purchase_log_status' ),
 		'purchase_log_save_tracking_id_nonce'    => _wpsc_create_ajax_nonce( 'purchase_log_save_tracking_id' ),
 		'purchase_log_send_tracking_email_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_send_tracking_email' ),
+		'purchase_log_refund_items_nonce'        => _wpsc_create_ajax_nonce( 'purchase_log_refund_items' ),
 		'remove_log_item_nonce'                  => _wpsc_create_ajax_nonce( 'remove_log_item' ),
 		'update_log_item_qty_nonce'              => _wpsc_create_ajax_nonce( 'update_log_item_qty' ),
 		'add_log_item_nonce'                     => _wpsc_create_ajax_nonce( 'add_log_item' ),
@@ -447,6 +448,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'strings'                                => array(
 			'confirm_delete_item' => esc_html__( 'Are you sure you want to remove this item?', 'wp-e-commerce' ),
 			'confirm_delete_note' => esc_html__( 'Are you sure you want to delete this note?', 'wp-e-commerce' ),
+			'confirm_refund_order' => esc_html__( 'Are you sure you want to refund this order?', 'wp-e-commerce' ),
 			'search_head' => esc_html__( 'Search for Products to Add', 'wp-e-commerce' ),
 			'cancel_btn' => esc_html__( 'Cancel', 'wp-e-commerce' ),
 		),

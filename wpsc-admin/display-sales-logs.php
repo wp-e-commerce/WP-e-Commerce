@@ -276,6 +276,40 @@ class WPSC_Purchase_Log_Page {
 						<th class='right-col'><?php esc_html_e( 'Total', 'wp-e-commerce' ); ?> </th>
 						<td><span><?php echo wpsc_display_purchlog_totalprice(); ?></span> <div class="spinner"></div></td>
 					</tr>
+					
+					
+					<tr class="wpsc_purchaselog_refunds">
+						<td colspan="<?php echo $this->cols + 2; ?>">
+							<p class="wpsc-add-row">
+								<button type="button" class="button refund-items"><?php _e( 'Refund', 'wp-e-commerce' ); ?></button>
+							</p>
+						</td>
+					</tr>
+					
+					<div>
+					<tr class="wpsc_purchaselog_refund" style="display: none;">
+							<tr>
+								<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
+								<td class="total">-XX</td>
+							</tr>
+							<tr>
+								<td class="label"><label for="refund_reason"><?php _e( 'Reason for refund (optional)', 'wp-e-commerce' ); ?>:</label></td>
+								<td class="total">
+									<input type="text" class="text" id="refund_reason" name="refund_reason" />
+									<div class="clear"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>
+										<button type="button" class="button tips do-gtw-refund">API REFUND</button>
+										<button type="button" class="button button-primary do-manual-refund tips">REFUND MANUAL</button>
+										<button type="button" class="button cancel-action"><?php _e( 'Cancel', 'wp-e-commerce' ); ?></button>
+									</p>
+								</td>
+							</tr>
+					</tr>
+					</div>
 				</tbody>
 			</table>
 
