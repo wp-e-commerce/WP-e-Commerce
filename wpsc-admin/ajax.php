@@ -19,7 +19,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 			// Validate that the refund can occur
 			$log            = new WPSC_Purchase_Log( $order_id );
 			$order_items    = $log->get_items();
-			$refund_amount  = $log->get( 'totalprice' );
+			$refund_amount  = $refund_amount ? $refund_amount : $log->get( 'totalprice' );
 
 			// Refund via API
 			if ( $api_refund ) {
