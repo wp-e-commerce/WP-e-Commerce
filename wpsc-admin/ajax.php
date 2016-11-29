@@ -1,13 +1,13 @@
 <?php
 function _wpsc_ajax_purchase_log_refund_items() {
 	if ( isset( $_POST['order_id'] ) ) {
-		
+
 		_wpsc_ajax_verify_nonce( 'purchase_log_refund_items' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			die(-1);
 		}
-	
+
 		$order_id               = absint( $_POST['order_id'] );
 		$refund_reason          = isset( $_POST['refund_reason'] ) ? sanitize_text_field( $_POST['refund_reason'] ) : '';
 		$refund_amount          = isset( $_POST['refund_amount'] ) ? sanitize_text_field( $_POST['refund_amount'] ) : false;
@@ -42,7 +42,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 
 			$response_data['status'] = 'fully_refunded';
 
-			do_action( 'wpec_order_refunded', $order_id );
+			do_action( 'wpsc_order_refunded', $order_id );
 
 			wp_send_json_success( $response_data );
 
@@ -50,7 +50,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 			wp_send_json_error( array( 'error' => $e->getMessage() ) );
 		}
 	}
-	return new WP_Error( 'wpsc_ajax_invalid_purchase_log_refund_items', __( 'Refund failed.', 'wp-e-commerce' ) );	
+	return new WP_Error( 'wpsc_ajax_invalid_purchase_log_refund_items', __( 'Refund failed.', 'wp-e-commerce' ) );
 }
 
 /**
