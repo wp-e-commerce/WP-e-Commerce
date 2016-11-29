@@ -48,7 +48,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			}
 			// Incontext Checkout Scripts
 			if ( (bool) $this->setting->get( 'incontext' ) && ! (bool) $this->setting->get( 'shortcut' ) ) {
-				add_action( 'wp_enqueue_scripts', array ( $this, 'incontext_load_scripts' ) );
+				add_action( 'wp_enqueue_scripts', array( $this, 'incontext_load_scripts' ) );
 			}
 		}
 	}
@@ -74,7 +74,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		if ( ! wpsc_uses_shipping() && wpsc_is_gateway_active( 'paypal-digital-goods' ) || ! wpsc_is_gateway_active( 'paypal-express-checkout' ) ) {
 			return;
 		}
-		
+
 		if ( 'bottom' == $context ) {
 			return;
 		}
