@@ -5,7 +5,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 		_wpsc_ajax_verify_nonce( 'purchase_log_refund_items' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			die(-1);
+			die( -1 );
 		}
 
 		$order_id               = absint( $_POST['order_id'] );
@@ -14,6 +14,8 @@ function _wpsc_ajax_purchase_log_refund_items() {
 		$manual                 = $_POST['api_refund'] === 'true' ? false : true;
 		$refund                 = false;
 		$response_data          = array();
+		$gateway_id             = $log->get( 'gateway' );
+		$gateway                = wpsc_get_payment_gateway( $gateway_id );
 
 		try {
 			// Validate that the refund can occur
@@ -21,9 +23,9 @@ function _wpsc_ajax_purchase_log_refund_items() {
 			$order_items    = $log->get_items();
 			$refund_amount  = $refund_amount ? $refund_amount : $log->get( 'totalprice' );
 
-			if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) ) {
+			if ( wpsc_payment_gateway_supports( $gateway_id, 'refunds' ) ) {
 				// Send api request to process refund. Returns Refund transaction ID
-				$result = wpsc_get_payment_gateway( $log->get( 'gateway' ) )->process_refund( $order_id, $refund_amount, $refund_reason, $manual );
+				$result = $gateway->process_refund( $order_id, $refund_amount, $refund_reason, $manual );
 
 				do_action( 'wpsc_refund_processed', $log, $result, $refund_amount, $refund_reason );
 
@@ -34,12 +36,25 @@ function _wpsc_ajax_purchase_log_refund_items() {
 				}
 			}
 
-			// Trigger notifications and status changes
-			do_action( 'wpec_order_fully_refunded', $order_id );
+			if ( $log->get_remaining_refund() > 0 ) {
+				/**
+				 * wpsc_order_partially_refunded.
+				 *
+				 * @since 4.0.0
+				 */
+				do_action( 'wpsc_order_partially_refunded', $log );
+				$response_data['status'] = 'partially_refunded';
 
+		} else {
+			/**
+			 * wpsc_order_fully_refunded.
+			 *
+			 * @since 4.0.0
+			 */
+			do_action( 'wpsc_order_fully_refunded', $log );
 			$response_data['status'] = 'fully_refunded';
+		}
 
-			do_action( 'wpsc_order_refunded', $order_id );
 
 			wp_send_json_success( $response_data );
 

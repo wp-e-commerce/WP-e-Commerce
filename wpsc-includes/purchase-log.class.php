@@ -1515,4 +1515,12 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		return wpsc_currency_display( $total, array( 'display_as_html' => false ) );
 	}
 
+	public function get_total_refunded() {
+		return $this->get( 'total_order_refunded' );
+	}
+
+	public function get_remaining_refund() {
+		return $this->get( 'totalprice' ) - $this->get( 'total_order_refunded' );
+	}
+
 }

@@ -1077,14 +1077,14 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			return new WP_Error( 'error', __( 'Refund Failed: No transaction ID', 'wp-e-commerce' ) );
 		}
 
-		$max_refund  = $log->get( 'totalprice' ) - $this->get_total_refunded( $log );
+		$max_refund  = $log->get( 'totalprice' ) - $log->get_total_refunded();
 
 		if ( $amount && $max_refund < $amount || 0 > $amount ) {
 			throw new Exception( __( 'Invalid refund amount', 'wp-e-commerce' ) );
 		}
 
 		if ( $manual ) {
-			$current_refund = $this->get_total_refunded( $log );
+			$current_refund = $log->get_total_refunded();
 			$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
 
 			wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), $amount ) );
@@ -1100,7 +1100,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'note'           => $reason,
 		);
 
-		if( $amount && $amount <= $this->get_remaining_refund( $log ) ) {
+		if( $amount && $amount <= $log->get_remaining_refund() ) {
 			$options['refund_type'] = 'Partial';
 			$options['amount']      = $amount;
 		} else {
@@ -1122,7 +1122,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 				$this->log_error( $response );
 				// Set a log meta entry
-				$current_refund = $this->get_total_refunded( $log );
+				$current_refund = $log->get_total_refunded();
 				$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
 
 				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), $params['GROSSREFUNDAMT'], $params['REFUNDTRANSACTIONID'] ) );
