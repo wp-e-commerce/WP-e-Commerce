@@ -1133,12 +1133,4 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			return false;
 		}
 	}
-
-	public function get_total_refunded( $log ) {
-		return $log->get( 'total_order_refunded' );
-	}
-
-	public function get_remaining_refund( $log ) {
-		return $log->get( 'totalprice' ) - $log->get( 'total_order_refunded' );
-	}
 }

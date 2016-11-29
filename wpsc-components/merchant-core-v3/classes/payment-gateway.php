@@ -756,6 +756,14 @@ abstract class WPSC_Payment_Gateway {
 	public function process_refund( $order_id, $amount = 0.00, $reason = '', $manual = false ) {
 		return false;
 	}
+
+	public function get_total_refunded( $log ) {
+		return $log->get( 'total_order_refunded' );
+	}
+
+	public function get_remaining_refund( $log ) {
+		return $log->get( 'totalprice' ) - $log->get( 'total_order_refunded' );
+	}
 }
 
 class WPSC_Payment_Gateway_Setting {
