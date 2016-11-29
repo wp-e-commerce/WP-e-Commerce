@@ -1071,8 +1071,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			return new WP_Error( 'paypal_refund_error', __( 'Refund Error: You need to specify a refund amount.', 'wp-e-commerce' ) );
 		}
 		
-		// TODO: Validate refund amounts here
-		
 		$log = new WPSC_Purchase_Log( $order_id );
 		
 		if ( ! $log->get( 'transactid' ) ) {
@@ -1085,16 +1083,12 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			throw new exception( __( 'Invalid refund amount', 'woocommerce' ) );
 		}
 
-		$log        = new WPSC_Purchase_Log( $order_id );
-		$refundType = 'Full';
-
 		// If refund is full amount is not needed
 		// add refund params
 		$options = array(
-			'transaction_id' => $log->get( 'transactid' ),
-			'invoice'        => $log->get( 'sessionid' ),
-			'refund_type'    => $refundType,
-			'note'           => $reason,
+			'transaction_id'         => $log->get( 'transactid' ),
+			'invoice'                => $log->get( 'sessionid' ),
+			'note'                   => $reason,
 		);
 
 		if( $amount && $amount <= $this->get_remaining_refund( $log ) ) {
@@ -1137,4 +1131,3 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		return $log->get( 'totalprice' ) - $log->get( 'total_order_refunded' );
 	}
 }
-
