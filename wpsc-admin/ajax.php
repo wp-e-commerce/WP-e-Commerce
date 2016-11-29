@@ -14,12 +14,13 @@ function _wpsc_ajax_purchase_log_refund_items() {
 		$manual                 = $_POST['api_refund'] === 'true' ? false : true;
 		$refund                 = false;
 		$response_data          = array();
+		
+		$log            = new WPSC_Purchase_Log( $order_id );
 		$gateway_id             = $log->get( 'gateway' );
 		$gateway                = wpsc_get_payment_gateway( $gateway_id );
 
 		try {
 			// Validate that the refund can occur
-			$log            = new WPSC_Purchase_Log( $order_id );
 			$order_items    = $log->get_items();
 			$refund_amount  = $refund_amount ? $refund_amount : $log->get( 'totalprice' );
 
