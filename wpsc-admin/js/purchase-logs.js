@@ -69,7 +69,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'click', '.edit-log-details', admin.toggleEditDetails );
 
 			$c.notes
-				.on( 'submit' , '#note-submit-form'       , admin.addNote
+				.on( 'submit' , '#note-submit-form'       , admin.addNote )
 				.on( 'keydown', '#note-submit-form'       , admin.commandEnterAddNote )
 				.on( 'click'  , '.wpsc-remove-note-button', admin.deleteNote );
 
@@ -410,7 +410,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 	};
 
 	admin.commandEnterAddNote = function( evt ) {
-		if ( evt.metaKey || evt.ctrlKey ) &&  evt.keyCode == 13 ) {
+		if ( ( evt.metaKey || evt.ctrlKey ) &&  evt.keyCode === 13 ) {
 			admin.addNote( evt );
 		}
 	};
