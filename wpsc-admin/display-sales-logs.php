@@ -310,8 +310,8 @@ class WPSC_Purchase_Log_Page {
 							<tr>
 								<td>
 									<p>
-										<button type="button" class="button tips do-api-refund">API REFUND</button>
-										<button type="button" class="button button-primary do-manual-refund tips">REFUND MANUAL</button>
+										<button type="button" class="button tips primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), $this->log->payment_method() ); ?></button>
+										<button type="button" class="button secondary button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
 										<button type="button" class="button cancel-action"><?php _e( 'Cancel', 'wp-e-commerce' ); ?></button>
 									</p>
 								</td>
