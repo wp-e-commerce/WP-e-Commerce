@@ -14,7 +14,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 		$manual                 = $_POST['api_refund'] === 'true' ? false : true;
 		$refund                 = false;
 		$response_data          = array();
-		
+
 		$log            = new WPSC_Purchase_Log( $order_id );
 		$gateway_id             = $log->get( 'gateway' );
 		$gateway                = wpsc_get_payment_gateway( $gateway_id );
@@ -55,7 +55,6 @@ function _wpsc_ajax_purchase_log_refund_items() {
 			do_action( 'wpsc_order_fully_refunded', $log );
 			$response_data['status'] = 'fully_refunded';
 		}
-
 
 			wp_send_json_success( $response_data );
 
@@ -892,7 +891,7 @@ add_action( 'wpsc_purchase_log_action_ajax-email_receipt', 'wpsc_purchase_log_ac
  * @uses _wpsc_delete_file()    Deletes files associated with a product
  * @uses WP_Error               WordPress error class
  *
- * @return array|WP_Error   $return     Response args if successful, WP_Error if otherwise
+ * @return WP_Error|array  $return     Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_delete_file() {
 	$product_id = absint( $_REQUEST['product_id'] );
@@ -920,7 +919,7 @@ function _wpsc_ajax_delete_file() {
  * @uses delete_meta()      Deletes metadata by meta id
  * @uses WP_Error           WordPress error class
  *
- * @return  array|WP_Error  $return     Response args if successful, WP_Error if otherwise
+ * @return  WP_Error|array  $return     Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_remove_product_meta() {
 	$meta_id = (int) $_POST['meta_id'];
@@ -943,7 +942,7 @@ function _wpsc_ajax_remove_product_meta() {
  * @uses WPSC_Purchase_Log_List_Table::views()
  * @uses WPSC_Purchase_Log_List_Table::display_tablenav()   @todo docs
  *
- * @return array|WP_Error   $return     Response args if successful, WP_Error if otherwise.
+ * @return WP_Error|array   $return     Response args if successful, WP_Error if otherwise.
  */
 function _wpsc_ajax_change_purchase_log_status() {
 	$result = wpsc_purchlog_edit_status( $_POST['id'], $_POST['new_status'] );
@@ -991,7 +990,7 @@ function _wpsc_ajax_change_purchase_log_status() {
  * @uses wp_update_post()   Updates post based on passed $args. Needs a post_id
  * @uses WP_Error           WordPress Error class
  *
- * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ * @return WP_Error|array Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_save_product_order() {
 

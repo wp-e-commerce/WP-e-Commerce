@@ -746,9 +746,9 @@ abstract class WPSC_Payment_Gateway {
 	 * a passed in amount.
 	 *
 	 * @param  int    $order_id
-	 * @param  float  $amount
-	 * @param  string $reason
-	 * @param  string $manual If refund is a manual refund.
+	 * @param  float   $amount
+	 * @param  string  $reason
+	 * @param  boolean $manual If refund is a manual refund.
 	 *
 	 * @since 4.0.0
 	 * @return bool|WP_Error True or false based on success, or a WP_Error object
