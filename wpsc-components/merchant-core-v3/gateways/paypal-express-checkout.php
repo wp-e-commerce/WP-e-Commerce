@@ -47,21 +47,23 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_ecs_button' ), 2, 2 );
 			}
 			// Incontext Checkout Scripts
-			if ( (bool) $this->setting->get( 'incontext' ) && ! (bool) $this->setting->get( 'shortcut' ) && wpsc_is_checkout() ) {
+			if ( (bool) $this->setting->get( 'incontext' ) && ! (bool) $this->setting->get( 'shortcut' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'incontext_load_scripts' ) );
 			}
 		}
 	}
 
 	public function incontext_load_scripts() {
-		wp_register_script( 'ec-incontext', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/ec-incontext.js', '', null, true );
-		wp_localize_script( 'ec-incontext', 'wpec_ppic', array(
-			'mid' => esc_attr( $this->setting->get( 'api_merchantid' ) ),
-			'env' => (bool) $this->setting->get( 'sandbox_mode' ) === true ? 'sandbox' : 'production',
-			)
-		);
-		wp_enqueue_script( 'ec-incontext' );
-		wp_enqueue_script( 'ppincontext', 'https://www.paypalobjects.com/api/checkout.js', array(), null, true );
+		if( wpsc_is_checkout() ) {
+			wp_register_script( 'ec-incontext', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/ec-incontext.js', '', null, true );
+			wp_localize_script( 'ec-incontext', 'wpec_ppic', array(
+				'mid' => esc_attr( $this->setting->get( 'api_merchantid' ) ),
+				'env' => (bool) $this->setting->get( 'sandbox_mode' ) === true ? 'sandbox' : 'production',
+				)
+			);
+			wp_enqueue_script( 'ec-incontext' );
+			wp_enqueue_script( 'ppincontext', 'https://www.paypalobjects.com/api/checkout.js', array(), null, true );
+		}
 	}
 
 	/**
