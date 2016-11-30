@@ -745,14 +745,15 @@ abstract class WPSC_Payment_Gateway {
 	 * If the gateway declares 'refunds' support, this will allow it to refund
 	 * a passed in amount.
 	 *
-	 * @param  int $order_id
-	 * @param  float $amount
-	 * @param  string $reason
+	 * @param  int    $order_id
+	 * @param  float   $amount
+	 * @param  string  $reason
+	 * @param  boolean $manual If refund is a manual refund.
 	 *
 	 * @since 4.0.0
 	 * @return bool|WP_Error True or false based on success, or a WP_Error object
 	 */
-	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+	public function process_refund( $order_id, $amount = 0.00, $reason = '', $manual = false ) {
 		return false;
 	}
 }

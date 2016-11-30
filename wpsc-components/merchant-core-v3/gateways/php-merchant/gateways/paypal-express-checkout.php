@@ -189,6 +189,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 			'AUTHORIZATIONID'=> 'authorization_id',
 			'MSGSUBID'	   => 'message_id',
 			'INVOICEID'	   => 'invoice',
+			'NOTE'         => 'note',
 		) );
 
 		// Cart Customization Fields
@@ -345,10 +346,10 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 		$this->options = array_merge( $this->options, $options );
 
 		// Required Fields
-		$this->requires( array( 'message_id', 'invoice' ) );
+		$this->requires( array( 'transaction_id' ) );
 
 		// Conditionally required fields (one field at least is set)
-		$this->conditional_requires( array( 'payer_id', 'transaction_id' ) );
+		$this->conditional_requires( array( 'invoice' ) );
 
 		// Amount is required if the refund is partial
 		if ( strtolower( $this->options['refund_type'] ) === 'partial' ) {

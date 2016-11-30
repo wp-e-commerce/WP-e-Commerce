@@ -1,4 +1,70 @@
 <?php
+function _wpsc_ajax_purchase_log_refund_items() {
+	if ( isset( $_POST['order_id'] ) ) {
+
+		_wpsc_ajax_verify_nonce( 'purchase_log_refund_items' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die( -1 );
+		}
+
+		$order_id               = absint( $_POST['order_id'] );
+		$refund_reason          = isset( $_POST['refund_reason'] ) ? sanitize_text_field( $_POST['refund_reason'] ) : '';
+		$refund_amount          = isset( $_POST['refund_amount'] ) ? sanitize_text_field( $_POST['refund_amount'] ) : false;
+		$manual                 = $_POST['api_refund'] === 'true' ? false : true;
+		$refund                 = false;
+		$response_data          = array();
+
+		$log            = new WPSC_Purchase_Log( $order_id );
+		$gateway_id             = $log->get( 'gateway' );
+		$gateway                = wpsc_get_payment_gateway( $gateway_id );
+
+		try {
+			// Validate that the refund can occur
+			$order_items    = $log->get_items();
+			$refund_amount  = $refund_amount ? $refund_amount : $log->get( 'totalprice' );
+
+			if ( wpsc_payment_gateway_supports( $gateway_id, 'refunds' ) ) {
+				// Send api request to process refund. Returns Refund transaction ID
+				$result = $gateway->process_refund( $order_id, $refund_amount, $refund_reason, $manual );
+
+				do_action( 'wpsc_refund_processed', $log, $result, $refund_amount, $refund_reason );
+
+				if ( is_wp_error( $result ) ) {
+					throw new Exception( $result->get_error_message() );
+				} elseif ( ! $result ) {
+					throw new Exception( __( 'Refund failed', 'wp-e-commerce' ) );
+				}
+			}
+
+			if ( $log->get_remaining_refund() > 0 ) {
+				/**
+				 * wpsc_order_partially_refunded.
+				 *
+				 * @since 4.0.0
+				 */
+				do_action( 'wpsc_order_partially_refunded', $log );
+				$response_data['status'] = 'partially_refunded';
+
+		} else {
+			/**
+			 * wpsc_order_fully_refunded.
+			 *
+			 * @since 4.0.0
+			 */
+			do_action( 'wpsc_order_fully_refunded', $log );
+			$response_data['status'] = 'fully_refunded';
+		}
+
+			wp_send_json_success( $response_data );
+
+		} catch ( Exception $e ) {
+			wp_send_json_error( array( 'error' => $e->getMessage() ) );
+		}
+	}
+	return new WP_Error( 'wpsc_ajax_invalid_purchase_log_refund_items', __( 'Refund failed.', 'wp-e-commerce' ) );
+}
+
 /**
  * Verify nonce of an AJAX request
  *
@@ -825,7 +891,7 @@ add_action( 'wpsc_purchase_log_action_ajax-email_receipt', 'wpsc_purchase_log_ac
  * @uses _wpsc_delete_file()    Deletes files associated with a product
  * @uses WP_Error               WordPress error class
  *
- * @return array|WP_Error   $return     Response args if successful, WP_Error if otherwise
+ * @return WP_Error|array  $return     Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_delete_file() {
 	$product_id = absint( $_REQUEST['product_id'] );
@@ -853,7 +919,7 @@ function _wpsc_ajax_delete_file() {
  * @uses delete_meta()      Deletes metadata by meta id
  * @uses WP_Error           WordPress error class
  *
- * @return  array|WP_Error  $return     Response args if successful, WP_Error if otherwise
+ * @return  WP_Error|array  $return     Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_remove_product_meta() {
 	$meta_id = (int) $_POST['meta_id'];
@@ -876,7 +942,7 @@ function _wpsc_ajax_remove_product_meta() {
  * @uses WPSC_Purchase_Log_List_Table::views()
  * @uses WPSC_Purchase_Log_List_Table::display_tablenav()   @todo docs
  *
- * @return array|WP_Error   $return     Response args if successful, WP_Error if otherwise.
+ * @return WP_Error|array   $return     Response args if successful, WP_Error if otherwise.
  */
 function _wpsc_ajax_change_purchase_log_status() {
 	$result = wpsc_purchlog_edit_status( $_POST['id'], $_POST['new_status'] );
@@ -924,7 +990,7 @@ function _wpsc_ajax_change_purchase_log_status() {
  * @uses wp_update_post()   Updates post based on passed $args. Needs a post_id
  * @uses WP_Error           WordPress Error class
  *
- * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ * @return WP_Error|array Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_save_product_order() {
 
