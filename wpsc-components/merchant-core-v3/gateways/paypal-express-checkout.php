@@ -28,6 +28,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		if ( ! $child ) {
 			$this->title = __( 'PayPal Express Checkout 3.0', 'wp-e-commerce' );
+			$this->supports = array( 'refunds', 'partial-refunds' );
 			$this->gateway->set_options( array(
 				'api_username'     => $this->setting->get( 'api_username' ),
 				'api_password'     => $this->setting->get( 'api_password' ),
@@ -1063,6 +1064,75 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			);
 
 			$log_entry = WPSC_Logging::insert_log( $log_data, $log_meta );
+		}
+	}
+
+	public function process_refund( $order_id, $amount = 0.00, $reason = '', $manual = false ) {
+
+		if ( 0.00 == $amount ) {
+			return new WP_Error( 'paypal_refund_error', __( 'Refund Error: You need to specify a refund amount.', 'wp-e-commerce' ) );
+		}
+
+		$log = new WPSC_Purchase_Log( $order_id );
+
+		if ( ! $log->get( 'transactid' ) ) {
+			return new WP_Error( 'error', __( 'Refund Failed: No transaction ID', 'wp-e-commerce' ) );
+		}
+
+		$max_refund  = $log->get( 'totalprice' ) - $log->get_total_refunded();
+
+		if ( $amount && $max_refund < $amount || 0 > $amount ) {
+			throw new Exception( __( 'Invalid refund amount', 'wp-e-commerce' ) );
+		}
+
+		if ( $manual ) {
+			$current_refund = $log->get_total_refunded();
+			$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
+
+			wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), $amount ) );
+
+			return true;
+		}
+
+		// If refund is full amount is not needed
+		// add refund params
+		$options = array(
+			'transaction_id' => $log->get( 'transactid' ),
+			'invoice'        => $log->get( 'sessionid' ),
+			'note'           => $reason,
+		);
+
+		if( $amount && $amount <= $log->get_remaining_refund() ) {
+			$options['refund_type'] = 'Partial';
+			$options['amount']      = $amount;
+		} else {
+			$options['refund_type'] = 'Full';
+		}
+
+		// do API call
+		$response = $this->gateway->credit( $options );
+
+		// look at ACK to see if success or failure
+		if ( $response->has_errors() ) {
+			// WE could use $response->get_errors() and return the errors in an alert message ?
+			return false;
+		}
+
+		if ( $response->is_successful() ) {
+			$params = $response->get_params();
+			if ( 'Success' == $params['ACK'] || 'SuccessWithWarning' == $params['ACK'] ) {
+
+				$this->log_error( $response );
+				// Set a log meta entry
+				$current_refund = $log->get_total_refunded();
+				$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
+
+				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), $params['GROSSREFUNDAMT'], $params['REFUNDTRANSACTIONID'] ) );
+
+				return true;
+			}
+		} else {
+			return false;
 		}
 	}
 }

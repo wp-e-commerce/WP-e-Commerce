@@ -57,7 +57,8 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'click', '.wpsc-remove-item-button', admin.remove_item )
 				.on( 'keypress', '.wpsc_item_qty', admin.maybe_update_qty )
 				.on( 'change', '.wpsc_item_qty', admin.update_qty )
-				.on( 'click', '.wpsc-add-item-button', function() { admin.product_search.trigger( 'open' ); } );
+				.on( 'click', '.wpsc-add-item-button', function() { admin.product_search.trigger( 'open' ); } )
+				.on( 'click', 'button.do-api-refund, button.do-manual-refund', admin.refund_item );
 			$c.body.on( 'click', '.ui-find-overlay', function() { admin.product_search.trigger( 'close' ); } );
 
 			$c.editDetails
@@ -77,6 +78,39 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 			$c.editActions.prepend( '<button type="button" class="button-secondary">'+ wpsc.strings.cancel_btn +'</button>' );
 		}
 
+	};
+
+	admin.refund_item = function() {
+		var $this = $( this );
+
+		if ( ! window.confirm( wpsc.strings.confirm_refund_order ) ) {
+			return;
+		}
+
+		var refund_reason = $( 'input#refund_reason' ).val();
+		var refund_amount = $( 'input#refund_amount' ).val();
+
+		var data = {
+			action        : 'purchase_log_refund_items',
+			order_id      : wpsc.log_id,
+			refund_reason : refund_reason,
+			refund_amount : refund_amount,
+			api_refund    : $this.is( '.do-api-refund' ),
+			nonce         : wpsc.purchase_log_refund_items_nonce
+		};
+
+		var ajax_callback = function(response) {
+			if ( ! response.is_successful ) {
+				if ( response.error ) {
+					window.alert( response.error.messages.join( BR ) );
+				}
+
+				return;
+			}
+			window.location.href = window.location.href;
+		};
+
+		$.wpsc_post( data, ajax_callback );
 	};
 
 	admin.event_enter_key_pressed = function(evt) {
