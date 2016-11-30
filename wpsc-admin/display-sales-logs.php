@@ -258,7 +258,7 @@ class WPSC_Purchase_Log_Page {
 						<td><?php echo wpsc_display_purchlog_discount(); ?></td>
 					</tr>
 
-					<?php if( ! wpec_display_product_tax() ): ?>
+					<?php if ( ! wpec_display_product_tax() ): ?>
 						<tr id="wpsc_total_taxes">
 							<td colspan='<?php echo $this->cols; ?>'></td>
 							<th class='right-col'><?php esc_html_e( 'Taxes', 'wp-e-commerce' ); ?> </th>
@@ -276,8 +276,8 @@ class WPSC_Purchase_Log_Page {
 						<th class='right-col'><?php esc_html_e( 'Total', 'wp-e-commerce' ); ?> </th>
 						<td><span><?php echo wpsc_display_purchlog_totalprice(); ?></span> <div class="spinner"></div></td>
 					</tr>
-					
-					<?php if( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'refunds' ) ) : ?>
+
+					<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'refunds' ) ) : ?>
 					<tr class="wpsc_purchaselog_refunds">
 						<td colspan="<?php echo $this->cols + 2; ?>">
 							<p class="wpsc-add-row">
@@ -291,7 +291,7 @@ class WPSC_Purchase_Log_Page {
 								<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
 								<td class="total"><?php echo $this->log->get( 'total_order_refunded' );?></td>
 							</tr>
-							<?php if( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
+							<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
 							<tr>
 								<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'woocommerce' ); ?>:</label></td>
 								<td class="total">
@@ -310,7 +310,7 @@ class WPSC_Purchase_Log_Page {
 							<tr>
 								<td>
 									<p>
-										<button type="button" class="button tips do-gtw-refund">API REFUND</button>
+										<button type="button" class="button tips do-api-refund">API REFUND</button>
 										<button type="button" class="button button-primary do-manual-refund tips">REFUND MANUAL</button>
 										<button type="button" class="button cancel-action"><?php _e( 'Cancel', 'wp-e-commerce' ); ?></button>
 									</p>
