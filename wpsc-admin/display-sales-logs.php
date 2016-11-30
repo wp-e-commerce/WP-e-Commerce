@@ -289,7 +289,7 @@ class WPSC_Purchase_Log_Page {
 					<tr class="wpsc_purchaselog_refund">
 							<tr>
 								<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
-								<td class="total"><?php echo $this->log->get( 'total_order_refunded' );?></td>
+								<td class="total"><?php echo $this->log->get_total_refunded();?></td>
 							</tr>
 							<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
 							<tr>
@@ -310,9 +310,8 @@ class WPSC_Purchase_Log_Page {
 							<tr>
 								<td>
 									<p>
-										<button type="button" class="button tips primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), $this->log->payment_method() ); ?></button>
-										<button type="button" class="button secondary button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
-										<button type="button" class="button cancel-action"><?php _e( 'Cancel', 'wp-e-commerce' ); ?></button>
+										<button type="button" class="button tips button-primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), wpsc_get_payment_gateway( $this->log->get( 'gateway' ) )->get_title() ); ?></button>
+										<button type="button" class="button button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
 									</p>
 								</td>
 							</tr>
@@ -404,6 +403,7 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function notes_output() {
+
 		foreach ( $this->notes as $note_id => $note_args ) : ?>
 			<?php self::note_output( $this->notes, $note_id, $note_args ); ?>
 		<?php endforeach;

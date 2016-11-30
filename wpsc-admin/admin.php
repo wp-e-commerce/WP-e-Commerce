@@ -449,6 +449,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 			'confirm_delete_item' => esc_html__( 'Are you sure you want to remove this item?', 'wp-e-commerce' ),
 			'confirm_delete_note' => esc_html__( 'Are you sure you want to delete this note?', 'wp-e-commerce' ),
 			'confirm_refund_order' => esc_html__( 'Are you sure you want to refund this order?', 'wp-e-commerce' ),
+			'confirm_refund_order_manually' => esc_html__( 'Are you sure you want to refund this order manually? Note: this only affects your on-site records, it does not interface with any payment gateway to return funds to the customer.', 'wp-e-commerce' ),
 			'search_head' => esc_html__( 'Search for Products to Add', 'wp-e-commerce' ),
 			'cancel_btn' => esc_html__( 'Cancel', 'wp-e-commerce' ),
 		),

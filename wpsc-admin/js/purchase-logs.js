@@ -81,9 +81,11 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 	};
 
 	admin.refund_item = function() {
-		var $this = $( this );
+		var $this      = $( this );
+		var api_refund = $this.is( '.do-api-refund' );
+		var refund_string = api_refund ? wpsc.strings.confirm_refund_order : wpsc.strings.confirm_refund_order_manually;
 
-		if ( ! window.confirm( wpsc.strings.confirm_refund_order ) ) {
+		if ( ! window.confirm( refund_string ) ) {
 			return;
 		}
 
@@ -95,7 +97,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 			order_id      : wpsc.log_id,
 			refund_reason : refund_reason,
 			refund_amount : refund_amount,
-			api_refund    : $this.is( '.do-api-refund' ),
+			api_refund    : api_refund,
 			nonce         : wpsc.purchase_log_refund_items_nonce
 		};
 
@@ -437,7 +439,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				return;
 			}
 
-			$c.notes.find( '.wpsc-notes' ).append( response.obj );
+			$c.notes.find( '.wpsc-notes' ).prepend( response.obj );
 			$c.notesText.val( '' );
 		};
 

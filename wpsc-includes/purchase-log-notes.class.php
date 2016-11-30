@@ -60,6 +60,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 * @return WPSC_Purchase_Log
 	 */
 	protected function fetch() {
+
 		if ( $this->fetched ) {
 			return;
 		}
@@ -67,8 +68,8 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 		$this->fetched = true;
 
 		$notes = array();
-		$data = $this->log->get_data();
-		$meta = $this->log->get_meta();
+		$data  = $this->log->get_data();
+		$meta  = $this->log->get_meta();
 
 		if ( ! empty( $meta['notes'] ) ) {
 			$notes = $meta['notes'];
@@ -103,71 +104,15 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 			}
 		}
 
-		// print( '<xmp>'. __LINE__ .') $this->data: '. print_r( $this->data, true ) .'</xmp>' );
-		// $this->add( 'howdy' );
+		usort( $this->data, array( $this, 'time_sort' ) );
 
-		// print( '<xmp>'. __LINE__ .') $this->data: '. print_r( $this->data, true ) .'</xmp>' );
-
-		// $new_data = array( end( $this->data ) );
-		// $new_data = $this->data;
-// 		$new_data[] = array(
-// 			'content' => 'slfjsfk fs;ajfg;sj agja;gj;sag j',
-// 			'type'    => 'error',
-// 			'status'  => 'private',
-// 			'time'    => '1478637949',
-// 		);
-
-// 		$this->set( $new_data )->save();
-
-// 		wp_die( '<xmp>'. __LINE__ .') $this->data: '. print_r( $this->data, true ) .'</xmp>' );
-
-// 		$this->data[1] = array(
-// 			'content' => 'Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Nullam quis risus eget urna mollis ornare vel eu leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum.
-
-// Cras mattis consectetur purus sit amet fermentum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.',
-// 			'type'    => 'error',
-// 			'status'  => 'private',
-// 			'time'    => '1478637949',
-// 		);
-
-// 		$this->data[2] = array(
-// 			'content' => 'slfjsfk fs;ajfg;sj agja;gj;sag j',
-// 			'type'    => 'error',
-// 			'status'  => 'private',
-// 			'time'    => '1478637949',
-// 		);
-
-// 		$this->data[3] = array(
-// 			'content' => 'slfjsfk fs;ajfg;sj agja;gj;sag j',
-// 			'type'    => 'error',
-// 			'status'  => 'private',
-// 			'time'    => '1478637949',
-// 		);
-
-// 		$this->data[4] = array(
-// 			'content' => 'Donec sed odio dui. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Nullam quis risus eget urna mollis ornare vel eu leo. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.
-
-// Curabitur blandit tempus porttitor. Maecenas sed diam eget risus varius blandit sit amet non magna. Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo.
-
-// Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Curabitur blandit tempus porttitor. Donec ullamcorper nulla non metus auctor fringilla.
-
-// Nullam quis risus eget urna mollis ornare vel eu leo. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna. Donec sed odio dui. Sed posuere consectetur est at lobortis. Maecenas sed diam eget risus varius blandit sit amet non magna. Etiam porta sem malesuada magna mollis euismod.',
-// 			'type'    => 'error',
-// 			'status'  => 'private',
-// 			'time'    => '1478637949',
-// 		);
-
-// 		$this->data[5] = array(
-// 			'content' => 'slfjsfk fs;ajfg;sj agja;gj;sag j',
-// 			'type'    => 'error',
-// 			'status'  => 'private',
-// 			'time'    => '1478637949',
-// 		);
-
-		// $this->data = array();
 		$this->exists = ! empty( $this->data );
 
 		return $this;
+	}
+
+	public function time_sort( $a, $b ) {
+		return $a['time'] < $b['time'];
 	}
 
 	/**
@@ -414,7 +359,6 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 		$this->fetch();
 		return isset( $this->data[ $this->key() ] );
 	}
-
 
 	public function get_status_text( $note = array() ) {
 		if ( empty( $note ) ) {
