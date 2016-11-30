@@ -68,8 +68,9 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'click', '.edit-log-details', admin.toggleEditDetails );
 
 			$c.notes
-				.on( 'submit', '#note-submit-form', admin.addNote )
-				.on( 'click', '.wpsc-remove-note-button', admin.deleteNote );
+				.on( 'submit' , '#note-submit-form'       , admin.addNote
+				.on( 'keydown', '#note-submit-form'       , admin.commandEnterAddNote )
+				.on( 'click'  , '.wpsc-remove-note-button', admin.deleteNote );
 
 			window.postboxes.add_postbox_toggles( window.pagenow );
 
@@ -372,6 +373,12 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 		$c.editActions.prepend( '<div class="spinner is-active"></div>' );
 
 		$.wpsc_post( args, ajax_callback );
+	};
+
+	admin.commandEnterAddNote = function( evt ) {
+		if ( evt.metaKey || evt.ctrlKey ) &&  evt.keyCode == 13 ) {
+			admin.addNote( evt );
+		}
 	};
 
 	admin.addNote = function( evt ) {
