@@ -2667,6 +2667,7 @@ a.wpsc_remove_meta {
 	font-size: 16px;
 }
 
-.product_gallery_image_delete_button:hover {
+.product_gallery_image_delete_button:hover,
+.wpsc-remove-row button {
 	cursor: pointer
 }
