@@ -291,7 +291,7 @@ class WPSC_Purchase_Log_Page {
 							<tbody>
 							<tr>
 								<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
-								<td class="total"><?php echo $this->log->get_total_refunded();?></td>
+								<td class="total"><?php echo wpsc_currency_display( $this->log->get_total_refunded() );?></td>
 							</tr>
 							<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
 							<tr>

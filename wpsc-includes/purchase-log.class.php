@@ -1516,11 +1516,11 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	}
 
 	public function get_total_refunded() {
-		return empty( $this->get( 'total_order_refunded' ) ) ? wpsc_currency_display( '0.00' ) : wpsc_currency_display( $this->get( 'total_order_refunded' ) );
+		return empty( $this->get( 'total_order_refunded' ) ) ? '0.00' : $this->get( 'total_order_refunded' );
 	}
 
 	public function get_remaining_refund() {
-		return wpsc_currency_display( $this->get( 'totalprice' ) - $this->get_total_refunded() );
+		return $this->get( 'totalprice' ) - $this->get_total_refunded();
 	}
 
 }
