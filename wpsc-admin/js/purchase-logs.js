@@ -58,7 +58,8 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 				.on( 'keypress', '.wpsc_item_qty', admin.maybe_update_qty )
 				.on( 'change', '.wpsc_item_qty', admin.update_qty )
 				.on( 'click', '.wpsc-add-item-button', function() { admin.product_search.trigger( 'open' ); } )
-				.on( 'click', 'button.do-api-refund, button.do-manual-refund', admin.refund_item );
+				.on( 'click', '.refund-items', admin.toggleRefundsUI )
+				.on( 'click', 'button.do-api-refund, button.do-manual-refund', admin.refundItem );
 			$c.body.on( 'click', '.ui-find-overlay', function() { admin.product_search.trigger( 'close' ); } );
 
 			$c.editDetails
@@ -80,7 +81,11 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 
 	};
 
-	admin.refund_item = function() {
+	admin.toggleRefundsUI = function() {
+			$( '.wpsc-refund-ui' ).toggle();
+	};
+
+	admin.refundItem = function() {
 		var $this      = $( this );
 		var api_refund = $this.is( '.do-api-refund' );
 		var refund_string = api_refund ? wpsc.strings.confirm_refund_order : wpsc.strings.confirm_refund_order_manually;
@@ -412,7 +417,7 @@ window.WPSC_Purchase_Logs_Admin = window.WPSC_Purchase_Logs_Admin || {};
 	};
 
 	admin.commandEnterAddNote = function( evt ) {
-		if ( ( evt.metaKey || evt.ctrlKey ) &&  evt.keyCode === 13 ) {
+		if ( ( evt.metaKey || evt.ctrlKey ) &&  evt.keyCode === ENTER ) {
 			admin.addNote( evt );
 		}
 	};

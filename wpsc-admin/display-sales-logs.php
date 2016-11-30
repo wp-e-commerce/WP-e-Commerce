@@ -278,15 +278,17 @@ class WPSC_Purchase_Log_Page {
 					</tr>
 
 					<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'refunds' ) ) : ?>
-					<tr class="wpsc_purchaselog_refunds">
+					<tr>
 						<td colspan="<?php echo $this->cols + 2; ?>">
 							<p class="wpsc-add-row">
 								<button type="button" class="button refund-items"><?php _e( 'Refund', 'wp-e-commerce' ); ?></button>
 							</p>
 						</td>
 					</tr>
-					<div>
-					<tr class="wpsc_purchaselog_refund">
+					<tr class="wpsc-refund-ui">
+						<td colspan="<?php echo $this->cols + 2; ?>">
+							<table>
+							<tbody>
 							<tr>
 								<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
 								<td class="total"><?php echo $this->log->get_total_refunded();?></td>
@@ -314,9 +316,10 @@ class WPSC_Purchase_Log_Page {
 										<button type="button" class="button button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
 									</p>
 								</td>
-							</tr>
+							</tbody>
+						</table>
+					</td>
 					</tr>
-					</div>
 					<?php endif; ?>
 				</tbody>
 			</table>

@@ -2671,3 +2671,7 @@ a.wpsc_remove_meta {
 .wpsc-remove-row button {
 	cursor: pointer
 }
+
+.wpsc-refund-ui {
+	display: none;
+}
