@@ -375,7 +375,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			}
 
 			$this->purchase_log->save();
-			transaction_results( $sessionid, false );
 		}
 
 		exit;
@@ -1089,8 +1088,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			$current_refund = $log->get_total_refunded();
 			$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
 
-			wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), $amount ) );
-
+			wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), wpsc_currency_display( $amount ) ) );
 			return true;
 		}
 
@@ -1127,7 +1125,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				$current_refund = $log->get_total_refunded();
 				$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
 
-				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), $params['GROSSREFUNDAMT'], $params['REFUNDTRANSACTIONID'] ) );
+				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), wpsc_currency_display( $params['GROSSREFUNDAMT'] ), $params['REFUNDTRANSACTIONID'] ) );
 
 				return true;
 			}
