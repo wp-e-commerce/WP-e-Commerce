@@ -6,8 +6,11 @@ window.paypalCheckoutReady = function () {
 	paypal.checkout.setup( wpec_ppic.mid, {
 		environment: wpec_ppic.env,
 		condition: function() {
-			return jQuery( 'input[name="wpsc_payment_method"]:checked' ).val() === 'paypal-express-checkout';
+			if( jQuery( 'input[name="wpsc_payment_method"]:checked' ).val() === 'paypal-express-checkout' || jQuery(".express-checkout-cart-button").click ) {
+				return true;
+			}
+			return false;
 		},
-		button: 'wpsc_submit_checkout'
+		button: [ 'wpsc_submit_checkout', 'express-checkout-cart-button' ]
 	});
 };
