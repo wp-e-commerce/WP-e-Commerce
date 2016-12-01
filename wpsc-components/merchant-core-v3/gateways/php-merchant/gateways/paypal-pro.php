@@ -4,7 +4,7 @@ require_once( 'paypal-pro-response.php' );
 
 class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 {
-	const API_VERSION = '117.0';
+	const API_VERSION = '204';
 	const SANDBOX_URL = 'https://api-3t.sandbox.paypal.com/nvp';
 	const LIVE_URL = 'https://api-3t.paypal.com/nvp';
 

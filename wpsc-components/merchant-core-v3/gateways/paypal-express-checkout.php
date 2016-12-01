@@ -44,11 +44,11 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			) );
 
 			// Express Checkout Button
-			if ( (bool) $this->setting->get( 'shortcut' ) && ! (bool) $this->setting->get( 'incontext' ) ) {
+			if ( (bool) $this->setting->get( 'shortcut' ) ) {
 				add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_ecs_button' ), 2, 2 );
 			}
 			// Incontext Checkout Scripts
-			if ( (bool) $this->setting->get( 'incontext' ) && ! (bool) $this->setting->get( 'shortcut' ) ) {
+			if ( (bool) $this->setting->get( 'incontext' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'incontext_load_scripts' ) );
 			}
 		}
