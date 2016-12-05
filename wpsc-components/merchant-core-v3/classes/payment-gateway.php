@@ -50,11 +50,14 @@ final class WPSC_Payment_Gateways {
 	 * Return a particular payment gateway object
 	 *
 	 * @access public
+	 *
 	 * @param string $gateway Name of the payment gateway you want to get
-	 * @return object
+	 * @param string $meta    Pass-through parameter for meta
+	 *
+	 * @return WPSC_Payment_Gateway|WP_Error Returns an error if gateway cannot be found, 3.0 gateway otherwise.
 	 * @since 3.9
 	 */
-	public static function &get( $gateway, $meta = false ) {
+	public static function &get( $gateway, $meta = array() ) {
 
 		$errors = new WP_Error();
 
@@ -65,14 +68,14 @@ final class WPSC_Payment_Gateways {
 
 		if ( empty( self::$instances[ $gateway ] ) ) {
 
-			// If no meta is found, it is likely that a legacy or unsupported gateway is being used, and we should exit early.
-			if ( ! array_key_exists( $gateway, $meta ) ) {
-				$errors->add( 'empty_meta', __( 'The gateway used is out of date. We recommend no longer using this gateway.', 'wp-e-commerce' ) );
-				return $errors;
+			if ( ! $meta && self::is_registered( $gateway ) ) {
+				$meta = self::$gateways[ $gateway ];
 			}
 
-			if ( ! $meta ) {
-				$meta = self::$gateways[ $gateway ];
+			// If no meta is found, it is likely that a legacy or unsupported gateway is being used, and we should exit early.
+			if ( ! array_key_exists( $gateway, (array) $meta ) ) {
+				$errors->add( 'empty_meta', __( 'The gateway used is out of date. We recommend no longer using this gateway.', 'wp-e-commerce' ) );
+				return $errors;
 			}
 
 			if ( ! file_exists( $meta['path'] ) ) {

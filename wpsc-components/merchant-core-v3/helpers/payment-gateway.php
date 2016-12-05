@@ -18,12 +18,11 @@ function wpsc_get_payment_gateway( $gateway ) {
 
 function wpsc_payment_gateway_supports( $gateway, $supports ) {
 
-	$support = false;
-	$gateway  = wpsc_get_payment_gateway( $gateway );
-
-	if ( is_subclass_of( $gateway, 'WPSC_Payment_Gateway' ) ) {
-		$support = $gateway->supports( $supports );
+	if ( ! wpsc_is_payment_gateway_registered( $gateway ) ) {
+		return false;
 	}
+
+	$support = $gateway->supports( $supports );
 
 	return $support;
 }
