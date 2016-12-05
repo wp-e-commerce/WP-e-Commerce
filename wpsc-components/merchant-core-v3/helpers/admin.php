@@ -25,8 +25,9 @@ add_filter(
 );
 
 function _wpsc_filter_merchant_v3_gateway_form( $form, $gateway_id ) {
-	if ( ! WPSC_Payment_Gateways::is_registered( $gateway_id ) )
+	if ( ! WPSC_Payment_Gateways::is_registered( $gateway_id ) ) {
 		return $form;
+	}
 
 	$payment_gateway_names = get_option('payment_gateway_names');
 	$form                  = array();
@@ -34,7 +35,6 @@ function _wpsc_filter_merchant_v3_gateway_form( $form, $gateway_id ) {
 	$gateway               = wpsc_get_payment_gateway( $gateway_id );
 	$display_name          = empty( $payment_gateway_names[$gateway_id] ) ? $gateway->get_title() : $payment_gateway_names[$gateway_id];
 	ob_start();
-
 	?>
 	<tr>
 		<td style='border-top: none;'>

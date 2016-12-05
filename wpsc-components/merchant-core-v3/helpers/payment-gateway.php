@@ -22,7 +22,5 @@ function wpsc_payment_gateway_supports( $gateway, $supports ) {
 		return false;
 	}
 
-	$support = $gateway->supports( $supports );
-
-	return $support;
+	return wpsc_get_payment_gateway( $gateway )->supports( $supports );
 }
