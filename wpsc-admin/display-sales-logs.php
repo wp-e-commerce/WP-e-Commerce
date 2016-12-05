@@ -295,9 +295,9 @@ class WPSC_Purchase_Log_Page {
 							</tr>
 							<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
 							<tr>
-								<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'woocommerce' ); ?>:</label></td>
+								<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'wp-e-commerce' ); ?>:</label></td>
 								<td class="total">
-									<input type="text" class="text" id="refund_amount" name="refund_amount" class="wc_input_price" />
+									<input type="text" class="text" id="refund_amount" name="refund_amount" class="wpec_input_price" />
 									<div class="clear"></div>
 								</td>
 							</tr>
@@ -313,7 +313,7 @@ class WPSC_Purchase_Log_Page {
 								<td>
 									<p>
 										<button type="button" class="button tips button-primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), wpsc_get_payment_gateway( $this->log->get( 'gateway' ) )->get_title() ); ?></button>
-										<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
+										<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
 										<button type="button" class="button button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
 										<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
 									</p>
