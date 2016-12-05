@@ -56,12 +56,20 @@ final class WPSC_Payment_Gateways {
 	 */
 	public static function &get( $gateway, $meta = false ) {
 
+		$errors = new WP_Error();
+
 		if ( empty( $gateway ) ) {
-			_wpsc_doing_it_wrong( __( 'You cannot pass an empty string as a gateway object.', 'wp-e-commerce' ) );
-			return new self;
+			$errors->add( 'empty_gateway', __( 'You cannot pass an empty string as a gateway object.', 'wp-e-commerce' ) );
+			return $errors;
 		}
 
 		if ( empty( self::$instances[ $gateway ] ) ) {
+
+			// If no meta is found, it is likely that a legacy or unsupported gateway is being used, and we should exit early.
+			if ( ! array_key_exists( $gateway, $meta ) ) {
+				$errors->add( 'empty_meta', __( 'The gateway used is out of date. We recommend no longer using this gateway.', 'wp-e-commerce' ) );
+				return $errors;
+			}
 
 			if ( ! $meta ) {
 				$meta = self::$gateways[ $gateway ];
@@ -360,7 +368,10 @@ final class WPSC_Payment_Gateways {
 
 		foreach( $active_gateways as $gateway_id ) {
 			$gateway = self::get( $gateway_id );
-			$gateway->init();
+
+			if ( ! is_wp_error( $gateway ) ) {
+				$gateway->init();
+			}
 		}
 	}
 

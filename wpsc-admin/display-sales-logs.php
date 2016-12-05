@@ -313,7 +313,9 @@ class WPSC_Purchase_Log_Page {
 								<td>
 									<p>
 										<button type="button" class="button tips button-primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), wpsc_get_payment_gateway( $this->log->get( 'gateway' ) )->get_title() ); ?></button>
+										<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
 										<button type="button" class="button button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
+										<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
 									</p>
 								</td>
 							</tbody>
