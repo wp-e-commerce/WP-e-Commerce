@@ -1100,7 +1100,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'note'           => $reason,
 		);
 
-		if( $amount && $amount <= $log->get_remaining_refund() ) {
+		if( $amount && $amount < $log->get_remaining_refund() ) {
 			$options['refund_type'] = 'Partial';
 			$options['amount']      = $amount;
 		} else {
