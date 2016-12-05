@@ -17,5 +17,13 @@ function wpsc_get_payment_gateway( $gateway ) {
 }
 
 function wpsc_payment_gateway_supports( $gateway, $supports ) {
-		return wpsc_get_payment_gateway( $gateway )->supports( $supports );
+
+	$supports = false;
+	$gateway  = wpsc_get_payment_gateway( $gateway );
+
+	if ( is_subclass_of( $gateway, 'WPSC_Payment_Gateway' ) ) {
+		$supports = $gateway->supports( $supports );
+	}
+
+	return $supports;
 }

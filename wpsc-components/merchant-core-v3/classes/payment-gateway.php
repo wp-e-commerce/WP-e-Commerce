@@ -56,6 +56,11 @@ final class WPSC_Payment_Gateways {
 	 */
 	public static function &get( $gateway, $meta = false ) {
 
+		if ( empty( $gateway ) ) {
+			_wpsc_doing_it_wrong( __( 'You cannot pass an empty string as a gateway object.', 'wp-e-commerce' ) );
+			return new self;
+		}
+
 		if ( empty( self::$instances[ $gateway ] ) ) {
 
 			if ( ! $meta ) {
