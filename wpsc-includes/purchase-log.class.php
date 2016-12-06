@@ -1189,6 +1189,8 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			 * If you want to allow editing completed orders via this fitler, you will
 			 * be responsible for ensuring that the item stock is adjusted accordingly.
 			 *
+			 * @since 4.0.0
+			 *
 			 * @var bool              $can_edit Whether this order can be edited
 			 * @var WPSC_Purchase_Log $log      This log object
 			 */
