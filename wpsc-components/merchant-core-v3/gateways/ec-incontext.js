@@ -11,6 +11,6 @@ window.paypalCheckoutReady = function () {
 			}
 			return false;
 		},
-		button: [ 'wpsc_submit_checkout', 'express-checkout-cart-button' ]
+		button: [ 'wpsc_submit_checkout', 'express-checkout-cart-button-top', 'express-checkout-cart-button-bottom' ]
 	});
 };
