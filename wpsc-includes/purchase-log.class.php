@@ -1181,6 +1181,19 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	public function can_edit() {
 		if ( null === $this->can_edit ) {
 			$can_edit = current_user_can( 'edit_others_posts' ) && ! $this->is_transaction_completed();
+
+			/**
+			 * This filter allows overriding the default order-edit behavior.
+			 * Default behavior only allows editing orders which are not yet completed.
+			 *
+			 * If you want to allow editing completed orders via this fitler, you will
+			 * be responsible for ensuring that the item stock is adjusted accordingly.
+			 *
+			 * @since 4.0.0
+			 *
+			 * @var bool              $can_edit Whether this order can be edited
+			 * @var WPSC_Purchase_Log $log      This log object
+			 */
 			$this->can_edit = apply_filters( 'wpsc_can_edit_order', $can_edit, $this );
 		}
 
