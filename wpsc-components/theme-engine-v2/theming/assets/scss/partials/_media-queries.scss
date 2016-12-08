@@ -89,16 +89,17 @@ Media Queries
 	.wpsc-controller .wpsc-shopping-cart .wpsc-form-actions {
 		text-align: left;
 	}
-	.top {
-		.wpsc-begin-checkout,
-		.express-checkout-button {
-			display: block;
-			text-align: left;
-			margin-left: 0;
-		}	
-		.express-checkout-button {
-			margin-bottom: 20px;
-		}
+	.wpsc-begin-checkout,
+	.express-checkout-button {
+		display: block;
+		text-align: left;
+		margin-left: 0;
+	}	
+	.express-checkout-button {
+		margin-bottom: 20px;
+	}
+	.wpsc-begin-checkout {
+		margin-top: 20px;
 	}
 	.wpsc-cart-footer {
 		.wpsc-cart-actions-row {
