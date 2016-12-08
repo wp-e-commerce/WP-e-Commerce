@@ -280,6 +280,22 @@ Shopping Cart
 	margin-right: 0;
 }
 
+.wpsc-form-actions {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-justify-content: flex-end;
+	-moz-justify-content: flex-end;
+	-ms-justify-content: flex-end;
+	justify-content: flex-end;
+	-webkit-align-items: center;
+	-moz-align-items: center;
+	-ms-align-items: center;
+	align-items: center;
+}
+
 .express-checkout-button,
 .wpsc-begin-checkout {
 	display: inline-block;
@@ -287,8 +303,8 @@ Shopping Cart
 	box-shadow: none !important;
 }
 
-.express-checkout-button {
-	margin-right: 0.5em;
+.paypal-express-separator {
+	margin: 0 0.5em;
 }
 
 /* Single Product Row */
@@ -873,6 +889,10 @@ Media Queries
 
 .wpsc-controller .wpsc-shopping-cart .wpsc-form-actions {
 	text-align: left;
+}
+
+.wpsc-form-actions {
+	display: block;
 }
 
 .wpsc-begin-checkout,

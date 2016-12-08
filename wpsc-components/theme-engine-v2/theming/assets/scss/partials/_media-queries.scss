@@ -89,6 +89,9 @@ Media Queries
 	.wpsc-controller .wpsc-shopping-cart .wpsc-form-actions {
 		text-align: left;
 	}
+	.wpsc-form-actions {
+		display: block;
+	}
 	.wpsc-begin-checkout,
 	.express-checkout-button {
 		display: block;
