@@ -508,6 +508,10 @@ Shopping Cart
 	width: 40px;
 }
 
+.wpsc-checkout .entry-content .wpsc-form-radio-wrapper img {
+	vertical-align: middle;
+}
+
 /**********************
 Accounts Page
 ***********************/
