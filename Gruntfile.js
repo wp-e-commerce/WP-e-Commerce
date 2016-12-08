@@ -132,8 +132,11 @@ module.exports = function( grunt ) {
 		},
 		watch: {
 			css: {
-				files: ['<%= sass.dist.files %>'],
-				tasks: ['css']
+				files: ['wpsc-components/theme-engine-v2/theming/assets/scss/**/*.scss'],
+				tasks: ['css'],
+				options: {
+					spawn: false,
+				},
 			},
 			js: {
 				files: ['<%= jshint.plugin %>'],
