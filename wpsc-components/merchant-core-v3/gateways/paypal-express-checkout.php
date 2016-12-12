@@ -274,9 +274,12 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		// Common Vars
 		$common = array(
-			'cmd'        => '_express-checkout',
-			'useraction' => 'commit',
+		    'cmd'        => '_express-checkout',
 		);
+
+		if ( ! wpsc_uses_shipping() ) {
+		   $common['useraction'] = 'commit';
+		}
 
 		if ( wp_is_mobile() ) {
 			$common['cmd'] = '_express-checkout-mobile';
