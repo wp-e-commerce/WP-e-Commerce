@@ -206,7 +206,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		);
 		$url = add_query_arg( $args, $url );
 
-		return esc_url( $url );
+		return $url;
 	}
 
 	/**
