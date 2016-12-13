@@ -277,7 +277,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		    'cmd'        => '_express-checkout',
 		);
 
-		if ( ! wpsc_uses_shipping() ) {
+		if ( ! wpsc_uses_shipping() || wpsc_is_checkout() ) {
 		   $common['useraction'] = 'commit';
 		}
 
