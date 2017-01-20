@@ -27,14 +27,14 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 			$request['PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
 		}
 
-		foreach ( array( 'subtotal', 'shipping', 'handling', 'tax' ) as $key ) {
+		foreach ( array( 'subtotal', 'shipping', 'handling', 'tax', 'amount' ) as $key ) {
 			if ( isset( $this->options[$key] ) ) {
 				$this->options[$key] = $this->format( $this->options[$key] );
 			}
 		}
 
 		$request += phpme_map( $this->options, array(
-			'PAYMENTREQUEST_0_ITEMAMT'     => 'subtotal',
+			'PAYMENTREQUEST_0_ITEMAMT'     => 'amount',
 			'PAYMENTREQUEST_0_SHIPPINGAMT' => 'shipping',
 			'PAYMENTREQUEST_0_HANDLINGAMT' => 'handling',
 			'PAYMENTREQUEST_0_TAXAMT'      => 'tax',
@@ -44,7 +44,6 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 			'L_BILLINGTYPE0' 			   => 'billing_type',
 			'L_BILLINGAGREEMENTDESCRIPTION0' => 'billing_description',
 		) );
-
 
 		// Apply a Discount if available
 		$this->add_discount();
