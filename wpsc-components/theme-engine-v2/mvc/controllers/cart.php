@@ -227,9 +227,8 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 			$this->message_collection->add( __( 'Coupon applied.', 'wp-e-commerce' ), 'success', 'main', 'flash' );
 		}
 
-		wp_safe_redirect( wp_get_referer() );
-		die;
-
+		wp_safe_redirect( wpsc_get_cart_url() );
+		exit;
 	}
 
 	public function clear() {
