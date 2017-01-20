@@ -1,5 +1,4 @@
 <?php
-
 class WPSC_Controller_Cart extends WPSC_Controller {
 	public function __construct() {
 		parent::__construct();
@@ -53,7 +52,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 				$product_id = $variation_product_id;
 			} else {
 				$this->message_collection->add( __( 'This variation combination is no longer available.  Please choose a different combination.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
-				wp_safe_redirect( wp_get_referer() );
+				wp_safe_redirect( wpsc_get_cart_url() );
 				exit;
 			}
 		}
@@ -95,12 +94,12 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 			if ( $remaining_quantity <= 0 ) {
 				$message = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, the product "%s" is out of stock.', 'wp-e-commerce' ) );
 				$this->message_collection->add( sprintf( $message, $product->post_title ), 'error', 'main', 'flash' );
-				wp_safe_redirect( wp_get_referer() );
+				wp_safe_redirect( wpsc_get_cart_url() );
 				exit;
 			} elseif ( $remaining_quantity < $parameters['quantity'] ) {
 				$message = __( 'Sorry, but the quantity you just specified is larger than the available stock. There are only %d of the item in stock.', 'wp-e-commerce' );
 				$this->message_collection->add( sprintf( $message, $remaining_quantity ), 'error', 'main', 'flash' );
-				wp_safe_redirect( wp_get_referer() );
+				wp_safe_redirect( wpsc_get_cart_url() );
 				exit;
 			}
 		}
@@ -108,7 +107,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		if ( wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ) ) {
 			$message = apply_filters( 'wpsc_add_to_cart_variation_missing_message', sprintf( __( 'This product has several options to choose from.<br /><br /><a href="%s" style="display:inline; float:none; margin: 0; padding: 0;">Visit the product page</a> to select options.', 'wp-e-commerce' ), esc_url( get_permalink( $product_id ) ) ), $product_id );
 			$this->message_collection->add( sprintf( $message, $product->post_title ), 'error', 'main', 'flash' );
-			wp_safe_redirect( wp_get_referer() );
+			wp_safe_redirect( wpsc_get_cart_url() );
 			exit;
 		}
 
@@ -119,7 +118,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 			exit;
 		} else {
 			$this->message_collection->add( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
-			wp_safe_redirect( wp_get_referer() );
+			wp_safe_redirect( wpsc_get_cart_url() );
 			exit;
 		}
 
@@ -201,6 +200,10 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 
 	public function index() {
 
+		if ( isset( $_POST['apply_coupon'] ) && empty( $_POST['coupon_code'] ) ) {
+			$this->_callback_remove_coupon();
+		}
+	
 		if ( isset( $_POST['apply_coupon'] ) && isset( $_POST['coupon_code'] ) ) {
 			$this->_callback_apply_coupon();
 		}
@@ -208,6 +211,19 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'update_quantity' ) {
 			$this->_callback_update_quantity();
 		}
+	}
+	
+	public function _callback_remove_coupon() {
+		global $wpsc_cart;
+		
+		$wpsc_cart->coupons_amount = 0;
+		$wpsc_cart->coupons_name = '';
+		wpsc_delete_customer_meta( 'coupon' );
+		
+		$this->message_collection->add( __( 'Coupon removed.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
+
+		wp_safe_redirect( wpsc_get_cart_url() );
+		exit;
 	}
 
 	public function _callback_apply_coupon() {
@@ -226,9 +242,10 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		} else {
 			$this->message_collection->add( __( 'Coupon applied.', 'wp-e-commerce' ), 'success', 'main', 'flash' );
 		}
-
+	
 		wp_safe_redirect( wpsc_get_cart_url() );
 		exit;
+
 	}
 
 	public function clear() {
@@ -252,7 +269,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		$wpsc_cart->remove_item( $key );
 		$this->message_collection->add( __( 'Item removed.', 'wp-e-commerce' ), 'success', 'main', 'flash' );
 
-		wp_safe_redirect( wp_get_referer() );
+		wp_safe_redirect( wpsc_get_cart_url() );
 		exit;
 	}
 
