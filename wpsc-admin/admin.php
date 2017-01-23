@@ -1556,3 +1556,26 @@ function wpsc_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 }
 
 add_filter( 'bulk_post_updated_messages', 'wpsc_bulk_updated_messages', 10, 2 );
+
+/**
+ * Add rating links to the admin dashboard
+ *
+ * @since	    3.12
+ * @global		string $typenow
+ * @param       string $footer_text The existing footer text
+ * @return      string Changed $footer_text
+ */
+function wpsc_admin_rate_us( $footer_text ) {
+	global $typenow;
+	
+	if ( $typenow == 'wpsc-product' ) {
+		$rate_text = sprintf( __( 'Thank you for using <a href="%1$s" target="_blank">WP eCommerce</a>! Please <a href="%2$s" target="_blank">rate us</a> on <a href="%2$s" target="_blank">WordPress.org</a>', 'wp-e-commerce' ),
+			'https://wpecommerce.org',
+			'https://wordpress.org/support/plugin/wp-e-commerce/reviews/?filter=5#new-post'
+		);
+		return str_replace( '</span>', '', $footer_text ) . ' | ' . $rate_text . '</span>';
+	} else {
+		return $footer_text;
+	}
+}
+add_filter( 'admin_footer_text', 'wpsc_admin_rate_us' );
