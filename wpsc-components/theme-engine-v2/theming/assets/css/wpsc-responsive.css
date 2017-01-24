@@ -983,5 +983,9 @@ Media Queries
 	padding: 5px 0;
 }
 
+.wpsc-cart-quantity-input {
+	max-width: 50%;
+}
+
 }
 
