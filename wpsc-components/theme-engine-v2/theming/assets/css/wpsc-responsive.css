@@ -18,7 +18,7 @@ Variables
   Product Grid on Archive Store Pages 
   **********************************/ /*******************
   Opinionated Styles
-  ********************/ /* Typography */ /* Variations and Quantity */ /* Sale Info */ /* Flexbox */
+  ********************/ /* Typography */ /* Variations and Quantity */ /* Sale Info */ /* Flexbox */ /* Layout */
 }
 
 .wpsc-grid .wpsc-product-description {
@@ -214,6 +214,11 @@ Variables
 	-webkit-flex: 1 0 auto;
 	-ms-flex: 1 0 auto;
 	flex: 1 0 auto;
+}
+
+.wpsc-grid .wpsc-form-actions button {
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .wpsc-list { /*****************

@@ -74,7 +74,12 @@ ins.wpsc-sale-price {
 }
 
 
-
+/* Layout */
+// Center buttons on product grid
+.wpsc-form-actions button {
+	margin-left: auto;
+	margin-right: auto;
+}
 
 
 
