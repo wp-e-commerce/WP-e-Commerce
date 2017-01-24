@@ -597,6 +597,14 @@ Accounts Page
 Media Queries
 *****************/
 
+/*******************
+Order Confirmation
+********************/
+
+.wpsc-purchase-log-transaction-results th {
+	text-align: left;
+}
+
 /*# sourceMappingURL=wpsc-responsive.css.map */
 
 @media (max-width: 960px) {
