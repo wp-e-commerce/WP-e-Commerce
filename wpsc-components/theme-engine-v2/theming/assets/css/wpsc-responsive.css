@@ -495,6 +495,40 @@ Shopping Cart
 	width: 25%;
 }
 
+.widget .wpsc-cart-item-title {
+	font-size: 1rem;
+}
+
+.widget .wpsc-cart-item:first-of-type {
+	padding-top: 0;
+}
+
+.widget .wpsc-form-actions.bottom {
+	padding-top: 20px;
+}
+
+.widget .wpsc-cart-cell.update-quantity {
+	text-align: center;
+}
+
+.widget .wpsc-cart-update {
+	float: none;
+}
+
+.widget .wpsc-clear-cart {
+	display: block;
+	text-align: center;
+}
+
+.widget .wpsc-cart-subtotal-row .wpsc-cart-cell,
+.widget .wpsc-cart-subtotal-row .wpsc-cart-cell-header {
+	text-align: center;
+}
+
+.widget .wpsc-cart-subtotal-row .wpsc-cart-cell {
+	font-size: 22px;
+}
+
 .wpsc-checkout { /*******************
   Checkout
   ********************/
@@ -839,6 +873,40 @@ Media Queries
 
 .wpsc-cart-quantity-input {
 	width: 25%;
+}
+
+.wpsc-cart-item-title {
+	font-size: 1rem;
+}
+
+.wpsc-cart-item:first-of-type {
+	padding-top: 0;
+}
+
+.wpsc-form-actions.bottom {
+	padding-top: 20px;
+}
+
+.wpsc-cart-cell.update-quantity {
+	text-align: center;
+}
+
+.wpsc-cart-update {
+	float: none;
+}
+
+.wpsc-clear-cart {
+	display: block;
+	text-align: center;
+}
+
+.wpsc-cart-subtotal-row .wpsc-cart-cell,
+.wpsc-cart-subtotal-row .wpsc-cart-cell-header {
+	text-align: center;
+}
+
+.wpsc-cart-subtotal-row .wpsc-cart-cell {
+	font-size: 22px;
 }
 
 .wpsc-grid .wpsc-column-6,
