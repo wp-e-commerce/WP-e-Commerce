@@ -26,3 +26,50 @@ $titles: unit-price quantity item-total id date status tracking-id total;
 .wpsc-cart-quantity-input {
 	width: 25%;
 }
+
+//Shopping Cart Widget
+.wpsc-cart-item-title {
+    font-size: 1rem;
+}
+
+.wpsc-cart-item:first-of-type {
+    padding-top: 0;
+}
+
+.wpsc-form-actions.bottom {
+    padding-top: 20px;
+}
+
+.wpsc-cart-cell.update-quantity {
+    text-align: center;
+}
+
+.wpsc-cart-update {
+    float: none;
+}
+
+.wpsc-clear-cart {
+    display: block;
+    text-align: center;
+}
+
+.wpsc-cart-subtotal-row {
+	.wpsc-cart-cell, 
+	.wpsc-cart-cell-header {
+		text-align: center;
+	}
+	.wpsc-cart-cell {
+		font-size: 22px;
+	}
+}
+
+//If you want all wpsc_widgets uncomment below and get rid of on_sale selector
+//[class*="widget_wpsc_"] {
+.widget_wpsc_widget_on_sale {
+	ul {
+		margin-left: 0;
+	}
+	li {
+		list-style-type: none;
+	}
+}
