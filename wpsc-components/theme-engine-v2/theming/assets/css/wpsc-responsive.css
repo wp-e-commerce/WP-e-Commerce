@@ -496,7 +496,7 @@ Shopping Cart
 }
 
 .widget-area .wpsc-cart-item-title {
-	font-size: 1rem;
+	font-size: 1.15em;
 }
 
 .widget-area .wpsc-cart-item:first-of-type {
@@ -889,7 +889,7 @@ Media Queries
 }
 
 .wpsc-cart-item-title {
-	font-size: 1rem;
+	font-size: 1.15em;
 }
 
 .wpsc-cart-item:first-of-type {
