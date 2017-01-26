@@ -63,6 +63,11 @@ $titles: unit-price quantity item-total id date status tracking-id total;
 	}
 }
 
+.wpsc-form-actions button {
+ 	margin-left: auto;
+ 	margin-right: auto;
+}
+
 //If you want all wpsc_widgets uncomment below and get rid of on_sale selector
 //[class*="widget_wpsc_"] {
 .widget_wpsc_widget_on_sale {
