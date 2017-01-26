@@ -58,8 +58,9 @@ $titles: unit-price quantity item-total id date status tracking-id total;
 	.wpsc-cart-cell-header {
 		text-align: center;
 	}
+
 	.wpsc-cart-cell {
-		font-size: 22px;
+		font-size: $title-size-col-3;
 	}
 }
 
@@ -68,13 +69,40 @@ $titles: unit-price quantity item-total id date status tracking-id total;
  	margin-right: auto;
 }
 
-//If you want all wpsc_widgets uncomment below and get rid of on_sale selector
-//[class*="widget_wpsc_"] {
-.widget_wpsc_widget_on_sale {
+[class*="widget_wpsc_"] {
 	ul {
 		margin-left: 0;
 	}
+
 	li {
 		list-style-type: none;
+	}
+}
+
+//All WPSC Widgets
+.wpsc-widget-latest-product-list-item {
+    margin-bottom: 1.5em;
+    a {
+		font-size: $title-size-col-5;
+    }
+}
+
+//On Sale Widget
+.widget_wpsc_widget_on_sale {
+	.wpsc-widget-latest-product-list-item {
+	    .wpsc-product-price {
+		    @include flexbox();
+		    @include flex-wrap(wrap);
+		    @include justify-content(space-between);
+		}
+
+		.wpsc-sale-price {
+		    font-weight: $bold;
+		}
+
+		.wpsc-you-save {
+		    width: 100%;
+		    font-size: $price-size-col-6;
+		}
 	}
 }
