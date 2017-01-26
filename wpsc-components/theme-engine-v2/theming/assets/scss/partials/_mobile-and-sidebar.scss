@@ -29,7 +29,7 @@ $titles: unit-price quantity item-total id date status tracking-id total;
 
 //Shopping Cart Widget
 .wpsc-cart-item-title {
-    font-size: 1rem;
+    font-size: $title-size-col-5;
 }
 
 .wpsc-cart-item:first-of-type {
