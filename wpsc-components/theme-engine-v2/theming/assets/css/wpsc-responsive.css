@@ -381,7 +381,16 @@ Shopping Cart
 
 /* Sidebar Cart */
 
-.widget-area { /* Mobile and Sidebar Table Styling */
+.widget-area { /* Mobile and Sidebar Table Styling */ /**If you want all wpsc_widgets to not have list styling uncomment below and remove same rule for on_sale widget
+  [class*="widget_wpsc_"] {
+  	ul {
+  		margin-left: 0;
+  	}
+  
+  	li {
+  		list-style-type: none;
+  	}
+  } */
 }
 
 .widget-area .wpsc-cart-cell,
@@ -526,7 +535,7 @@ Shopping Cart
 }
 
 .widget-area .wpsc-cart-subtotal-row .wpsc-cart-cell {
-	font-size: 22px;
+	font-size: 1.35em;
 }
 
 .widget-area .wpsc-form-actions button {
@@ -540,6 +549,39 @@ Shopping Cart
 
 .widget-area .widget_wpsc_widget_on_sale li {
 	list-style-type: none;
+}
+
+.widget-area .widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item {
+	margin-bottom: 1em;
+}
+
+.widget-area .widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item a {
+	font-size: 1.15em;
+}
+
+.widget-area .widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item .wpsc-product-price {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	-moz-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-webkit-justify-content: space-between;
+	-moz-justify-content: space-between;
+	-ms-justify-content: space-between;
+	justify-content: space-between;
+}
+
+.widget-area .widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item .wpsc-sale-price {
+	font-weight: 600;
+}
+
+.widget-area .widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item .wpsc-you-save {
+	width: 100%;
+	font-size: 0.8em;
 }
 
 .wpsc-checkout { /*******************
@@ -919,7 +961,7 @@ Media Queries
 }
 
 .wpsc-cart-subtotal-row .wpsc-cart-cell {
-	font-size: 22px;
+	font-size: 1.35em;
 }
 
 .wpsc-form-actions button {
@@ -927,12 +969,56 @@ Media Queries
 	margin-right: auto;
 }
 
+/**If you want all wpsc_widgets to not have list styling uncomment below and remove same rule for on_sale widget
+  [class*="widget_wpsc_"] {
+  	ul {
+  		margin-left: 0;
+  	}
+  
+  	li {
+  		list-style-type: none;
+  	}
+  } */
+
 .widget_wpsc_widget_on_sale ul {
 	margin-left: 0;
 }
 
 .widget_wpsc_widget_on_sale li {
 	list-style-type: none;
+}
+
+.widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item {
+	margin-bottom: 1em;
+}
+
+.widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item a {
+	font-size: 1.15em;
+}
+
+.widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item .wpsc-product-price {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	-moz-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-webkit-justify-content: space-between;
+	-moz-justify-content: space-between;
+	-ms-justify-content: space-between;
+	justify-content: space-between;
+}
+
+.widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item .wpsc-sale-price {
+	font-weight: 600;
+}
+
+.widget_wpsc_widget_on_sale .wpsc-widget-latest-product-list-item .wpsc-you-save {
+	width: 100%;
+	font-size: 0.8em;
 }
 
 .wpsc-grid .wpsc-column-6,
