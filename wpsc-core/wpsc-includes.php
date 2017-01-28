@@ -87,3 +87,6 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/cron.php' );
 if ( defined( 'WP_CLI' ) && WP_CLI && version_compare( phpversion(), '5.3', '>=' ) ) {
 	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-wp-cli.php' );
 }
+
+// Tracking
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-tracking.php' );
