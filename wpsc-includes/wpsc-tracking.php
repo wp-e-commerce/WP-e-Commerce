@@ -45,10 +45,11 @@ class WPSC_Tracking {
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'init'                    , array( $this, 'schedule_send' ) );
-		add_action( 'wpsc_opt_into_tracking'  , array( $this, 'check_for_optin' ) );
-		add_action( 'wpsc_opt_out_of_tracking', array( $this, 'check_for_optout' ) );
-		add_action( 'admin_notices'           , array( $this, 'admin_notice' ) );
+		add_action( 'init'                           , array( $this, 'schedule_send' ) );
+		add_action( 'wpsc_opt_into_tracking'         , array( $this, 'check_for_optin' ) );
+		add_action( 'wpsc_opt_out_of_tracking'       , array( $this, 'check_for_optout' ) );
+		add_action( 'wpsc_settings_page_save_options', array( $this, 'check_for_settings_optin' ), 10, 2 );
+		add_action( 'admin_notices'                  , array( $this, 'admin_notice' ) );
 	}
 
 	/**
@@ -183,6 +184,19 @@ class WPSC_Tracking {
 
 		wp_safe_redirect( esc_url_raw( remove_query_arg( 'wpsc_tracking_action' ) ) );
 		exit;
+	}
+
+	/**
+	 * Check for opt-in via the settings page
+	 *
+	 * @since 3.12.0
+	 * @access public
+	 * @return void
+	 */
+	public function check_for_settings_optin( $option, $value ) {
+		if( isset( $option ) && $option == 'wpsc_usage_tracking' && $value == '1'  ) {
+			$this->send_data( true );
+		}
 	}
 
 	/**
