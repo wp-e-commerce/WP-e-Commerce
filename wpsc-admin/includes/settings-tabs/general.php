@@ -215,6 +215,26 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 				</td>
 			</tr>
 		</table>
+
+		<h3 class="form_group"><?php esc_html_e( 'Usage Tracking', 'wp-e-commerce' ); ?></h3>
+		<table class='wpsc_options form-table'>
+			<tr>
+				<th scope="row">
+					<label for="wpsc_options_usage_tracking"><?php esc_html_e( 'Allow Usage Tracking ?', 'wp-e-commerce' ); ?></label>
+				</th>
+				<td>
+					<?php $usage_tracking = get_option( 'wpsc_usage_tracking', 0 ); ?>
+					<label><input type="radio" <?php checked( $usage_tracking, 1 ); ?> name="wpsc_options[wpsc_usage_tracking]" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;
+					<label><input type="radio" <?php checked( $usage_tracking, 0 ); ?>name="wpsc_options[wpsc_usage_tracking]" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label><br />
+					<p class='description'>
+						<?php echo sprintf( 
+							__( 'Allow WP eCommerce to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the WPeC shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'wp-e-commerce' ),
+							'https://wpecommerce.org/store/' );
+						?>
+					</p>
+				</td>
+			</tr>
+		</table>
 		<?php
 	}
 } // end class
