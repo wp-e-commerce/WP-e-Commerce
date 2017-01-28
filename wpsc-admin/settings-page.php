@@ -674,9 +674,11 @@ final class WPSC_Settings_Page {
 
 			foreach ( $_POST['wpsc_options'] as $key => $value ) {
 				if ( $value != get_option( $key ) ) {
+					
+					do_action( 'wpsc_settings_page_save_options', $key, $value );
+					
 					update_option( $key, $value );
 					$updated++;
-
 				}
 			}
 		}
