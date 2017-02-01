@@ -10,7 +10,7 @@ class WPSC_Cart_Item_Table_Widget_Form extends WPSC_Cart_Item_Table_Form {
 		$this->show_total        	= false;
 		$this->show_thumbnails   	= false;
 		$this->show_coupon_field 	= false;
-		$this->show_quantity_field	= false;
+		$this->show_quantity_field	= true;
 
 		unset( $this->columns['unit_price'] );
 	}
@@ -52,7 +52,5 @@ class WPSC_Cart_Item_Table_Widget_Form extends WPSC_Cart_Item_Table_Form {
 		<?php
 	}
 
-	protected function column_quantity( $item, $key ) {
-		echo $item->quantity;
-	}
+
 }
