@@ -33,7 +33,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				'api_username'     => $this->setting->get( 'api_username' ),
 				'api_password'     => $this->setting->get( 'api_password' ),
 				'api_signature'    => $this->setting->get( 'api_signature' ),
-				'cancel_url'       => wpsc_get_cart_url(),
+				'cancel_url'       => $this->get_cart_url(),
 				'currency'         => $this->get_currency_code(),
 				'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
 				'address_override' => 1,
@@ -764,7 +764,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			<li><?php echo esc_html( $error['details'] ) ?> (<?php echo esc_html( $error['code'] ); ?>)</li>
 			<?php endforeach; ?>
 		</ul>
-			<p><a href="<?php echo esc_url( wpsc_get_cart_url() ); ?>"><?php ( 'Click here to go back to the checkout page.') ?></a></p>
+			<p><a href="<?php echo esc_url( $this->get_cart_url() ); ?>"><?php ( 'Click here to go back to the checkout page.') ?></a></p>
 <?php
 		$output = apply_filters( 'wpsc_paypal_express_checkout_gateway_error_message', ob_get_clean(), $errors );
 		return $output;
@@ -779,7 +779,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		ob_start();
 ?>
 <p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' , 'wp-e-commerce' ); ?></p>
-<p><a href="<?php echo esc_attr( wpsc_get_cart_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.', 'wp-e-commerce' ) ?></a></p>
+<p><a href="<?php echo esc_attr( $this->get_cart_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.', 'wp-e-commerce' ) ?></a></p>
 <?php
 		$output = apply_filters( 'wpsc_paypal_express_checkout_generic_error_message', ob_get_clean() );
 		return $output;
