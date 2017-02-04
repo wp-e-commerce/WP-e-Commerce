@@ -56,7 +56,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	}
 
 	public function incontext_load_scripts() {
-		if( wpsc_is_checkout() || wpsc_is_cart() ) {
+
+		$is_cart = wpsc_is_theme_engine( '1.0' ) ? wpsc_is_checkout() : ( wpsc_is_checkout() || wpsc_is_cart() );
+
+		if ( $is_cart ) {
 			wp_register_script( 'ec-incontext', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/ec-incontext.js', '', null, true );
 			wp_localize_script( 'ec-incontext', 'wpec_ppic', array(
 				'mid' => esc_attr( $this->setting->get( 'api_merchantid' ) ),
