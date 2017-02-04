@@ -174,7 +174,12 @@ class Sputnik_Admin {
 	}
 
 	public static function scripts() {
-		wp_enqueue_script('sputnik_js', plugins_url( 'static/sputnik.js', Sputnik::$path . '/wpsc-marketplace' ), array('jquery', 'common'), '20141202' );
+		wp_enqueue_script(
+			'sputnik_js',
+			plugins_url( 'static/sputnik.js', Sputnik::$path . '/wpsc-marketplace' ),
+			array( 'jquery' ),
+			WPSC_VERSION
+		);
 	}
 
 	public static function connect_notice() {
