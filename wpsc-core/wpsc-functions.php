@@ -1153,7 +1153,7 @@ function wpsc_repair_tables() {
 add_action( 'wpsc_init', 'wpsc_repair_tables' );
 
 /**
- * Addes 'wpsc' to the list of Say What aliases after moving to WordPress.org language packs.
+ * Addes 'wpsc' to the list of Say What aliases after moving to WordPress.org * * language packs.
  *
  * @since  3.11.0
  *
@@ -1167,3 +1167,18 @@ function wpsc_say_what_domain_aliases( $aliases ) {
 }
 
 add_filter( 'say_what_domain_aliases', 'wpsc_say_what_domain_aliases' );
+
+/**
+ * Checks if system is using a specific version of the theme engine.
+ *
+ * Defaults to 1.0.
+ *
+ * @since 3.11.5
+ * @param  string  $version Version number
+ * @return boolean          Whether or not this is the theme engine being used.
+ */
+function wpsc_is_theme_engine( $version = '1.0' ) {
+	$te = get_option( 'wpsc_get_active_theme_engine', $version );
+
+	return $version == $te;
+}
