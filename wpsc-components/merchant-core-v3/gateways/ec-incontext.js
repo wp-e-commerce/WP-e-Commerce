@@ -6,11 +6,18 @@ window.paypalCheckoutReady = function () {
 	paypal.checkout.setup( wpec_ppic.mid, {
 		environment: wpec_ppic.env,
 		condition: function() {
-			if( jQuery( 'input[name="wpsc_payment_method"]:checked' ).val() === 'paypal-express-checkout' || jQuery(".express-checkout-cart-button").click ) {
+			if (
+				jQuery( 'input[name="wpsc_payment_method"]:checked' ).val() === 'paypal-express-checkout' || jQuery( '.express-checkout-cart-button' ).click ||
+				jQuery( 'input[name="custom_gateway"]:checked' ).val() === 'paypal-express-checkout' ) {
 				return true;
 			}
 			return false;
 		},
-		button: [ 'wpsc_submit_checkout', 'express-checkout-cart-button-top', 'express-checkout-cart-button-bottom' ]
+		button: [
+			'wpsc_submit_checkout',
+			'wpsc_buy_button',
+			'express-checkout-cart-button-top',
+			'express-checkout-cart-button-bottom'
+		]
 	});
 };
