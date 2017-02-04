@@ -221,22 +221,14 @@ class WPSC_Tracking {
 			return;
 		}
 
-		if (
-			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
-			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
-			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
-		) {
-			update_option( 'wpsc_usage_tracking_notice', '1' );
-		} else {
-			$optin_url  = esc_url_raw( add_query_arg( 'wpsc_tracking_action', 'opt_into_tracking' ) );
-			$optout_url = esc_url_raw( add_query_arg( 'wpsc_tracking_action', 'opt_out_of_tracking' ) );
-			$extensions_url = $this->api_url . 'store/';
-			echo '<div class="updated"><p>';
-				echo sprintf( __( 'Allow WP eCommerce to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%s discount to the WPEC shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'wp-e-commerce' ), '%', $extensions_url );
-				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'wp-e-commerce' ) . '</a>';
-				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'wp-e-commerce' ) . '</a>';
-			echo '</p></div>';
-		}
+		$optin_url  = esc_url_raw( add_query_arg( 'wpsc_tracking_action', 'opt_into_tracking' ) );
+		$optout_url = esc_url_raw( add_query_arg( 'wpsc_tracking_action', 'opt_out_of_tracking' ) );
+		$extensions_url = $this->api_url . 'store/';
+		echo '<div class="updated"><p>';
+			echo sprintf( __( 'Allow WP eCommerce to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%s discount to the WPEC shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'wp-e-commerce' ), '%', $extensions_url );
+			echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'wp-e-commerce' ) . '</a>';
+			echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'wp-e-commerce' ) . '</a>';
+		echo '</p></div>';
 	}
 
 	/**
