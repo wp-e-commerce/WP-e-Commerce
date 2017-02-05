@@ -156,7 +156,7 @@ table.wpsc-edit-module-options tr td {
 	background: #f8f8f8;
 }
 
-.gateway_settings .gateway_settings_form,
+.gateway_settings.active .gateway_settings_form,
 .gateway_settings.active .gateway_settings_form tr td {
 	background: #ecf5f9;
 }
