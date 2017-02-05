@@ -1529,7 +1529,9 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	}
 
 	public function get_total_refunded() {
-		return empty( $this->get( 'total_order_refunded' ) ) ? '0.00' : $this->get( 'total_order_refunded' );
+		$total_refund = $this->get( 'total_order_refunded' );
+
+		return empty( $total_refund ) ? '0.00' : $this->get( 'total_order_refunded' );
 	}
 
 	public function get_remaining_refund() {
