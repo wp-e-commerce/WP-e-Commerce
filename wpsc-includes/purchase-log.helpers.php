@@ -322,6 +322,11 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 	return $output;
 }
 
+function _wpsc_update_log_total_with_item_update( $item_id, $purchase_log ) {
+	$purchase_log->set( 'totalprice', $purchase_log->get_total() )->save();
+}
+add_action( 'wpsc_purchase_log_update_item', '_wpsc_update_log_total_with_item_update', 10, 2 );
+
 /**
  * Returns a purchase log.
  *

@@ -493,7 +493,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 
 		if ( $log_id > 0 ) {
 
-			do_action( 'wpsc_purchase_log_before_delete', $log_id );
+			do_action( 'wpsc_purchase_log_before_delete', $log_id, $this );
 
 			$this->delete_caches();
 
@@ -514,7 +514,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_META . "` WHERE `wpsc_purchase_id` = %d", $log_id ) );
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d ", $log_id ) );
 
-			do_action( 'wpsc_purchase_log_delete', $log_id );
+			do_action( 'wpsc_purchase_log_delete', $log_id, $this );
 
 			return true;
 
@@ -810,7 +810,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$item = $this->get_item( $item_id );
 
 		if ( $item ) {
-			do_action( 'wpsc_purchase_log_before_update_item', $item_id );
+			do_action( 'wpsc_purchase_log_before_update_item', $item_id, $this );
 
 			$data = wp_unslash( $data );
 			$result = $wpdb->update( WPSC_TABLE_CART_CONTENTS, $data, array( 'id' => $item_id  ) );
@@ -820,7 +820,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 				$this->log_items = array();
 				$this->get_item( $item_id );
 
-				do_action( 'wpsc_purchase_log_update_item', $item_id );
+				do_action( 'wpsc_purchase_log_update_item', $item_id, $this );
 			}
 
 			return $result;
@@ -836,7 +836,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$item = $this->get_item( $item_id );
 
 		if ( $item ) {
-			do_action( 'wpsc_purchase_log_before_remove_item', $item_id );
+			do_action( 'wpsc_purchase_log_before_remove_item', $item_id, $this );
 
 			$result = $wpdb->delete( WPSC_TABLE_CART_CONTENTS, array( 'id' => $item_id ) );
 
@@ -845,7 +845,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 				unset( $this->log_items[ $this->log_item_ids[ $item_id ] ] );
 				unset( $this->log_item_ids[ $item_id ] );
 
-				do_action( 'wpsc_purchase_log_remove_item', $item_id );
+				do_action( 'wpsc_purchase_log_remove_item', $item_id, $this );
 			}
 
 			return $result;
@@ -1521,11 +1521,38 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		return $taxes;
 	}
 
-	public function total_price() {
-		global $purchlogitem;
+	public function get_subtotal() {
+		$subtotal = 0;
 
-		$total = $purchlogitem->totalAmount - $this->discount( true ) + $this->shipping( true ) + $this->taxes( true );
-		return wpsc_currency_display( $total, array( 'display_as_html' => false ) );
+		foreach ( $this->get_items() as $item ) {
+			$subtotal += ( $item->price * $item->quantity );
+			$subtotal += ( $item->pnp );
+		}
+
+		return $subtotal;
+	}
+
+	/**
+	 * Get total price.
+	 *
+	 * @since  3.11.7
+	 *
+	 * @return float Price.
+	 */
+	public function get_total() {
+		return $this->get_subtotal() - $this->discount( true ) + $this->shipping( true ) + $this->taxes( true );
+	}
+
+	/**
+	 * Get total price display.
+	 *
+	 * @param  array $args Args for wpsc_currency_display().
+	 *
+	 * @return mixed Price.
+	 */
+	public function total_price( $args = array() ) {
+		$args = wp_parse_args( $args, array( 'display_as_html' => false ) );
+		return wpsc_currency_display( $this->get_total(), $args );
 	}
 
 	public function get_total_refunded() {
