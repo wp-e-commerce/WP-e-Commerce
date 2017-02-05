@@ -1567,7 +1567,7 @@ add_filter( 'bulk_post_updated_messages', 'wpsc_bulk_updated_messages', 10, 2 );
  */
 function wpsc_admin_rate_us( $footer_text ) {
 	global $typenow;
-	
+
 	if ( $typenow == 'wpsc-product' ) {
 		$rate_text = sprintf( __( 'Thank you for using <a href="%1$s" target="_blank">WP eCommerce</a>! Please <a href="%2$s" target="_blank">rate us</a> on <a href="%2$s" target="_blank">WordPress.org</a>', 'wp-e-commerce' ),
 			'https://wpecommerce.org',

@@ -493,7 +493,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 
 		if ( $log_id > 0 ) {
 
-			do_action( 'wpsc_purchase_log_before_delete', $log_id );
+			do_action( 'wpsc_purchase_log_before_delete', $log_id, $this );
 
 			$this->delete_caches();
 
@@ -514,7 +514,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_META . "` WHERE `wpsc_purchase_id` = %d", $log_id ) );
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d ", $log_id ) );
 
-			do_action( 'wpsc_purchase_log_delete', $log_id );
+			do_action( 'wpsc_purchase_log_delete', $log_id, $this );
 
 			return true;
 
@@ -810,7 +810,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$item = $this->get_item( $item_id );
 
 		if ( $item ) {
-			do_action( 'wpsc_purchase_log_before_update_item', $item_id );
+			do_action( 'wpsc_purchase_log_before_update_item', $item_id, $this );
 
 			$data = wp_unslash( $data );
 			$result = $wpdb->update( WPSC_TABLE_CART_CONTENTS, $data, array( 'id' => $item_id  ) );
@@ -820,7 +820,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 				$this->log_items = array();
 				$this->get_item( $item_id );
 
-				do_action( 'wpsc_purchase_log_update_item', $item_id );
+				do_action( 'wpsc_purchase_log_update_item', $item_id, $this );
 			}
 
 			return $result;
@@ -836,7 +836,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$item = $this->get_item( $item_id );
 
 		if ( $item ) {
-			do_action( 'wpsc_purchase_log_before_remove_item', $item_id );
+			do_action( 'wpsc_purchase_log_before_remove_item', $item_id, $this );
 
 			$result = $wpdb->delete( WPSC_TABLE_CART_CONTENTS, array( 'id' => $item_id ) );
 
@@ -845,7 +845,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 				unset( $this->log_items[ $this->log_item_ids[ $item_id ] ] );
 				unset( $this->log_item_ids[ $item_id ] );
 
-				do_action( 'wpsc_purchase_log_remove_item', $item_id );
+				do_action( 'wpsc_purchase_log_remove_item', $item_id, $this );
 			}
 
 			return $result;
