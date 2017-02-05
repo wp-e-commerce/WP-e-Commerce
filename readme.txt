@@ -4,7 +4,7 @@ Donate link: https://wpecommerce.org
 Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 4.5
 Tested up to: 4.7.2
-Stable tag: 4.0-dev
+Stable tag: 3.11.5
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -36,7 +36,15 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
-= 3.11.4 [2016-11-11] =
+= 3.11.5 [2017-2-04] =
+
+* Fix: Our extension page had some dated code which, in a bizarre turn of events, caused bulk select to break for all list tables. Mystery of mysteries, solved.
+* Fix: Fix PHPMailer issue for emails failing to send when admin email is empty.
+* Enhancement: Addition of In-Context Checkout for PayPal Express (3.0)
+* Enhancement: Addition Order Notes API
+* Enhancement: Addition Refund API (including partial refunds)
+
+3.11.4 [2016-11-11]
 
 * Security Fix: Under specific conditions (Gold Cart enabled, using eWay as a payment processor, and using the yet-to-be-released 2.0 Theme Engine) - a SQL vulnerability has been patched.
 
