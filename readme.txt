@@ -41,8 +41,9 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Our extension page had some dated code which, in a bizarre turn of events, caused bulk select to break for all list tables. Mystery of mysteries, solved.
 * Fix: Fix PHPMailer issue for emails failing to send when admin email is empty.
 * Enhancement: Addition of In-Context Checkout for PayPal Express (3.0)
-* Enhancement: Addition Order Notes API
-* Enhancement: Addition Refund API (including partial refunds)
+* Enhancement: Addition of Order Notes API
+* Enhancement: Addition of Refund API (including partial refunds)
+* Enhancement: Addition of ability to edit pending orders.
 
 3.11.4 [2016-11-11]
 
