@@ -1521,11 +1521,38 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		return $taxes;
 	}
 
-	public function total_price() {
-		global $purchlogitem;
+	public function get_subtotal() {
+		$subtotal = 0;
 
-		$total = $purchlogitem->totalAmount - $this->discount( true ) + $this->shipping( true ) + $this->taxes( true );
-		return wpsc_currency_display( $total, array( 'display_as_html' => false ) );
+		foreach ( $this->get_items() as $item ) {
+			$subtotal += ( $item->price * $item->quantity );
+			$subtotal += ( $item->pnp );
+		}
+
+		return $subtotal;
+	}
+
+	/**
+	 * Get total price.
+	 *
+	 * @since  3.11.7
+	 *
+	 * @return float Price.
+	 */
+	public function get_total() {
+		return $this->get_subtotal() - $this->discount( true ) + $this->shipping( true ) + $this->taxes( true );
+	}
+
+	/**
+	 * Get total price display.
+	 *
+	 * @param  array $args Args for wpsc_currency_display().
+	 *
+	 * @return mixed Price.
+	 */
+	public function total_price( $args = array() ) {
+		$args = wp_parse_args( $args, array( 'display_as_html' => false ) );
+		return wpsc_currency_display( $this->get_total(), $args );
 	}
 
 	public function get_total_refunded() {
