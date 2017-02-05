@@ -560,8 +560,9 @@ function wpsc_purchlogs_update_notes( $purchlog_id = 0, $purchlog_notes = '' ) {
 		: wpsc_get_order( $purchlog_id );
 
 	$notes = wpsc_get_order_notes( $purchase_log );
+	$notes->add( $purchlog_notes )->save();
 
-	return $notes->add( $purchlog_notes )->save();
+	return $notes;
 }
 
 /**
