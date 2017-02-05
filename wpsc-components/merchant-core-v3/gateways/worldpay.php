@@ -41,6 +41,15 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	}
 
 	/**
+	 * Load gateway only if TEv2 for now
+	 *
+	 * @return bool Whether or not to load gateway.
+	 */
+	public static function load() {
+		return function_exists( '_wpsc_get_current_controller' );
+	}
+
+	/**
 	 * Settings Form Template
 	 *
 	 * @since 3.9
