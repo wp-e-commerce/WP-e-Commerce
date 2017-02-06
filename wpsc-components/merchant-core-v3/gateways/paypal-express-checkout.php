@@ -116,7 +116,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		global $wpsc_cart;
 		//	Create a new PurchaseLog Object
-		$purchase_log = new WPSC_Purchase_Log();
+		$purchase_log = wpsc_get_order();
 
 		// Create a Sessionid
 		$sessionid = ( mt_rand( 100, 999 ) . time() );
@@ -1076,7 +1076,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			return new WP_Error( 'paypal_refund_error', __( 'Refund Error: You need to specify a refund amount.', 'wp-e-commerce' ) );
 		}
 
-		$log = new WPSC_Purchase_Log( $order_id );
+		$log = wpsc_get_order( $order_id );
 
 		if ( ! $log->get( 'transactid' ) ) {
 			return new WP_Error( 'error', __( 'Refund Failed: No transaction ID', 'wp-e-commerce' ) );
@@ -1092,7 +1092,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			$current_refund = $log->get_total_refunded();
 			$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
 
-			wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), wpsc_currency_display( $amount ) ) );
+			wpsc_purchlogs_update_notes( $log, sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), wpsc_currency_display( $amount ) ) );
 			return true;
 		}
 
@@ -1129,7 +1129,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				$current_refund = $log->get_total_refunded();
 				$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
 
-				wpsc_purchlogs_update_notes( absint( $order_id ), sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), wpsc_currency_display( $params['GROSSREFUNDAMT'] ), $params['REFUNDTRANSACTIONID'] ) );
+				wpsc_purchlogs_update_notes( $log, sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), wpsc_currency_display( $params['GROSSREFUNDAMT'] ), $params['REFUNDTRANSACTIONID'] ) );
 
 				return true;
 			}
