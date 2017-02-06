@@ -70,7 +70,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * into the database
 	 *
 	 * @static
-	 * @since 4.0
+	 * @since 3.11.5
 	 * @var array
 	 */
 	private static $float_cols = array(
@@ -85,7 +85,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * Array of metadata
 	 *
 	 * @static
-	 * @since 4.0
+	 * @since 3.11.5
 	 * @var array
 	 */
 	private static $metadata = array(
@@ -393,7 +393,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 *
 	 * @access public
 	 * @static
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @return void
 	 */
@@ -435,7 +435,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 *
 	 * @access public
 	 * @static
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @param string|null $value Optional (left for back-compatibility). The value which was queried.
 	 * @param string|null $col   Optional (left for back-compatibility). The column used as the identifier.
@@ -696,14 +696,14 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * Returns the value of the specified property of the $data array if it exists.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  string $key Name of the property (column)
 	 * @return mixed
 	 */
 	public function get( $key ) {
 		if ( 'notes' === $key ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Getting notes from the Log object has been deprecated in favor of the wpsc_get_order_notes() function.', 'wp-e-commerce' ), '4.0' );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Getting notes from the Log object has been deprecated in favor of the wpsc_get_order_notes() function.', 'wp-e-commerce' ), '3.11.5' );
 		}
 
 		return parent::get( $key );
@@ -713,7 +713,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * Prepares the return value for get() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  mixed  $value Value fetched
 	 * @param  string $key   Key for $data.
@@ -728,7 +728,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * Prepares the return value for get_data() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -740,7 +740,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * Prepares the return value for get_meta() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -749,7 +749,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	}
 
 	public function get_cart_contents() {
-		_wpsc_doing_it_wrong( __FUNCTION__, __( 'This function has been deprecated in favor of the get_items() method.', 'wp-e-commerce' ), '4.0' );
+		_wpsc_doing_it_wrong( __FUNCTION__, __( 'This function has been deprecated in favor of the get_items() method.', 'wp-e-commerce' ), '3.11.5' );
 		return $this->get_items();
 	}
 
@@ -1053,7 +1053,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * Save meta data for purchase log, if any was set via set().
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return WPSC_Purchase_Log  The current object (for method chaining)
 	 */
@@ -1112,7 +1112,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	/**
 	 * Adds ability to retrieve a purchase log by a meta key or value.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  string $key   Meta key. Optional.
 	 * @param  string $value Meta value. Optional.
@@ -1189,7 +1189,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			 * If you want to allow editing completed orders via this fitler, you will
 			 * be responsible for ensuring that the item stock is adjusted accordingly.
 			 *
-			 * @since 4.0.0
+			 * @since 3.11.5
 			 *
 			 * @var bool              $can_edit Whether this order can be edited
 			 * @var WPSC_Purchase_Log $log      This log object
@@ -1242,7 +1242,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	/**
 	 * Init the purchase log items for this purchase log.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return wpsc_purchaselogs_items|false The purhchase log item object or false.
 	 */
@@ -1463,7 +1463,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	/**
 	 * Returns base shipping should make a function to calculate items shipping as well
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  boolean $numeric Return numeric value.
 	 *
@@ -1481,7 +1481,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	/**
 	 * Returns base shipping should make a function to calculate items shipping as well
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  boolean $numeric       Return numeric value.
 	 * @param  boolean $include_items Whether to calculate per-item-shipping.
@@ -1505,7 +1505,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	/**
 	 * Returns taxes total.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  boolean $numeric Return numeric value.
 	 *
@@ -1563,6 +1563,50 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 
 	public function get_remaining_refund() {
 		return $this->get( 'totalprice' ) - $this->get_total_refunded();
+	}
+
+	/**
+	 * Add a purchase log note.
+	 *
+	 * @since 3.12.0
+	 *
+	 * @param mixed $note_text  String to add note. Optionally Accepts an array to specify note attributes: {
+	 *    @type string $type    The note type. Defaults to 'default', but can be 'error'.
+	 *    @type string $status  The note status. Defaults to 'public'.
+	 *    @type int    $time    The note timestamp. Defaults to time().
+	 *    @type string $content The note text.
+	 * }
+	 *
+	 * @return WPSC_Purchase_Log The current object (for method chaining)
+	 */
+	public function add_note( $note_text ) {
+		static $notes = null;
+
+		if ( ! ( $notes instanceof WPSC_Purchase_Log_Notes ) ) {
+			$notes = wpsc_get_order_notes( $this );
+		}
+
+		$notes->add( $note_text )->save();
+
+		return $this;
+	}
+
+	/**
+	 * Add a purchase log refund note.
+	 *
+	 * @since 3.12.0
+	 *
+	 * @param  mixed  $note_text         String to add refund note.
+	 * @param  string $reason_for_refund Optional reason for refund. Will display on a new line from default text.
+	 *
+	 * @return WPSC_Purchase_Log         The current object (for method chaining)
+	 */
+	public function add_refund_note( $note_text, $reason_for_refund = '' ) {
+		if ( ! empty( $reason_for_refund ) ) {
+			$note_text .= sprintf( __( "\nReason: %s", 'wp-e-commerce' ), $reason_for_refund );
+		}
+
+		return $this->add_note( $note_text );
 	}
 
 }

@@ -358,7 +358,7 @@ add_action( 'wpsc_purchase_log_action-downloads_lock', 'wpsc_purchase_log_action
  */
 function wpsc_purchase_log_action_delete( $log_id ) {
 
-	$log = new WPSC_Purchase_Log( $log_id );
+	$log = wpsc_get_order( $log_id );
 	$deleted = $log->delete();
 
 	// Redirect back to purchase logs list
@@ -426,7 +426,7 @@ function wpsc_purchlog_resend_email( $log_id = '' ) {
 		$wpec_taxes_controller = new wpec_taxes_controller();
 
 		if ( is_numeric( $log_id ) ) {
-			$purchase_log = new WPSC_Purchase_Log( $log_id );
+			$purchase_log = wpsc_get_order( $log_id );
 			return wpsc_send_customer_email( $purchase_log );
 		}
 	}
@@ -505,7 +505,7 @@ function wpsc_purchlog_bulk_modify() {
 		} elseif ( $_POST['purchlog_multiple_status_change'] == 'delete' ) {
 			foreach ( (array)$_POST['purchlogids'] as $purchlogid ) {
 
-				$log = new WPSC_Purchase_Log( $purchlogid );
+				$log = wpsc_get_order( $purchlogid );
 				$deleted_log = $log->delete();
 				if ( $deleted_log ) {
 					$deleted++;
@@ -560,8 +560,9 @@ function wpsc_purchlogs_update_notes( $purchlog_id = 0, $purchlog_notes = '' ) {
 		: wpsc_get_order( $purchlog_id );
 
 	$notes = wpsc_get_order_notes( $purchase_log );
+	$notes->add( $purchlog_notes )->save();
 
-	return $notes->add( $purchlog_notes )->save();
+	return $notes;
 }
 
 /**
@@ -582,7 +583,7 @@ function wpsc_delete_purchlog( $purchlog_id = '' ) {
 		return false;
 	}
 
-	$log = new WPSC_Purchase_Log( $purchlog_id );
+	$log = wpsc_get_order( $purchlog_id );
 
 	return $log->delete();
 

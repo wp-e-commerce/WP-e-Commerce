@@ -118,7 +118,7 @@ add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
  * @param   string  $taxonomy  Taxonomy.
  * @param   string  $context   Context.
  *
- * @since  4.0.0
+ * @since  3.11.5
  *
  * @return  array              Filtered dropdown args.
  */
@@ -1521,7 +1521,7 @@ add_filter( 'plugin_action_links_' . WPSC_PLUGIN_BASENAME, 'wpsc_support_links' 
  *
  * @param  array $args Array of removable query args.
  *
- * @since  4.0.0
+ * @since  3.11.5
  *
  * @return array $args Array of removable query args.
  */
@@ -1538,7 +1538,7 @@ add_filter( 'removable_query_args', 'wpsc_removable_query_args' );
  * @param  array $bulk_messages Array of bulk messages.
  * @param  int   $bulk_counts   The amount of messages affected.
  *
- * @since  4.0.0
+ * @since  3.11.5
  *
  * @return array                Array of bulk messages.
  */

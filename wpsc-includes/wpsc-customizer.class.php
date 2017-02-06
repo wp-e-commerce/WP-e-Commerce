@@ -5,13 +5,13 @@
  *
  * @package WP eCommerce
  * @subpackage Customizer
- * @since 4.0
+ * @since 3.11.5
  */
 
 /**
  * Class used to implement Customizer ( specifically Selective Refresh ) functionality.
  *
- * @since 4.0
+ * @since 3.11.5
  */
 
  /** WPSC_Customizer_Thumbnail_Control class */
