@@ -41,7 +41,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 			/**
 			 * wpsc_order_partially_refunded.
 			 *
-			 * @since 4.0.0
+			 * @since 3.11.5
 			 */
 			do_action( 'wpsc_order_partially_refunded', $log );
 			$response_data['status'] = 'partially_refunded';
@@ -50,7 +50,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 			/**
 			 * wpsc_order_fully_refunded.
 			 *
-			 * @since 4.0.0
+			 * @since 3.11.5
 			 */
 			do_action( 'wpsc_order_fully_refunded', $log );
 			$response_data['status'] = 'fully_refunded';
@@ -521,7 +521,7 @@ function _wpsc_ajax_purchase_log_action_link() {
 /**
  * Remove purchase log item.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -545,7 +545,7 @@ function _wpsc_ajax_remove_log_item() {
 /**
  * Update purchase log item quantity.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -576,7 +576,7 @@ function _wpsc_ajax_update_log_item_qty() {
 /**
  * Add purchase log item.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -661,7 +661,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 /**
  * Edit log contact details.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -717,7 +717,7 @@ function _wpsc_ajax_edit_contact_details() {
 /**
  * Add a note to a log.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -753,7 +753,7 @@ function _wpsc_ajax_add_note() {
 /**
  * Delete a note from a log.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -774,7 +774,7 @@ function _wpsc_ajax_delete_note() {
 /**
  * Search for products.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
