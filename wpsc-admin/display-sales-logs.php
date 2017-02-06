@@ -560,7 +560,7 @@ class WPSC_Purchase_Log_Page {
 		if ( $note ) {
 			check_admin_referer( 'wpsc_log_add_notes_nonce', 'wpsc_log_add_notes_nonce' );
 
-			wpsc_purchlogs_update_notes( $log, wp_kses_post( $note ) );
+			$log->add_note( wp_kses_post( $note ) );
 
 			wp_safe_redirect( esc_url_raw( remove_query_arg( 'wpsc_log_add_notes_nonce' ) ) );
 			exit;
