@@ -501,7 +501,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$this->pull_paypal_details();
 
 		// If no Shipping is required, confirm the Transaction
-		if ( !wpsc_uses_shipping() ) {
+		if ( ! wpsc_uses_shipping() ) {
 			$this->callback_confirm_transaction();
 		}
 
