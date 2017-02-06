@@ -151,6 +151,19 @@ table.wpsc-edit-module-options tr td {
 	margin-top: 2em;
 }
 
+.gateway_settings .gateway_settings_form,
+.gateway_settings .gateway_settings_form tr {
+	background: #f8f8f8;
+}
+
+.gateway_settings.active .gateway_settings_form,
+.gateway_settings.active .gateway_settings_form tr td {
+	background: #ecf5f9;
+}
+
+.gateway_settings .gateway_settings_form tr:last-child td {
+	box-shadow: none;
+}
 .gateway_settings input[type=text]{
 	width: 200px;
 }
