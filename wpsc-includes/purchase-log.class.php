@@ -1565,4 +1565,48 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		return $this->get( 'totalprice' ) - $this->get_total_refunded();
 	}
 
+	/**
+	 * Add a purchase log note.
+	 *
+	 * @since 3.12.0
+	 *
+	 * @param mixed $note_text  String to add note. Optionally Accepts an array to specify note attributes: {
+	 *    @type string $type    The note type. Defaults to 'default', but can be 'error'.
+	 *    @type string $status  The note status. Defaults to 'public'.
+	 *    @type int    $time    The note timestamp. Defaults to time().
+	 *    @type string $content The note text.
+	 * }
+	 *
+	 * @return WPSC_Purchase_Log The current object (for method chaining)
+	 */
+	public function add_note( $note_text ) {
+		static $notes = null;
+
+		if ( ! ( $notes instanceof WPSC_Purchase_Log_Notes ) ) {
+			$notes = wpsc_get_order_notes( $this );
+		}
+
+		$notes->add( $note_text )->save();
+
+		return $this;
+	}
+
+	/**
+	 * Add a purchase log refund note.
+	 *
+	 * @since 3.12.0
+	 *
+	 * @param  mixed  $note_text         String to add refund note.
+	 * @param  string $reason_for_refund Optional reason for refund. Will display on a new line from default text.
+	 *
+	 * @return WPSC_Purchase_Log         The current object (for method chaining)
+	 */
+	public function add_refund_note( $note_text, $reason_for_refund = '' ) {
+		if ( ! empty( $reason_for_refund ) ) {
+			$note_text .= sprintf( __( "\nReason: %s", 'wp-e-commerce' ), $reason_for_refund );
+		}
+
+		return $this->add_note( $note_text );
+	}
+
 }
