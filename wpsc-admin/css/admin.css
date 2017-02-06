@@ -2675,3 +2675,7 @@ a.wpsc_remove_meta {
 .wpsc-refund-ui {
 	display: none;
 }
+
+.wp-core-ui .wpsc-refund-ui .button {
+	margin-right: 5px;
+}

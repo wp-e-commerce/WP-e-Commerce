@@ -228,11 +228,9 @@ class WPSC_Purchase_Log_Page {
 		<form name="wpsc_items_ordered_form" method="post">
 			<table class="widefat" cellspacing="0">
 				<thead>
-				<tr>
-					<?php
-						print_column_headers( 'wpsc_purchase_log_item_details' );
-					 ?>
-				</tr>
+					<tr>
+						<?php print_column_headers( 'wpsc_purchase_log_item_details' ); ?>
+					</tr>
 				</thead>
 
 				<tbody>
@@ -288,44 +286,45 @@ class WPSC_Purchase_Log_Page {
 					<tr class="wpsc-refund-ui">
 						<td colspan="<?php echo $this->cols + 2; ?>">
 							<table>
-							<tbody>
-							<tr>
-								<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
-								<td class="total"><?php echo wpsc_currency_display( $this->log->get_total_refunded() );?></td>
-							</tr>
-							<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
-							<tr>
-								<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'wp-e-commerce' ); ?>:</label></td>
-								<td class="total">
-									<input type="text" class="text" id="refund_amount" name="refund_amount" class="wpec_input_price" />
-									<div class="clear"></div>
-								</td>
-							</tr>
-							<?php endif; ?>
-							<tr>
-								<td class="label"><label for="refund_reason"><?php _e( 'Reason for refund (optional)', 'wp-e-commerce' ); ?>:</label></td>
-								<td class="total">
-									<input type="text" class="text" id="refund_reason" name="refund_reason" />
-									<div class="clear"></div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p>
-										<button type="button" class="button tips button-primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), wpsc_get_payment_gateway( $this->log->get( 'gateway' ) )->get_title() ); ?></button>
-										<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
-										<button type="button" class="button button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
-										<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
-									</p>
-								</td>
-							</tbody>
-						</table>
-					</td>
+								<tbody>
+									<tr>
+										<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
+										<td class="total"><?php echo wpsc_currency_display( $this->log->get_total_refunded() );?></td>
+									</tr>
+									<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
+									<tr>
+										<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'wp-e-commerce' ); ?>:</label></td>
+										<td class="total">
+											<input type="text" class="text" id="refund_amount" name="refund_amount" class="wpec_input_price" />
+											<div class="clear"></div>
+										</td>
+									</tr>
+									<?php endif; // gateway supports PARTIAL refunds ?>
+									<tr>
+										<td class="label"><label for="refund_reason"><?php _e( 'Reason for refund (optional)', 'wp-e-commerce' ); ?>:</label></td>
+										<td class="total">
+											<input type="text" class="text" id="refund_reason" name="refund_reason" />
+											<div class="clear"></div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<p>
+												<button type="button" class="button tips button-primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), wpsc_get_payment_gateway( $this->log->get( 'gateway' ) )->get_title() ); ?></button>
+												<button type="button" class="button button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
+											</p>
+										</td>
+										<td>
+											<span class="spinner"></span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
 					</tr>
-					<?php endif; ?>
+					<?php endif; // gateway supports refunds ?>
 				</tbody>
 			</table>
-
 		</form>
 
 		<?php do_action( 'wpsc_purchlogitem_metabox_end', $this->log_id ); ?>
