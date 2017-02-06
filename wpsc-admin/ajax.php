@@ -532,7 +532,7 @@ function _wpsc_ajax_remove_log_item() {
 
 		$item_id = absint( $_POST['item_id'] );
 		$log_id  = absint( $_POST['log_id'] );
-		$log     = new WPSC_Purchase_Log( $log_id );
+		$log     = wpsc_get_order( $log_id );
 
 		if ( $log->remove_item( $item_id ) ) {
 			return _wpsc_init_log_items( $log );
@@ -560,7 +560,7 @@ function _wpsc_ajax_update_log_item_qty() {
 
 		$item_id = absint( $_POST['item_id'] );
 		$log_id  = absint( $_POST['log_id'] );
-		$log     = new WPSC_Purchase_Log( $log_id );
+		$log     = wpsc_get_order( $log_id );
 		$result  = $log->update_item( $item_id, array( 'quantity' => absint( $_POST['qty'] ) ) );
 
 		if ( 0 === $result ) {
@@ -600,7 +600,7 @@ function _wpsc_ajax_add_log_item() {
 		foreach ( $_POST['product_ids'] as $product_id ) {
 			$product_id = absint( $product_id );
 			$log_id     = absint( $_POST['log_id'] );
-			$log        = new WPSC_Purchase_Log( $log_id );
+			$log        = wpsc_get_order( $log_id );
 
 			// Is product is already in item list?
 			if ( $existing && in_array( $product_id, $existing, true ) ) {
@@ -674,7 +674,7 @@ function _wpsc_ajax_edit_contact_details() {
 		parse_str( $_POST['fields'], $fields );
 
 		$log_id = absint( $_POST['log_id'] );
-		$log    = new WPSC_Purchase_Log( $log_id );
+		$log    = wpsc_get_order( $log_id );
 
 		if ( isset( $fields['wpsc_checkout_details'] ) && is_array( $fields['wpsc_checkout_details'] ) ) {
 			$details = wp_unslash( $fields['wpsc_checkout_details'] );

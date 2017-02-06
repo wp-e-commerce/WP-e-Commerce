@@ -36,8 +36,8 @@ class WPSC_Purchase_Log_Page {
 		// If individual purchase log, setup ID and action links.
 		if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
 			$this->log_id   = (int) $_REQUEST['id'];
-			$this->log      = new WPSC_Purchase_Log( $this->log_id );
-			$this->notes    = new WPSC_Purchase_Log_Notes( $this->log );
+			$this->log      = wpsc_get_order( $this->log_id );
+			$this->notes    = wpsc_get_order_notes( $this->log );
 			$this->can_edit = $this->log->can_edit();
 		}
 
@@ -572,7 +572,7 @@ class WPSC_Purchase_Log_Page {
 		if ( is_numeric( $note_id ) ) {
 			check_admin_referer( 'delete-note', 'delete-note' );
 
-			$notes = new WPSC_Purchase_Log_Notes( $log );
+			$notes = wpsc_get_order_notes( $log );
 
 			$notes->remove( $note_id )->save();
 
@@ -759,7 +759,7 @@ class WPSC_Purchase_Log_Page {
 				$ids = array_map( 'intval', $_REQUEST['post'] );
 
 				foreach ( $ids as $id ) {
-					$log = new WPSC_Purchase_Log( $id );
+					$log = wpsc_get_order( $id );
 					$log->delete();
 				}
 
