@@ -3,7 +3,7 @@
 /**
  * Commands for working with WP e-Commerce product tags.
  *
- * @since  4.0
+ * @since  3.11.5
  *
  * @todo This is fairly generic, and doesn't support WP e-Commerce specific category values such as:
  *   * Category images

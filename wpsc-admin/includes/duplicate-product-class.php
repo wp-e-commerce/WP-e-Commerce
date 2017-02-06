@@ -5,7 +5,7 @@
  *
  * @package     WP eCommerce
  * @subpackage  Duplicate Product Class
- * @since       4.0
+ * @since       3.11.0
  */
 
 /**
@@ -13,7 +13,7 @@
  *
  * Used to duplicate products.
  *
- * @since  4.0
+ * @since  3.11.0
  */
 class WPSC_Duplicate_Product {
 
@@ -24,7 +24,7 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Create new duplicate product
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @param  int        $post_id        Post ID.
 	 * @param  int|false  $new_parent_id  Optional. New post parent ID.
@@ -40,7 +40,7 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Duplicates a product
 	 *
-	 * @since 4.0
+	 * @since 3.11.0
 	 *
 	 * @uses  wp_insert_post()  Inserts a new post to the database.
 	 *
@@ -117,7 +117,7 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Copy the taxonomies of a post to another post
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @uses  get_object_taxonomies()   Gets taxonomies for the given object.
 	 * @uses  wpsc_get_product_terms()  Gets terms for the product taxonomies.
@@ -145,7 +145,7 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Copy the meta information of a post to another post
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @uses  $wpdb          WordPress database object for queries.
 	 * @uses  get_results()  Gets generic multirow results from the database.
@@ -197,7 +197,7 @@ class WPSC_Duplicate_Product {
 	 * duplicated this function is used to update the gallery meta to
 	 * refer to the IDs of any duplicated media.
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @param  array  $duplicated_children  Associative array mapping original child IDs to duplicated child IDs.
 	 */
@@ -248,7 +248,7 @@ class WPSC_Duplicate_Product {
 	 * the duplicated product and offers the opportunity to change the featured image
 	 * of the duplicated product via the 'wpsc_duplicate_product_thumbnail' filter.
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 */
 	private function duplicate_product_thumbnail() {
 
@@ -277,7 +277,7 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Duplicates product children and meta
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @uses  get_posts()  Gets an array of posts given array of arguments.
 	 *
@@ -331,7 +331,7 @@ class WPSC_Duplicate_Product {
 	 * Uses a portion of code from media_sideload_image() in `wp-admin/includes/media.php`
 	 * to check file before downloading from URL.
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @uses  get_post_type()          Gets post type.
 	 * @uses  wp_get_attachment_url()  Gets attachment URL.
@@ -411,7 +411,7 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Get Post ID
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @return  int  Post ID.
 	 */
@@ -423,7 +423,7 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Get New Post ID
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @return  int  Post ID.
 	 */
@@ -435,7 +435,7 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Get New Parent ID
 	 *
-	 * @since  4.0
+	 * @since  3.11.0
 	 *
 	 * @param   int  $default  Default parent ID.
 	 * @return  int            Post ID.

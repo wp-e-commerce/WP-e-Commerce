@@ -170,7 +170,7 @@ function _wpsc_process_transaction_coupon( $purchase_log ) {
  * Currently, only used to send customer and admin emails upon successful purchase.
  *
  * @since  3.8.9
- * @since  4.0    Removed coupons and stocks from email sending.  Much easier now to remove_action() on either
+ * @since  3.11.5 Removed coupons and stocks from email sending.  Much easier now to remove_action() on either
  *                of those functions when desiring to override.
  *
  * @param  int               $id             Purchase Log ID.
@@ -192,7 +192,7 @@ add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_purchase_log
 /**
  * Routine that runs when updating a purchase log's status, used to update status of coupon's used.
  *
- * @since  4.0
+ * @since  3.11.5
  *
  * @param  int               $id             Purchase Log ID.
  * @param  int               $status         Current status.
@@ -228,7 +228,7 @@ add_action( 'wpsc_update_purchase_log_status', '_wpsc_update_purchase_log_coupon
 /**
  * Routine that runs when updating a purchase log's status, used to update status of inventory.
  *
- * @since  4.0
+ * @since  3.11.5
  *
  * @param  int               $id             Purchase Log ID.
  * @param  int               $status         Current status.
@@ -331,7 +331,7 @@ add_action( 'wpsc_purchase_log_update_item', '_wpsc_update_log_total_with_item_u
  * Returns a purchase log.
  *
  * @param int $order_id Order ID.
- * @since 4.0
+ * @since 3.11.5
  */
 function wpsc_get_order( $order_id ) {
 	return new WPSC_Purchase_Log( $order_id );
@@ -341,7 +341,7 @@ function wpsc_get_order( $order_id ) {
  * Returns a purchase log's notes object.
  *
  * @param int $order_id Order ID or WPSC_Purchase_Log object.
- * @since 4.0
+ * @since 3.11.5
  */
 function wpsc_get_order_notes( $order_id ) {
 	return new WPSC_Purchase_Log_Notes( $order_id );

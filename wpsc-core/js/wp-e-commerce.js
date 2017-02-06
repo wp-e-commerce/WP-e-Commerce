@@ -110,7 +110,7 @@ function wpsc_var_set( name, value ) {
  * Create an <option> tag in a cross-browser manner.
  * See: https://github.com/wp-e-commerce/WP-e-Commerce/issues/1792
  *
- * @since 4.0
+ * @since 3.11.0
  *
  * @param {string} displaytext              The text to put between the <option></option> tags.
  * @param {string|int|float} [value='']     The value's option, (for the "value" attribute).
