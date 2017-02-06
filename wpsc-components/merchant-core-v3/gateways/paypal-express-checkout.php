@@ -605,8 +605,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$this->log_protection_status( $response );
 		$location = remove_query_arg( 'payment_gateway_callback' );
 
-		die( var_dump( $response ) );
-
 		if ( $response->has_errors() ) {
 			$errors = $response->get_params();
 
@@ -1014,8 +1012,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		if ( $this->setting->get( 'ipn', false ) ) {
 			$options['notify_url'] = $this->get_notify_url();
 		}
-
-		die( var_dump( $options ) );
 
 		// SetExpressCheckout
 		$response = $this->gateway->setup_purchase( $options );
