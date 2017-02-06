@@ -1091,13 +1091,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		if ( $manual ) {
 			$current_refund = $log->get_total_refunded();
 
-			$log
-				// Set a log meta entry
-				->set( 'total_order_refunded' , $amount + $current_refund )->save()
-				->add_refund_note(
-					sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), wpsc_currency_display( $amount ) ),
-					$reason
-				);
+			// Set a log meta entry, and save log before adding refund note.
+			$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
+
+			$log->add_refund_note(
+				sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), wpsc_currency_display( $amount ) ),
+				$reason
+			);
 
 			return true;
 		}
@@ -1134,13 +1134,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 				$current_refund = $log->get_total_refunded();
 
-				$log
-					// Set a log meta entry
-					->set( 'total_order_refunded' , $amount + $current_refund )->save()
-					->add_refund_note(
-						sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), wpsc_currency_display( $params['GROSSREFUNDAMT'] ), $params['REFUNDTRANSACTIONID'] ),
-						$reason
-					);
+				// Set a log meta entry, and save log before adding refund note.
+				$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
+
+				$log->add_refund_note(
+					sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), wpsc_currency_display( $params['GROSSREFUNDAMT'] ), $params['REFUNDTRANSACTIONID'] ),
+					$reason
+				);
 
 				return true;
 			}
