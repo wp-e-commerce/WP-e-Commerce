@@ -4,7 +4,7 @@ Donate link: https://wpecommerce.org
 Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 4.5
 Tested up to: 4.7.2
-Stable tag: 3.11.6
+Stable tag: 3.11.7
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,6 +35,10 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.11.7 [2017-2-05] =
+
+* Fix: In PHP versions prior to 5.5, we caused a fatal error. Our apologies are sincere, but update your PHP! Literally the same problem resolved in 3.11.6, just in a different context.  We'll get better at supporting EOL PHP, the WordPress way.
 
 = 3.11.6 [2017-2-05] =
 
