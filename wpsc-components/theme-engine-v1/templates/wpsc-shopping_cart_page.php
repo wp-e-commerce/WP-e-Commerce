@@ -140,14 +140,18 @@ endif;
             </td>
          </tr>
 
-         <?php if ( ! wpsc_have_shipping_quote() ) : // No valid shipping quotes ?>
+         <?php
+		 	$shipping_country = wpsc_get_customer_meta( 'shippingcountry' );
+
+			if ( ! wpsc_have_shipping_quote() ) : // No valid shipping quotes
+		?>
             <?php if ( ! wpsc_have_valid_shipping_zipcode() ) : ?>
                   <tr class='wpsc_update_location'>
                      <td colspan='5' class='shipping_error' >
                         <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wp-e-commerce'); ?>
                      </td>
                   </tr>
-            <?php elseif ( ! empty( wpsc_get_customer_meta( 'shippingcountry' ) ) ) : ?>
+            <?php elseif ( ! empty( $shipping_country ) ) : ?>
                <tr class='wpsc_update_location_error'>
                   <td colspan='5' class='shipping_error' >
                      <?php _e('Sorry, shipping quotes could not be calculated with the details provided. Please double check your shipping address details.', 'wp-e-commerce'); ?>
