@@ -142,6 +142,18 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 		return apply_filters( 'wpsc_get_purchase_log_notes', $this->data, $this );
 	}
 
+	/**
+	 * Add a note to the log.
+	 *
+	 * @since 4.0
+	 *
+	 * @param mixed $note_args String to add note. Optionally Accepts an array to specify note attributes: {
+	 *    @type string $type    The note type. Defaults to 'default', but can be 'error'.
+	 *    @type string $status  The note status. Defaults to 'public'.
+	 *    @type int    $time    The note timestamp. Defaults to time().
+	 *    @type string $content The note text.
+	 * }
+	 */
 	public function add( $note_args ) {
 		if ( ! is_array( $note_args ) ) {
 			$note_args = self::parse_args( array( self::$map_keys[ self::KEY_CONTENT ] => $note_args ) );
@@ -150,6 +162,15 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 		return $this->set( false, $note_args );
 	}
 
+	/**
+	 * Remove a note from the log by the note_id (or index).
+	 *
+	 * @since  4.0
+	 *
+	 * @param  int $note_id    Note index.
+	 *
+	 * @return WPSC_Query_Base The current object (for method chaining)
+	 */
 	public function remove( $note_id ) {
 		$this->fetch();
 		unset( $this->data[ $note_id ] );
