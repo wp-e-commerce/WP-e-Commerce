@@ -1,4 +1,8 @@
 <?php
+/**
+ * Todo: Create a nice user sign-up flow, as a part of an overall onboarding experience
+ * integrated with subscriptions
+ */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 	private $endpoints = array(
@@ -27,9 +31,14 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			'sandbox'    => 'https://protectpaytest.propay.com/pmi/spr.aspx',
 			'production' => 'https://protectpay.propay.com/pmi/spr.aspx'
 		),
+		// REST API endpoint
+		'rest-api-endpoint' => array(
+			'sandbox'    => 'https://xmltestapi.propay.com/protectpay',
+			'production' => 'https://xmlapi.propay.com/protectpay',
+		)
 	);
 
-	private $login_url = 'https://xmltest.propay.com/login';
+	private $login_url = 'http://xmltest.propay.com/signup/?refid=WPECOMME';
 	private $auth_token;
 	private $payment_capture;
 	private $order_handler;
@@ -39,7 +48,8 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	private $cert_string = '511ed119b09498d93ad2ba9b40a57f';
 	private $term_id = '40a57f';
 	private $account_number = '';
-	private $merchant_id = '';
+	private $merchant_profile_id = '';
+	private $biller_account_id = '';
 
 	/**
 	 * Constructor of pro-pay Payment Gateway
@@ -57,11 +67,28 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$this->order_handler	= WPSC_Pro_Pay_Payments_Order_Handler::get_instance( $this );
 
 		// Define user set variables
-		$this->account_number   = $this->setting->get( 'account_number' );
-		$this->merchant_id      = $this->setting->get( 'merchant_id' );
-		$this->sandbox			= $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
-		$this->endpoint			= $this->sandbox ? $this->endpoints['payment-processing-endpoint']['sandbox'] : $this->endpoints['payment-processing-endpoint']['production'];
-		$this->payment_capture 	= $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
+		$this->account_number      = $this->setting->get( 'account_number' );
+		$this->merchant_profile_id = $this->setting->get( 'merchant_profile_id' );
+		$this->biller_account_id   = $this->setting->get( 'biller_account_id' );
+		$this->auth_token          = $this->setting->get( 'auth_token' );
+		$this->sandbox			   = $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
+		$this->endpoint			   = $this->sandbox ? $this->endpoints['payment-processing-endpoint']['sandbox'] : $this->endpoints['payment-processing-endpoint']['production'];
+		$this->payment_capture 	   = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
+	}
+
+	public static function get_endpoint( $type, $environment ) {
+		// Default to a sane assumption of sandbox payment processing;
+		$endpoint = $this->endpoints['payment-processing-endpoint']['sandbox'];
+
+		if ( ! isset( $this->endpoints[ $type ] ) ) {
+			return $endpoint;
+		}
+
+		if ( ! isset( $this->endpoints[ $type ][ $environment ] ) ) {
+			return $endpoint;
+		}
+
+		return $this->endpoints[ $type ][ $environment ];
 	}
 
 	/**
@@ -91,7 +118,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	/**
 	 * Settings Form Template
 	 *
-	 * @since 3.9
+	 * @since 3.12.0
 	 */
 	public function setup_form() {
 		if ( empty( $this->account_number ) ) {
@@ -103,7 +130,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 					<a class="button-secondary" href="#" onclick="jQuery( '#pro-pay-account-row' ).slideDown( 300 ); jQuery('#account-creation-pro-pay').slideUp(400); return false; "><?php _e( 'Already Have One?', 'wp-e-commerce' ); ?></a>
 				</td>
 			</tr>
-			<?php
+		<?php
 			$this->get_account_number_row( true );
 		} else {
 
@@ -117,11 +144,30 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		<?php $this->get_account_number_row(); ?>
 		<tr>
 			<td>
-				<label for="wpsc-pro-pay-secure-key"><?php _e( 'Merchant Profile ID', 'wp-e-commerce' ); ?></label>
+				<label for="wpsc-pro-pay-auth-token"><?php _e( 'Authentication Token', 'wp-e-commerce' ); ?></label>
+			</td>
+			<td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'auth_token' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'auth_token' ) ); ?>" id="wpsc-pro-pay-auth-token" />
+				<br><span class="small description"><?php _e( 'Enter the Authentication Token provided to you by ProPay.', 'wp-e-commerce' ); ?></span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="wpsc-pro-pay-merchant-profile-id"><?php _e( 'Merchant Profile ID', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'merchant_profile_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'merchant_profile_id' ) ); ?>" id="wpsc-pro-pay-merchant-profile-id" />
-				<br><span class="small description"><?php _e( 'You can obtain the Merchant Profile ID by signing into the Virtual Terminal with the login credentials that you were emailed to you during the sign-up process.', 'wp-e-commerce' ); ?></span>
+				<br><span class="small description"><?php _e( 'If you have not yet received a merchant profile ID, create one below.', 'wp-e-commerce' ); ?></span>
+				<p><a href="#" class="button-primary" class="create-merchant-profile" onclick="return false;"><?php _e( 'Create Merchant Profile ID' ); ?></a></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="wpsc-pro-pay-merchant-profile-id"><?php _e( 'Biller Account ID', 'wp-e-commerce' ); ?></label>
+			</td>
+			<td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'biller_account_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'biller_account_id' ) ); ?>" id="wpsc-pro-pay-biller-account-id" />
+				<br><span class="small description"><?php _e( 'Your biller account ID was provided to you via email during the sign-up process.', 'wp-e-commerce' ); ?></span>
 			</td>
 		</tr>
 		<tr>
@@ -178,6 +224,24 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$args['before_form_actions'] = $fields . $default;
 
 		return $args;
+	}
+
+	public function create_merchant_profile() {
+		$config = new WPSC_Pro_Pay_Merchant_Profile_Config(
+			array(
+				'cert_string'       => $this->cert_string,
+				'account_number'    => $this->account_number,
+				'term_id'           => $this->term_id,
+				'environment'       => $this->sandbox ? 'sandbox' : 'production',
+				'biller_account_id' => $this->biller_account_id,
+				'auth_token'        => $this->auth_token
+			)
+		);
+
+		$profile = new WPSC_ProPay_Merchant_Profile( $config );
+
+		$response = $profile->create();
+
 	}
 
 	public function process() {
@@ -769,4 +833,117 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
+}
+
+class WPSC_ProPay_Merchant_Profile {
+
+	protected $config;
+
+	public function __construct( WPSC_Pro_Pay_Merchant_Profile_Config $config ) {
+		$this->config = $config;
+	}
+
+	public function create() {
+		$request = new WPSC_ProPay_Request( $this->config );
+
+		$body = json_encode( array(
+			'ProfileName' => '',
+			'PaymentProcessor' => 'LegacyProPay',
+			'ProcessorData' => array(
+				array(
+					'ProcessorField' => 'certStr',
+					'Value'          => $this->config->cert_string
+				),
+				array(
+					'ProcessorField' => 'accountNum',
+					'Value'          => $this->config->account_number
+				),
+				array(
+					'ProcessorField' => 'termId',
+					'Value'          => $this->config->term_id
+				)
+			),
+		) );
+
+		return $request->request( '/protectpay/MerchantProfiles/', array( 'body' => $body ) );
+	}
+}
+
+class WPSC_Pro_Pay_Merchant_Profile_Config {
+
+	public $cert_string;
+	public $account_number;
+	public $term_id;
+	public $environment;
+	public $biller_account_id;
+	public $auth_token;
+
+	public function __construct( $args ) {
+		$this->args = (object) $args;
+
+		$this->cert_string       = $this->args->cert_string;
+		$this->account_number    = $this->args->account_number;
+		$this->term_id           = $this->args->term_id;
+		$this->environment       = $this->args->environment;
+		$this->biller_account_id = $this->args->biller_account_id;
+		$this->auth_token        = $this->args->auth_token;
+	}
+}
+
+class WPSC_ProPay_Request {
+
+	protected $config;
+
+	public function __construct( $config ) {
+		$this->config = $config;
+	}
+
+	public function request( $resource, $args = array() ) {
+
+		$endpoint = WPSC_Payment_Gateway_Pro_Pay::get_endpoint( 'rest-api-endpoint', $this->config->environment );
+
+		$url = path_join( $endpoint, $resource );
+
+		$args = wp_parse_args( $args, array(
+			'timeout' => 60,
+			'method'  => 'PUT',
+			'body'    => array(),
+			'headers' => array(
+				'content-type'  => 'application/json',
+				'authorization' => self::generate_auth( $this->config->biller_account_id, $this->config->auth_token )
+			)
+		) );
+
+		$args['headers']['content-length'] = strlen( $args['body'] );
+
+		return new WPSC_ProPay_Response( wp_safe_remote_request( $url, $args ) );
+	}
+
+	private static function generate_auth( $id, $auth ) {
+		return 'Basic ' . base64_encode( "{$id}:{$auth}" );
+	}
+}
+
+class WPSC_ProPay_Response {
+
+	public $response;
+
+	public function __construct( $response ) {
+		$this->response = $response;
+		$this->prepare_response();
+	}
+
+	public function prepare_response() {
+		return $this->response;
+	}
+
+	/**
+	 * Temp debug function.
+	 * 
+	 * @return string [description]
+	 */
+	public function __toString() {
+		return '<pre>' . print_r( $this->response, 1 ) . '</pre>';
+	}
+
 }
