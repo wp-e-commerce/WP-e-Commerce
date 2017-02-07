@@ -2,6 +2,7 @@
 /**
  * Todo: Create a nice user sign-up flow, as a part of an overall onboarding experience
  * integrated with subscriptions
+ * @todo enqueue admin script for propay, localize nonce.
  */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
@@ -167,7 +168,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'merchant_profile_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'merchant_profile_id' ) ); ?>" id="wpsc-pro-pay-merchant-profile-id" />
 				<br><span class="small description"><?php _e( 'If you have not yet received a merchant profile ID, create one below.', 'wp-e-commerce' ); ?></span>
-				<p><a href="#" class="button-primary" class="create-merchant-profile" onclick="return false;"><?php _e( 'Create Merchant Profile ID' ); ?></a></p>
+				<p><a href="#" class="button-primary create-merchant-profile" onclick="return false;"><?php _e( 'Create Merchant Profile ID' ); ?></a><div class="spinner"></div></p>
 			</td>
 		</tr>
 		<tr>
