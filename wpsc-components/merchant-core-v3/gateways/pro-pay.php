@@ -153,21 +153,21 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		</tr>
 		<tr>
 			<td>
+				<label for="wpsc-pro-pay-biller-account-id"><?php _e( 'Biller Account ID', 'wp-e-commerce' ); ?></label>
+			</td>
+			<td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'biller_account_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'biller_account_id' ) ); ?>" id="wpsc-pro-pay-biller-account-id" />
+				<br><span class="small description"><?php _e( 'Your biller account ID was provided to you via email during the sign-up process.', 'wp-e-commerce' ); ?></span>
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<label for="wpsc-pro-pay-merchant-profile-id"><?php _e( 'Merchant Profile ID', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'merchant_profile_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'merchant_profile_id' ) ); ?>" id="wpsc-pro-pay-merchant-profile-id" />
 				<br><span class="small description"><?php _e( 'If you have not yet received a merchant profile ID, create one below.', 'wp-e-commerce' ); ?></span>
 				<p><a href="#" class="button-primary" class="create-merchant-profile" onclick="return false;"><?php _e( 'Create Merchant Profile ID' ); ?></a></p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="wpsc-pro-pay-merchant-profile-id"><?php _e( 'Biller Account ID', 'wp-e-commerce' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'biller_account_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'biller_account_id' ) ); ?>" id="wpsc-pro-pay-biller-account-id" />
-				<br><span class="small description"><?php _e( 'Your biller account ID was provided to you via email during the sign-up process.', 'wp-e-commerce' ); ?></span>
 			</td>
 		</tr>
 		<tr>
