@@ -39,18 +39,19 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		)
 	);
 
-	private $login_url = 'http://xmltest.propay.com/signup/?refid=WPECOMME';
-	private $auth_token;
 	private $payment_capture;
 	private $order_handler;
 	private $endpoint;
 	private $sandbox;
 
-	private $cert_string = '511ed119b09498d93ad2ba9b40a57f';
-	private $term_id = '40a57f';
-	private $account_number = '';
+	private $login_url = 'http://xmltest.propay.com/signup/?refid=WPECOMME';
+	private $auth_token = '745ef573-6fb0-4d9e-a410-24791e3769b6';
+
+	private $cert_string         = '511ed119b09498d93ad2ba9b40a57f';
+	private $term_id             = '40a57f';
+	private $biller_account_id   = '3364620760318539';
+	private $account_number      = '';
 	private $merchant_profile_id = '';
-	private $biller_account_id = '';
 
 	/**
 	 * Constructor of pro-pay Payment Gateway
@@ -62,7 +63,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		parent::__construct();
 
-		$this->title = __( 'ProPay (TSYS) Payment Gateway', 'wp-e-commerce' );
+		$this->title    = __( 'ProPay (TSYS) Payment Gateway', 'wp-e-commerce' );
 		$this->supports = array( 'tev1' );
 
 		$this->order_handler	= WPSC_Pro_Pay_Payments_Order_Handler::get_instance( $this );
@@ -70,8 +71,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		// Define user set variables
 		$this->account_number      = $this->setting->get( 'account_number' );
 		$this->merchant_profile_id = $this->setting->get( 'merchant_profile_id' );
-		$this->biller_account_id   = $this->setting->get( 'biller_account_id' );
-		$this->auth_token          = $this->setting->get( 'auth_token' );
 		$this->sandbox			   = $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
 		$this->endpoint			   = $this->sandbox ? self::$endpoints['payment-processing-endpoint']['sandbox'] : self::$endpoints['payment-processing-endpoint']['production'];
 		$this->payment_capture 	   = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
