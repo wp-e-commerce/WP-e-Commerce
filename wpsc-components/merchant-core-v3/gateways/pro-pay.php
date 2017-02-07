@@ -144,24 +144,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		<?php $this->get_account_number_row(); ?>
 		<tr>
 			<td>
-				<label for="wpsc-pro-pay-auth-token"><?php _e( 'Authentication Token', 'wp-e-commerce' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'auth_token' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'auth_token' ) ); ?>" id="wpsc-pro-pay-auth-token" />
-				<br><span class="small description"><?php _e( 'Enter the Authentication Token provided to you by ProPay.', 'wp-e-commerce' ); ?></span>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="wpsc-pro-pay-biller-account-id"><?php _e( 'Biller Account ID', 'wp-e-commerce' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'biller_account_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'biller_account_id' ) ); ?>" id="wpsc-pro-pay-biller-account-id" />
-				<br><span class="small description"><?php _e( 'Your biller account ID was provided to you via email during the sign-up process.', 'wp-e-commerce' ); ?></span>
-			</td>
-		</tr>
-		<tr>
-			<td>
 				<label for="wpsc-pro-pay-merchant-profile-id"><?php _e( 'Merchant Profile ID', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
