@@ -5,7 +5,7 @@
  */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
-	private $endpoints = array(
+	private static $endpoints = array(
 		// Posting URL for ProPay API real time processing
 		'account-creation-endpoint' => array(
 			'sandbox'    => 'https://xmltest.propay.com/api/propayapi.aspx',
@@ -72,23 +72,23 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$this->biller_account_id   = $this->setting->get( 'biller_account_id' );
 		$this->auth_token          = $this->setting->get( 'auth_token' );
 		$this->sandbox			   = $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
-		$this->endpoint			   = $this->sandbox ? $this->endpoints['payment-processing-endpoint']['sandbox'] : $this->endpoints['payment-processing-endpoint']['production'];
+		$this->endpoint			   = $this->sandbox ? self::$endpoints['payment-processing-endpoint']['sandbox'] : self::$endpoints['payment-processing-endpoint']['production'];
 		$this->payment_capture 	   = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
 	}
 
 	public static function get_endpoint( $type, $environment ) {
 		// Default to a sane assumption of sandbox payment processing;
-		$endpoint = $this->endpoints['payment-processing-endpoint']['sandbox'];
+		$endpoint = self::$endpoints['payment-processing-endpoint']['sandbox'];
 
-		if ( ! isset( $this->endpoints[ $type ] ) ) {
+		if ( ! isset( self::$endpoints[ $type ] ) ) {
 			return $endpoint;
 		}
 
-		if ( ! isset( $this->endpoints[ $type ][ $environment ] ) ) {
+		if ( ! isset( self::$endpoints[ $type ][ $environment ] ) ) {
 			return $endpoint;
 		}
 
-		return $this->endpoints[ $type ][ $environment ];
+		return self::$endpoints[ $type ][ $environment ];
 	}
 
 	/**
@@ -242,6 +242,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		$response = $profile->create();
 
+		return $response;
 	}
 
 	public function process() {
@@ -307,10 +308,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 				"paymentVaultToken" => array(
 					"paymentMethodId" => $token,
 					"publicKey"       => $this->public_key
-				),
-				"extendedInformation" => array(
-					"typeOfGoods" => $this->type_of_goods( $order->get( 'id' ) )
-				),
+				)
 			);
 
 			$response = $this->execute( 'Payments/Charge', $params );
@@ -353,10 +351,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 				"paymentVaultToken" => array(
 					"paymentMethodId" => $token,
 					"publicKey"       => $this->public_key,
-				),
-				"extendedInformation" => array(
-					"typeOfGoods" => $this->type_of_goods( $order->get( 'id' ) )
-				),
+				)
 			);
 
 			$response = $this->execute( 'Payments/Authorize', $params );
@@ -425,23 +420,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		return $request;
     }
-
-	public function type_of_goods( $log_id ) {
-		$digital = 0;
-
-		$log = new WPSC_Purchase_Log( $log_id );
-		$cart = $log->get_items();
-
-		foreach ( $cart as $cartitem ) {
-			$product_meta = get_post_meta( $cartitem->prodid, '_wpsc_product_metadata' );
-
-			if ( isset( $product_meta[0]['no_shipping'] ) && $product_meta[0]['no_shipping'] == 1 ) {
-				$digital++;
-			}
-		}
-
-		return $digital == count( $cart ) ? 'DIGITAL' : 'PHYSICAL';
-	}
 }
 
 class WPSC_Pro_Pay_Payments_Order_Handler {
@@ -480,7 +458,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 	}
 
 	/**
-	 * Perform order actions for amazon
+	 * Perform order actions for Pro Pay
 	 */
 	public function order_actions() {
 		check_ajax_referer( 'wp_order_action', 'security' );
@@ -718,7 +696,6 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 		}
 	}
 
-
     /**
      * Void auth/capture
      *
@@ -902,7 +879,7 @@ class WPSC_ProPay_Request {
 
 		$endpoint = WPSC_Payment_Gateway_Pro_Pay::get_endpoint( 'rest-api-endpoint', $this->config->environment );
 
-		$url = path_join( $endpoint, $resource );
+		$url = $endpoint . '/'. ltrim( $resource, '/' );
 
 		$args = wp_parse_args( $args, array(
 			'timeout' => 60,
@@ -939,7 +916,7 @@ class WPSC_ProPay_Response {
 
 	/**
 	 * Temp debug function.
-	 * 
+	 *
 	 * @return string [description]
 	 */
 	public function __toString() {
