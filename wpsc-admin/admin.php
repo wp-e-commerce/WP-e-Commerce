@@ -118,7 +118,7 @@ add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
  * @param   string  $taxonomy  Taxonomy.
  * @param   string  $context   Context.
  *
- * @since  4.0.0
+ * @since  3.11.5
  *
  * @return  array              Filtered dropdown args.
  */
@@ -1521,7 +1521,7 @@ add_filter( 'plugin_action_links_' . WPSC_PLUGIN_BASENAME, 'wpsc_support_links' 
  *
  * @param  array $args Array of removable query args.
  *
- * @since  4.0.0
+ * @since  3.11.5
  *
  * @return array $args Array of removable query args.
  */
@@ -1538,7 +1538,7 @@ add_filter( 'removable_query_args', 'wpsc_removable_query_args' );
  * @param  array $bulk_messages Array of bulk messages.
  * @param  int   $bulk_counts   The amount of messages affected.
  *
- * @since  4.0.0
+ * @since  3.11.5
  *
  * @return array                Array of bulk messages.
  */
@@ -1567,7 +1567,7 @@ add_filter( 'bulk_post_updated_messages', 'wpsc_bulk_updated_messages', 10, 2 );
  */
 function wpsc_admin_rate_us( $footer_text ) {
 	global $typenow;
-	
+
 	if ( $typenow == 'wpsc-product' ) {
 		$rate_text = sprintf( __( 'Thank you for using <a href="%1$s" target="_blank">WP eCommerce</a>! Please <a href="%2$s" target="_blank">rate us</a> on <a href="%2$s" target="_blank">WordPress.org</a>', 'wp-e-commerce' ),
 			'https://wpecommerce.org',

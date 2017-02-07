@@ -3,7 +3,7 @@
  * The WP eCommerce Base Query Class
  *
  * @package wp-e-commerce
- * @since 4.0
+ * @since 3.11.5
  */
 
 abstract class WPSC_Query_Base {
@@ -41,7 +41,7 @@ abstract class WPSC_Query_Base {
 	 * Contains the values fetched from the DB
 	 *
 	 * @access protected
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @var array
 	 */
@@ -51,7 +51,7 @@ abstract class WPSC_Query_Base {
 	 * Data that is not directly stored inside the DB but is inferred. Optional.
 	 *
 	 * @access protected
-	 * @since 4.0
+	 * @since 3.11.5
 	 */
 	protected $meta_data = array();
 
@@ -59,7 +59,7 @@ abstract class WPSC_Query_Base {
 	 * True if the DB row is fetched into the $data array.
 	 *
 	 * @access protected
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @var boolean
 	 */
@@ -69,7 +69,7 @@ abstract class WPSC_Query_Base {
 	 * True if the row exists in DB
 	 *
 	 * @access protected
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @var boolean
 	 */
@@ -81,7 +81,7 @@ abstract class WPSC_Query_Base {
 	 * Should return $this;
 	 *
 	 * @access protected
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @return WPSC_Query_Base
 	 */
@@ -91,7 +91,7 @@ abstract class WPSC_Query_Base {
 	 * Whether the DB row for this purchase log exists
 	 *
 	 * @access public
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @return bool True if it exists. Otherwise false.
 	 */
@@ -103,7 +103,7 @@ abstract class WPSC_Query_Base {
 	/**
 	 * Resets properties so any subsequent requests will be refreshed.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return void
 	 */
@@ -117,7 +117,7 @@ abstract class WPSC_Query_Base {
 	 * Returns the value of the specified property of the $data array if it exists.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  string $key Name of the property (column)
 	 * @return mixed
@@ -144,7 +144,7 @@ abstract class WPSC_Query_Base {
 	 * Prepares the return value for get() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  mixed  $value Value fetched
 	 * @param  string $key   Key for $data.
@@ -157,7 +157,7 @@ abstract class WPSC_Query_Base {
 	 * Returns the entire $data array.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return array
 	 */
@@ -173,7 +173,7 @@ abstract class WPSC_Query_Base {
 	 * Prepares the return value for get_data() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -183,7 +183,7 @@ abstract class WPSC_Query_Base {
 	 * Returns the entire $meta_data array.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return array
 	 */
@@ -201,7 +201,7 @@ abstract class WPSC_Query_Base {
 	 * Prepares the return value for get_meta() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -214,7 +214,7 @@ abstract class WPSC_Query_Base {
 	 * as arguments, or an associative array containing key value pairs.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param mixed $key             Name of the property (column), or an array containing
 	 *                               key value pairs
@@ -228,7 +228,7 @@ abstract class WPSC_Query_Base {
 	 * Saves the object back to the database.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -239,7 +239,7 @@ abstract class WPSC_Query_Base {
 	 * and a value as arguments, or an associative array containing key value pairs.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param mixed $key             Name of the property (column), or an array containing
 	 *                               key value pairs
@@ -269,7 +269,7 @@ abstract class WPSC_Query_Base {
 	 * Saves the meta data back to the database.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return WPSC_Query_Base  The current object (for method chaining)
 	 */
@@ -281,7 +281,7 @@ abstract class WPSC_Query_Base {
 	 * Wrapper for wp_cache_get.
 	 *
 	 * @access public
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @see wp_cache_get()
 	 *
@@ -300,7 +300,7 @@ abstract class WPSC_Query_Base {
 	 * Wrapper for wp_cache_set.
 	 *
 	 * @access public
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @see wp_cache_set()
 	 *
@@ -320,7 +320,7 @@ abstract class WPSC_Query_Base {
 	 * Wrapper for wp_cache_delete.
 	 *
 	 * @access public
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @see wp_cache_delete()
 	 *
@@ -336,7 +336,7 @@ abstract class WPSC_Query_Base {
 	/**
 	 * Get the versioned group id from the $group_ids array.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  string $group_id The key for the group_ids array to compile the group
 	 *                          from version/key.

@@ -295,7 +295,7 @@ class Sputnik {
 	 */
 	public static function push_sales_data( $purchase_log_id, $current_status, $old_status, $purchase_log ) {
 
-		$purchase_log = new WPSC_Purchase_Log( $purchase_log_id );
+		$purchase_log = wpsc_get_order( $purchase_log_id );
 
 		$id = absint( $purchase_log->get( 'id' ) );
 
@@ -343,7 +343,7 @@ class Sputnik {
 
 		unset( $data['id'] );
 
-		$purchase_log = new WPSC_Purchase_Log( $data );
+		$purchase_log = wpsc_get_order( $data );
 		$purchase_log->save();
 		$purchase_log_id = $purchase_log->get( 'id' );
 

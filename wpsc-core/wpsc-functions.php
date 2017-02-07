@@ -993,7 +993,7 @@ add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1 );
  *
  * In a future version, we will likely have a `System` page that would include a link to the repair.php page.
  *
- * @since  4.0
+ * @since  3.11.0
  *
  * @param  array $tables Core tables
  *

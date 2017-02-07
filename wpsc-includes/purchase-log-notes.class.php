@@ -119,7 +119,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 * Prepares the return value for get() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  mixed  $value Value fetched
 	 * @param  string $key   Key for $data.
@@ -134,7 +134,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 * Prepares the return value for get_data() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -142,6 +142,18 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 		return apply_filters( 'wpsc_get_purchase_log_notes', $this->data, $this );
 	}
 
+	/**
+	 * Add a note to the log.
+	 *
+	 * @since 3.11.5
+	 *
+	 * @param mixed $note_args String to add note. Optionally Accepts an array to specify note attributes: {
+	 *    @type string $type    The note type. Defaults to 'default', but can be 'error'.
+	 *    @type string $status  The note status. Defaults to 'public'.
+	 *    @type int    $time    The note timestamp. Defaults to time().
+	 *    @type string $content The note text.
+	 * }
+	 */
 	public function add( $note_args ) {
 		if ( ! is_array( $note_args ) ) {
 			$note_args = self::parse_args( array( self::$map_keys[ self::KEY_CONTENT ] => $note_args ) );
@@ -150,6 +162,15 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 		return $this->set( false, $note_args );
 	}
 
+	/**
+	 * Remove a note from the log by the note_id (or index).
+	 *
+	 * @since  3.11.5
+	 *
+	 * @param  int $note_id    Note index.
+	 *
+	 * @return WPSC_Query_Base The current object (for method chaining)
+	 */
 	public function remove( $note_id ) {
 		$this->fetch();
 		unset( $this->data[ $note_id ] );
@@ -162,7 +183,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 * as arguments, or an associative array containing key value pairs.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param mixed $key             Name of the property (column), or an array containing
 	 *                               key value pairs
@@ -196,7 +217,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 * Saves the object back to the database.
 	 *
 	 * @access public
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -257,7 +278,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	/**
 	 * Merge arguments into defaults array.
 	 *
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @param array $args Value to merge with defaults.
 	 * @return array Merged arguments with defaults.
@@ -274,7 +295,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	/**
 	 * Merge arguments into defaults array.
 	 *
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @param array $args Value to merge with defaults.
 	 * @return array Merged arguments with defaults.
@@ -291,7 +312,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	/**
 	 * Get current for Iterator.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -303,7 +324,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	/**
 	 * Get key for Iterator.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return scalar
 	 */
@@ -315,7 +336,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	/**
 	 * Get next for Iterator.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return void
 	 */
@@ -327,7 +348,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	/**
 	 * Get prev for Iterator.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return void
 	 */
@@ -339,7 +360,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	/**
 	 * Get rewind for Iterator.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return void
 	 */
@@ -351,7 +372,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	/**
 	 * Get valid for Iterator.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return boolean
 	 */

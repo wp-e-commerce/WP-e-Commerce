@@ -15,7 +15,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @param array $options
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function __construct( $options ) {
         require_once( 'php-merchant/gateways/paypal-digital-goods.php' );
@@ -43,7 +43,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
   	 * Run the gateway hooks
   	 *
   	 * @access public
-  	 * @since 4.0
+  	 * @since 3.9.0
   	 *
   	 * @return void
   	 */
@@ -57,7 +57,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 		// Load DG scripts and styles
 		add_action( 'wp_enqueue_scripts', array( 'WPSC_Payment_Gateway_Paypal_Digital_Goods', 'dg_script' ) );
-		
+
 		// Express Checkout for DG Button
 		add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_ecs_button' ), 2, 2 );
 
@@ -68,7 +68,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     /**
      * Toggles Digital Goods option based on whether or not shipping is being used on the given cart.
      *
-     * @since  4.0
+     * @since  3.9.0
      *
      * @param  array $fields Payment method form fields
      *
@@ -149,7 +149,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return void
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public static function dg_script() {
 		$dg_loc = array(
@@ -174,7 +174,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * No payment gateway is selected by default
      *
      * @access public
-     * @since 3.9
+     * @since 3.9.0
      *
      * @param array $fields
      *
@@ -193,7 +193,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return string
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     protected function get_return_url() {
         $redirect = add_query_arg( array(
@@ -211,7 +211,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return void
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function callback_return_url_redirect() {
         // Session id
@@ -270,7 +270,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return string
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     protected function get_original_return_url( $session_id ) {
 		$transact_url = get_option( 'transact_url' );
@@ -298,7 +298,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return string
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     protected function get_cancel_url() {
         $redirect = add_query_arg( array(
@@ -315,7 +315,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return void
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function callback_cancel_url_redirect() {
         // Page Styles
@@ -356,7 +356,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return string
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     protected function get_original_cancel_url() {
         return apply_filters( 'wpsc_paypal_digital_goods_cancel_url', $this->get_shopping_cart_payment_url() );
@@ -367,7 +367,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return string
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     protected function get_notify_url() {
         $location = add_query_arg( array(
@@ -383,7 +383,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return void
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function callback_ipn() {
         $ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
@@ -418,7 +418,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return null
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function callback_confirm_transaction() {
 
@@ -434,7 +434,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     /**
      * Process the transaction through the PayPal APIs
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function callback_process_confirmed_payment() {
         $args = array_map( 'urldecode', $_GET );
@@ -497,7 +497,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return void
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function callback_display_paypal_error_redirect() {
         // Redirect Location
@@ -551,7 +551,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     /**
      * Error Page Template
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function filter_paypal_error_page() {
         $errors = wpsc_get_customer_meta( 'paypal_express_checkout_errors' );
@@ -574,7 +574,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     /**
      * Generic Error Page Template
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function filter_generic_error_page() {
         ob_start();
@@ -589,7 +589,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     /**
      * Settings Form Template
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function setup_form() {
         $paypal_currency = $this->get_currency_code();
@@ -732,7 +732,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @param array $args
      * @return void
      *
-     * @since 3.9
+     * @since 3.9.0
      */
     public function process( $args = array() ) {
         $total = $this->convert( $this->purchase_log->get( 'totalprice' ) );

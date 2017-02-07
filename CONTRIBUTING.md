@@ -18,6 +18,10 @@ Reporting a bug
 4. If this is a visual bug, please make sure to add a screenshot. 
 5. if you create a Pull Request for this issue, make sure to attach the Pull Request created to the issue.
 
+Branch Strategy
+---
+Master will be in sync with the latest release, which will also have its own branch (`branch-x.x.x`). Features should go in `features/*` branches, which then merge into `branch-x.x.x` branch, which then merges to master upon release. Our goal is to keep from merging directly to master. To determine the next branch to fork/PR, review the [Development status](https://github.com/wp-e-commerce/WP-e-Commerce#development-status).
+
 Resources
 ---
 [Labels and Workflow](https://github.com/wp-e-commerce/WP-e-Commerce/wiki/Issue-Labels-and-Workflow)

@@ -11,14 +11,14 @@ if ( ! class_exists( 'WP_Customize_Control' ) ) {
  *
  * @package WP eCommerce
  * @subpackage Customizer
- * @since 4.0
+ * @since 3.11.5
  */
 
 /**
  * Thumbnail setting control for WxH settings in Customizer.
  *
  * @todo Move to its own file.
- * @since 4.0
+ * @since 3.11.5
  */
 class WPSC_Customizer_Thumbnail_Control extends WP_Customize_Control {
 

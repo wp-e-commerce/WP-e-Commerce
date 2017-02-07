@@ -441,7 +441,7 @@ class WPSC_Logging {
      * @param  array $args Arguments passed to the taxonomy and post type hooks.
      * @return array $args Arguments passed to the taxonomy and post type hooks.
      *
-     * @since  4.0
+     * @since  3.11.0
      */
     public static function force_ui( $args ) {
         $args['show_ui'] = true;

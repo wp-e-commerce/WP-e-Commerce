@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * WPSC Coupon Class.
+ * @since 3.8.2
+ */
 class WPSC_Coupon extends WPSC_Query_Base {
 
 	const IS_PERCENTAGE    = 1;
@@ -12,7 +16,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * to fetch a property with the same object.
 	 *
 	 * @access  private
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @var  int
 	 */
@@ -24,7 +28,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 *
 	 * @access  private
 	 * @static
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @var  array
 	 */
@@ -38,7 +42,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 *
 	 * @access  private
 	 * @static
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @var  array
 	 */
@@ -66,7 +70,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * DB using the coupon id.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @param  false|integer|array  $value  Optional. Defaults to false.
 	 */
@@ -101,7 +105,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * as arguments, or an associative array containing key value pairs.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @param   string|array         $key    Name of the property (column), or an array containing key value pairs.
 	 * @param   string|integer|null  $value  Optional. Defaults to false. In case $key is a string, this should be specified.
@@ -134,7 +138,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Prepares the return value for get() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  mixed  $value Value fetched
 	 * @param  string $key   Key for $data.
@@ -149,7 +153,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Prepares the return value for get_data() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -161,7 +165,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Get the SQL query format for a column.
 	 *
 	 * @access  private
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @param   string  $col  Name of the column.
 	 * @return  string        Placeholder.
@@ -185,7 +189,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * $wpdb methods (update, insert etc.)
 	 *
 	 * @access  private
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @param   array  $data
 	 * @return  array
@@ -206,7 +210,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Fetches the actual record from the database.
 	 *
 	 * @access  private
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return WPSC_Coupon
 	 */
@@ -258,7 +262,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Update cache of the passed coupon object.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 */
 	public function update_cache() {
 
@@ -271,7 +275,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Deletes cache of a coupon.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 */
 	public function delete_cache() {
 
@@ -286,7 +290,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Saves the coupon back to the database.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 */
 	public function save() {
 
@@ -338,7 +342,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Deletes a coupon from the database.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean
 	 */
@@ -432,7 +436,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Checks if the current coupon is valid to use (expiry date, active, used).
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean  True if coupon is not expired, used and still active, false otherwise.
 	 */
@@ -489,7 +493,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Check whether this coupon is active.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean
 	 */
@@ -503,7 +507,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Check whether this coupon is a "Free shipping" coupon.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean
 	 */
@@ -517,7 +521,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Check whether this coupon is a "percentage" coupon.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean
 	 */
@@ -531,7 +535,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Check whether this coupon is a fixed amount coupon.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean
 	 */
@@ -545,7 +549,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Check whether this coupon can only be used once.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean
 	 */
@@ -559,7 +563,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Check if a single use coupon is used.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean
 	 */
@@ -575,7 +579,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * If the coupon can only be used once it will be marked as used and made inactive.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 */
 	public function used() {
 
@@ -591,7 +595,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Check whether this coupon can be applied to all items.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean
 	 */
@@ -605,7 +609,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Check whether the coupon has conditions.
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @return  boolean  True if there are conditions.
 	 */
@@ -621,7 +625,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Get Percentage Discount
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @param   integer|double  $price  Price.
 	 * @return  integer|double          Discount amount.
@@ -642,7 +646,7 @@ class WPSC_Coupon extends WPSC_Query_Base {
 	 * Get Fixed Discount
 	 *
 	 * @access  public
-	 * @since   4.0
+	 * @since   3.11.5
 	 *
 	 * @param   int  $quantity  Discount multiplier.
 	 * @return  int             Discount amount.

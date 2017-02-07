@@ -9,7 +9,7 @@
  *
  * @author   WP eCommerce
  * @package  WP-e-Commerce/Templates/Emails
- * @version  4.0
+ * @version  3.9.0
  */
 ?>
 

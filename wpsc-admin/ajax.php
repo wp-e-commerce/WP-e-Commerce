@@ -1,66 +1,66 @@
 <?php
 function _wpsc_ajax_purchase_log_refund_items() {
-	if ( isset( $_POST['order_id'] ) ) {
-
-		_wpsc_ajax_verify_nonce( 'purchase_log_refund_items' );
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			die( -1 );
-		}
-
-		$order_id               = absint( $_POST['order_id'] );
-		$refund_reason          = isset( $_POST['refund_reason'] ) ? sanitize_text_field( $_POST['refund_reason'] ) : '';
-		$refund_amount          = isset( $_POST['refund_amount'] ) ? sanitize_text_field( $_POST['refund_amount'] ) : false;
-		$manual                 = $_POST['api_refund'] === 'true' ? false : true;
-		$response_data          = array();
-
-		$log                    = new WPSC_Purchase_Log( $order_id );
-		$gateway_id             = $log->get( 'gateway' );
-		$gateway                = wpsc_get_payment_gateway( $gateway_id );
-
-		try {
-			// Validate that the refund can occur
-			$refund_amount  = $refund_amount ? $refund_amount : $log->get( 'totalprice' );
-
-			if ( wpsc_payment_gateway_supports( $gateway_id, 'refunds' ) ) {
-				// Send api request to process refund. Returns Refund transaction ID
-				$result = $gateway->process_refund( $order_id, $refund_amount, $refund_reason, $manual );
-
-				do_action( 'wpsc_refund_processed', $log, $result, $refund_amount, $refund_reason );
-
-				if ( is_wp_error( $result ) ) {
-					throw new Exception( $result->get_error_message() );
-				} elseif ( ! $result ) {
-					throw new Exception( __( 'Refund failed', 'wp-e-commerce' ) );
-				}
-			}
-
-			if ( $log->get_remaining_refund() > 0 ) {
-				/**
-				 * wpsc_order_partially_refunded.
-				 *
-				 * @since 4.0.0
-				 */
-				do_action( 'wpsc_order_partially_refunded', $log );
-				$response_data['status'] = 'partially_refunded';
-
-			} else {
-				/**
-				 * wpsc_order_fully_refunded.
-				 *
-				 * @since 4.0.0
-				 */
-				do_action( 'wpsc_order_fully_refunded', $log );
-				$response_data['status'] = 'fully_refunded';
-			}
-
-			wp_send_json_success( $response_data );
-
-		} catch ( Exception $e ) {
-			wp_send_json_error( array( 'error' => $e->getMessage() ) );
-		}
+	if ( ! isset( $_POST['order_id'] ) ) {
+		return new WP_Error( 'wpsc_ajax_invalid_purchase_log_refund_items', __( 'Refund failed.', 'wp-e-commerce' ) );
 	}
-	return new WP_Error( 'wpsc_ajax_invalid_purchase_log_refund_items', __( 'Refund failed.', 'wp-e-commerce' ) );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return new WP_Error( 'wpsc_ajax_not_allowed_purchase_log_refund', __( 'Refund failed. (Incorrect Permissions)', 'wp-e-commerce' ) );
+	}
+
+	$order_id      = absint( $_POST['order_id'] );
+	$refund_reason = isset( $_POST['refund_reason'] ) ? sanitize_text_field( $_POST['refund_reason'] ) : '';
+	$refund_amount = isset( $_POST['refund_amount'] ) ? sanitize_text_field( $_POST['refund_amount'] ) : false;
+	$manual        = $_POST['api_refund'] === 'true' ? false : true;
+	$response_data = array();
+
+	$log           = wpsc_get_order( $order_id );
+	$gateway_id    = $log->get( 'gateway' );
+	$gateway       = wpsc_get_payment_gateway( $gateway_id );
+
+	try {
+		// Validate that the refund can occur
+		$refund_amount  = $refund_amount ? $refund_amount : $log->get( 'totalprice' );
+
+		if ( wpsc_payment_gateway_supports( $gateway_id, 'refunds' ) ) {
+			// Send api request to process refund. Returns Refund transaction ID
+			$result = $gateway->process_refund( $order_id, $refund_amount, $refund_reason, $manual );
+
+			do_action( 'wpsc_refund_processed', $log, $result, $refund_amount, $refund_reason );
+
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+
+			if ( ! $result ) {
+				throw new Exception( __( 'Refund failed', 'wp-e-commerce' ) );
+			}
+		}
+
+		if ( $log->get_remaining_refund() > 0 ) {
+			/**
+			 * wpsc_order_partially_refunded.
+			 *
+			 * @since 3.11.5
+			 */
+			do_action( 'wpsc_order_partially_refunded', $log );
+			$response_data['status'] = 'partially_refunded';
+
+		} else {
+			/**
+			 * wpsc_order_fully_refunded.
+			 *
+			 * @since 3.11.5
+			 */
+			do_action( 'wpsc_order_fully_refunded', $log );
+			$response_data['status'] = 'fully_refunded';
+		}
+
+		return $response_data;
+
+	} catch ( Exception $e ) {
+		return new WP_Error( 'wpsc_ajax_purchase_log_refund_failed', $e->getMessage() );
+	}
 }
 
 /**
@@ -521,7 +521,7 @@ function _wpsc_ajax_purchase_log_action_link() {
 /**
  * Remove purchase log item.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -532,7 +532,7 @@ function _wpsc_ajax_remove_log_item() {
 
 		$item_id = absint( $_POST['item_id'] );
 		$log_id  = absint( $_POST['log_id'] );
-		$log     = new WPSC_Purchase_Log( $log_id );
+		$log     = wpsc_get_order( $log_id );
 
 		if ( $log->remove_item( $item_id ) ) {
 			return _wpsc_init_log_items( $log );
@@ -545,7 +545,7 @@ function _wpsc_ajax_remove_log_item() {
 /**
  * Update purchase log item quantity.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -560,7 +560,7 @@ function _wpsc_ajax_update_log_item_qty() {
 
 		$item_id = absint( $_POST['item_id'] );
 		$log_id  = absint( $_POST['log_id'] );
-		$log     = new WPSC_Purchase_Log( $log_id );
+		$log     = wpsc_get_order( $log_id );
 		$result  = $log->update_item( $item_id, array( 'quantity' => absint( $_POST['qty'] ) ) );
 
 		if ( 0 === $result ) {
@@ -576,7 +576,7 @@ function _wpsc_ajax_update_log_item_qty() {
 /**
  * Add purchase log item.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -600,7 +600,7 @@ function _wpsc_ajax_add_log_item() {
 		foreach ( $_POST['product_ids'] as $product_id ) {
 			$product_id = absint( $product_id );
 			$log_id     = absint( $_POST['log_id'] );
-			$log        = new WPSC_Purchase_Log( $log_id );
+			$log        = wpsc_get_order( $log_id );
 
 			// Is product is already in item list?
 			if ( $existing && in_array( $product_id, $existing, true ) ) {
@@ -661,7 +661,7 @@ function _wpsc_init_log_items( WPSC_Purchase_Log $log, $item_ids = array() ) {
 /**
  * Edit log contact details.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -674,7 +674,7 @@ function _wpsc_ajax_edit_contact_details() {
 		parse_str( $_POST['fields'], $fields );
 
 		$log_id = absint( $_POST['log_id'] );
-		$log    = new WPSC_Purchase_Log( $log_id );
+		$log    = wpsc_get_order( $log_id );
 
 		if ( isset( $fields['wpsc_checkout_details'] ) && is_array( $fields['wpsc_checkout_details'] ) ) {
 			$details = wp_unslash( $fields['wpsc_checkout_details'] );
@@ -717,7 +717,7 @@ function _wpsc_ajax_edit_contact_details() {
 /**
  * Add a note to a log.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -753,7 +753,7 @@ function _wpsc_ajax_add_note() {
 /**
  * Delete a note from a log.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
@@ -774,7 +774,7 @@ function _wpsc_ajax_delete_note() {
 /**
  * Search for products.
  *
- * @since   4.0
+ * @since   3.11.5
  * @access  private
  *
  * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise

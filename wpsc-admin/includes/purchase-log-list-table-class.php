@@ -214,7 +214,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	 * prior 3 months, this year, last year. You can insert your own custom periods by filtering
 	 * either based on the $period_flag or just filter the final query setup.
 	 *
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @param array $period_flag The period requested from $_REQUEST['m'].
 	 *
@@ -855,7 +855,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		/**
 		 * Filter the available bulk actions on the purchase log listing screen.
 		 *
-		 * @since 4.0
+		 * @since 3.11.5
 		 *
 		 * @param array $actions The bulk actions currently defined.
 		 */

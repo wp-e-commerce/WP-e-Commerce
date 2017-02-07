@@ -41,7 +41,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * Fetches the actual $data array.
 	 *
 	 * @access protected
-	 * @since 4.0
+	 * @since 3.11.5
 	 *
 	 * @return WPSC_Checkout_Form_Data
 	 */
@@ -101,7 +101,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	/**
 	 * Get the raw data indexed by the 'id' column.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return array
 	 */
@@ -119,7 +119,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	/**
 	 * Determines if values in shipping fields matches values in billing fields.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return bool  Whether shipping values match billing values.
 	 */
@@ -152,7 +152,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	/**
 	 * Get the segmented billing info.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return array
 	 */
@@ -165,7 +165,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	/**
 	 * Get the segmented shipping info.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return array
 	 */
@@ -178,7 +178,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	/**
 	 * Gets the raw data array.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return array
 	 */
@@ -192,7 +192,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * Prepares the return value for get() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @param  mixed  $value Value fetched
 	 * @param  string $key   Key for $data.
@@ -207,7 +207,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * Prepares the return value for get_data() (apply_filters, etc).
 	 *
 	 * @access protected
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return mixed
 	 */
@@ -266,7 +266,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 * @param string|int $key   Expects either form ID or unique name.
 	 * @param string     $value Value to be set for field.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 * @return WPSC_Checkout_Form_Data Current instance of form data.
 	 */
 	public function set( $key, $value = '' ) {
@@ -284,7 +284,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	/**
 	 * Used in conjunction with set() method, saves individual checkout form fields to database.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 * @return void
 	 */
 	public function save() {
@@ -361,7 +361,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	/**
 	 * Returns the log id property.
 	 *
-	 * @since  4.0
+	 * @since  3.11.5
 	 *
 	 * @return int  The log id.
 	 */
