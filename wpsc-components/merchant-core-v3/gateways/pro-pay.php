@@ -4,6 +4,7 @@
  * @todo: Later, integrated with subscriptions
  * @todo: Use nonces we are creating
  * @todo: Ensure it works in Tev2 at all, and in both theme engines when it's the only gateway available.
+ * @todo: Ensure it works on page load if gateway is already selected
  */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
@@ -91,6 +92,14 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		add_action( 'wp_ajax_create_hosted_transaction_id'       , array( $this, 'create_hosted_transaction_id' ) );
 		add_action( 'wp_ajax_nopriv_create_hosted_transaction_id', array( $this, 'create_hosted_transaction_id' ) );
 
+		add_action( 'wpsc_inside_shopping_cart', array( $this, 'add_propay_iframe' ) );
+
+	}
+
+	public function add_propay_iframe() {
+		?>
+		<iframe id="pro_pay_iframe" name="pro_pay_iframe" class="pro-pay-iframe"></iframe>
+		<?php
 	}
 
 	/**
@@ -137,14 +146,28 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$is_cart = wpsc_is_theme_engine( '1.0' ) ? wpsc_is_checkout() : ( wpsc_is_checkout() || wpsc_is_cart() );
 
 		if ( $is_cart ) {
-			wp_enqueue_script( 'pro-pay-js', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/pro-pay-checkout.js', array( 'jquery' ), WPSC_VERSION );
-			wp_localize_script( 'pro-pay-js', 'WPSC_Pro_Pay_Checkout', array(
+			wp_enqueue_script( 'pro-pay-signal-r', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/signal-r.js', array( 'jquery' ), WPSC_VERSION );
+			wp_enqueue_script( 'pro-pay-hpp', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/hpp.js', array( 'jquery', 'pro-pay-signal-r' ), WPSC_VERSION );
+			wp_enqueue_script( 'pro-pay-js', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/pro-pay-checkout.js', array( 'jquery', 'pro-pay-hpp' ), WPSC_VERSION );
+
+			wp_localize_script( 'pro-pay-hpp', 'WPSC_Pro_Pay_Checkout', array(
 					'checkout_nonce' => wp_create_nonce( 'checkout_nonce' ),
 					'ajaxurl'        => admin_url( 'admin-ajax.php', 'relative' ),
+					'iframe_id'      => 'pro_pay_iframe',
+					'base_uri'       => $this->get_hpp_base_uri(),
+					'debug'          => WPSC_DEBUG
 				)
 			);
 		}
+	}
 
+	private function get_hpp_base_uri() {
+		// For use during development
+		$integration_url = 'https://protectpaytest.propay.com';
+
+		$base_url = $this->sandbox ? 'https://sbprotectpay.propay.com' : 'https://protectpay.propay.com';
+
+		return $integration_url;
 	}
 
 	public function enqueue_admin_scripts( $hook ) {

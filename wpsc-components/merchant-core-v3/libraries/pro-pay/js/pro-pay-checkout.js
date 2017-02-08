@@ -1,4 +1,4 @@
-/*global ajaxurl*/
+/*global ajaxurl, hpp_Load*/
 window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 ( function( window, document, $, wpsc, ajaxurl, undefined ) {
@@ -136,6 +136,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			if ( response.success ) {
 				window.console.log( response );
 				$c.spinner.fadeOut( 350 );
+				hpp_Load( response.data.token, wpsc.debug );
 			} else {
 				window.console.log( response );
 			}
