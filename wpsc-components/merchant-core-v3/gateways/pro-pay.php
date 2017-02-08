@@ -78,16 +78,19 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function init() {
-		add_action( 'wp_ajax_pro-pay_order_action'             , array( $this, 'order_actions' ) );
-		add_action( 'admin_enqueue_scripts'                    , array( $this, 'enqueue_admin_scripts' ) );
-		add_filter( 'wpsc_gateway_checkout_form_pro-pay'       , array( $this, 'payment_fields' ) );
-		add_action( 'wp_enqueue_scripts'                       , array( $this, 'checkout_scripts' ) );
-
-		add_action( 'wp_ajax_propay_create_merchant_profile_id', array( $this, 'create_merchant_profile' ) );
-		add_action( 'wp_ajax_create_payer_id'                  , array( $this, 'create_payer_id' ) );
-		add_action( 'wp_ajax_nopriv_create_payer_id'           , array( $this, 'create_payer_id' ) );
-
+		add_action( 'wp_ajax_pro-pay_order_action'        , array( $this, 'order_actions' ) );
+		add_action( 'admin_enqueue_scripts'               , array( $this, 'enqueue_admin_scripts' ) );
+		add_filter( 'wpsc_gateway_checkout_form_pro-pay'  , array( $this, 'payment_fields' ) );
+		add_action( 'wp_enqueue_scripts'                  , array( $this, 'checkout_scripts' ) );
 		add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_spinner' ) );
+
+		add_action( 'wp_ajax_propay_create_merchant_profile_id'  , array( $this, 'create_merchant_profile' ) );
+
+		add_action( 'wp_ajax_create_payer_id'                    , array( $this, 'create_payer_id' ) );
+		add_action( 'wp_ajax_nopriv_create_payer_id'             , array( $this, 'create_payer_id' ) );
+		add_action( 'wp_ajax_create_hosted_transaction_id'       , array( $this, 'create_hosted_transaction_id' ) );
+		add_action( 'wp_ajax_nopriv_create_hosted_transaction_id', array( $this, 'create_hosted_transaction_id' ) );
+
 	}
 
 	/**
@@ -100,7 +103,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function add_spinner( $gateway ) {
-
 		if ( 'pro-pay' !== $gateway ) {
 			return;
 		}
@@ -126,7 +128,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 				background-image: url(<?php echo admin_url( 'images/spinner-2x.gif' ) ?>);
 			}
 		}
-</style>
+		</style>
 		<?php
 	}
 
@@ -1164,7 +1166,8 @@ class WPSC_Pro_Pay_Hosted_Transaction_Id {
 			'Description'       => $this->config->description,
 			'MerchantProfileId' => $this->config->merchant_profile_id,
 			'AuthOnly'          => $this->config->auth_only,
-			'Amount'            => wpsc_cart_total() * 100,
+			'ProcessCard'       => ! $this->config->auth_only,
+			'Amount'            => wpsc_cart_total( false ) * 100,
 			'PayerAccountId'    => wpsc_get_customer_meta( 'pro_pay_payer_id' ),
 			'PaymentTypeId'     => '0',
 			'CurrencyCode'      => 'USD',
