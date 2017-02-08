@@ -105,7 +105,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 *
 	 * @return bool Whether or not to load gateway.
 	 */
-	public static function load() {
+	public function load() {
 		return version_compare( phpversion(), '5.3', '>=' ) && function_exists( 'curl_init' ) && function_exists( '_wpsc_get_current_controller' );
 	}
 

@@ -239,15 +239,6 @@ final class WPSC_Payment_Gateways {
 			require_once $file;
 		}
 
-		if ( is_callable( array( $classname, 'load' ) ) && ! call_user_func( array( $classname, 'load' ) ) ) {
-
-			self::unregister_file( $filename );
-
-			$error = new WP_Error( 'wpsc-payment', __( 'Error', 'wp-e-commerce' ) );
-
-			return $error;
-		}
-
 		$meta = array(
 			'class'        => $classname,
 			'path'         => $file,
@@ -258,6 +249,14 @@ final class WPSC_Payment_Gateways {
 
 		if ( is_wp_error( $gateway ) ) {
 			return $gateway;
+		}
+
+		if ( ! $gateway->load() ) {
+			self::unregister_file( $filename );
+
+			$error = new WP_Error( 'wpsc-payment', __( 'Error', 'wp-e-commerce' ) );
+
+			return $error;
 		}
 
 		$meta['name']  = $gateway->get_title();
@@ -750,6 +749,10 @@ abstract class WPSC_Payment_Gateway {
 	 * @return void
 	 */
 	public function init() {}
+
+	public function load() {
+		return true;
+	}
 
 	/**
 	 * Process refund

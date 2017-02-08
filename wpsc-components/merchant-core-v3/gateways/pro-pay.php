@@ -90,6 +90,15 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_spinner' ) );
 	}
 
+	/**
+	 * Currently only functional for US.
+	 *
+	 * @return [type] [description]
+	 */
+	public function load() {
+		return 'USD' === wpsc_get_currency_code() && 'US' === wpsc_get_base_country();
+	}
+
 	public function add_spinner( $gateway ) {
 
 		if ( 'pro-pay' !== $gateway ) {
@@ -165,15 +174,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		}
 
 		return self::$endpoints[ $type ][ $environment ];
-	}
-
-	/**
-	 * Load gateway only if SoapClient exists
-	 *
-	 * @return bool Whether or not to load gateway.
-	 */
-	public static function load() {
-		return class_exists( 'SoapClient' );
 	}
 
 	public function get_account_number_row( $hide = false ) {
