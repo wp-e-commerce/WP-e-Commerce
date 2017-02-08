@@ -255,6 +255,26 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		}
 	}
 
+	public function create_payer_id() {
+		$config = new WPSC_Pro_Pay_Payer_Id_Config(
+			array(
+				'environment'       => $this->sandbox ? 'sandbox' : 'production',
+				'biller_account_id' => $this->biller_account_id,
+				'auth_token'        => $this->auth_token
+			)
+		);
+
+		$profile = new WPSC_ProPay_Payer_Id( $config );
+
+		$payer_id = $profile->create()->get_payer_id();
+
+		if ( $payer_id ) {
+			wp_send_json_success( array( 'payer' => $payer_id ) );
+		} else {
+			wp_send_json_error();
+		}
+	}
+
 	public function process() {
 
 		$order = $this->purchase_log;
@@ -913,6 +933,7 @@ class WPSC_ProPay_Response {
 
 	public $response;
 	protected $profile_id;
+	protected $success = false;
 
 	public function __construct( $response ) {
 		$this->response = $response;
@@ -927,12 +948,20 @@ class WPSC_ProPay_Response {
 		$success = 200 === $code && 'SUCCESS' === $response->RequestResult->ResultValue;
 
 		if ( ! is_wp_error( $this->response ) && $success ) {
-			$this->profile_id = $response->ProfileId;
+			$this->success = true;
 		}
 
 		return $this->response;
 	}
 
+	public function is_successful() {
+		return $this->success;
+	}
+
+	/**
+	 * This should not be here.
+	 * @return [type] [description]
+	 */
 	public function get_profile_id() {
 		return $this->profile_id;
 	}
@@ -945,5 +974,53 @@ class WPSC_ProPay_Response {
 	public function __toString() {
 		return '<pre>' . print_r( $this->response, 1 ) . '</pre>';
 	}
+}
 
+class WPSC_ProPay_Payer_Id {
+
+	protected $config;
+	protected $response;
+
+	public function __construct( WPSC_Pro_Pay_Merchant_Profile_Config $config ) {
+		$this->config = $config;
+	}
+
+	public function create() {
+		$request = new WPSC_ProPay_Request( $this->config );
+
+		$body = json_encode( array(
+			'Name'             => $this->config->name,
+			'EmailAddress'     => $this->config->name,
+		) );
+
+		$this->response = $request->request( '/Payers/', array( 'body' => $body ) );
+
+		return $this;
+	}
+
+	public function get_payer_id() {
+		if ( $this->response->is_successful() ) {
+			return $this->response->ExternalAccountID;
+		}
+
+		return '';
+	}
+}
+
+class WPSC_Pro_Pay_Payer_Id_Config {
+
+	public $cert_string;
+	public $account_number;
+	public $term_id;
+	public $environment;
+	public $biller_account_id;
+	public $auth_token;
+
+	public function __construct( $args ) {
+		$this->args = (object) $args;
+
+		$this->environment       = $this->args->environment;
+		$this->biller_account_id = $this->args->biller_account_id;
+		$this->auth_token        = $this->args->auth_token;
+	}
 }
