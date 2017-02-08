@@ -76,6 +76,29 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$this->payment_capture 	   = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
 	}
 
+	public function init() {
+		add_action( 'wp_ajax_pro-pay_order_action'      , array( $this, 'order_actions' ) );
+		add_action( 'admin_enqueue_scripts'             , array( $this, 'enqueue_admin_scripts' ) );
+		add_filter( 'wpsc_gateway_checkout_form_pro-pay', array( $this, 'payment_fields' ) );
+		add_action( 'wp_ajax_propay_create_merchant_profile_id', array( $this, 'create_merchant_profile' ) );
+	}
+
+	public function enqueue_admin_scripts( $hook ) {
+
+		if ( 'settings_page_wpsc-settings' !== $hook ) {
+			return;
+		}
+
+		wp_enqueue_script( 'pro-pay-admin-js', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/pro-pay.js', array( 'jquery' ), WPSC_VERSION, true );
+		wp_localize_script( 'pro-pay-admin-js', 'WPSC_Pro_Pay', array(
+				'merchant_profile_nonce'  => wp_create_nonce( 'wpsc_merchant_profile' ),
+				'profile_id_success_text' => __( 'Congratulations, you now have a functional merchant profile ID!', 'wp-e-commerce' ),
+				'profile_id_error_text'   => __( 'Unfortunately, there was an error with this process. Try again later.', 'wp-e-commerce' )
+			)
+		);
+
+	}
+
 	public static function get_endpoint( $type, $environment ) {
 		// Default to a sane assumption of sandbox payment processing;
 		$endpoint = self::$endpoints['payment-processing-endpoint']['sandbox'];
@@ -148,8 +171,12 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'merchant_profile_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'merchant_profile_id' ) ); ?>" id="wpsc-pro-pay-merchant-profile-id" />
-				<br><span class="small description"><?php _e( 'If you have not yet received a merchant profile ID, create one below.', 'wp-e-commerce' ); ?></span>
-				<p><a href="#" class="button-primary create-merchant-profile" onclick="return false;"><?php _e( 'Create Merchant Profile ID' ); ?></a><div class="spinner"></div></p>
+				<?php if ( empty( $this->merchant_profile_id ) ) : ?>
+				<div id="wpsc-propay-merchant-profile-create">
+					<p><span class="small description"><?php _e( 'If you have not yet received a merchant profile ID, create one below.', 'wp-e-commerce' ); ?></span></p>
+					<br /><a href="#" class="button-primary create-merchant-profile"><?php _e( 'Create Merchant Profile ID' ); ?></a><div class="spinner" style="float:none"></div>
+				</div>
+			<?php endif; ?>
 			</td>
 		</tr>
 		<tr>
@@ -191,10 +218,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		}
 	}
 
-	public function init() {
-		add_filter( 'wpsc_gateway_checkout_form_pro-pay', array( $this, 'payment_fields' ) );
-	}
-
 	public function te_v2_show_payment_fields( $args ) {
 
 		$default = '<div class="wpsc-form-actions">';
@@ -222,9 +245,14 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		$profile = new WPSC_ProPay_Merchant_Profile( $config );
 
-		$response = $profile->create();
+		$response   = $profile->create();
+		$profile_id = $response->get_profile_id();
 
-		return $response;
+		if ( $profile_id ) {
+			wp_send_json_success( array( 'profile_id' => $profile_id ) );
+		} else {
+			wp_send_json_error();
+		}
 	}
 
 	public function process() {
@@ -423,8 +451,6 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 	 */
 	public function init() {
 		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'meta_box' ), 8 );
-		add_action( 'wp_ajax_pro-pay_order_action'  , array( $this, 'order_actions' ) );
-
 	}
 
 	public static function get_instance( $gateway ) {
@@ -824,7 +850,7 @@ class WPSC_ProPay_Merchant_Profile {
 			),
 		) );
 
-		return $request->request( '/protectpay/MerchantProfiles/', array( 'body' => $body ) );
+		return $request->request( '/MerchantProfiles/', array( 'body' => $body ) );
 	}
 }
 
@@ -886,6 +912,7 @@ class WPSC_ProPay_Request {
 class WPSC_ProPay_Response {
 
 	public $response;
+	protected $profile_id;
 
 	public function __construct( $response ) {
 		$this->response = $response;
@@ -893,7 +920,21 @@ class WPSC_ProPay_Response {
 	}
 
 	public function prepare_response() {
+
+		$response = json_decode( wp_remote_retrieve_body( $this->response ) );
+		$code     = wp_remote_retrieve_response_code( $this->response );
+
+		$success = 200 === $code && 'SUCCESS' === $response->RequestResult->ResultValue;
+
+		if ( ! is_wp_error( $this->response ) && $success ) {
+			$this->profile_id = $response->ProfileId;
+		}
+
 		return $this->response;
+	}
+
+	public function get_profile_id() {
+		return $this->profile_id;
 	}
 
 	/**
