@@ -2,7 +2,51 @@
 var iFrameId = WPSC_Pro_Pay_Checkout.iframe_id;
 var baseURI  = WPSC_Pro_Pay_Checkout.base_uri;
 var TimeoutInterval = 30000; //in ms
-var $ = $ || jQuery();
+//Get Timestamp for log
+            function GetTimestamp() {
+                var date = new Date();
+                var hour = date.getHours();
+                var minutes = date.getMinutes();
+                var seconds = date.getSeconds();
+                var milliseconds = date.getMilliseconds();
+                if ((minutes + '').length == 1) {
+                    minutes = '0' + minutes;
+                }
+                if ((seconds + '').length == 1) {
+                    seconds = '0' + seconds;
+                }
+                if ((milliseconds + '').length == 1) {
+                    milliseconds = '00' + milliseconds;
+                }
+                if ((milliseconds + '').length == 2) {
+                    milliseconds = '0' + milliseconds;
+                }
+                return hour + ':' + minutes + ':' + seconds + ':' + milliseconds;
+            }
+
+            //Echo Browser Events to Browser Log Window
+            function echoBrowserMessage(message) {
+                var divMessage = document.getElementById('BrowserLog');
+                var msg = divMessage.innerHTML;
+                msg = '[' + GetTimestamp() + '] ' + message + '<br />' + msg;
+                divMessage.innerHTML = msg;
+            }
+
+            //Echo SignalR Message and Data Events to Log Window
+            function echoSignalRMessage(message) {
+                var divMessage = document.getElementById('MessageLog');
+                var msg = divMessage.innerHTML;
+                msg = '[' + GetTimestamp() + '] ' + message + '<br />' + msg;
+                divMessage.innerHTML = msg;
+            }
+
+            //Echo SignalR Console Transport Connection Events to Log Window
+            function echoSignalRConsoleMessage(message) {
+                var divMessage = document.getElementById('ConsoleLog');
+                var msg = divMessage.innerHTML;
+                msg = '<b>[' + GetTimestamp() + ']</b> ' + message + '<br />' + msg;
+                divMessage.innerHTML = msg;
+            }
 
 function fixMissingBrowserFunctionality() {
 
@@ -200,12 +244,12 @@ function hpp_Load(hostedTransactionIdentifier, debugMode) {
 function signalR_SetupConnection(HID) {
 
     // Create a reference to the signalR
-    Connection = $.hubConnection();
+    Connection = jQuery.hubConnection();
     Connection.url = signalrURI;
     Connection.qs = { 'hid': HID, 'c': '0' };
 
     if(debug){
-        $.connection.fn.log = function (message) {
+        jQuery.connection.fn.log = function (message) {
             echoSignalRConsoleMessage(message);
         }
 

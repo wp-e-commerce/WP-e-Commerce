@@ -81,25 +81,30 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	public function init() {
 		add_action( 'wp_ajax_pro-pay_order_action'        , array( $this, 'order_actions' ) );
 		add_action( 'admin_enqueue_scripts'               , array( $this, 'enqueue_admin_scripts' ) );
-		add_filter( 'wpsc_gateway_checkout_form_pro-pay'  , array( $this, 'payment_fields' ) );
 		add_action( 'wp_enqueue_scripts'                  , array( $this, 'checkout_scripts' ) );
 		add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_spinner' ) );
+		add_action( 'wpsc_inside_shopping_cart'           , array( $this, 'add_propay_iframe' ) );
 
 		add_action( 'wp_ajax_propay_create_merchant_profile_id'  , array( $this, 'create_merchant_profile' ) );
 
 		add_action( 'wp_ajax_create_payer_id'                    , array( $this, 'create_payer_id' ) );
 		add_action( 'wp_ajax_nopriv_create_payer_id'             , array( $this, 'create_payer_id' ) );
+
 		add_action( 'wp_ajax_create_hosted_transaction_id'       , array( $this, 'create_hosted_transaction_id' ) );
 		add_action( 'wp_ajax_nopriv_create_hosted_transaction_id', array( $this, 'create_hosted_transaction_id' ) );
-
-		add_action( 'wpsc_inside_shopping_cart', array( $this, 'add_propay_iframe' ) );
 
 	}
 
 	public function add_propay_iframe() {
 		?>
-		<iframe id="pro_pay_iframe" name="pro_pay_iframe" class="pro-pay-iframe"></iframe>
+		<style>.pro-pay-iframe { height: 640px; overflow:hidden; border: none; }</style>
+		<iframe scrolling="no"  id="pro_pay_iframe" name="pro_pay_iframe" class="pro-pay-iframe"></iframe>
+		<?php if ( defined( 'WPSC_DEBUG' ) && WPSC_DEBUG ) : ?>
+			<div id="MessageLog" class="BrowserMessageBox"></div>
+			<div id="BrowserLog" class="BrowserMessageBox"></div>
+			<div id="ConsoleLog" class="BrowserMessageBox"></div>
 		<?php
+			endif;
 	}
 
 	/**

@@ -16,10 +16,12 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		$c.tev1_wrapper   = $( 'form.wpsc_checkout_forms' );
 		$c.tev2_wrapper   = $( '#gateway_settings_pro-pay_form' );
 		$c.v1             = false;
+		$c.iframe         = $( '#pro_pay_iframe' );
 
 		if ( $c.tev1_wrapper.length ) {
 			$c.wrapper = $c.tev1_wrapper;
 			$c.v1      = true;
+			$c.iframe.insertBefore( $( '.wpsc_make_purchase' ) ).hide();
 		} else {
 			$c.wrapper = $c.tev2_wrapper;
 		}
@@ -91,6 +93,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	pro_pay.generate_hosted_id = function() {
 		var first_name,
 		last_name,
+		address,
 		address1,
 		address2,
 		city,
@@ -101,8 +104,9 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		if ( $c.v1 ) {
 			first_name = $( 'input[data-wpsc-meta-key="billingfirstname"].text' ).val();
 			last_name  = $( 'input[data-wpsc-meta-key="billinglastname"].text' ).val();
-			address1   = $( 'textarea[data-wpsc-meta-key="billingaddress"].text' ).val();
-			address2   = address1.split( "\n" )[0];
+			address   = $( 'textarea[data-wpsc-meta-key="billingaddress"].text' ).val();
+			address1   = address.split( "\n" )[0];
+			address2   = address.split( "\n" )[1] || '';
 			city       = $( 'input[data-wpsc-meta-key="billingcity"].text' ).val();
 			state      = $( 'input[data-wpsc-meta-key="billingstate"].text' ).val();
 			zip        = $( 'input[data-wpsc-meta-key="billingpostcode"].text' ).val();
@@ -110,8 +114,9 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		} else {
 			first_name = $( 'input[data-wpsc-meta-key="billingfirstname"].text' ).val();
 			last_name  = $( 'input[data-wpsc-meta-key="billinglastname"].text' ).val();
-			address1   = $( 'input[data-wpsc-meta-key="billingaddress"].text' ).val();
-			address2   = address1.split( "\n" )[0];
+			address   = $( 'textarea[data-wpsc-meta-key="billingaddress"].text' ).val();
+			address1   = address.split( "\n" )[0];
+			address2   = address.split( "\n" )[1] || '';
 			city       = $( 'input[data-wpsc-meta-key="billingcity"].text' ).val();
 			state      = $( 'input[data-wpsc-meta-key="billingstate"].text' ).val();
 			zip        = $( 'input[data-wpsc-meta-key="billingpostcode"].text' ).val();
@@ -137,6 +142,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 				window.console.log( response );
 				$c.spinner.fadeOut( 350 );
 				hpp_Load( response.data.token, wpsc.debug );
+				$c.iframe.slideDown();
 			} else {
 				window.console.log( response );
 			}
@@ -150,3 +156,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	$( pro_pay.init );
 
 } )( window, document, jQuery, window.WPSC_Pro_Pay_Checkout, ajaxurl );
+
+function formIsReadyToSubmit() {
+	return true;
+}
