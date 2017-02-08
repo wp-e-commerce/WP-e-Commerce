@@ -209,7 +209,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		<?php
 			$this->get_account_number_row( true );
 		} else {
-
 ?>
 		<!-- Account Credentials -->
 		<tr>
@@ -335,6 +334,45 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		if ( $payer_id ) {
 			wpsc_update_customer_meta( 'pro_pay_payer_id', $payer_id );
 			wp_send_json_success( array( 'payer' => $payer_id ) );
+		} else {
+			wp_send_json_error();
+		}
+	}
+
+	public function create_hosted_transaction_id() {
+
+		$name        = sanitize_text_field( $_POST['name'] );
+		$address1    = sanitize_text_field( $_POST['address1'] );
+		$address2    = sanitize_text_field( $_POST['address2'] );
+		$city        = sanitize_text_field( $_POST['city'] );
+		$state       = sanitize_text_field( $_POST['state'] );
+		$zip         = sanitize_text_field( $_POST['zip'] );
+		$country     = sanitize_text_field( $_POST['country'] );
+
+		$config = new WPSC_Pro_Pay_Hosted_Transaction_Id_Config(
+			array(
+				'environment'         => $this->sandbox ? 'sandbox' : 'production',
+				'biller_account_id'   => $this->biller_account_id,
+				'auth_token'          => $this->auth_token,
+				'name'                => $name,
+				'address1'            => $address1,
+				'address2'            => $address2,
+				'city'                => $city,
+				'state'               => $state,
+				'zip'                 => $zip,
+				'country'             => $country,
+				'description'         => sprintf( __( 'Order from %s', 'wp-e-commerce' ), get_bloginfo( 'blogname' ) ),
+				'merchant_profile_id' => $this->merchant_profile_id,
+				'auth_only'           => 'authorize' === $this->payment_capture,
+			)
+		);
+
+		$hosted = new WPSC_Pro_Pay_Hosted_Transaction_Id( $config );
+
+		$token = $hosted->create()->get_transaction_id();
+
+		if ( $token ) {
+			wp_send_json_success( array( 'token' => $token ) );
 		} else {
 			wp_send_json_error();
 		}
@@ -1100,5 +1138,79 @@ class WPSC_Pro_Pay_Payer_Id_Config {
 		$this->auth_token        = $this->args->auth_token;
 		$this->name              = $this->args->name;
 		$this->email             = $this->args->email;
+	}
+}
+
+class WPSC_Pro_Pay_Hosted_Transaction_Id {
+
+	protected $config;
+	protected $response;
+
+	public function __construct( WPSC_Pro_Pay_Hosted_Transaction_Id_Config $config ) {
+		$this->config = $config;
+	}
+
+	public function create() {
+		$request = new WPSC_ProPay_Request( $this->config );
+
+		$body = json_encode( apply_filters( 'wpsc_pro_pay_default_hosted_transaction_args', array(
+			'Name'              => $this->config->name,
+			'Address1'          => $this->config->address1,
+			'Address2'          => $this->config->address2,
+			'City'              => $this->config->city,
+			'State'             => $this->config->state,
+			'ZipCode'           => $this->config->zip,
+			'Country'           => $this->config->country,
+			'Description'       => $this->config->description,
+			'MerchantProfileId' => $this->config->merchant_profile_id,
+			'AuthOnly'          => $this->config->auth_only,
+			'Amount'            => wpsc_cart_total() * 100,
+			'PayerAccountId'    => wpsc_get_customer_meta( 'pro_pay_payer_id' ),
+			'PaymentTypeId'     => '0',
+			'CurrencyCode'      => 'USD',
+			'InvoiceNumber'     => 'somehow add order ID here',
+			'AvsRequirementType'               => 1,
+			'CardHolderNameRequirementType'    => 1,
+			'SecurityCodeRequirementType'      => 1,
+			'OnlyStoreCardOnSuccessfulProcess' => true,
+		) ) );
+
+		$this->response = $request->request( '/HostedTransactions/', array( 'body' => $body ) );
+
+		return $this;
+	}
+
+	public function get_transaction_id() {
+		if ( $this->response->is_successful() ) {
+			return $this->response->get( 'HostedTransactionIdentifier' );
+		}
+
+		return '';
+	}
+}
+
+class WPSC_Pro_Pay_Hosted_Transaction_Id_Config {
+
+	public $environment;
+	public $biller_account_id;
+	public $auth_token;
+	public $name;
+
+	public function __construct( $args ) {
+		$this->args = (object) $args;
+
+		$this->environment         = $this->args->environment;
+		$this->biller_account_id   = $this->args->biller_account_id;
+		$this->auth_token          = $this->args->auth_token;
+		$this->name                = $this->args->name;
+		$this->address1            = $this->args->address1;
+		$this->address2            = $this->args->address2;
+		$this->city                = $this->args->city;
+		$this->state               = $this->args->state;
+		$this->zip                 = $this->args->zip;
+		$this->country             = $this->args->country;
+		$this->description         = $this->args->description;
+		$this->merchant_profile_id = $this->args->merchant_profile_id;
+		$this->auth_only           = $this->args->auth_only;
 	}
 }
