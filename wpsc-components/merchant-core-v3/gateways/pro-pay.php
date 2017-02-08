@@ -375,9 +375,9 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$address1    = sanitize_text_field( $_POST['address1'] );
 		$address2    = sanitize_text_field( $_POST['address2'] );
 		$city        = sanitize_text_field( $_POST['city'] );
-		$state       = sanitize_text_field( $_POST['state'] );
+		$state       = wpsc_get_state_by_id( $_POST['state'], 'code' );
 		$zip         = sanitize_text_field( $_POST['zip'] );
-		$country     = sanitize_text_field( $_POST['country'] );
+		$country     = 'USA'; // Check if we can do international BUYERS. If so, we need 3-character ISO
 
 		$config = new WPSC_Pro_Pay_Hosted_Transaction_Id_Config(
 			array(

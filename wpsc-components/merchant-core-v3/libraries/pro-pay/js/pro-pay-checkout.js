@@ -108,9 +108,9 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			address1   = address.split( "\n" )[0];
 			address2   = address.split( "\n" )[1] || '';
 			city       = $( 'input[data-wpsc-meta-key="billingcity"].text' ).val();
-			state      = $( 'input[data-wpsc-meta-key="billingstate"].text' ).val();
+			state      = $( 'select[data-wpsc-meta-key="billingregion"]' ).val();
 			zip        = $( 'input[data-wpsc-meta-key="billingpostcode"].text' ).val();
-			country    = $( 'input[data-wpsc-meta-key="billingcountry"].text' ).val();
+			country    = $( 'select[data-wpsc-meta-key="billingcountry"]' ).val();
 		} else {
 			first_name = $( 'input[data-wpsc-meta-key="billingfirstname"].text' ).val();
 			last_name  = $( 'input[data-wpsc-meta-key="billinglastname"].text' ).val();
@@ -118,9 +118,9 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			address1   = address.split( "\n" )[0];
 			address2   = address.split( "\n" )[1] || '';
 			city       = $( 'input[data-wpsc-meta-key="billingcity"].text' ).val();
-			state      = $( 'input[data-wpsc-meta-key="billingstate"].text' ).val();
+			state      = $( 'select[data-wpsc-meta-key="billingregion"]' ).val();
 			zip        = $( 'input[data-wpsc-meta-key="billingpostcode"].text' ).val();
-			country    = $( 'input[data-wpsc-meta-key="billingcountry"].text' ).val();
+			country    = $( 'select[data-wpsc-meta-key="billingcountry"]' ).val();
 		}
 
 		$c.spinner.fadeIn().css( 'display', 'inline-block' );
