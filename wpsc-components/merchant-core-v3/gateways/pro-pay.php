@@ -77,24 +77,60 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function init() {
-		add_action( 'wp_ajax_pro-pay_order_action'      , array( $this, 'order_actions' ) );
-		add_action( 'admin_enqueue_scripts'             , array( $this, 'enqueue_admin_scripts' ) );
-		add_filter( 'wpsc_gateway_checkout_form_pro-pay', array( $this, 'payment_fields' ) );
+		add_action( 'wp_ajax_pro-pay_order_action'             , array( $this, 'order_actions' ) );
+		add_action( 'admin_enqueue_scripts'                    , array( $this, 'enqueue_admin_scripts' ) );
+		add_filter( 'wpsc_gateway_checkout_form_pro-pay'       , array( $this, 'payment_fields' ) );
+		add_action( 'wp_enqueue_scripts'                       , array( $this, 'checkout_scripts' ) );
+
 		add_action( 'wp_ajax_propay_create_merchant_profile_id', array( $this, 'create_merchant_profile' ) );
-		add_action( 'wp_enqueue_scripts'                , array( $this, 'checkout_scripts' ) );
+		add_action( 'wp_ajax_create_payer_id'                  , array( $this, 'create_payer_id' ) );
+		add_action( 'wp_ajax_nopriv_create_payer_id'           , array( $this, 'create_payer_id' ) );
+
+		add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_spinner' ) );
+	}
+
+	public function add_spinner( $gateway ) {
+
+		if ( 'pro-pay' !== $gateway ) {
+			return;
+		}
+
+		?>
+		<div class="spinner"></div>
+		<style>
+		.spinner {
+			background: url(<?php echo admin_url( 'images/spinner.gif' ) ?>) no-repeat;
+			-webkit-background-size: 20px 20px;
+			background-size: 20px 20px;
+			display: inline-block;
+			vertical-align: middle;
+			opacity: .7;
+			filter: alpha(opacity=70);
+			width: 20px;
+			height: 20px;
+			margin: 4px 10px 0;
+			display: none;
+		}
+		@media print, (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+			.spinner {
+				background-image: url(<?php echo admin_url( 'images/spinner-2x.gif' ) ?>);
+			}
+		}
+</style>
+		<?php
 	}
 
 	public function checkout_scripts() {
+
 		$is_cart = wpsc_is_theme_engine( '1.0' ) ? wpsc_is_checkout() : ( wpsc_is_checkout() || wpsc_is_cart() );
 
 		if ( $is_cart ) {
-			wp_enqueue_script( 'pro-pay-js', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/pro-pay-checkout.js', array( 'jquery' ), WPSC_VERSION, true );
+			wp_enqueue_script( 'pro-pay-js', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/pro-pay-checkout.js', array( 'jquery' ), WPSC_VERSION );
 			wp_localize_script( 'pro-pay-js', 'WPSC_Pro_Pay_Checkout', array(
 					'checkout_nonce' => wp_create_nonce( 'checkout_nonce' ),
 					'ajaxurl'        => admin_url( 'admin-ajax.php', 'relative' ),
 				)
 			);
-
 		}
 
 	}
@@ -271,6 +307,12 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function create_payer_id() {
+		$payer_id = wpsc_get_customer_meta( 'pro_pay_payer_id' );
+
+		if ( $payer_id ) {
+			wp_send_json_success( array( 'payer' => $payer_id ) );
+		}
+
 		$name  = sanitize_text_field( $_POST['name'] );
 		$email = sanitize_email( $_POST['email'] );
 
@@ -289,6 +331,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$payer_id = $payer->create()->get_payer_id();
 
 		if ( $payer_id ) {
+			wpsc_update_customer_meta( 'pro_pay_payer_id', $payer_id );
 			wp_send_json_success( array( 'payer' => $payer_id ) );
 		} else {
 			wp_send_json_error();
@@ -913,6 +956,7 @@ class WPSC_ProPay_Response {
 
 		if ( ! is_wp_error( $this->response ) && $success ) {
 			$this->success = true;
+			$this->response = $response;
 		}
 
 		return $this->response;
@@ -920,6 +964,15 @@ class WPSC_ProPay_Response {
 
 	public function is_successful() {
 		return $this->success;
+	}
+
+	public function get( $variable ) {
+
+		if ( isset( $this->response->$variable ) ) {
+			return $this->response->$variable;
+		}
+
+		return '';
 	}
 
 	/**
@@ -970,7 +1023,7 @@ class WPSC_ProPay_Merchant_Profile {
 	public function get_profile_id() {
 
 		if ( $this->response->is_successful() ) {
-			return $this->response->ProfileId;
+			return $this->response->get( 'ProfileId' );
 		}
 
 		return '';
@@ -1003,7 +1056,7 @@ class WPSC_ProPay_Payer_Id {
 	protected $config;
 	protected $response;
 
-	public function __construct( WPSC_Pro_Pay_Merchant_Profile_Config $config ) {
+	public function __construct( WPSC_Pro_Pay_Payer_Id_Config $config ) {
 		$this->config = $config;
 	}
 
@@ -1022,7 +1075,7 @@ class WPSC_ProPay_Payer_Id {
 
 	public function get_payer_id() {
 		if ( $this->response->is_successful() ) {
-			return $this->response->ExternalAccountID;
+			return $this->response->get( 'ExternalAccountID' );
 		}
 
 		return '';
@@ -1043,7 +1096,7 @@ class WPSC_Pro_Pay_Payer_Id_Config {
 		$this->environment       = $this->args->environment;
 		$this->biller_account_id = $this->args->biller_account_id;
 		$this->auth_token        = $this->args->auth_token;
-		$this->name              = $this->args->auth_token;
-		$this->email             = $this->args->auth_token;
+		$this->name              = $this->args->name;
+		$this->email             = $this->args->email;
 	}
 }
