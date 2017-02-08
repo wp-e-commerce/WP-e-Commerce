@@ -81,6 +81,22 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		add_action( 'admin_enqueue_scripts'             , array( $this, 'enqueue_admin_scripts' ) );
 		add_filter( 'wpsc_gateway_checkout_form_pro-pay', array( $this, 'payment_fields' ) );
 		add_action( 'wp_ajax_propay_create_merchant_profile_id', array( $this, 'create_merchant_profile' ) );
+		add_action( 'wp_enqueue_scripts'                , array( $this, 'checkout_scripts' ) );
+	}
+
+	public function checkout_scripts() {
+		$is_cart = wpsc_is_theme_engine( '1.0' ) ? wpsc_is_checkout() : ( wpsc_is_checkout() || wpsc_is_cart() );
+
+		if ( $is_cart ) {
+			wp_enqueue_script( 'pro-pay-js', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/pro-pay-checkout.js', array( 'jquery' ), WPSC_VERSION, true );
+			wp_localize_script( 'pro-pay-js', 'WPSC_Pro_Pay_Checkout', array(
+					'checkout_nonce' => wp_create_nonce( 'checkout_nonce' ),
+					'ajaxurl'        => admin_url( 'admin-ajax.php', 'relative' ),
+				)
+			);
+
+		}
+
 	}
 
 	public function enqueue_admin_scripts( $hook ) {
@@ -245,8 +261,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		$profile = new WPSC_ProPay_Merchant_Profile( $config );
 
-		$response   = $profile->create();
-		$profile_id = $response->get_profile_id();
+		$profile_id   = $profile->create()->get_profile_id();
 
 		if ( $profile_id ) {
 			wp_send_json_success( array( 'profile_id' => $profile_id ) );
@@ -256,17 +271,22 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function create_payer_id() {
+		$name  = sanitize_text_field( $_POST['name'] );
+		$email = sanitize_email( $_POST['email'] );
+
 		$config = new WPSC_Pro_Pay_Payer_Id_Config(
 			array(
 				'environment'       => $this->sandbox ? 'sandbox' : 'production',
 				'biller_account_id' => $this->biller_account_id,
-				'auth_token'        => $this->auth_token
+				'auth_token'        => $this->auth_token,
+				'name'              => $name,
+				'email'             => $email
 			)
 		);
 
-		$profile = new WPSC_ProPay_Payer_Id( $config );
+		$payer = new WPSC_ProPay_Payer_Id( $config );
 
-		$payer_id = $profile->create()->get_payer_id();
+		$payer_id = $payer->create()->get_payer_id();
 
 		if ( $payer_id ) {
 			wp_send_json_success( array( 'payer' => $payer_id ) );
@@ -840,61 +860,6 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
     }
 }
 
-class WPSC_ProPay_Merchant_Profile {
-
-	protected $config;
-
-	public function __construct( WPSC_Pro_Pay_Merchant_Profile_Config $config ) {
-		$this->config = $config;
-	}
-
-	public function create() {
-		$request = new WPSC_ProPay_Request( $this->config );
-
-		$body = json_encode( array(
-			'ProfileName' => '',
-			'PaymentProcessor' => 'LegacyProPay',
-			'ProcessorData' => array(
-				array(
-					'ProcessorField' => 'certStr',
-					'Value'          => $this->config->cert_string
-				),
-				array(
-					'ProcessorField' => 'accountNum',
-					'Value'          => $this->config->account_number
-				),
-				array(
-					'ProcessorField' => 'termId',
-					'Value'          => $this->config->term_id
-				)
-			),
-		) );
-
-		return $request->request( '/MerchantProfiles/', array( 'body' => $body ) );
-	}
-}
-
-class WPSC_Pro_Pay_Merchant_Profile_Config {
-
-	public $cert_string;
-	public $account_number;
-	public $term_id;
-	public $environment;
-	public $biller_account_id;
-	public $auth_token;
-
-	public function __construct( $args ) {
-		$this->args = (object) $args;
-
-		$this->cert_string       = $this->args->cert_string;
-		$this->account_number    = $this->args->account_number;
-		$this->term_id           = $this->args->term_id;
-		$this->environment       = $this->args->environment;
-		$this->biller_account_id = $this->args->biller_account_id;
-		$this->auth_token        = $this->args->auth_token;
-	}
-}
-
 class WPSC_ProPay_Request {
 
 	protected $config;
@@ -931,8 +896,7 @@ class WPSC_ProPay_Request {
 
 class WPSC_ProPay_Response {
 
-	public $response;
-	protected $profile_id;
+	public $response = null;
 	protected $success = false;
 
 	public function __construct( $response ) {
@@ -959,20 +923,78 @@ class WPSC_ProPay_Response {
 	}
 
 	/**
-	 * This should not be here.
-	 * @return [type] [description]
-	 */
-	public function get_profile_id() {
-		return $this->profile_id;
-	}
-
-	/**
 	 * Temp debug function.
 	 *
 	 * @return string [description]
 	 */
 	public function __toString() {
 		return '<pre>' . print_r( $this->response, 1 ) . '</pre>';
+	}
+}
+
+class WPSC_ProPay_Merchant_Profile {
+
+	protected $config;
+
+	public function __construct( WPSC_Pro_Pay_Merchant_Profile_Config $config ) {
+		$this->config = $config;
+	}
+
+	public function create() {
+		$request = new WPSC_ProPay_Request( $this->config );
+
+		$body = json_encode( array(
+			'ProfileName' => '',
+			'PaymentProcessor' => 'LegacyProPay',
+			'ProcessorData' => array(
+				array(
+					'ProcessorField' => 'certStr',
+					'Value'          => $this->config->cert_string
+				),
+				array(
+					'ProcessorField' => 'accountNum',
+					'Value'          => $this->config->account_number
+				),
+				array(
+					'ProcessorField' => 'termId',
+					'Value'          => $this->config->term_id
+				)
+			),
+		) );
+
+		$this->response = $request->request( '/MerchantProfiles/', array( 'body' => $body ) );
+
+		return $this;
+	}
+
+	public function get_profile_id() {
+
+		if ( $this->response->is_successful() ) {
+			return $this->response->ProfileId;
+		}
+
+		return '';
+	}
+}
+
+class WPSC_Pro_Pay_Merchant_Profile_Config {
+
+	public $cert_string;
+	public $account_number;
+	public $term_id;
+	public $environment;
+	public $biller_account_id;
+	public $auth_token;
+
+	public function __construct( $args ) {
+		$this->args = (object) $args;
+
+		$this->cert_string       = $this->args->cert_string;
+		$this->account_number    = $this->args->account_number;
+		$this->term_id           = $this->args->term_id;
+		$this->environment       = $this->args->environment;
+		$this->biller_account_id = $this->args->biller_account_id;
+		$this->auth_token        = $this->args->auth_token;
 	}
 }
 
@@ -990,7 +1012,7 @@ class WPSC_ProPay_Payer_Id {
 
 		$body = json_encode( array(
 			'Name'             => $this->config->name,
-			'EmailAddress'     => $this->config->name,
+			'EmailAddress'     => $this->config->email,
 		) );
 
 		$this->response = $request->request( '/Payers/', array( 'body' => $body ) );
@@ -1009,12 +1031,11 @@ class WPSC_ProPay_Payer_Id {
 
 class WPSC_Pro_Pay_Payer_Id_Config {
 
-	public $cert_string;
-	public $account_number;
-	public $term_id;
 	public $environment;
 	public $biller_account_id;
 	public $auth_token;
+	public $name;
+	public $email;
 
 	public function __construct( $args ) {
 		$this->args = (object) $args;
@@ -1022,5 +1043,7 @@ class WPSC_Pro_Pay_Payer_Id_Config {
 		$this->environment       = $this->args->environment;
 		$this->biller_account_id = $this->args->biller_account_id;
 		$this->auth_token        = $this->args->auth_token;
+		$this->name              = $this->args->auth_token;
+		$this->email             = $this->args->auth_token;
 	}
 }
