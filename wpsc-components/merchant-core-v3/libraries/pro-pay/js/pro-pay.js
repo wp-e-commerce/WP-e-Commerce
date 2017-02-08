@@ -48,8 +48,6 @@ window.WPSC_Pro_Pay = window.WPSC_Pro_Pay || {};
 		};
 
 		$.post( ajaxurl, data, success, 'json' );
-
-		return false;
 	};
 
 	$( pro_pay.init );

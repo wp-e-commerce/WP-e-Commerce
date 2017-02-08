@@ -1,8 +1,9 @@
 <?php
 /**
- * Todo: Create a nice user sign-up flow, as a part of an overall onboarding experience
- * integrated with subscriptions
- * @todo enqueue admin script for propay, localize nonce.
+ * @todo: Later,  Create a nice user sign-up flow, as a part of an overall onboarding experience
+ * @todo: Later, integrated with subscriptions
+ * @todo: Use nonces we are creating
+ * @todo: Ensure it works in Tev2 at all, and in both theme engines when it's the only gateway available.
  */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
@@ -300,6 +301,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$profile_id   = $profile->create()->get_profile_id();
 
 		if ( $profile_id ) {
+			$this->setting->set( 'merchant_profile_id', $profile_id );
 			wp_send_json_success( array( 'profile_id' => $profile_id ) );
 		} else {
 			wp_send_json_error();
