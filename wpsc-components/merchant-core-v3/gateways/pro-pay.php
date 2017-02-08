@@ -994,7 +994,7 @@ class WPSC_ProPay_Response {
 		$response = json_decode( wp_remote_retrieve_body( $this->response ) );
 		$code     = wp_remote_retrieve_response_code( $this->response );
 
-		$success = 200 === $code && 'SUCCESS' === $response->RequestResult->ResultValue;
+		$success = 200 === $code && ( 'SUCCESS' === $response->RequestResult->ResultValue || 'SUCCESS' === $response->Result->ResultValue );
 
 		if ( ! is_wp_error( $this->response ) && $success ) {
 			$this->success = true;
