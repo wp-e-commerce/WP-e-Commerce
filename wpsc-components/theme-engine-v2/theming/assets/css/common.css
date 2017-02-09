@@ -133,8 +133,8 @@
 	display: block;
 }
 
-.wpsc-controller .wpsc-field-radios .wpsc-controls .wpsc-field-description,
-.wpsc-controller .wpsc-field-checkboxes .wpsc-controls .wpsc-field-description {
+.wpsc-controller .wpsc-field-radios .wpsc-field-description,
+.wpsc-controller .wpsc-field-checkboxes .wpsc-field-description {
 	margin-left: 15px;
 	margin-bottom: 18px;
 }

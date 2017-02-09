@@ -109,9 +109,9 @@ function wpsc_get_form_output( $args ) {
 		'after_field'         => '</div>',
 		'before_field_description' => '<div id="%1$s" class="%2$s">',
 		'after_field_description'  => '</div>',
-		'before_label'        => '',
+		'before_label'        => '<div class="wpsc-label-input-container">',
 		'after_label'         => '',
-		'before_controls'     => '<div class="wpsc-controls">',
+		'before_controls'     => '',
 		'after_controls'      => '</div>',
 		'before_form_actions' => '<div class="wpsc-form-actions">',
 		'after_form_actions'  => '</div>',
@@ -587,7 +587,7 @@ function wpsc_form_label( $label, $for = '', $atts = array(), $echo = true ) {
 		$atts['for'] = $for;
 	}
 
-	$output = '<label ' . _wpsc_form_attributes( $atts ) . '>' . $label . '</label>';
+	$output = '<label ' . _wpsc_form_attributes( $atts ) . '><span>' . $label . '</span></label>';
 
 	if ( $echo ) {
 		echo $output;
