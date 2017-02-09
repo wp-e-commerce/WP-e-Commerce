@@ -481,7 +481,7 @@ function wpsc_display_purchlog_shipping_name() {
 
 function wpsc_display_purchlog_shipping_address() {
 	global $purchlogitem;
-	return esc_html( $purchlogitem->log()->shipping_address() );
+	return wp_kses_post( $purchlogitem->log()->shipping_address() );
 }
 
 function wpsc_display_purchlog_shipping_city() {
