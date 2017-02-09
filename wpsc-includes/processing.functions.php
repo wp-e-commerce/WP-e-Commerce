@@ -42,7 +42,7 @@ function wpsc_currency_display( $price_in, $args = null ) {
 			wp_cache_set( $currency_type, $wpsc_currency_data, 'wpsc_currency_id' );
 		}
 	} elseif ( ! $wpsc_currency_data = wp_cache_get( $query['isocode'], 'wpsc_currency_isocode' ) ) {
-		$wpsc_currency_data = WPSC_Countries::get_currency_data( $currency_type, true );
+		$wpsc_currency_data = WPSC_Countries::get_currency_data( $query['isocode'], true );
 		wp_cache_set( $query['isocode'], $wpsc_currency_data, 'wpsc_currency_isocode' );
 	}
 
