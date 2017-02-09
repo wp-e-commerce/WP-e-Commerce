@@ -1,4 +1,4 @@
-/*global ajaxurl, hpp_Load*/
+/*global ajaxurl, hpp_Load, signalR_SubmitForm */
 window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 ( function( window, document, $, wpsc, ajaxurl, undefined ) {
@@ -22,6 +22,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			$c.wrapper = $c.tev1_wrapper;
 			$c.v1      = true;
 			$c.iframe.insertBefore( $( '.wpsc_make_purchase' ) ).hide();
+			$c.buy_button = $( '.wpsc_buy_button' );
 		} else {
 			$c.wrapper = $c.tev2_wrapper;
 		}
@@ -143,6 +144,12 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 				$c.spinner.fadeOut( 350 );
 				hpp_Load( response.data.token, wpsc.debug );
 				$c.iframe.slideDown();
+
+				$( '.wpsc_buy_button' ).prop( 'disabled', true );
+				$c.wrapper.on( 'submit', function() {
+					signalR_SubmitForm();
+					return false;
+				} );
 			} else {
 				window.console.log( response );
 			}
@@ -158,5 +165,5 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 } )( window, document, jQuery, window.WPSC_Pro_Pay_Checkout, ajaxurl );
 
 function formIsReadyToSubmit() {
-	return true;
+	jQuery( '.wpsc_buy_button' ).prop( 'disabled', false );
 }
