@@ -5,6 +5,7 @@
  * @todo: Use nonces we are creating
  * @todo: Ensure it works in Tev2 at all, and in both theme engines when it's the only gateway available.
  * @todo: Ensure it works on page load if gateway is already selected
+ * @todo: Improve UX (spinner in Purchase button, notifications, etc.)
  */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
@@ -66,7 +67,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		parent::__construct();
 
 		$this->title    = __( 'ProPay (TSYS) Payment Gateway', 'wp-e-commerce' );
-		$this->supports = array( 'tev1' );
+		$this->supports = array( 'tev1', 'refunds', 'partial-refunds' );
 
 		$this->order_handler	= WPSC_Pro_Pay_Payments_Order_Handler::get_instance( $this );
 
