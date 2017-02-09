@@ -1000,9 +1000,11 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 class WPSC_ProPay_Request {
 
 	protected $config;
+	protected $method;
 
-	public function __construct( $config ) {
+	public function __construct( $config, $method = 'PUT' ) {
 		$this->config = $config;
+		$this->method = $method;
 	}
 
 	public function request( $resource, $args = array() ) {
@@ -1013,7 +1015,7 @@ class WPSC_ProPay_Request {
 
 		$args = wp_parse_args( $args, array(
 			'timeout' => 60,
-			'method'  => 'PUT',
+			'method'  => $this->method,
 			'body'    => array(),
 			'headers' => array(
 				'content-type'  => 'application/json',
@@ -1280,7 +1282,7 @@ class WPSC_Pro_Pay_Hosted_Transaction_Results {
 	}
 
 	public function create() {
-		$request = new WPSC_ProPay_Request( $this->config );
+		$request = new WPSC_ProPay_Request( $this->config, 'GET' );
 
 		$this->response = $request->request( "/HostedTransactionResults/{$this->config->id}", array( 'body' => $body ) );
 
