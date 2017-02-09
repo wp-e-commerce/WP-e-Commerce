@@ -54,6 +54,18 @@ function _wpsc_action_enqueue_shipping_billing_scripts() {
 	) );
 }
 
+function _wpsc_enqueue_float_label_scripts() {
+    add_action(
+        'wp_enqueue_scripts',
+        '_wpsc_action_enqueue_float_label_scripts'
+    );
+}
+
+function _wpsc_action_enqueue_float_label_scripts() {
+    wpsc_enqueue_script( 'wpsc-float-labels' );
+    wpsc_enqueue_script( 'wpsc-checkout' );
+}
+
 /**
  * Enqueue a registered wpsc script (and optionally localize its JS data).
  * If script cannot be enqueued yet, register the queued script for later enqueue.

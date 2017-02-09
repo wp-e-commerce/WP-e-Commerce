@@ -18,12 +18,16 @@ function wpsc_display_upgrades_page() {
 							<?php submit_button( __( 'Register License', 'wp-e-commerce' ), 'primary', 'submit_values', false ); ?>
 							<?php submit_button( __( 'Reset License', 'wp-e-commerce' ), 'secondary', 'reset_values', false ); ?>
 						</p>
-						<p>
-							<?php _e( 'In order to receive automatic plugin updates, you need to register your license for each product that provides one. ', 'wp-e-commerce' ); ?>
-						</p>
+						<?php
+						echo '<p>' . sprintf(
+							__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'wp-e-commerce' ),
+							'http://docs.wpecommerce.org/license-renewals/'
+						) . '</p>';
+						?>						
 						<p>
 							<?php _e( 'API keys purchased prior to November 6, 2015 will not work.', 'wp-e-commerce' ); ?>
 						</p>
+
 					</div>
 				</form>
 			</div>
@@ -185,36 +189,35 @@ function wpec_lic_weekly_license_check() {
 add_action( 'wpsc_weekly_cron_task', 'wpec_lic_weekly_license_check' ); // For testing use admin_init
 
 function wpec_license_notices() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
+	static $showed_invalid_message;
+	
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
 
-		$active_licenses = get_option( 'wpec_licenses_active_products', array() );
-		if( empty( $active_licenses ) ) {
-			return;
-		}
+	$active_licenses = get_option( 'wpec_licenses_active_products', array() );
+	if( empty( $active_licenses ) ) {
+		return;
+	}
 
-		$messages = array();
+	$messages = array();
 
-		foreach ( (array) $active_licenses as $license ) {
-			$license = get_option( 'wpec_product_' . $license . '_license_active' );
-			if( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
-				if( isset( $_GET['page'] ) && 'wpsc-upgrades' !== $_GET['page'] ) {
-					$messages[] = sprintf(
-						__( 'You have invalid or expired license keys for WP eCommerce. Please go to the <a href="%s" title="Go to Licenses page">Licenses page</a> to correct this issue.', 'wp-e-commerce' ),
-						admin_url( 'index.php?page=wpsc-upgrades' )
-					);
-					$showed_invalid_message = true;
-				}
-			}
-		}
+	foreach ( (array) $active_licenses as $license ) {
+		$license = get_option( 'wpec_product_' . $license . '_license_active' );
 
-		if( ! empty( $messages ) ) {
-			foreach( $messages as $message ) {
-				echo '<div class="error">';
-					echo '<p>' . $message . '</p>';
-				echo '</div>';
-			}
+		if( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+			$messages[] = sprintf(
+				__( 'You have invalid or expired license keys for WP eCommerce. Please go to the <a href="%s" title="WPeC Licensing">WPeC Licensing</a> page to correct this issue.', 'wp-e-commerce' ),
+				admin_url( 'index.php?page=wpsc-upgrades' )
+			);
+			$showed_invalid_message = true;
 		}
+	}
+
+	if( ! empty( $messages ) ) {
+		foreach( $messages as $message ) {
+			echo '<div class="error"><p>' . $message . '</p></div>';
+		}
+	}
 }
 add_action( 'admin_notices', 'wpec_license_notices' );

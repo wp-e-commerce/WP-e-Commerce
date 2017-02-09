@@ -590,6 +590,7 @@ Shopping Cart
 
 .wpsc-checkout .entry-content fieldset {
 	width: 47.5%;
+	margin: 0;
 	display: inline-block;
 	vertical-align: top;
 }
@@ -676,6 +677,79 @@ Accounts Page
 
 .wpsc-customer-account-digital-content .wpsc-cart-header {
 	border-top: 0;
+}
+
+/*******************
+JS Float Label
+********************/
+
+.wpsc-controller .wpsc-field-textfield,
+.wpsc-controller .wpsc-field-select_region,
+.wpsc-controller .wpsc-field-select_country {
+	position: relative;
+}
+
+.wpsc-controller .wpsc-field-textfield input,
+.wpsc-controller .wpsc-field-textfield textarea,
+.wpsc-controller .wpsc-field-select_region input,
+.wpsc-controller .wpsc-field-select_region textarea,
+.wpsc-controller .wpsc-field-select_country input,
+.wpsc-controller .wpsc-field-select_country textarea {
+	padding: 1em;
+}
+
+.wpsc-controller .wpsc-field-textfield input,
+.wpsc-controller .wpsc-field-textfield textarea,
+.wpsc-controller .wpsc-field-textfield label,
+.wpsc-controller .wpsc-field-select_region input,
+.wpsc-controller .wpsc-field-select_region textarea,
+.wpsc-controller .wpsc-field-select_region label,
+.wpsc-controller .wpsc-field-select_country input,
+.wpsc-controller .wpsc-field-select_country textarea,
+.wpsc-controller .wpsc-field-select_country label {
+	-webkit-transition: 0.2s ease-in-out;
+	-moz-transition: 0.2s ease-in-out;
+	-ms-transition: 0.2s ease-in-out;
+	-o-transition: 0.2s ease-in-out;
+	transition: 0.2s ease-in-out;
+}
+
+.wpsc-controller .wpsc-field-textfield label,
+.wpsc-controller .wpsc-field-select_region label,
+.wpsc-controller .wpsc-field-select_country label {
+	position: absolute;
+	top: 1em;
+	left: 1em;
+	opacity: 0;
+}
+
+.wpsc-controller .wpsc-field-textfield.focused label,
+.wpsc-controller .wpsc-field-textfield.populated label,
+.wpsc-controller .wpsc-field-select_region.focused label,
+.wpsc-controller .wpsc-field-select_region.populated label,
+.wpsc-controller .wpsc-field-select_country.focused label,
+.wpsc-controller .wpsc-field-select_country.populated label {
+	opacity: 1;
+	top: 0;
+	left: 1em;
+	font-size: 0.65em;
+	font-weight: 600;
+}
+
+.wpsc-controller .wpsc-field-textfield.focused input,
+.wpsc-controller .wpsc-field-textfield.focused textarea,
+.wpsc-controller .wpsc-field-textfield.populated input,
+.wpsc-controller .wpsc-field-textfield.populated textarea,
+.wpsc-controller .wpsc-field-select_region.focused input,
+.wpsc-controller .wpsc-field-select_region.focused textarea,
+.wpsc-controller .wpsc-field-select_region.populated input,
+.wpsc-controller .wpsc-field-select_region.populated textarea,
+.wpsc-controller .wpsc-field-select_country.focused input,
+.wpsc-controller .wpsc-field-select_country.focused textarea,
+.wpsc-controller .wpsc-field-select_country.populated input,
+.wpsc-controller .wpsc-field-select_country.populated textarea {
+	padding-top: 1.5em;
+	padding-bottom: .5em;
 }
 
 /*****************

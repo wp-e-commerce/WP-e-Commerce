@@ -177,6 +177,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 	public function shipping_and_billing() {
 		$this->view = 'checkout-shipping-and-billing';
 		_wpsc_enqueue_shipping_billing_scripts();
+		_wpsc_enqueue_float_label_scripts();
 
 		$this->maybe_add_guest_account();
 
