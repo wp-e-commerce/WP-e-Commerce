@@ -6,6 +6,8 @@
  * @todo: Ensure it works in Tev2 at all, and in both theme engines when it's the only gateway available.
  * @todo: Ensure it works on page load if gateway is already selected
  * @todo: Improve UX (spinner in Purchase button, notifications, etc.)
+ * @todo: Flesh out auth/capture flow for auth-only, refunds, partial refunds.
+ * @todo: What happens if a card gets declined?
  */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
@@ -57,7 +59,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	private $merchant_profile_id = '';
 
 	/**
-	 * Constructor of pro-pay Payment Gateway
+	 * Constructor of ProPay Payment Gateway
 	 *
 	 * @access public
 	 * @since 3.12.0
@@ -678,18 +680,17 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 		$order_id = $this->log->get( 'id' );
 
 		// Get ids
-		$wp_transaction_id 	= $this->log->get( 'wp_transactionId' );
+		$transaction_id 	= $this->log->get( 'transactid' );
 		$wp_auth_code		= $this->log->get( 'wp_authcode' );
 		$wp_order_status	= $this->log->get( 'wp_order_status' );
 
 		//Don't change order status if a refund has been requested
 		$wp_refund_set = wpsc_get_purchase_meta( $order_id, 'pro-pay_refunded', true );
-		$order_info    = $this->refresh_transaction_info( $wp_transaction_id, ! (bool) $wp_refund_set );
 		?>
 
 		<div class="metabox-holder">
 			<div id="wpsc-pro-pay-payments" class="postbox">
-				<h3 class='hndle'><?php _e( 'pro-pay Payments' , 'wp-e-commerce' ); ?></h3>
+				<h3 class='hndle'><?php _e( 'ProPay Payments' , 'wp-e-commerce' ); ?></h3>
 				<div class='inside'>
 					<p><?php
 							_e( 'Current status: ', 'wp-e-commerce' );
@@ -698,7 +699,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 					</p>
 					<p><?php
 							_e( 'Transaction ID: ', 'wp-e-commerce' );
-							echo wp_kses_data( $wp_transaction_id );
+							echo esc_html( $transaction_id );
 						?>
 					</p>
 		<?php
@@ -745,7 +746,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 
 				if ( $wp_refund_id ) {
 					//Get refund order status to check if its eligible for a void (not settled)
-					$refund_status = $this->refresh_transaction_info( $wp_refund_id, false );
+
 
 					if ( ! $refund_status['settled'] ) {
 						//Show void only if not settled.
@@ -773,81 +774,10 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 
 		}
 		?>
-		<script type="text/javascript">
-		jQuery( document ).ready( function( $ ) {
-			$('#wpsc-pro-pay-payments').on( 'click', 'a.button, a.refresh', function( e ) {
-				var $this = $( this );
-				e.preventDefault();
-
-				var data = {
-					action: 		'pro-pay_order_action',
-					security: 		'<?php echo wp_create_nonce( "wp_order_action" ); ?>',
-					order_id: 		'<?php echo $order_id; ?>',
-					pro-pay_action: 	$this.data('action'),
-					pro-pay_id: 		$this.data('id'),
-					pro-pay_refund_amount: $('.pro-pay_refund_amount').val(),
-				};
-
-				// Ajax action
-				$.post( ajaxurl, data, function( result ) {
-						location.reload();
-					}, 'json' );
-
-				return false;
-			});
-		} );
-
-		</script>
 		</div>
 		</div>
 		</div>
 		<?php
-	}
-
-    /**
-     * Get the order status from API
-     *
-     * @param  string $transaction_id
-     */
-	public function refresh_transaction_info( $transaction_id, $update = true ) {
-
-		if ( $this->log->get( 'gateway' ) == 'pro-pay' ) {
-
-			$response = $this->gateway->execute( 'transactions/'. $transaction_id, null, 'GET' );
-
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message() );
-			}
-
-			$response_object = array();
-			$response_object['trans_type'] = $response['ResponseBody']->transactions[0]->transactionType;
-			$response_object['settled']    = isset( $response['ResponseBody']->transactions[0]->settlementData ) ? true : false;
-
-			//Recheck status and update if required
-			if ( $update ) {
-				switch ( $response_object['trans_type'] ) {
-					case 'AUTH_ONLY' :
-						$this->log->set( 'wp_order_status', 'Open' )->save();
-					break;
-
-					case 'VOID' :
-						$this->log->set( 'wp_order_status', 'Voided' )->save();
-					break;
-
-					case 'REFUND' :
-					case 'CREDIT' :
-						$this->log->set( 'wp_order_status', 'Refunded' )->save();
-					break;
-
-					case 'AUTH_CAPTURE' :
-					case 'PRIOR_AUTH_CAPTURE' :
-						$this->log->set( 'wp_order_status', 'Completed' )->save();
-					break;
-				}
-			}
-
-			return $response_object;
-		}
 	}
 
     /**
