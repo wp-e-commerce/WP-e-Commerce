@@ -913,7 +913,9 @@ class WPSC_ProPay_Request {
 			)
 		) );
 
-		$args['headers']['content-length'] = strlen( $args['body'] );
+		if ( ! empty( $args['body'] ) ) {
+			$args['headers']['content-length'] = strlen( $args['body'] );	
+		}
 
 		return new WPSC_ProPay_Response( wp_safe_remote_request( $url, $args ) );
 	}
