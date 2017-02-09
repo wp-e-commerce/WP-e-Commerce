@@ -690,6 +690,7 @@ JS Float Label
 .wpsc-controller .wpsc-field input,
 .wpsc-controller .wpsc-field textarea {
 	padding: 1em;
+	width: 100%;
 }
 
 .wpsc-controller .wpsc-field label {
