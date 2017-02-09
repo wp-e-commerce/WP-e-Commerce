@@ -25,17 +25,17 @@ JS Float Label
 	    font-weight: $bold;
 	}
 
-	.wpsc-field.focused input,
-	.wpsc-field.populated input,
-	.wpsc-field.focused textarea,
-	.wpsc-field.populated textarea {
+	.wpsc-field-textfield.focused input,
+	.wpsc-field-textfield.populated input,
+	.wpsc-field-textfield.focused textarea,
+	.wpsc-field-textfield.populated textarea {
 		padding-top: 1.5em;
 		padding-bottom: .5em;
 	}
 
-	.wpsc-field input,
-	.wpsc-field textarea,
-	.wpsc-field label {
+	.wpsc-field-textfield input,
+	.wpsc-field-textfield textarea,
+	.wpsc-field-textfield label {
 		-webkit-transition: 0.2s ease-in-out;
 		-moz-transition: 0.2s ease-in-out;
 		-ms-transition: 0.2s ease-in-out;

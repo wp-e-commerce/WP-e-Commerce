@@ -1,3 +1,3 @@
 ;(function($) {
-	$( '.wpsc-field' ).FloatLabel();
+	$( '.wpsc-field-textfield' ).FloatLabel();
 })(jQuery);
