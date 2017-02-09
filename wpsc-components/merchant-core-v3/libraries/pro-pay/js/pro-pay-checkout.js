@@ -182,12 +182,22 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			hosted_id : $c.hosted_id
 		};
 
-		window.console.log( data );
-
 		var success = function(response) {
-			if ( response.success ) {
-				window.console.log( response );
+			if ( response.success && 'SUCCESS' === response.data.results.response.Result.ResultValue ) {
+				var transaction = response.data.results.response.HostedTransaction;
+
 				$c.spinner.fadeOut( 350 );
+				$c.wrapper.off( 'submit' );
+				$c.wrapper.append( '<input id="pro-pay-payment-method-token" type="hidden" name="pro_pay_payment_method_token" />' );
+				$c.wrapper.append( '<input id="pro-pay-transaction-id" type="hidden" name="pro_pay_transaction_id" />' );
+				$c.wrapper.append( '<input id="pro-pay-acct-number" type="hidden" name="pro_pay_obfs_acct_number" />' );
+				$c.wrapper.append( '<input id="pro-pay-type" type="hidden" name="pro_pay_card_type" />' );
+				$( '#pro-pay-payment-method-token' ).val( transaction.PaymentMethodInfo.PaymentMethodID );
+				$( '#pro-pay-transaction-id' ).val( transaction.TransactionHistoryId );
+				$( '#pro-pay-acct-number' ).val( transaction.PaymentMethodInfo.ObfuscatedAccountNumber );
+				$( '#pro-pay-type' ).val( transaction.PaymentMethodInfo.PaymentMethodType );
+
+				$c.wrapper.submit();
 			} else {
 				window.console.log( response );
 			}

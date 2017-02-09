@@ -435,44 +435,32 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 	public function process() {
 
-		$order = $this->purchase_log;
+		$token          = sanitize_text_field( $_POST['pro_pay_payment_method_token'] );
+		$transaction_id = sanitize_text_field( $_POST['pro_pay_transaction_id'] );
+		$last_four      = absint( substr( $_POST['pro_pay_obfs_acct_number'], 0, -4 ) );
+		$type           = sanitize_text_field( $_POST['pro_pay_card_type'] );
+		$order          = $this->purchase_log;
 
 		$status = $this->payment_capture === '' ? WPSC_Purchase_Log::ACCEPTED_PAYMENT : WPSC_Purchase_Log::ORDER_RECEIVED;
 
 		$order->set( 'processed', $status )->save();
-
-		$card_token = isset( $_POST['pro-pay_pay_token'] ) ? sanitize_text_field( $_POST['pro-pay_pay_token'] ) : '';
+		$order->set( 'token', $token )->save();
+		$order->set( 'transactid', $transaction_id )->save();
+		$order->set( 'last_four', $last_four )->save();
+		$order->set( 'type', $type )->save();
 
 		$this->order_handler->set_purchase_log( $order->get( 'id' ) );
 
 		switch ( $this->payment_capture ) {
 			case 'authorize' :
 
-				// Authorize only
-				$result = $this->authorize_payment( $card_token );
-
-				if ( $result ) {
-					// Mark as on-hold
-					$order->set( 'pro-pay-status', __( 'pro-pay order opened. Capture the payment below. Authorized payments must be captured within 7 days.', 'wp-e-commerce' ) )->save();
-
-				} else {
-					$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED )->save();
-					$order->set( 'pro-pay-status', __( 'Could not authorize pro-pay payment.', 'wp-e-commerce' ) )->save();
-				}
+				// Mark as on-hold
+				$order->set( 'pro-pay-status', __( 'ProPay order opened. Capture the payment below.', 'wp-e-commerce' ) )->save();
 
 			break;
 			default:
 
-				// Capture
-				$result = $this->capture_payment( $card_token );
-
-				if ( $result ) {
-					// Payment complete
-					$order->set( 'pro-pay-status', __( 'pro-pay order completed.  Funds have been authorized and captured.', 'wp-e-commerce' ) );
-				} else {
-					$order->set( 'processed'      , WPSC_Purchase_Log::PAYMENT_DECLINED );
-					$order->set( 'pro-pay-status', __( 'Could not authorize pro-pay payment.', 'wp-e-commerce' ) );
-				}
+				$order->set( 'pro-pay-status', __( 'ProPay order completed.  Funds have been authorized and captured.', 'wp-e-commerce' ) );
 
 			break;
 		}
@@ -488,18 +476,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 			$order = $this->purchase_log;
 
-			$params = array(
-				'amount'	        => $order->get( 'totalprice' ),
-				'orderId'	        => $order->get( 'id' ),
-				'invoiceNumber'     => $order->get( 'sessionid' ),
-				"addToVault"        => false,
-				"paymentVaultToken" => array(
-					"paymentMethodId" => $token,
-					"publicKey"       => $this->public_key
-				)
-			);
-
-			$response = $this->execute( 'Payments/Charge', $params );
+			$response = null;
 
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
@@ -513,11 +490,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			}
 
 			// Store transaction ID and Auth code in the order
-			$order->set( 'wp_transactionId', $transaction_id )->save();
-			$order->set( 'wp_order_status' , 'Completed' )->save();
-			$order->set( 'wp_authcode'     , $auth_code )->save();
-			$order->set( 'transactid'      , $transaction_id )->save();
-			$order->set( 'wp_order_token'  , $token )->save();
+
 
 			return true;
 		}
@@ -525,89 +498,84 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		return false;
 	}
 
-	public function authorize_payment( $token ) {
+	public function process_refund( $order_id, $amount = 0.00, $reason = '', $manual = false ) {
 
-		if ( $this->purchase_log->get( 'gateway' ) == 'pro-pay' ) {
+		if ( 0.00 == $amount ) {
+			return new WP_Error( 'propay_refund_error', __( 'Refund Error: You need to specify a refund amount.', 'wp-e-commerce' ) );
+		}
 
-			$order = $this->purchase_log;
+		$log = wpsc_get_order( $order_id );
 
-			$params = array(
-				'amount'	        => $order->get( 'totalprice' ),
-				'orderId'	        => $order->get( 'id' ),
-				'invoiceNumber'     => $order->get( 'sessionid' ),
-				"addToVault"        => false,
-				"paymentVaultToken" => array(
-					"paymentMethodId" => $token,
-					"publicKey"       => $this->public_key,
-				)
+		if ( ! $log->get( 'transactid' ) ) {
+			return new WP_Error( 'error', __( 'Refund Failed: No transaction ID', 'wp-e-commerce' ) );
+		}
+
+		$max_refund  = $log->get( 'totalprice' ) - $log->get_total_refunded();
+
+		if ( $amount && $max_refund < $amount || 0 > $amount ) {
+			throw new Exception( __( 'Invalid refund amount', 'wp-e-commerce' ) );
+		}
+
+		if ( $manual ) {
+			$current_refund = $log->get_total_refunded();
+
+			// Set a log meta entry, and save log before adding refund note.
+			$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
+
+			$log->add_refund_note(
+				sprintf( __( 'Refunded %s via Manual Refund', 'wp-e-commerce' ), wpsc_currency_display( $amount ) ),
+				$reason
 			);
-
-			$response = $this->execute( 'Payments/Authorize', $params );
-
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message() );
-			}
-
-			if ( isset( $response['ResponseBody']->transaction->transactionId ) ) {
-				$transaction_id = $response['ResponseBody']->transaction->transactionId;
-				$auth_code      = $response['ResponseBody']->transaction->authorizationCode;
-			} else {
-				return false;
-			}
-
-			// Store transaction ID and Auth code in the order
-			$order->set( 'wp_transactionId', $transaction_id )->save();
-			$order->set( 'wp_order_status' , 'Open' )->save();
-			$order->set( 'wp_authcode'     , $auth_code )->save();
-			$order->set( 'transactid'      , $transaction_id )->save();
-			$order->set( 'wp_order_token'  , $token )->save();
 
 			return true;
 		}
 
-		return false;
-	}
-
-	public function execute( $endpoint, $params = array(), $type = 'POST' ) {
-
-	   // where we make the API petition
-        $endpoint = $this->endpoint . $endpoint;
-
-		if ( ! is_null( $params ) ) {
-			$params += array(
-				"developerApplication" => array(
-					"developerId" => 10000644,
-					"version"     => "1.2"
-				),
-			);
-		}
-
-		$data = json_encode( $params );
-
-		$args = array(
-			'timeout' => 15,
-			'headers' => array(
-				'Authorization' => $this->auth_token,
-				'Content-Type'  => 'application/json',
-			),
-			'sslverify' => false,
-			'body'      => $data,
+		// If refund is full amount is not needed
+		// add refund params
+		$options = array(
+			'transaction_id' => $log->get( 'transactid' ),
+			'invoice'        => $log->get( 'sessionid' ),
+			'note'           => $reason,
 		);
 
-		$request  = $type == 'GET' ? wp_safe_remote_get( $endpoint, $args ) : wp_safe_remote_post( $endpoint, $args );
-        $response = wp_remote_retrieve_body( $request );
-
-		if ( ! is_wp_error( $request ) ) {
-
-			$response_object = array();
-			$response_object['ResponseBody'] = json_decode( $response );
-			$response_object['Status']       = wp_remote_retrieve_response_code( $request );
-
-			$request = $response_object;
+		if( $amount && $amount < $log->get_remaining_refund() ) {
+			$options['refund_type'] = 'Partial';
+			$options['amount']      = $amount;
+		} else {
+			$options['refund_type'] = 'Full';
 		}
 
-		return $request;
-    }
+		// do API call
+		$response = $this->gateway->credit( $options );
+
+		// look at ACK to see if success or failure
+		if ( $response->has_errors() ) {
+			// WE could use $response->get_errors() and return the errors in an alert message ?
+			return false;
+		}
+
+		if ( $response->is_successful() ) {
+			$params = $response->get_params();
+			if ( 'Success' == $params['ACK'] || 'SuccessWithWarning' == $params['ACK'] ) {
+
+				$this->log_error( $response );
+
+				$current_refund = $log->get_total_refunded();
+
+				// Set a log meta entry, and save log before adding refund note.
+				$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
+
+				$log->add_refund_note(
+					sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), wpsc_currency_display( $params['GROSSREFUNDAMT'] ), $params['REFUNDTRANSACTIONID'] ),
+					$reason
+				);
+
+				return true;
+			}
+		} else {
+			return false;
+		}
+	}
 }
 
 class WPSC_Pro_Pay_Payments_Order_Handler {
