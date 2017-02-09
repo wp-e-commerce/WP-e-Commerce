@@ -93,6 +93,9 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		add_action( 'wp_ajax_create_hosted_transaction_id'       , array( $this, 'create_hosted_transaction_id' ) );
 		add_action( 'wp_ajax_nopriv_create_hosted_transaction_id', array( $this, 'create_hosted_transaction_id' ) );
 
+		add_action( 'wp_ajax_create_hosted_results'       , array( $this, 'create_hosted_results' ) );
+		add_action( 'wp_ajax_nopriv_create_hosted_results', array( $this, 'create_hosted_results' ) );
+
 	}
 
 	public function add_propay_iframe() {
@@ -403,6 +406,27 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		if ( $token ) {
 			wp_send_json_success( array( 'token' => $token ) );
+		} else {
+			wp_send_json_error();
+		}
+	}
+
+	public function create_hosted_results() {
+		$config = new WPSC_Pro_Pay_Hosted_Transaction_Results_Config(
+			array(
+				'environment'         => $this->sandbox ? 'sandbox' : 'production',
+				'biller_account_id'   => $this->biller_account_id,
+				'auth_token'          => $this->auth_token,
+				'id'                  => sanitize_text_field( $_POST['hosted_id'] )
+			)
+		);
+
+		$hosted = new WPSC_Pro_Pay_Hosted_Transaction_Results( $config );
+
+		$results = $hosted->create()->get_response();
+
+		if ( $results ) {
+			wp_send_json_success( array( 'results' => $results ) );
 		} else {
 			wp_send_json_error();
 		}
@@ -1199,7 +1223,7 @@ class WPSC_Pro_Pay_Hosted_Transaction_Id {
 			'PayerAccountId'    => wpsc_get_customer_meta( 'pro_pay_payer_id' ),
 			'PaymentTypeId'     => '0',
 			'CurrencyCode'      => 'USD',
-			'InvoiceNumber'     => 'somehow add order ID here',
+			'InvoiceNumber'     => uniqid(),
 			'AvsRequirementType'               => 1,
 			'CardHolderNameRequirementType'    => 1,
 			'SecurityCodeRequirementType'      => 1,
@@ -1243,5 +1267,48 @@ class WPSC_Pro_Pay_Hosted_Transaction_Id_Config {
 		$this->description         = $this->args->description;
 		$this->merchant_profile_id = $this->args->merchant_profile_id;
 		$this->auth_only           = $this->args->auth_only;
+	}
+}
+
+class WPSC_Pro_Pay_Hosted_Transaction_Results {
+
+	protected $config;
+	protected $response;
+
+	public function __construct( WPSC_Pro_Pay_Hosted_Transaction_Results_Config $config ) {
+		$this->config = $config;
+	}
+
+	public function create() {
+		$request = new WPSC_ProPay_Request( $this->config );
+
+		$this->response = $request->request( "/HostedTransactionResults/{$this->config->id}", array( 'body' => $body ) );
+
+		return $this;
+	}
+
+	public function get_response() {
+		if ( $this->response->is_successful() ) {
+			return $this->response;
+		}
+
+		return '';
+	}
+}
+
+class WPSC_Pro_Pay_Hosted_Transaction_Results_Config {
+
+	public $environment;
+	public $biller_account_id;
+	public $auth_token;
+	public $id;
+
+	public function __construct( $args ) {
+		$this->args = (object) $args;
+
+		$this->environment       = $this->args->environment;
+		$this->biller_account_id = $this->args->biller_account_id;
+		$this->auth_token        = $this->args->auth_token;
+		$this->id                = $this->args->id;
 	}
 }

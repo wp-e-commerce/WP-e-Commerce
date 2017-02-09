@@ -36,6 +36,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		pro_pay.cache();
 
 		$c.wrapper.on( 'change', '.custom_gateway', pro_pay.create_payer_id );
+		$c.body.on( 'pro-pay-submission-success'  , pro_pay.hosted_results );
 
 	};
 
@@ -48,10 +49,12 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 		if ( 'pro-pay' !== val ) {
 			$c.wrapper.off( 'submit', pro_pay.generate_hosted_id );
+			$c.buy_button.prop( 'disabled', false );
 			return;
 		} else {
 			$c.wrapper.on( 'submit', function() {
 				pro_pay.generate_hosted_id();
+				$c.buy_button.prop( 'disabled', true );
 				return false;
 			} );
 		}
@@ -142,14 +145,49 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			if ( response.success ) {
 				window.console.log( response );
 				$c.spinner.fadeOut( 350 );
+				$c.hosted_id = response.data.token;
+
 				hpp_Load( response.data.token, wpsc.debug );
+
 				$c.iframe.slideDown();
 
-				$( '.wpsc_buy_button' ).prop( 'disabled', true );
-				$c.wrapper.on( 'submit', function() {
+				$c.wrapper.off( 'submit' );
+
+				$c.wrapper.on( 'submit', function( e ) {
+					e.preventDefault();
 					signalR_SubmitForm();
 					return false;
 				} );
+
+			} else {
+				window.console.log( response );
+			}
+		};
+
+		$.post( wpsc.ajaxurl, data, success, 'json' );
+
+		return false;
+	};
+
+	pro_pay.hosted_results = function() {
+		window.console.log( 'hosted results' );
+
+		$c.iframe.slideUp();
+
+		$c.spinner.fadeIn().css( 'display', 'inline-block' );
+
+		var data = {
+			action    : 'create_hosted_results',
+			nonce     : wpsc.checkout_nonce,
+			hosted_id : $c.hosted_id
+		};
+
+		window.console.log( data );
+
+		var success = function(response) {
+			if ( response.success ) {
+				window.console.log( response );
+				$c.spinner.fadeOut( 350 );
 			} else {
 				window.console.log( response );
 			}

@@ -3,50 +3,50 @@ var iFrameId = WPSC_Pro_Pay_Checkout.iframe_id;
 var baseURI  = WPSC_Pro_Pay_Checkout.base_uri;
 var TimeoutInterval = 30000; //in ms
 //Get Timestamp for log
-            function GetTimestamp() {
-                var date = new Date();
-                var hour = date.getHours();
-                var minutes = date.getMinutes();
-                var seconds = date.getSeconds();
-                var milliseconds = date.getMilliseconds();
-                if ((minutes + '').length == 1) {
-                    minutes = '0' + minutes;
-                }
-                if ((seconds + '').length == 1) {
-                    seconds = '0' + seconds;
-                }
-                if ((milliseconds + '').length == 1) {
-                    milliseconds = '00' + milliseconds;
-                }
-                if ((milliseconds + '').length == 2) {
-                    milliseconds = '0' + milliseconds;
-                }
-                return hour + ':' + minutes + ':' + seconds + ':' + milliseconds;
-            }
+function GetTimestamp() {
+    var date = new Date();
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var milliseconds = date.getMilliseconds();
+    if ((minutes + '').length == 1) {
+        minutes = '0' + minutes;
+    }
+    if ((seconds + '').length == 1) {
+        seconds = '0' + seconds;
+    }
+    if ((milliseconds + '').length == 1) {
+        milliseconds = '00' + milliseconds;
+    }
+    if ((milliseconds + '').length == 2) {
+        milliseconds = '0' + milliseconds;
+    }
+    return hour + ':' + minutes + ':' + seconds + ':' + milliseconds;
+}
 
-            //Echo Browser Events to Browser Log Window
-            function echoBrowserMessage(message) {
-                var divMessage = document.getElementById('BrowserLog');
-                var msg = divMessage.innerHTML;
-                msg = '[' + GetTimestamp() + '] ' + message + '<br />' + msg;
-                divMessage.innerHTML = msg;
-            }
+//Echo Browser Events to Browser Log Window
+function echoBrowserMessage(message) {
+    var divMessage = document.getElementById('BrowserLog');
+    var msg = divMessage.innerHTML;
+    msg = '[' + GetTimestamp() + '] ' + message + '<br />' + msg;
+    divMessage.innerHTML = msg;
+}
 
-            //Echo SignalR Message and Data Events to Log Window
-            function echoSignalRMessage(message) {
-                var divMessage = document.getElementById('MessageLog');
-                var msg = divMessage.innerHTML;
-                msg = '[' + GetTimestamp() + '] ' + message + '<br />' + msg;
-                divMessage.innerHTML = msg;
-            }
+//Echo SignalR Message and Data Events to Log Window
+function echoSignalRMessage(message) {
+    var divMessage = document.getElementById('MessageLog');
+    var msg = divMessage.innerHTML;
+    msg = '[' + GetTimestamp() + '] ' + message + '<br />' + msg;
+    divMessage.innerHTML = msg;
+}
 
-            //Echo SignalR Console Transport Connection Events to Log Window
-            function echoSignalRConsoleMessage(message) {
-                var divMessage = document.getElementById('ConsoleLog');
-                var msg = divMessage.innerHTML;
-                msg = '<b>[' + GetTimestamp() + ']</b> ' + message + '<br />' + msg;
-                divMessage.innerHTML = msg;
-            }
+//Echo SignalR Console Transport Connection Events to Log Window
+function echoSignalRConsoleMessage(message) {
+    var divMessage = document.getElementById('ConsoleLog');
+    var msg = divMessage.innerHTML;
+    msg = '<b>[' + GetTimestamp() + ']</b> ' + message + '<br />' + msg;
+    divMessage.innerHTML = msg;
+}
 
 function fixMissingBrowserFunctionality() {
 
@@ -175,6 +175,7 @@ function signalR_OnFormWasInvalid() {
     if (debug) {
         echoBrowserMessage('<b style="color: gold">Event: </b><span style="color: red">Form Submitted failed Validation - </span>signalR_OnFormWasInvalid() <b>Raised</b>');
     }
+	jQuery( document.body ).trigger( 'pro-pay-submission-error' );
 }
 
 // This function is called when the server signalR issues a 'FormSubmitErrored' message (indicating an error occurred when the user submitted the form).
@@ -183,6 +184,8 @@ function signalR_OnFormSubmitErrored() {
     if (debug) {
         echoBrowserMessage('<b style="color: gold">Event: </b><span style="color: red">Form Submission Error - </span>signalR_OnFormSubmitErrored() <b>Raised</b>');
     }
+	jQuery( document.body ).trigger( 'pro-pay-submission-error' );
+
 }
 
 // This function is called when the server signalR issues a 'FormSubmitSucceeded' message (indicating the form was submitted successfully).
@@ -191,7 +194,7 @@ function signalR_OnFormSubmitSucceeded() {
     if (debug) {
         echoBrowserMessage('<b style="color: gold">Event: </b><span style="color: Green">Form Submission Succeeded - </span>signalR_OnFormSubmitSucceeded() <b>Raised</b>');
     }
-    //Use ProtectPay(r) API Method 4.7.3 'Get Hosted Transaction Results'
+   jQuery( document.body ).trigger( 'pro-pay-submission-success' );
 }
 
 //This function is called when the timeout period elapses for communication from the Hosted Payment Page to your Checkout Page
@@ -200,6 +203,8 @@ function signalR_OnFormCommunicationTimeout(){
     if (debug) {
         echoBrowserMessage('<b style="color: gold">Event: </b><span style="color: Green">Form Submission Succeeded - </span>signalR_OnFormCommunicationTimeout() <b>Raised</b>');
     }
+
+   jQuery( document.body ).trigger( 'pro-pay-connection-timeout' );
  }
 
 //==============================================================================================================================================
