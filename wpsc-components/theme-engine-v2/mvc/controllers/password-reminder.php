@@ -157,6 +157,7 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 		}
 
 		$this->view = 'password-reminder-reset';
+		_wpsc_enqueue_float_label_scripts();
 
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'reset_password' ) {
 			$this->callback_reset_password( $user );
