@@ -1,0 +1,45 @@
+/*******************
+JS Float Label
+********************/
+.wpsc-controller {
+	.wpsc-label-input-container {
+	position: relative;
+
+		input, textarea {
+			padding: 1em;
+		}
+	}
+
+	.wpsc-label-input-container label {
+		position: absolute;
+		top: 1em; left: 1em;
+		opacity: 0;
+	}
+
+	.wpsc-label-input-container.focused label,
+	.wpsc-label-input-container.populated label {
+		opacity: 1;
+		top: 0;
+	    left: 1em;
+	    font-size: $sml-size-col-5;
+	    font-weight: $bold;
+	}
+
+	.wpsc-label-input-container.focused input,
+	.wpsc-label-input-container.populated input,
+	.wpsc-label-input-container.focused textarea,
+	.wpsc-label-input-container.populated textarea {
+		padding-top: 1.5em;
+		padding-bottom: .5em;
+	}
+
+	.wpsc-label-input-container input,
+	.wpsc-label-input-container textarea,
+	.wpsc-label-input-container label {
+		-webkit-transition: 0.2s ease-in-out;
+		-moz-transition: 0.2s ease-in-out;
+		-ms-transition: 0.2s ease-in-out;
+		-o-transition: 0.2s ease-in-out;
+		transition: 0.2s ease-in-out;
+	}
+}
