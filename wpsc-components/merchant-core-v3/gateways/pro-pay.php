@@ -532,35 +532,25 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			return true;
 		}
 
-		// If refund is full amount is not needed
-		// add refund params
-		$options = array(
-			'transaction_id' => $log->get( 'transactid' ),
-			'invoice'        => $log->get( 'sessionid' ),
-			'note'           => $reason,
-		);
+		$transaction_id = $log->get( 'transactid' );
 
-		if( $amount && $amount < $log->get_remaining_refund() ) {
-			$options['refund_type'] = 'Partial';
-			$options['amount']      = $amount;
-		} else {
-			$options['refund_type'] = 'Full';
-		}
+		$options = new WPSC_Pro_Pay_Refund_Config( array(
+			'amount'            => $amount,
+			'reason'            => $reason,
+			'transaction_id'    => $transaction_id,
+			'merchant_id'       => $this->merchant_profile_id,
+			'environment'       => $this->sandbox ? 'sandbox' : 'production',
+			'biller_account_id' => $this->biller_account_id,
+			'auth_token'        => $this->auth_token,
+		) );
 
 		// do API call
-		$response = $this->gateway->credit( $options );
+		$refund = new WPSC_Pro_Pay_Refund( $options );
+		$refund = $refund->create()->get_refund();
 
-		// look at ACK to see if success or failure
-		if ( $response->has_errors() ) {
-			// WE could use $response->get_errors() and return the errors in an alert message ?
-			return false;
-		}
+		if ( $refund ) {
 
-		if ( $response->is_successful() ) {
-			$params = $response->get_params();
-			if ( 'Success' == $params['ACK'] || 'SuccessWithWarning' == $params['ACK'] ) {
-
-				$this->log_error( $response );
+			if ( 'Success' == $refund->TransactionResult ) {
 
 				$current_refund = $log->get_total_refunded();
 
@@ -568,7 +558,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 				$log->set( 'total_order_refunded' , $amount + $current_refund )->save();
 
 				$log->add_refund_note(
-					sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), wpsc_currency_display( $params['GROSSREFUNDAMT'] ), $params['REFUNDTRANSACTIONID'] ),
+					sprintf( __( 'Refunded %s - Refund ID: %s', 'wp-e-commerce' ), wpsc_currency_display( $refund->CurrencyConvertedAmount / 100 ), $refund->TransactionHistoryId ),
 					$reason
 				);
 
@@ -610,7 +600,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 	}
 
 	public function set_purchase_log( $id ) {
-		$this->log = new WPSC_Purchase_Log( $id );
+		$this->log = wpsc_get_order( $id );
 	}
 
 	/**
@@ -637,7 +627,8 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 			break;
 
 			case 'refund' :
-				// refund a settled payment
+				// refun
+				// d a settled payment
 				$this->refund_payment( $id );
 			break;
 
@@ -947,7 +938,13 @@ class WPSC_ProPay_Response {
 		$response = json_decode( wp_remote_retrieve_body( $this->response ) );
 		$code     = wp_remote_retrieve_response_code( $this->response );
 
-		$success = 200 === $code && ( 'SUCCESS' === $response->RequestResult->ResultValue || 'SUCCESS' === $response->Result->ResultValue );
+		if ( isset( $response->RequestResult ) ) {
+			$transaction_success = 'SUCCESS' === $response->RequestResult->ResultValue;
+		} else {
+			$transaction_success = 'SUCCESS' === $response->Result->ResultValue;
+		}
+
+		$success = 200 === $code && $transaction_success;
 
 		if ( ! is_wp_error( $this->response ) && $success ) {
 			$this->success = true;
@@ -1183,7 +1180,7 @@ class WPSC_Pro_Pay_Hosted_Transaction_Results {
 	public function create() {
 		$request = new WPSC_ProPay_Request( $this->config, 'GET' );
 
-		$this->response = $request->request( "/HostedTransactionResults/{$this->config->id}", array( 'body' => $body ) );
+		$this->response = $request->request( "/HostedTransactionResults/{$this->config->id}" );
 
 		return $this;
 	}
@@ -1211,5 +1208,59 @@ class WPSC_Pro_Pay_Hosted_Transaction_Results_Config {
 		$this->biller_account_id = $this->args->biller_account_id;
 		$this->auth_token        = $this->args->auth_token;
 		$this->id                = $this->args->id;
+	}
+}
+
+class WPSC_Pro_Pay_Refund {
+
+	protected $config;
+	protected $response;
+
+	public function __construct( WPSC_Pro_Pay_Refund_Config $config ) {
+		$this->config = $config;
+	}
+
+	public function create() {
+		$request = new WPSC_ProPay_Request( $this->config );
+
+		$body = json_encode( array(
+			'CurrencyCode'         => 'USD',
+			'TransactionHistoryId' => $this->config->transaction_id,
+			'Comment1'             => $this->config->reason,
+			'Amount'               => $this->config->amount * 100,
+			'MerchantProfileId'    => $this->config->merchant_id
+		) );
+
+		$this->response = $request->request( '/RefundTransaction/', array( 'body' => $body ) );
+
+		return $this;
+	}
+
+	public function get_refund() {
+		if ( $this->response->is_successful() ) {
+			return $this->response->get( 'TransactionDetail' );
+		}
+
+		return '';
+	}
+}
+
+class WPSC_Pro_Pay_Refund_Config {
+
+	public $environment;
+	public $biller_account_id;
+	public $auth_token;
+	public $name;
+
+	public function __construct( $args ) {
+		$this->args                = (object) $args;
+		$this->environment         = $this->args->environment;
+		$this->biller_account_id   = $this->args->biller_account_id;
+		$this->auth_token          = $this->args->auth_token;
+		$this->transaction_id      = $this->args->transaction_id;
+		$this->reason              = $this->args->reason;
+		$this->amount              = $this->args->amount;
+		$this->merchant_id         = $this->args->merchant_id;
+
 	}
 }

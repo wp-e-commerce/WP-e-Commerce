@@ -295,7 +295,7 @@ class WPSC_Purchase_Log_Page {
 									<tr>
 										<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'wp-e-commerce' ); ?>:</label></td>
 										<td class="total">
-											<input type="text" class="text" id="refund_amount" name="refund_amount" class="wpec_input_price" />
+											<input type="number" max="<?php echo floatval( $this->log->get_remaining_refund() ); ?>" class="text" id="refund_amount" name="refund_amount" class="wpec_input_price" />
 											<div class="clear"></div>
 										</td>
 									</tr>

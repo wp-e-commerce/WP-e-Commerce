@@ -32,9 +32,11 @@
 					<?php self::shipping_address_output(); ?>
 				</blockquote>
 
+				<?php $method = wpsc_display_purchlog_shipping_method(); ?>
+				<?php if ( ! empty( $method ) ) : ?>
 				<h4><?php esc_html_e( 'Shipping Details', 'wp-e-commerce' ); ?></h4>
 				<blockquote>
-					<strong><?php esc_html_e( 'Shipping Method:', 'wp-e-commerce' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_method(); ?><br />
+					<strong><?php esc_html_e( 'Shipping Method:', 'wp-e-commerce' ); ?></strong> <?php echo $method; ?><br />
 					<strong><?php esc_html_e( 'Shipping Option:', 'wp-e-commerce' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_option(); ?><br />
 					<?php $purchase_weight = wpsc_purchlogs_get_weight_text(); ?>
 					<?php if ( ! empty( $purchase_weight ) ) { ?>
@@ -56,6 +58,7 @@
 					<?php } ?>
 				</blockquote>
 				<?php do_action( 'wpsc_shipping_details_bottom', $this->log_id ); ?>
+			<?php endif; ?>
 			</div>
 		<?php endif ?>
 
