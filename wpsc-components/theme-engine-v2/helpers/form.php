@@ -50,6 +50,7 @@ function _wpsc_get_field_output( $field, $r ) {
 		return _wpsc_get_fieldset_output( $field, $r );
 	}
 
+	do_action( 'wpsc_action_field_before', $r['before_field'], $field, $r );
 	$before_field = apply_filters( 'wpsc_field_before', $r['before_field'], $field, $r );
 	$before_field = sprintf( $before_field, $field['id'], $field['class'] );
 
@@ -58,6 +59,8 @@ function _wpsc_get_field_output( $field, $r ) {
 	$output .= apply_filters( "wpsc_control_{$field['type']}", ''                   , $field, $r );
 	$output .= apply_filters( 'wpsc_control_after'           , $r['after_controls'] , $field, $r );
 	$output .= apply_filters( 'wpsc_field_after'             , $r['after_field']    , $field, $r );
+
+	do_action( 'wpsc_action_field_after', $r['after_field'], $field, $r );
 
 	return $output;
 }
@@ -127,6 +130,8 @@ function wpsc_get_form_output( $args ) {
 
 	$output = "<form id='{$r['id']}' method='{$r['method']}' action='{$r['action']}' class='{$r['class']}'>";
 
+	do_action( 'wpsc_get_form_output_before_form_fields', $r );
+
 	foreach ( $r['fields'] as $field ) {
 		$output .= _wpsc_get_field_output( $field, $r );
 	}
@@ -138,6 +143,8 @@ function wpsc_get_form_output( $args ) {
 	}
 
 	$output .= $r['after_form_actions'];
+
+	do_action( 'wpsc_get_form_output_after_form_fields', $r );
 
 	$output .= '</form>';
 
