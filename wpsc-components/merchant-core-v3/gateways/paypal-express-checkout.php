@@ -1070,13 +1070,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		}
 	}
 
-	public function process_refund( $order_id, $amount = 0.00, $reason = '', $manual = false ) {
+	public function process_refund( $log, $amount = 0.00, $reason = '', $manual = false ) {
 
 		if ( 0.00 == $amount ) {
 			return new WP_Error( 'paypal_refund_error', __( 'Refund Error: You need to specify a refund amount.', 'wp-e-commerce' ) );
 		}
 
-		$log = wpsc_get_order( $order_id );
+		$log = wpsc_get_order( $log );
 
 		if ( ! $log->get( 'transactid' ) ) {
 			return new WP_Error( 'error', __( 'Refund Failed: No transaction ID', 'wp-e-commerce' ) );
