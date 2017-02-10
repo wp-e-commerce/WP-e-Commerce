@@ -17,6 +17,7 @@ class WPSC_Controller_Register extends WPSC_Controller {
 		}
 
 		$this->view = 'register';
+		_wpsc_enqueue_float_label_scripts();
 	}
 
 	public function filter_fields_dont_match_message() {
