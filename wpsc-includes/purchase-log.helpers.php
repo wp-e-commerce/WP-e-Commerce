@@ -371,13 +371,13 @@ add_action( 'wpsc_purchase_log_update_item', '_wpsc_update_log_total_with_item_u
 
 
 function wpsc_update_order_status_partially_refunded( $log ) {
-	wpsc_update_purchase_log_status( $log->get( 'id' ), WPSC_Purchase_Log::PARTIALLY_REFUNDED );
+	wpsc_update_purchase_log_status( $log, WPSC_Purchase_Log::PARTIALLY_REFUNDED );
 }
 
 add_action( 'wpsc_order_partially_refunded', 'wpsc_update_order_status_partially_refunded' );
 
 function wpsc_update_order_status_fully_refunded( $log ) {
-	wpsc_update_purchase_log_status( $log->get( 'id' ), WPSC_Purchase_Log::REFUNDED );
+	wpsc_update_purchase_log_status( $log, WPSC_Purchase_Log::REFUNDED );
 }
 
 add_action( 'wpsc_order_fully_refunded', 'wpsc_update_order_status_partially_refunded' );
