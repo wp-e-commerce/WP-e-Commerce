@@ -137,7 +137,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				'notify_url' => $notify_url,
 			);
 		}
-		
+
 		// Customer details
 		$paypal_vars += array(
 			'email'      => $this->cart_data['email_address'],
@@ -422,7 +422,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 	private function import_ipn_data() {
 		global $wpdb;
 
-		$purchase_log = new WPSC_Purchase_Log( $this->cart_data['session_id'], 'sessionid' );
+		$purchase_log = wpsc_get_order( $this->cart_data['session_id'], 'sessionid' );
 
 		if ( ! $purchase_log->exists() ) {
 			return;
@@ -582,7 +582,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			$valid = false;
 		}
 
-		$purchase_log = new WPSC_Purchase_Log( $this->cart_data['session_id'], 'sessionid' );
+		$purchase_log = wpsc_get_order( $this->cart_data['session_id'], 'sessionid' );
 
 		if ( ! $purchase_log->exists() ) {
 			$valid = false;
@@ -932,7 +932,7 @@ function _wpsc_buy_now_transaction_results() {
 	if ( ! isset( $_REQUEST['sessionid'] ) )
 		return;
 
-	$purchase_log = new WPSC_Purchase_Log( $_REQUEST['sessionid'], 'sessionid' );
+	$purchase_log = wpsc_get_order( $_REQUEST['sessionid'], 'sessionid' );
 
 	if ( ! $purchase_log->exists() || $purchase_log->is_transaction_completed() )
 		return;

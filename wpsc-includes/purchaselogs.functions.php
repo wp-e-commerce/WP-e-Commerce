@@ -557,7 +557,7 @@ function wpsc_purchlog_edit_status( $purchlog_id = '', $purchlog_status = '' ) {
 		$purchlog_status = absint( $_POST['new_status'] );
 	}
 
-	$purchase_log = new WPSC_Purchase_Log( $purchlog_id );
+	$purchase_log = wpsc_get_order( $purchlog_id );
 
    // In the future when everyone is using the 2.0 merchant api,
    // we should use the merchant class to update the staus,

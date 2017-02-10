@@ -735,7 +735,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			'wpec_taxes_rate'  => $tax_percentage,
 		);
 
-		$purchase_log = new WPSC_Purchase_Log( $args );
+		$purchase_log = wpsc_get_order( $args );
 		$purchase_log->save();
 		$purchase_log_id = $purchase_log->get( 'id' );
 

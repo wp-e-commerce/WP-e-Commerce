@@ -289,7 +289,7 @@ class WPSC_Checkout_Form_Data extends WPSC_Query_Base {
 	 */
 	public function save() {
 
-		$log    = new WPSC_Purchase_Log( $this->log_id );
+		$log    = wpsc_get_order( $this->log_id );
 		$form   = WPSC_Checkout_Form::get();
 		$fields = $form->get_fields();
 

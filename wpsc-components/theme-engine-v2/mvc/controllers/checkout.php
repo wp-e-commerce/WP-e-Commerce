@@ -161,7 +161,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		// Update the Purchase Log
 		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
-		$purchase_log    = new WPSC_Purchase_Log( $purchase_log_id );
+		$purchase_log    = wpsc_get_order( $purchase_log_id );
 		$purchase_log->set( 'base_shipping', $wpsc_cart->calculate_base_shipping() );
 		$purchase_log->set( 'totalprice', $wpsc_cart->calculate_total_price() );
 		$purchase_log->save();
@@ -241,14 +241,14 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$create = true;
 
 		if ( $purchase_log_id ) {
-			$purchase_log = new WPSC_Purchase_Log( $purchase_log_id );
+			$purchase_log = wpsc_get_order( $purchase_log_id );
 			$create       = ! $purchase_log->exists();
 		}
 
 		if ( $create ) {
 			wpsc_delete_customer_meta( 'current_purchase_log_id' );
 
-			$purchase_log = new WPSC_Purchase_Log();
+			$purchase_log = wpsc_get_order();
 
 			$purchase_log->set( array(
 				'user_ID'        => get_current_user_id(),
@@ -452,7 +452,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		}
 
 		$purchase_log_id   = wpsc_get_customer_meta( 'current_purchase_log_id' );
-		$purchase_log      = new WPSC_Purchase_Log( $purchase_log_id );
+		$purchase_log      = wpsc_get_order( $purchase_log_id );
 		$submitted_gateway = $_POST['wpsc_payment_method'];
 
 		$purchase_log->set( array(

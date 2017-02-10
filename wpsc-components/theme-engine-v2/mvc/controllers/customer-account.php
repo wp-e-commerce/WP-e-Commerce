@@ -98,7 +98,7 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 		$this->view    = 'customer-account-order';
 		$form_data_obj = new WPSC_Checkout_Form_Data( $id );
 		$this->form    = WPSC_Checkout_Form::get();
-		$this->log     = new WPSC_Purchase_Log( $id );
+		$this->log     = wpsc_get_order( $id );
 		$this->title   = sprintf(
 			__( 'View Order #%d', 'wp-e-commerce' ),
 			$id

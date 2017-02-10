@@ -56,7 +56,7 @@ function _wpsc_filter_merchant_v2_payment_method_form_fields( $fields ) {
 
 	if ( empty( $selected_value ) ) {
 		$current_purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
-		$purchase_log = new WPSC_Purchase_Log( $current_purchase_log_id );
+		$purchase_log = wpsc_get_order( $current_purchase_log_id );
 		$selected_value = $purchase_log->get( 'gateway' );
 	}
 

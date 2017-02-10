@@ -338,7 +338,7 @@ class WPSC_Shipwire {
 	 */
 	public function shipwire_on_checkout( $log_id ) {
 
-		$log = new WPSC_Purchase_Log( $log_id );
+		$log = wpsc_get_order( $log_id );
 
 		if ( ! $log->is_transaction_completed() ) {
 			return false;

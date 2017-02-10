@@ -980,7 +980,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 	}
 
 	public function set_purchase_log( $id ) {
-		$this->log = new WPSC_Purchase_Log( $id );
+		$this->log = wpsc_get_order( $id );
 	}
 
 	/**
