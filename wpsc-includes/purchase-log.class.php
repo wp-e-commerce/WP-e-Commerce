@@ -1580,12 +1580,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @return WPSC_Purchase_Log The current object (for method chaining)
 	 */
 	public function add_note( $note_text ) {
-		static $notes = null;
-
-		if ( ! ( $notes instanceof WPSC_Purchase_Log_Notes ) ) {
-			$notes = wpsc_get_order_notes( $this );
-		}
-
+		$notes = wpsc_get_order_notes( $this );
 		$notes->add( $note_text )->save();
 
 		return $this;

@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
+class WPSC_Purchase_Log_Notes extends WPSC_Query_Registry implements Iterator {
 	const TYPE_DEFAULT   = 0;
 	const TYPE_ERROR     = 1;
 	const STATUS_PUBLIC  = 0;
@@ -29,12 +29,15 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 
 	protected static $map_text = array();
 	protected $log = null;
+	protected static $flag = false;
 
 	public function __construct( $log ) {
-		if ( $log instanceof WPSC_Purchase_Log ) {
-			$this->log = $log;
-		} else {
-			$this->log = new WPSC_Purchase_Log( $log );
+		$this->log = wpsc_get_order( $log );
+
+		parent::add_instance( $this );
+
+		if ( ! self::$flag ) {
+			_wpsc_doing_it_wrong( 'wpsc_purchlog_notes_class_error', __( 'Please use `WPSC_Purchase_Log_Notes::get_instance( $log_id )` instead of `new WPSC_Purchase_Log_Notes( $log_id ).', 'wp-e-commerce' ), '3.12.0' );
 		}
 
 		if ( empty( self::$map_text ) ) {
@@ -49,6 +52,40 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 				self::$map_keys[ self::KEY_CONTENT ]        => __( 'Note Content', 'wp-e-commerce' ),
 			);
 		}
+	}
+
+	/**
+	 * Retrieve a WPSC_Purchase_Log_Notes instance by instance id.
+	 *
+	 * @since 3.12.0
+	 *
+	 * @param string $instance_id A WPSC_Purchase_Log_Notes instance id.
+	 *
+	 * @return WPSC_Purchase_Log_Notes object instance.
+	 */
+	public static function get_instance( $log_id ) {
+		$log = wpsc_get_order( $log_id );
+
+		$instance = parent::_get_instance( __CLASS__, $log->get( 'id' ) );
+
+		if ( ! $instance ) {
+			self::$flag = true;
+			$instance = new self( $log );
+			self::$flag = false;
+		}
+
+		return $instance;
+	}
+
+	/**
+	 * Retrieves the unique identifier for a WPSC_Query_Base instance.
+	 *
+	 * @since  3.12.0
+	 *
+	 * @return mixed
+	 */
+	public function instance_id() {
+		return $this->log->get( 'id' );
 	}
 
 	/**
