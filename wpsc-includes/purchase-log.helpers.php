@@ -11,7 +11,7 @@
  */
 function wpsc_get_order( $order_id, $by = 'id' ) {
 	$order = wpsc_is_order( $order_id );
-	return $order ? $order : new WPSC_Purchase_Log( $order_id, $by );
+	return $order ? $order : WPSC_Purchase_Log::get_instance( $order_id, $by );
 }
 
 /**

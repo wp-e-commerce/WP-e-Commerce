@@ -6,7 +6,7 @@ if ( ! defined( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE' ) ) {
 	define( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE', DAY_IN_SECONDS * 2 );
 }
 
-class WPSC_Purchase_Log extends WPSC_Query_Base {
+class WPSC_Purchase_Log extends WPSC_Query_Registry {
 	const INCOMPLETE_SALE  		= 1;
 	const ORDER_RECEIVED  	 	= 2;
 	const ACCEPTED_PAYMENT		= 3;
@@ -139,6 +139,8 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
    protected $shipping_country = null;
    protected $payment_method = null;
    protected $shipping_method = null;
+   protected static $flag = false;
+   protected static $alt_ids = false;
 
 	/**
 	 * Get the SQL query format for a column
@@ -426,7 +428,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 */
 	public static function delete_cache( $value, $col = 'id' ) {
 		// this will pull from the old cache, so no worries there
-		$log = new WPSC_Purchase_Log( $value, $col );
+		$log = self::get_instance( $value, $col );
 		$log->delete_caches( $value, $col );
 	}
 
@@ -529,13 +531,15 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * create a new empty object. Otherwise, this will get the purchase log from the
 	 * DB either by using purchase log id or sessionid (specified by the 2nd argument).
 	 *
+	 * It is preferred to use WPSC_Purchase_Log::get_instance() or wpsc_get_order().
+	 *
 	 * Eg:
 	 *
 	 * // get purchase log with ID number 23
-	 * $log = new WPSC_Purchase_Log( 23 );
+	 * $log = WPSC_Purchase_Log::get_instance( 23 );
 	 *
 	 * // get purchase log with sessionid "asdf"
-	 * $log = new WPSC_Purchase_Log( 'asdf', 'sessionid' )
+	 * $log = WPSC_Purchase_Log::get_instance( 'asdf', 'sessionid' )
 	 *
 	 * @access public
 	 * @since 3.8.9
@@ -544,6 +548,12 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @param string $col Optional. Defaults to 'id'.
 	 */
 	public function __construct( $value = false, $col = 'id' ) {
+		if ( ! self::$flag ) {
+			_wpsc_doing_it_wrong( 'wpsc_purchlog_notes_class_error', __( 'Please use `WPSC_Purchase_Log::get_instance( $log_id )` instead of `new WPSC_Purchase_Log( $log_id ).', 'wp-e-commerce' ), '3.12.0' );
+		}
+
+		parent::add_instance( $this );
+
 		if ( false === $value ) {
 			return;
 		}
@@ -584,6 +594,72 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			$this->exists  = true;
 			return;
 		}
+	}
+
+	/**
+	 * Retrieve a WPSC_Purchase_Log instance.
+	 * Get the log either by using purchase log id or sessionid (specified by the 2nd argument).
+	 *
+	 * Eg:
+	 *
+	 * // get purchase log with ID number 23
+	 * $log = WPSC_Purchase_Log::get_instance( 23 );
+	 *
+	 * // get purchase log with sessionid "asdf"
+	 * $log = WPSC_Purchase_Log::get_instance( 'asdf', 'sessionid' )
+	 *
+	 * @since 3.12.0
+	 *
+	 * @param string $value Optional. Defaults to false.
+	 * @param string $col Optional. Defaults to 'id'.
+	 *
+	 * @return WPSC_Purchase_Log object instance.
+	 */
+	public static function get_instance( $value = false, $col = 'id' ) {
+		$instance = false;
+
+		if ( $value && isset( self::$alt_ids[ $col ][ $value ] ) ) {
+			$instance = parent::_get_instance( __CLASS__, self::$alt_ids[ $col ][ $value ] );
+		}
+
+		if ( ! $instance ) {
+			self::$flag = true;
+			$instance = new self( $value, $col );
+			self::$flag = false;
+		}
+
+		$id = $instance->get( 'id' );
+		$instance_id = $instance->instance_id();
+
+		// If fetched object matches one we already have (based on the ID), then use original instance.
+		if ( $id && 'id' !== $col && isset( self::$alt_ids['id'][ $id ] ) ) {
+			$existing = parent::_get_instance( __CLASS__, self::$alt_ids['id'][ $id ] );
+			if ( $existing ) {
+				$instance    = $existing;
+				$instance_id = $instance->instance_id();
+			}
+		}
+
+		if ( $value && 'id' !== $col ) {
+			self::$alt_ids[ $col ][ $value ] = $instance_id;
+		}
+
+		if ( $id ) {
+			self::$alt_ids['id'][ $id ] = $instance_id;
+		}
+
+		return $instance;
+	}
+
+	/**
+	 * Retrieves the unique identifier for a WPSC_Query_Base instance.
+	 *
+	 * @since  3.12.0
+	 *
+	 * @return mixed
+	 */
+	public function instance_id() {
+		return spl_object_hash( $this );
 	}
 
 	private function set_total_shipping() {
@@ -1044,6 +1120,16 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 			$this->save_meta();
 		}
 
+		$instance_id = $this->instance_id();
+
+		if ( $sessionid = $this->get( 'sessionid' ) ) {
+			self::$alt_ids['sessionid'][ $sessionid ] = $instance_id;
+		}
+
+		if ( $id = $this->get( 'id' ) ) {
+			self::$alt_ids['id'][ $id ] = $instance_id;
+		}
+
 		do_action( 'wpsc_purchase_log_save', $this );
 
 		return $result;
@@ -1138,7 +1224,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$id = $wpdb->get_var( $sql );
 
 		if ( $id ) {
-			return new WPSC_Purchase_Log( $id );
+			return self::get_instance( $id );
 		} else {
 			return false;
 		}
