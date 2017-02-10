@@ -424,7 +424,7 @@ class WPSC_Tracking {
 
 		$wpec_data['version']      = WPSC_VERSION;
 		$wpec_data['url']          = WPSC_URL;
-		$wpec_data['base_country'] = $base->get_name();
+		$wpec_data['base_country'] = $base_country->get_name();
 		$wpec_data['debug']        = WPSC_DEBUG;
 
 		return $wpec_data;
