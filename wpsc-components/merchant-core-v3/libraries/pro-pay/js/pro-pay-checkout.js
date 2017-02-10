@@ -1,7 +1,7 @@
-/*global ajaxurl, hpp_Load, signalR_SubmitForm */
+/*global hpp_Load, signalR_SubmitForm */
 window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
-( function( window, document, $, wpsc, ajaxurl, undefined ) {
+( function( window, document, $, wpsc, undefined ) {
 	'use strict';
 
 	var $c = {};
@@ -210,7 +210,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 	$( pro_pay.init );
 
-} )( window, document, jQuery, window.WPSC_Pro_Pay_Checkout, ajaxurl );
+} )( window, document, jQuery, window.WPSC_Pro_Pay_Checkout );
 
 function formIsReadyToSubmit() {
 	jQuery( '.wpsc_buy_button' ).prop( 'disabled', false );
