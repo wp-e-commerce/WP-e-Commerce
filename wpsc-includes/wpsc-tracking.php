@@ -420,9 +420,12 @@ class WPSC_Tracking {
 	private static function get_wpec_info() {
 		$wpec_data = array();
 
-		$wpec_data['version'] = WPSC_VERSION;
-		$wpec_data['url']     = WPSC_URL;
-		$wpec_data['debug']   = WPSC_DEBUG;
+		$base_country = new WPSC_Country( wpsc_get_base_country() );
+
+		$wpec_data['version']      = WPSC_VERSION;
+		$wpec_data['url']          = WPSC_URL;
+		$wpec_data['base_country'] = $base->get_name();
+		$wpec_data['debug']        = WPSC_DEBUG;
 
 		return $wpec_data;
 	}
