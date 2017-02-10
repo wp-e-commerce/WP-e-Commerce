@@ -1,6 +1,8 @@
 <?php
 
-class TestWPSCCouponClass extends WP_UnitTestCase {
+require_once( 'wpsc-tests-base.class.php' );
+
+class Test_WPSC_Coupon_Class extends WPSC_Tests_Base {
 
 	const START_DATE  = '2015-03-06';
 	const EXPIRY_DATE = '2015-04-16';

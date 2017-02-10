@@ -1,6 +1,8 @@
 <?php
 
-class TestWPSCRegionClass extends WP_UnitTestCase {
+require_once( 'wpsc-tests-base.class.php' );
+
+class Test_WPSC_Region extends WPSC_Tests_Base {
 
 	// Test country / regions
 	const COUNTRY_ID_WITH_REGIONS      = 136;
