@@ -30,8 +30,10 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			wpsc_update_customer_meta( 'checkout_after_login', true );
 			if ( get_option( 'require_register' ) ) {
 				$this->view = 'checkout-login-required';
+				_wpsc_enqueue_float_label_scripts();
 			} else {
 				$this->view = 'checkout-login-prompt';
+				_wpsc_enqueue_float_label_scripts();
 			}
 		} else {
 			wp_redirect( wpsc_get_checkout_url( 'shipping-and-billing' ) );
