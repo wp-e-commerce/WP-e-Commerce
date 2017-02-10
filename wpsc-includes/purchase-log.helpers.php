@@ -384,4 +384,4 @@ function wpsc_update_order_status_fully_refunded( $log ) {
 	}
 }
 
-add_action( 'wpsc_order_fully_refunded', 'wpsc_update_order_status_partially_refunded' );
+add_action( 'wpsc_order_fully_refunded', 'wpsc_update_order_status_fully_refunded' );
