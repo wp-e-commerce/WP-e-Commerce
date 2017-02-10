@@ -2,7 +2,7 @@
 /**
  * @todo: Later,  Create a nice user sign-up flow, as a part of an overall onboarding experience
  * @todo: Later, integrated with subscriptions
- * 
+ *
  * @todo: Ensure it works in Tev2 at all, and in both theme engines when it's the only gateway available.
  * @todo: Ensure it works on page load if gateway is already selected
  * @todo: Improve UX (spinner in Purchase button, notifications, etc.)
@@ -322,6 +322,10 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	public function create_merchant_profile() {
 
 		if ( ! wp_verify_nonce( $_POST['nonce'] , 'wpsc_merchant_profile' ) ) {
+			wp_send_json_error();
+		}
+
+		if ( ! wpsc_is_store_admin() ) {
 			wp_send_json_error();
 		}
 
