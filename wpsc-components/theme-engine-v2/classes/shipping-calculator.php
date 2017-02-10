@@ -14,7 +14,7 @@ final class WPSC_Shipping_Calculator {
 		}
 
 		if ( is_int( $purchase_log ) ) {
-			$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+			$purchase_log = wpsc_get_order( $purchase_log );
 		}
 
 		$id = $purchase_log->get( 'id' );
@@ -76,7 +76,7 @@ final class WPSC_Shipping_Calculator {
 
 		// in case of integer argument, initialize the purchase log object
 		if ( ! is_object( $purchase_log ) ) {
-			$purchase_log = new WPSC_Purchase_Log( absint( $purchase_log ) );
+			$purchase_log = wpsc_get_order( absint( $purchase_log ) );
 		}
 
 		$this->purchase_log = $purchase_log;
@@ -171,7 +171,7 @@ final class WPSC_Shipping_Calculator {
 
 		$current_purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
 
-		$purchase_log = new WPSC_Purchase_Log( $current_purchase_log_id );
+		$purchase_log = wpsc_get_order( $current_purchase_log_id );
 		$module       = $purchase_log->get( 'shipping_method' );
 		$option       = $purchase_log->get( 'shipping_option' );
 

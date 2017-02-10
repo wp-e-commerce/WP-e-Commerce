@@ -23,7 +23,7 @@ class wpsc_purchaselogs_items {
 
 		$this->log = $purchase_log instanceof WPSC_Purchase_Log
 			? $purchase_log
-			: new WPSC_Purchase_Log( $this->purchlogid );
+			: wpsc_get_order( $this->purchlogid );
 
 		$this->get_purchlog_details();
 	}

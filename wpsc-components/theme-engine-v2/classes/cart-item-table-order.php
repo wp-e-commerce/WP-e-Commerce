@@ -13,7 +13,7 @@ class WPSC_Cart_Item_Table_Order extends WPSC_Cart_Item_Table {
 		$this->show_thumbnails = true;
 		$this->show_shipping   = true;
 
-		$this->log   = new WPSC_Purchase_Log( $id );
+		$this->log   = wpsc_get_order( $id );
 		$this->items = $this->get_items();
 	}
 

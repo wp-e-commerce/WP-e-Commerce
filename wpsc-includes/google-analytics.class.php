@@ -151,7 +151,7 @@ class WPSC_Google_Analytics {
 	}
 	public function add_pushes( $session_id ) {
 
-		$purchase    = new WPSC_Purchase_Log( $session_id, 'sessionid' );
+		$purchase    = wpsc_get_order( $session_id, 'sessionid' );
 		$purchase_id = $purchase->get( 'id' );
 
 		$data = new WPSC_Checkout_Form_Data( $purchase_id );

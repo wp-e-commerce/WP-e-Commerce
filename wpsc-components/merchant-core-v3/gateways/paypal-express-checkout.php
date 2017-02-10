@@ -342,7 +342,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		}
 
 		// Create a new Purchase Log entry
-		$purchase_log = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
+		$purchase_log = wpsc_get_order( $sessionid, 'sessionid' );
 
 		if ( ! $purchase_log->exists() ) {
 			return null;

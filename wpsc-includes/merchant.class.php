@@ -278,7 +278,7 @@ class wpsc_merchant {
 	 * go to transaction results, if this changes and you extend this, your merchant module may go to the wrong place
 	 */
 	function go_to_transaction_results( $session_id ) {
-		$purchase_log = new WPSC_Purchase_Log( $this->purchase_id );
+		$purchase_log = wpsc_get_order( $this->purchase_id );
 
 		//Now to do actions once the payment has been attempted
 		switch ( $purchase_log->get( 'processed' ) ) {
@@ -334,7 +334,7 @@ class wpsc_merchant {
 	 */
 	function set_authcode( $authcode, $append = false ){
 
-		$log              = new WPSC_Purchase_Log( $this->purchase_id );
+		$log              = wpsc_get_order( $this->purchase_id );
 		$current_authcode = $log->get( 'authcode' );
 
 		if ( $append && ! empty( $current_authcode ) ) {

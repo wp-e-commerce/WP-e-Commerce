@@ -413,7 +413,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	public function type_of_goods( $log_id ) {
 		$digital = 0;
 
-		$log = new WPSC_Purchase_Log( $log_id );
+		$log = wpsc_get_order( $log_id );
 		$cart = $log->get_items();
 
 		foreach ( $cart as $cartitem ) {
@@ -460,7 +460,7 @@ class WPSC_WorldPay_Payments_Order_Handler {
 	}
 
 	public function set_purchase_log( $id ) {
-		$this->log = new WPSC_Purchase_Log( $id );
+		$this->log = wpsc_get_order( $id );
 	}
 
 	/**

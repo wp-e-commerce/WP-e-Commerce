@@ -15,7 +15,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 	// pre-3.8.9 variable
 	$echo_to_screen = $display_to_screen;
 
-	$purchase_log_object = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
+	$purchase_log_object = wpsc_get_order( $sessionid, 'sessionid' );
 
 	// compatibility with pre-3.8.9 templates where they use a global
 	// $purchase_log object which is simply just a database row
