@@ -2,7 +2,7 @@
 /**
  * @todo: Later,  Create a nice user sign-up flow, as a part of an overall onboarding experience
  * @todo: Later, integrated with subscriptions
- * @todo: Use nonces we are creating
+ * 
  * @todo: Ensure it works in Tev2 at all, and in both theme engines when it's the only gateway available.
  * @todo: Ensure it works on page load if gateway is already selected
  * @todo: Improve UX (spinner in Purchase button, notifications, etc.)
@@ -320,6 +320,11 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function create_merchant_profile() {
+
+		if ( ! wp_verify_nonce( $_POST['nonce'] , 'wpsc_merchant_profile' ) ) {
+			wp_send_json_error();
+		}
+
 		$config = new WPSC_Pro_Pay_Merchant_Profile_Config(
 			array(
 				'cert_string'       => $this->cert_string,
@@ -344,6 +349,11 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function create_payer_id() {
+
+		if ( ! wp_verify_nonce( $_POST['nonce'] , 'checkout_nonce' ) ) {
+			wp_send_json_error();
+		}
+
 		$payer_id = wpsc_get_customer_meta( 'pro_pay_payer_id' );
 
 		if ( $payer_id ) {
@@ -376,6 +386,10 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function create_hosted_transaction_id() {
+
+		if ( ! wp_verify_nonce( $_POST['nonce'] , 'checkout_nonce' ) ) {
+			wp_send_json_error();
+		}
 
 		$name        = sanitize_text_field( $_POST['name'] );
 		$address1    = sanitize_text_field( $_POST['address1'] );
@@ -415,6 +429,11 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function create_hosted_results() {
+
+		if ( ! wp_verify_nonce( $_POST['nonce'] , 'checkout_nonce' ) ) {
+			wp_send_json_error();
+		}
+
 		$config = new WPSC_Pro_Pay_Hosted_Transaction_Results_Config(
 			array(
 				'environment'         => $this->sandbox ? 'sandbox' : 'production',
@@ -914,7 +933,7 @@ class WPSC_ProPay_Request {
 		) );
 
 		if ( ! empty( $args['body'] ) ) {
-			$args['headers']['content-length'] = strlen( $args['body'] );	
+			$args['headers']['content-length'] = strlen( $args['body'] );
 		}
 
 		return new WPSC_ProPay_Response( wp_safe_remote_request( $url, $args ) );
