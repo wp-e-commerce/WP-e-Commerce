@@ -180,7 +180,6 @@ class WPSC_Duplicate_Product {
 				}
 
 				$sql_query .= implode( ",", $sql_query_sel );
-				$sql_query = $wpdb->prepare( $sql_query, $values );
 				$wpdb->query( $sql_query );
 				clean_post_cache( $new_post_id );
 			}
