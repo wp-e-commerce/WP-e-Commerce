@@ -1,51 +1,50 @@
 /*******************
 JS Float Label
 ********************/
-.js {
-	.wpsc-controller {
-		.wpsc-field-textfield,
-		.wpsc-field-select_region,
-		.wpsc-field-select_country,
-		.wpsc-field-password {
-			position: relative;
 
-			input, 
-			textarea {
-				padding: 1em;
+.wpsc-controller.wpsc-float-js {
+	.wpsc-field-textfield,
+	.wpsc-field-select_region,
+	.wpsc-field-select_country,
+	.wpsc-field-password {
+		position: relative;
+
+		input, 
+		textarea {
+			padding: 1em;
+		}
+
+		input,
+		textarea,
+		label {
+			-webkit-transition: 0.2s ease-in-out;
+			-moz-transition: 0.2s ease-in-out;
+			-ms-transition: 0.2s ease-in-out;
+			-o-transition: 0.2s ease-in-out;
+			transition: 0.2s ease-in-out;
+		}
+
+		label {
+			position: absolute;
+			top: 1em; left: 1em;
+			opacity: 0;
+		}
+
+		&.focused,
+		&.populated {
+
+			label {
+				opacity: 1;
+				top: 0;
+			    left: 1em;
+			    font-size: $sml-size-col-5;
+			    font-weight: $bold;
 			}
 
 			input,
-			textarea,
-			label {
-				-webkit-transition: 0.2s ease-in-out;
-				-moz-transition: 0.2s ease-in-out;
-				-ms-transition: 0.2s ease-in-out;
-				-o-transition: 0.2s ease-in-out;
-				transition: 0.2s ease-in-out;
-			}
-
-			label {
-				position: absolute;
-				top: 1em; left: 1em;
-				opacity: 0;
-			}
-
-			&.focused,
-			&.populated {
-
-				label {
-					opacity: 1;
-					top: 0;
-				    left: 1em;
-				    font-size: $sml-size-col-5;
-				    font-weight: $bold;
-				}
-
-				input,
-				textarea {
-					padding-top: 1.5em;
-					padding-bottom: .5em;
-				}
+			textarea {
+				padding-top: 1.5em;
+				padding-bottom: .5em;
 			}
 		}
 	}
