@@ -2,6 +2,8 @@
 
 	$.fn.FloatLabel = function( options ){
 
+		$('body').addClass( 'wpsc-float-js' );
+
 		var defaults = {
 			populatedClass : 'populated',
 			focusedClass : 'focused'
