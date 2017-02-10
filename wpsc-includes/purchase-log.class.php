@@ -1063,6 +1063,12 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 		$meta = $this->get_meta();
 
 		foreach ( $meta as $key => $value ) {
+
+			if ( 'notes' === $key ) {
+				wpsc_get_order_notes( $this )->save();
+				continue;
+			}
+
 			$is_multiple_meta = isset( self::$multiple_meta[ $key ] );
 
 			if ( $is_multiple_meta ) {

@@ -1,4 +1,45 @@
 <?php
+
+/**
+ * Returns a purchase log.
+ *
+ * @since 3.11.5
+ *
+ * @param int $order_id Order ID.
+ *
+ * @return WPSC_Purchase_Log
+ */
+function wpsc_get_order( $order_id, $by = 'id' ) {
+	$order = wpsc_is_order( $order_id );
+	return $order ? $order : new WPSC_Purchase_Log( $order_id, $by );
+}
+
+/**
+ * Determines if object is a an order (WPSC_Purchase_Log).
+ *
+ * @since 3.12.0
+ *
+ * @param mixed $order Object to check
+ *
+ * @return WPSC_Purchase_Log|bool
+ */
+function wpsc_is_order( $order ) {
+	return $order instanceof WPSC_Purchase_Log ? $order : false;
+}
+
+/**
+ * Returns a purchase log's notes object.
+ *
+ * @since 3.11.5
+ *
+ * @param int $order_id Order ID or WPSC_Purchase_Log object.
+ *
+ * @return WPSC_Purchase_Log
+ */
+function wpsc_get_order_notes( $order_id ) {
+	return new WPSC_Purchase_Log_Notes( $order_id );
+}
+
 function wpsc_get_plaintext_table( $headings, $rows ) {
 	$colwidths = array();
 	$output    = array();
@@ -46,33 +87,34 @@ function wpsc_get_plaintext_table( $headings, $rows ) {
 	return implode( "\r\n", $output ) . "\r\n";
 }
 
-function wpsc_update_purchase_log_status( $unique_id, $new_status, $by = 'id' ) {
-	global $wpdb;
+function wpsc_update_purchase_log_status( $log_id, $new_status, $by = 'id' ) {
+	$log = wpsc_get_order( $log_id, $by );
 
-	$purchase_log = new WPSC_Purchase_Log( $unique_id, $by );
+	$old_status = $log->get( 'processed' );
+	$log->set( 'processed', $new_status );
 
-	$old_status = $purchase_log->get( 'processed' );
-	$purchase_log->set( 'processed', $new_status );
-	return $purchase_log->save();
+	return $log->save();
 }
 
-function wpsc_update_purchase_log_details( $unique_id, $details, $by = 'id' ) {
+function wpsc_update_purchase_log_details( $log_id, $details, $by = 'id' ) {
+	$log = wpsc_get_order( $log_id, $by );
+	$log->set( $details );
 
-	$purchase_log = new WPSC_Purchase_Log( $unique_id, $by );
-	$purchase_log->set( $details );
-	return $purchase_log->save();
+	return $log->save();
 }
 
 function wpsc_get_downloadable_links( $purchase_log ) {
-	if ( ! $purchase_log->is_transaction_completed() )
+	if ( ! $purchase_log->is_transaction_completed() ) {
 		return array();
+	}
 
 	$cart_contents = $purchase_log->get_items();
 	$links = array();
 	foreach ( $cart_contents as $item ) {
 		$item_links = _wpsc_get_cart_item_downloadable_links( $item, $purchase_log );
-		if ( empty( $item_links ) )
+		if ( empty( $item_links ) ) {
 			continue;
+		}
 		$links[$item->name] = $item_links;
 	}
 
@@ -152,7 +194,7 @@ function _wpsc_process_transaction_coupon( $purchase_log ) {
 	global $wpdb;
 
 	if ( ! is_object( $purchase_log ) )
-		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+		$purchase_log = wpsc_get_order( $purchase_log );
 
 	$discount_data = $purchase_log->get( 'discount_data' );
 	if ( ! empty( $discount_data ) ) {
@@ -264,7 +306,7 @@ add_action( 'wpsc_update_purchase_log_status', '_wpsc_update_purchase_log_stock_
 
 function wpsc_send_customer_email( $purchase_log ) {
 	if ( ! is_object( $purchase_log ) ) {
-		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+		$purchase_log = wpsc_get_order( $purchase_log );
 	}
 
 	if ( ! $purchase_log->is_transaction_completed() && ! $purchase_log->is_order_received() ) {
@@ -281,7 +323,7 @@ function wpsc_send_customer_email( $purchase_log ) {
 function wpsc_send_admin_email( $purchase_log, $force = false ) {
 
 	if ( ! is_object( $purchase_log ) ) {
-		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+		$purchase_log = wpsc_get_order( $purchase_log );
 	}
 
 	if ( $purchase_log->get( 'email_sent' ) && ! $force ) {
@@ -303,7 +345,7 @@ function wpsc_send_admin_email( $purchase_log, $force = false ) {
 function wpsc_get_transaction_html_output( $purchase_log ) {
 
 	if ( ! is_object( $purchase_log ) ) {
-		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+		$purchase_log = wpsc_get_order( $purchase_log );
 	}
 
 	$notification = new WPSC_Purchase_Log_Customer_HTML_Notification( $purchase_log );
@@ -326,23 +368,3 @@ function _wpsc_update_log_total_with_item_update( $item_id, $purchase_log ) {
 	$purchase_log->set( 'totalprice', $purchase_log->get_total() )->save();
 }
 add_action( 'wpsc_purchase_log_update_item', '_wpsc_update_log_total_with_item_update', 10, 2 );
-
-/**
- * Returns a purchase log.
- *
- * @param int $order_id Order ID.
- * @since 3.11.5
- */
-function wpsc_get_order( $order_id ) {
-	return new WPSC_Purchase_Log( $order_id );
-}
-
-/**
- * Returns a purchase log's notes object.
- *
- * @param int $order_id Order ID or WPSC_Purchase_Log object.
- * @since 3.11.5
- */
-function wpsc_get_order_notes( $order_id ) {
-	return new WPSC_Purchase_Log_Notes( $order_id );
-}

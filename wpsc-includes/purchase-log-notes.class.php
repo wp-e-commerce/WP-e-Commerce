@@ -224,6 +224,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	public function save() {
 		global $wpdb;
 
+		$this->fetch();
 		$this->data = apply_filters( 'wpsc_purchase_log_notes_to_save', $this->data, $this );
 
 		$meta = $this->log->get_meta();
