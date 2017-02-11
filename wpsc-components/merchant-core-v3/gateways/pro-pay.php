@@ -200,7 +200,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			'billinglastname'  => $details[ $checkout->get_field_id_by_unique_name( 'billinglastname' ) ],
 			'billingaddress'   => $details[ $checkout->get_field_id_by_unique_name( 'billingaddress' ) ],
 			'billingcity'      => $details[ $checkout->get_field_id_by_unique_name( 'billingcity' ) ],
-			'billingregion'    => $details[ $checkout->get_field_id_by_unique_name( 'billingstate' ) ],
+			'billingregion'    => wpsc_get_state_by_id( wpsc_get_customer_meta( '_wpsc_cart.delivery_region' ), 'code' ),
 			'billingpostcode'  => $details[ $checkout->get_field_id_by_unique_name( 'billingpostcode' ) ],
 			'billingcountry'   => $details[ $checkout->get_field_id_by_unique_name( 'billingcountry' ) ]
 		);
@@ -433,7 +433,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$address1    = sanitize_text_field( $_POST['address1'] );
 		$address2    = sanitize_text_field( $_POST['address2'] );
 		$city        = sanitize_text_field( $_POST['city'] );
-		$state       = wpsc_get_state_by_id( $_POST['state'], 'code' );
+		$state       = is_numeric( $_POST['state'] ) ? wpsc_get_state_by_id( $_POST['state'], 'code' ) : sanitize_text_field( $_POST['state'] );
 		$zip         = sanitize_text_field( $_POST['zip'] );
 		$country     = 'USA'; // Check if we can do international BUYERS. If so, we need 3-character ISO
 

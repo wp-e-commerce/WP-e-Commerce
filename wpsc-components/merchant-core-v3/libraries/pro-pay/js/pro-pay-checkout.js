@@ -122,7 +122,6 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 		var success = function(response) {
 			if ( response.success ) {
-				window.console.log( response );
 				$c.spinner.fadeOut( 350 );
 			} else {
 				window.console.log( response );
@@ -150,7 +149,6 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 		var success = function(response) {
 			if ( response.success ) {
-				window.console.log( response );
 				$c.spinner.fadeOut( 350 );
 				$c.hosted_id = response.data.token;
 
@@ -177,7 +175,6 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	};
 
 	pro_pay.hosted_results = function() {
-		window.console.log( 'hosted results' );
 
 		$c.iframe.slideUp();
 
@@ -215,10 +212,14 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		return false;
 	};
 
+	wpsc.enable_buy_buttons = function() {
+		$c.buy_button.prop( 'disabled', false );
+	};
+
 	$( pro_pay.init );
 
 } )( window, document, jQuery, window.WPSC_Pro_Pay_Checkout );
 
 function formIsReadyToSubmit() {
-	jQuery( '.wpsc_buy_button' ).prop( 'disabled', false );
+	window.WPSC_Pro_Pay_Checkout.enable_buy_buttons();
 }
