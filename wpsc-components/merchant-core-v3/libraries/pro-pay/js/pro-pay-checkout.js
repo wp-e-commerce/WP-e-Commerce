@@ -14,7 +14,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		$c.body           = $( document.body );
 
 		$c.tev1_wrapper   = $( 'form.wpsc_checkout_forms' );
-		$c.tev2_wrapper   = $( '#gateway_settings_pro-pay_form' );
+		$c.tev2_wrapper   = $( '#wpsc-checkout-form' );
 		$c.v1             = false;
 		$c.iframe         = $( '#pro_pay_iframe' );
 
@@ -25,27 +25,74 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			$c.buy_button = $( '.wpsc_buy_button' );
 		} else {
 			$c.wrapper = $c.tev2_wrapper;
+			$c.iframe.insertBefore( $( '.wpsc-form-actions' ) ).hide();
+			$c.buy_button = $( '.wpsc-field-wpsc_submit_checkout' );
 		}
 
 		$c.spinner = $c.wrapper.find( '.spinner' );
-
 	};
 
 	pro_pay.init = function() {
 
 		pro_pay.cache();
 
-		$c.wrapper.on( 'change', '.custom_gateway', pro_pay.create_payer_id );
+		$c.wrapper.on( 'change', '.custom_gateway, .wpsc-field-wpsc_payment_method input', pro_pay.create_payer_id );
 		$c.body.on( 'pro-pay-submission-success'  , pro_pay.hosted_results );
 
 	};
 
-	pro_pay.create_payer_id = function() {
+	pro_pay.get_customer_data = function() {
 
-		var val = $( this ).val(),
-		first_name,
+		var first_name,
 		last_name,
+		address,
+		address1,
+		address2,
+		city,
+		state,
+		zip,
+		country,
 		email;
+
+		if ( $c.v1 ) {
+			email      = $( 'input[data-wpsc-meta-key="billingemail"].text' ).val();
+			first_name = $( 'input[data-wpsc-meta-key="billingfirstname"].text' ).val();
+			last_name  = $( 'input[data-wpsc-meta-key="billinglastname"].text' ).val();
+			address    = $( 'textarea[data-wpsc-meta-key="billingaddress"].text' ).val();
+			address1   = address.split( "\n" )[0];
+			address2   = address.split( "\n" )[1] || '';
+			city       = $( 'input[data-wpsc-meta-key="billingcity"].text' ).val();
+			state      = $( 'select[data-wpsc-meta-key="billingregion"]' ).val();
+			zip        = $( 'input[data-wpsc-meta-key="billingpostcode"].text' ).val();
+			country    = $( 'select[data-wpsc-meta-key="billingcountry"]' ).val();
+		} else {
+			email      = wpsc.checkout_data.billingemail;
+			first_name = wpsc.checkout_data.billingfirstname;
+			last_name  = wpsc.checkout_data.billinglastname;
+			address    = wpsc.checkout_data.billingaddress;
+			address1   = address.split( "\n" )[0];
+			address2   = address.split( "\n" )[1] || '';
+			city       = wpsc.checkout_data.billingcity;
+			state      = wpsc.checkout_data.billingregion;
+			zip        = wpsc.checkout_data.billingpostcode;
+			country    = wpsc.checkout_data.billingcountry;
+		}
+
+		return {
+			email : email,
+			first_name : first_name,
+			last_name : last_name,
+			address1 : address1 ,
+			address2 : address2,
+			city : city,
+			state : state,
+			zip : zip,
+			country : country
+		};
+	};
+
+	pro_pay.create_payer_id = function() {
+		var val = $( this ).val();
 
 		if ( 'pro-pay' !== val ) {
 			$c.wrapper.off( 'submit', pro_pay.generate_hosted_id );
@@ -59,17 +106,8 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			} );
 		}
 
-		if ( $c.v1 ) {
-			first_name = $( 'input[data-wpsc-meta-key="billingfirstname"].text' ).val();
-			last_name  = $( 'input[data-wpsc-meta-key="billinglastname"].text' ).val();
-			email      = $( 'input[data-wpsc-meta-key="billingemail"].text' ).val();
-		} else {
-			first_name = $( 'input[data-wpsc-meta-key="billingfirstname"].text' ).val();
-			last_name  = $( 'input[data-wpsc-meta-key="billinglastname"].text' ).val();
-			email      = $( 'input[data-wpsc-meta-key="billingemail"].text' ).val();
-		}
 
-		if ( '' === first_name || '' === last_name || '' === email ) {
+		if ( '' === pro_pay.get_customer_data().first_name || '' === pro_pay.get_customer_data().last_name || '' === pro_pay.get_customer_data().email ) {
 			return;
 		}
 
@@ -78,8 +116,8 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		var data = {
 			action : 'create_payer_id',
 			nonce  : wpsc.checkout_nonce,
-			name   : first_name + ' ' + last_name,
-			email  : email
+			name   : pro_pay.get_customer_data().first_name + ' ' + pro_pay.get_customer_data().last_name,
+			email  : pro_pay.get_customer_data().email
 		};
 
 		var success = function(response) {
@@ -95,50 +133,19 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	};
 
 	pro_pay.generate_hosted_id = function() {
-		var first_name,
-		last_name,
-		address,
-		address1,
-		address2,
-		city,
-		state,
-		zip,
-		country;
-
-		if ( $c.v1 ) {
-			first_name = $( 'input[data-wpsc-meta-key="billingfirstname"].text' ).val();
-			last_name  = $( 'input[data-wpsc-meta-key="billinglastname"].text' ).val();
-			address   = $( 'textarea[data-wpsc-meta-key="billingaddress"].text' ).val();
-			address1   = address.split( "\n" )[0];
-			address2   = address.split( "\n" )[1] || '';
-			city       = $( 'input[data-wpsc-meta-key="billingcity"].text' ).val();
-			state      = $( 'select[data-wpsc-meta-key="billingregion"]' ).val();
-			zip        = $( 'input[data-wpsc-meta-key="billingpostcode"].text' ).val();
-			country    = $( 'select[data-wpsc-meta-key="billingcountry"]' ).val();
-		} else {
-			first_name = $( 'input[data-wpsc-meta-key="billingfirstname"].text' ).val();
-			last_name  = $( 'input[data-wpsc-meta-key="billinglastname"].text' ).val();
-			address   = $( 'textarea[data-wpsc-meta-key="billingaddress"].text' ).val();
-			address1   = address.split( "\n" )[0];
-			address2   = address.split( "\n" )[1] || '';
-			city       = $( 'input[data-wpsc-meta-key="billingcity"].text' ).val();
-			state      = $( 'select[data-wpsc-meta-key="billingregion"]' ).val();
-			zip        = $( 'input[data-wpsc-meta-key="billingpostcode"].text' ).val();
-			country    = $( 'select[data-wpsc-meta-key="billingcountry"]' ).val();
-		}
 
 		$c.spinner.fadeIn().css( 'display', 'inline-block' );
 
 		var data = {
 			action    : 'create_hosted_transaction_id',
 			nonce     : wpsc.checkout_nonce,
-			name      : first_name + ' ' + last_name,
-			address1  : address1,
-			address2  : address2,
-			city      : city,
-			state     : state,
-			zip       : zip,
-			country   : country
+			name      : pro_pay.get_customer_data().first_name + ' ' + pro_pay.get_customer_data().last_name,
+			address1  : pro_pay.get_customer_data().address1,
+			address2  : pro_pay.get_customer_data().address2,
+			city      : pro_pay.get_customer_data().city,
+			state     : pro_pay.get_customer_data().state,
+			zip       : pro_pay.get_customer_data().zip,
+			country   : pro_pay.get_customer_data().country
 		};
 
 		var success = function(response) {

@@ -99,11 +99,27 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		add_action( 'wp_ajax_create_hosted_results'       , array( $this, 'create_hosted_results' ) );
 		add_action( 'wp_ajax_nopriv_create_hosted_results', array( $this, 'create_hosted_results' ) );
 
+		add_action( 'wpsc_get_form_output_after_form_fields', array( $this, 'add_propay_iframe' ) );
+
+		add_filter( 'wpsc_form_input_append_to_label', function( $label, $atts ) {
+			$method  = isset( $atts['name'] ) && 'wpsc_payment_method' === $atts['name'];
+			$pro_pay = isset( $atts['value'] ) && 'pro-pay' === $atts['value'];
+
+			if ( $method && $pro_pay ) {
+				ob_start();
+
+				$this->add_spinner( 'pro-pay' );
+				$spinner = ob_get_clean();
+				$label = $spinner . $label;
+			}
+
+			return $label;
+		}, 10, 2 );
 	}
 
 	public function add_propay_iframe() {
 		?>
-		<style>.pro-pay-iframe { height: 640px; overflow:hidden; border: none; }</style>
+		<style>.pro-pay-iframe { height: 640px; overflow:hidden; border: none; width: 100% }</style>
 		<iframe scrolling="no"  id="pro_pay_iframe" name="pro_pay_iframe" class="pro-pay-iframe"></iframe>
 		<?php if ( defined( 'WPSC_DEBUG' ) && WPSC_DEBUG ) : ?>
 			<div id="MessageLog" class="BrowserMessageBox"></div>
@@ -166,10 +182,28 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 					'ajaxurl'        => admin_url( 'admin-ajax.php', 'relative' ),
 					'iframe_id'      => 'pro_pay_iframe',
 					'base_uri'       => $this->get_hpp_base_uri(),
-					'debug'          => WPSC_DEBUG
+					'debug'          => WPSC_DEBUG,
+					'checkout_data' => $this->get_checkout_details()
 				)
 			);
 		}
+	}
+
+	private function get_checkout_details() {
+		$details  = wpsc_get_customer_meta( 'checkout_details' );
+		$checkout = WPSC_Checkout_Form::get();
+
+		/* @todo: investigate why state is not there. */
+		return array(
+			'billingemail'     => $details[ $checkout->get_field_id_by_unique_name( 'billingemail' ) ],
+			'billingfirstname' => $details[ $checkout->get_field_id_by_unique_name( 'billingfirstname' ) ],
+			'billinglastname'  => $details[ $checkout->get_field_id_by_unique_name( 'billinglastname' ) ],
+			'billingaddress'   => $details[ $checkout->get_field_id_by_unique_name( 'billingaddress' ) ],
+			'billingcity'      => $details[ $checkout->get_field_id_by_unique_name( 'billingcity' ) ],
+			'billingregion'    => $details[ $checkout->get_field_id_by_unique_name( 'billingstate' ) ],
+			'billingpostcode'  => $details[ $checkout->get_field_id_by_unique_name( 'billingpostcode' ) ],
+			'billingcountry'   => $details[ $checkout->get_field_id_by_unique_name( 'billingcountry' ) ]
+		);
 	}
 
 	private function get_hpp_base_uri() {
