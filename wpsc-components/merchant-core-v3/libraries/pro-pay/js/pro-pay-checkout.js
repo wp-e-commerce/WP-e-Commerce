@@ -12,15 +12,14 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 	pro_pay.cache = function() {
 		$c.body           = $( document.body );
-
 		$c.tev1_wrapper   = $( 'form.wpsc_checkout_forms' );
 		$c.tev2_wrapper   = $( '#wpsc-checkout-form' );
 		$c.v1             = false;
 		$c.iframe         = $( '#pro_pay_iframe' );
+		$c.v1             = $c.tev1_wrapper.length;
 
-		if ( $c.tev1_wrapper.length ) {
+		if ( $c.v1 ) {
 			$c.wrapper = $c.tev1_wrapper;
-			$c.v1      = true;
 			$c.iframe.insertBefore( $( '.wpsc_make_purchase' ) ).hide();
 			$c.buy_button = $( '.wpsc_buy_button' );
 		} else {
@@ -36,7 +35,8 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 		pro_pay.cache();
 
-		$c.wrapper.on( 'change', '.custom_gateway, .wpsc-field-wpsc_payment_method input', pro_pay.create_payer_id );
+		$c.wrapper.on( 'change', 'input[name="custom_gateway"], .wpsc-field-wpsc_payment_method input', pro_pay.create_payer_id );
+		$( document ).on( 'ready', pro_pay.create_payer_id );
 		$c.body.on( 'pro-pay-submission-success'  , pro_pay.hosted_results );
 
 	};
@@ -92,7 +92,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	};
 
 	pro_pay.create_payer_id = function() {
-		var val = $( this ).val();
+		var val = $( 'input[name="custom_gateway"], .wpsc-field-wpsc_payment_method input' ).val();
 
 		if ( 'pro-pay' !== val ) {
 			$c.wrapper.off( 'submit', pro_pay.generate_hosted_id );

@@ -34,7 +34,6 @@ window.WPSC_Pro_Pay = window.WPSC_Pro_Pay || {};
 			nonce  : wpsc.merchant_profile_nonce
 		};
 
-		window.console.log( $c.spinner );
 		$c.spinner.css( 'visibility', 'visible' );
 
 		var success = function(response) {

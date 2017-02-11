@@ -3,10 +3,10 @@
  * @todo: Later,  Create a nice user sign-up flow, as a part of an overall onboarding experience
  * @todo: Later, integrated with subscriptions
  *
- * @todo: Ensure it works in Tev2 at all, and in both theme engines when it's the only gateway available.
- * @todo: Ensure it works on page load if gateway is already selected
  * @todo: Improve UX (spinner in Purchase button, notifications, etc.)
- * @todo: Flesh out auth/capture flow for auth-only, refunds, partial refunds.
+ * @todo: Flesh out auth/capture flow for auth-only/void.
+ * @todo: Abstract out config files, API objects, etc.
+ *
  * @todo: What happens if a card gets declined?
  */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
@@ -117,7 +117,15 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		}, 10, 2 );
 	}
 
-	public function add_propay_iframe() {
+	public function add_propay_iframe( $r = '' ) {
+
+		$is_tev2_payment_page = ! empty( $r ) && 'wpsc-checkout-form' === $r['id'] && 'payment' === _wpsc_get_current_controller_slug();
+		$is_tev1_payment_page = empty( $r );
+
+		if ( ! $is_tev1_payment_page && ! $is_tev2_payment_page ) {
+			return;
+		}
+
 		?>
 		<style>.pro-pay-iframe { height: 640px; overflow:hidden; border: none; width: 100% }</style>
 		<iframe scrolling="no"  id="pro_pay_iframe" name="pro_pay_iframe" class="pro-pay-iframe"></iframe>
@@ -193,7 +201,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$details  = wpsc_get_customer_meta( 'checkout_details' );
 		$checkout = WPSC_Checkout_Form::get();
 
-		/* @todo: investigate why state is not there. */
 		return array(
 			'billingemail'     => $details[ $checkout->get_field_id_by_unique_name( 'billingemail' ) ],
 			'billingfirstname' => $details[ $checkout->get_field_id_by_unique_name( 'billingfirstname' ) ],
@@ -221,7 +228,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			return;
 		}
 
-		wp_enqueue_script( 'pro-pay-admin-js', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/pro-pay.js', array( 'jquery' ), WPSC_VERSION, true );
+		wp_enqueue_script( 'pro-pay-admin-js', WPSC_MERCHANT_V3_SDKS_URL . '/pro-pay/js/pro-pay-admin.js', array( 'jquery' ), WPSC_VERSION, true );
 		wp_localize_script( 'pro-pay-admin-js', 'WPSC_Pro_Pay', array(
 				'merchant_profile_nonce'  => wp_create_nonce( 'wpsc_merchant_profile' ),
 				'profile_id_success_text' => __( 'Congratulations, you now have a functional merchant profile ID!', 'wp-e-commerce' ),
@@ -338,19 +345,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		</tr>
 <?php
 		}
-	}
-
-	public function te_v2_show_payment_fields( $args ) {
-
-		$default = '<div class="wpsc-form-actions">';
-		ob_start();
-
-		$this->payment_fields();
-		$fields = ob_get_clean();
-
-		$args['before_form_actions'] = $fields . $default;
-
-		return $args;
 	}
 
 	public function create_merchant_profile() {
@@ -526,7 +520,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		$order->save();
 		$this->go_to_transaction_results();
-
 	}
 
 	public function capture_payment( $token ) {
@@ -730,7 +723,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 		// Get ids
 		$transaction_id 	= $this->log->get( 'transactid' );
 		$wp_auth_code		= $this->log->get( 'wp_authcode' );
-		$wp_order_status	= $this->log->get( 'wp_order_status' );
+		$pro_pay_order_status	= $this->log->get( 'pro_pay_order_status' );
 
 		//Don't change order status if a refund has been requested
 		$wp_refund_set = wpsc_get_purchase_meta( $order_id, 'pro-pay_refunded', true );
@@ -753,7 +746,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 		<?php
 
 		//Show actions based on order status
-		switch ( $wp_order_status ) {
+		switch ( $pro_pay_order_status ) {
 			case 'Open' :
 				//Order is only authorized and still not captured/voided
 				$actions['capture'] = array(
@@ -848,7 +841,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 				throw new Exception( $response->get_error_message() );
 			}
 
-			$this->log->set( 'wp_order_status', 'Voided' )->save();
+			$this->log->set( 'pro_pay_order_status', 'Voided' )->save();
 			$this->log->set( 'pro-pay-status', sprintf( __( 'Authorization voided (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
 			$this->log->set( 'processed'      , WPSC_Purchase_Log::INCOMPLETE_SALE )->save();
 			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
@@ -881,7 +874,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 
 			$this->log->set( 'pro-pay-status', sprintf( __( 'Refunded (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
 			$this->log->set( 'processed'      , WPSC_Purchase_Log::REFUNDED )->save();
-			$this->log->set( 'wp_order_status', 'Refunded' )->save();
+			$this->log->set( 'pro_pay_order_status', 'Refunded' )->save();
 			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
 		}
     }
@@ -906,7 +899,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 				throw new Exception( $response->get_error_message() );
 			}
 
-			$this->log->set( 'wp_order_status', 'Completed' )->save();
+			$this->log->set( 'pro_pay_order_status', 'Completed' )->save();
 			$this->log->set( 'pro-pay-status', sprintf( __( 'Authorization Captured (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
 			$this->log->set( 'processed'      , WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
 			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
@@ -937,7 +930,7 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 			wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'pro-pay_refund_id' );
 
 			$this->log->set( 'processed'      , WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
-			$this->log->set( 'wp_order_status', 'Completed' )->save();
+			$this->log->set( 'pro_pay_order_status', 'Completed' )->save();
 			$this->log->set( 'pro-pay-status', sprintf( __( 'Refund Voided (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
 			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
 		}
