@@ -11,24 +11,40 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	};
 
 	pro_pay.cache = function() {
-		$c.body           = $( document.body );
-		$c.tev1_wrapper   = $( 'form.wpsc_checkout_forms' );
-		$c.tev2_wrapper   = $( '#wpsc-checkout-form' );
-		$c.v1             = false;
-		$c.iframe         = $( '#pro_pay_iframe' );
-		$c.v1             = $c.tev1_wrapper.length;
+		$c.body             = $( document.body );
+		$c.tev1_wrapper     = $( 'form.wpsc_checkout_forms' );
+		$c.tev2_wrapper     = $( '#wpsc-checkout-form' );
+		$c.iframe           = $( '#pro_pay_iframe' );
+		$c.v1               = $c.tev1_wrapper.length;
+		$c.purchase_spinner = $( '.wpsc-purchase-loader-container' );
 
 		if ( $c.v1 ) {
-			$c.wrapper = $c.tev1_wrapper;
-			$c.iframe.insertBefore( $( '.wpsc_make_purchase' ) ).hide();
-			$c.buy_button = $( '.wpsc_buy_button' );
+			$c.wrapper              = $c.tev1_wrapper;
+			$c.buy_button_container = $( '.wpsc_make_purchase' );
+			$c.buy_button           = $( '.wpsc_buy_button' );
 		} else {
-			$c.wrapper = $c.tev2_wrapper;
-			$c.iframe.insertBefore( $( '.wpsc-form-actions' ) ).hide();
-			$c.buy_button = $( '.wpsc-field-wpsc_submit_checkout' );
+			$c.wrapper              = $c.tev2_wrapper;
+			$c.buy_button_container = $( '.wpsc-form-actions' );
+			$c.buy_button           = $( '.wpsc-field-wpsc_submit_checkout' );
 		}
 
+		$c.purchase_spinner.prependTo( $c.buy_button_container );
+		$c.iframe.insertBefore( $c.buy_button_container ).hide();
 		$c.spinner = $c.wrapper.find( '.spinner' );
+		pro_pay.adjust_spinner();
+	};
+
+	pro_pay.adjust_spinner = function() {
+		$( '.wpsc-purchase-loader', $c.purchase_spinner ).css( {
+			'height'           : $c.buy_button_container.height(),
+			'background-color' : $c.buy_button.css( 'background-color' )
+		} );
+	};
+
+	pro_pay.toggle_purchase_spinner = function() {
+		$c.buy_button.fadeToggle( 150, function() {
+			$c.purchase_spinner.fadeToggle();
+		} );
 	};
 
 	pro_pay.init = function() {
@@ -94,6 +110,8 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	pro_pay.create_payer_id = function() {
 		var val = $( 'input[name="custom_gateway"], .wpsc-field-wpsc_payment_method input' ).val();
 
+		pro_pay.toggle_purchase_spinner();
+
 		if ( 'pro-pay' !== val ) {
 			$c.wrapper.off( 'submit', pro_pay.generate_hosted_id );
 			$c.buy_button.prop( 'disabled', false );
@@ -101,17 +119,18 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		} else {
 			$c.wrapper.on( 'submit', function() {
 				pro_pay.generate_hosted_id();
+				pro_pay.toggle_purchase_spinner();
 				$c.buy_button.prop( 'disabled', true );
 				return false;
 			} );
 		}
-
 
 		if ( '' === pro_pay.get_customer_data().first_name || '' === pro_pay.get_customer_data().last_name || '' === pro_pay.get_customer_data().email ) {
 			return;
 		}
 
 		$c.spinner.fadeIn().css( 'display', 'inline-block' );
+		pro_pay.toggle_purchase_spinner();
 
 		var data = {
 			action : 'create_payer_id',
@@ -123,6 +142,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		var success = function(response) {
 			if ( response.success ) {
 				$c.spinner.fadeOut( 350 );
+				pro_pay.toggle_purchase_spinner();
 			} else {
 				window.console.log( response );
 			}
@@ -134,6 +154,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	pro_pay.generate_hosted_id = function() {
 
 		$c.spinner.fadeIn().css( 'display', 'inline-block' );
+		pro_pay.toggle_purchase_spinner();
 
 		var data = {
 			action    : 'create_hosted_transaction_id',
@@ -151,7 +172,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			if ( response.success ) {
 				$c.spinner.fadeOut( 350 );
 				$c.hosted_id = response.data.token;
-
+				pro_pay.toggle_purchase_spinner();
 				hpp_Load( response.data.token, wpsc.debug );
 
 				$c.iframe.slideDown();
@@ -179,6 +200,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		$c.iframe.slideUp();
 
 		$c.spinner.fadeIn().css( 'display', 'inline-block' );
+		pro_pay.toggle_purchase_spinner();
 
 		var data = {
 			action    : 'create_hosted_results',
@@ -191,6 +213,8 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 				var transaction = response.data.results.response.HostedTransaction;
 
 				$c.spinner.fadeOut( 350 );
+				pro_pay.toggle_purchase_spinner();
+				
 				$c.wrapper.off( 'submit' );
 				$c.wrapper.append( '<input id="pro-pay-payment-method-token" type="hidden" name="pro_pay_payment_method_token" />' );
 				$c.wrapper.append( '<input id="pro-pay-transaction-id" type="hidden" name="pro_pay_transaction_id" />' );

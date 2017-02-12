@@ -1,7 +1,7 @@
 <?php
 /**
  * @todo: Later,  Create a nice user sign-up flow, as a part of an overall onboarding experience
- * @todo: Later, integrated with subscriptions
+ * @todo: Later, integrate with subscriptions
  *
  * @todo: Improve UX (spinner in Purchase button, notifications, etc.)
  * @todo: Flesh out auth/capture flow for auth-only/void.
@@ -101,20 +101,22 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		add_action( 'wpsc_get_form_output_after_form_fields', array( $this, 'add_propay_iframe' ) );
 
-		add_filter( 'wpsc_form_input_append_to_label', function( $label, $atts ) {
-			$method  = isset( $atts['name'] ) && 'wpsc_payment_method' === $atts['name'];
-			$pro_pay = isset( $atts['value'] ) && 'pro-pay' === $atts['value'];
+		add_filter( 'wpsc_form_input_append_to_label', array( $this, 'tev2_pro_pay_spinner' ), 10, 2 );
+	}
 
-			if ( $method && $pro_pay ) {
-				ob_start();
+	public function tev2_pro_pay_spinner( $label, $atts ) {
+		$method  = isset( $atts['name'] )  && 'wpsc_payment_method' === $atts['name'];
+		$pro_pay = isset( $atts['value'] ) && 'pro-pay' === $atts['value'];
 
-				$this->add_spinner( 'pro-pay' );
-				$spinner = ob_get_clean();
-				$label = $spinner . $label;
-			}
+		if ( $method && $pro_pay ) {
+			ob_start();
 
-			return $label;
-		}, 10, 2 );
+			$this->add_spinner( 'pro-pay' );
+			$spinner = ob_get_clean();
+			$label = $spinner . $label;
+		}
+
+		return $label;
 	}
 
 	public function add_propay_iframe( $r = '' ) {
@@ -125,9 +127,17 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		if ( ! $is_tev1_payment_page && ! $is_tev2_payment_page ) {
 			return;
 		}
-
+		$this->loader();
 		?>
-		<style>.pro-pay-iframe { height: 640px; overflow:hidden; border: none; width: 100% }</style>
+		<style>
+		.pro-pay-iframe {
+			height: 640px;
+			overflow:hidden;
+			border: none;
+			width: 100%;
+			background: url(<?php echo admin_url( 'images/spinner.gif' ) ?>) no-repeat 50% 50%;
+		}
+		</style>
 		<iframe scrolling="no"  id="pro_pay_iframe" name="pro_pay_iframe" class="pro-pay-iframe"></iframe>
 		<?php if ( defined( 'WPSC_DEBUG' ) && WPSC_DEBUG ) : ?>
 			<div id="MessageLog" class="BrowserMessageBox"></div>
@@ -135,6 +145,113 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			<div id="ConsoleLog" class="BrowserMessageBox"></div>
 		<?php
 			endif;
+	}
+
+	public function loader() {
+		?>
+		<style>
+		.wpsc-purchase-loader-container {
+			position:relative;
+			display: none;
+		}
+
+		.wpsc-purchase-loader {
+		  position: absolute;
+		  top: 50%;
+		  width: 100%;
+		}
+
+		.blob {
+		  position: absolute;
+		  left: 50%;
+		  top: 18px;
+		  width: 3px;
+		  height: 3px;
+		  border-radius: 1.5px;
+		  background-color: #00ffeb;
+		  content: "";
+		  -webkit-filter: blur(1px);
+		          filter: blur(1px);
+		  -webkit-transform: translateY(-10px);
+		          transform: translateY(-10px);
+		}
+		.blob:nth-child(1) {
+		  -webkit-animation: spin 1.25s infinite ease-in-out;
+		          animation: spin 1.25s infinite ease-in-out;
+		  -webkit-animation-delay: 0.1s;
+		          animation-delay: 0.1s;
+		}
+		.blob:nth-child(2) {
+		  -webkit-animation: spin 1.25s infinite ease-in-out;
+		          animation: spin 1.25s infinite ease-in-out;
+		  -webkit-animation-delay: 0.2s;
+		          animation-delay: 0.2s;
+		}
+		.blob:nth-child(3) {
+		  -webkit-animation: spin 1.25s infinite ease-in-out;
+		          animation: spin 1.25s infinite ease-in-out;
+		  -webkit-animation-delay: 0.3s;
+		          animation-delay: 0.3s;
+		}
+		.blob:nth-child(4) {
+		  -webkit-animation: spin 1.25s infinite ease-in-out;
+		          animation: spin 1.25s infinite ease-in-out;
+		  -webkit-animation-delay: 0.4s;
+		          animation-delay: 0.4s;
+		}
+		.blob:nth-child(5) {
+		  -webkit-animation: spin 1.25s infinite ease-in-out;
+		          animation: spin 1.25s infinite ease-in-out;
+		  -webkit-animation-delay: 0.5s;
+		          animation-delay: 0.5s;
+		}
+		.blob:nth-child(6) {
+		  -webkit-animation: spin 1.25s infinite ease-in-out;
+		          animation: spin 1.25s infinite ease-in-out;
+		  -webkit-animation-delay: 0.6s;
+		          animation-delay: 0.6s;
+		}
+		.blob:nth-child(7) {
+		  -webkit-animation: spin 1.25s infinite ease-in-out;
+		          animation: spin 1.25s infinite ease-in-out;
+		  -webkit-animation-delay: 0.7s;
+		          animation-delay: 0.7s;
+		}
+
+		@-webkit-keyframes spin {
+		  0% {
+		    -webkit-transform: rotate(0deg) translateY(-10px) rotate(0deg);
+		            transform: rotate(0deg) translateY(-10px) rotate(0deg);
+		  }
+		  70% {
+		    -webkit-transform: rotate(360deg) translateY(-10px) rotate(-360deg);
+		            transform: rotate(360deg) translateY(-10px) rotate(-360deg);
+		  }
+		}
+
+		@keyframes spin {
+		  0% {
+		    -webkit-transform: rotate(0deg) translateY(-10px) rotate(0deg);
+		            transform: rotate(0deg) translateY(-10px) rotate(0deg);
+		  }
+		  70% {
+		    -webkit-transform: rotate(360deg) translateY(-10px) rotate(-360deg);
+		            transform: rotate(360deg) translateY(-10px) rotate(-360deg);
+		  }
+		}
+		</style>
+		<div class='wpsc-purchase-loader-container'>
+			<div class='wpsc-purchase-loader'>
+			  <div class='blob'></div>
+			  <div class='blob'></div>
+			  <div class='blob'></div>
+			  <div class='blob'></div>
+			  <div class='blob'></div>
+			  <div class='blob'></div>
+			  <div class='blob'></div>
+			</div>
+		</div>
+	<?php
 	}
 
 	/**
