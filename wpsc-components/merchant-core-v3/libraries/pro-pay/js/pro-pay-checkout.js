@@ -28,18 +28,29 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			$c.buy_button           = $( '.wpsc-field-wpsc_submit_checkout' );
 		}
 
-		$c.purchase_spinner.prependTo( $c.buy_button_container );
-		$c.iframe.insertBefore( $c.buy_button_container ).hide();
-		$c.spinner = $c.wrapper.find( '.spinner' );
-		pro_pay.adjust_spinner();
+		$c.buy_button_container.css( 'position', 'relative' );
+
+		pro_pay.purchase_spinner();
+		pro_pay.payment_method_spinner();
+		pro_pay.iframe();
 	};
 
-	pro_pay.adjust_spinner = function() {
+	pro_pay.iframe = function() {
+		$c.iframe.insertBefore( $c.buy_button_container ).hide();
+	};
+
+	pro_pay.purchase_spinner = function() {
+		$c.purchase_spinner.prependTo( $c.buy_button_container );
 		$c.purchase_spinner.css( {
 			'height'           : $c.buy_button.css( 'height' ),
 			'width'            : $c.buy_button.css( 'width' ),
-			'background-color' : $c.buy_button.css( 'background-color' )
+			'background-color' : $c.buy_button.css( 'background-color' ),
+			'top'              : $c.buy_button_container.css( 'padding-top' )
 		} );
+	};
+
+	pro_pay.payment_method_spinner = function() {
+		$c.spinner = $c.wrapper.find( '.spinner' );
 	};
 
 	pro_pay.toggle_purchase_spinner = function() {
@@ -180,6 +191,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 				$c.wrapper.on( 'submit', function( e ) {
 					e.preventDefault();
+					pro_pay.toggle_purchase_spinner();
 					signalR_SubmitForm();
 					return false;
 				} );
@@ -197,8 +209,6 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	pro_pay.hosted_results = function() {
 
 		$c.iframe.slideUp();
-
-		pro_pay.toggle_purchase_spinner();
 
 		var data = {
 			action    : 'create_hosted_results',
@@ -222,6 +232,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 
 				$c.wrapper.submit();
 			} else {
+				pro_pay.toggle_purchase_spinner();
 				window.console.log( response );
 			}
 		};

@@ -156,7 +156,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		?>
 		<style>
 		.wpsc-purchase-loader-container {
-			position:relative;
+			position:absolute;
 			display: none;
 		}
 
