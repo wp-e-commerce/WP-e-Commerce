@@ -66,6 +66,7 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		$( document ).on( 'ready'                                                                     , pro_pay.create_payer_id );
 		$c.body.on( 'pro-pay-submission-success'                                                      , pro_pay.hosted_results );
 		$c.body.on( 'pro-pay-connected'                                                               , pro_pay.toggle_iframe_class );
+		$c.body.on( 'pro-pay-submission-error'                                                        , pro_pay.toggle_purchase_spinner );
 
 	};
 

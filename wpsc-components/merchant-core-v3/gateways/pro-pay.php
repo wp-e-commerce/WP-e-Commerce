@@ -3,7 +3,6 @@
  * @todo: Later,  Create a nice user sign-up flow, as a part of an overall onboarding experience
  * @todo: Later, integrate with subscriptions
  *
- * @todo: Improve UX (spinner in Purchase button, notifications, etc.)
  * @todo: Flesh out auth/capture flow for auth-only/void.
  * @todo: Abstract out config files, API objects, etc.
  *
@@ -69,7 +68,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		parent::__construct();
 
 		$this->title    = __( 'ProPay (TSYS) Payment Gateway', 'wp-e-commerce' );
-		$this->supports = array( 'tev1', 'refunds', 'partial-refunds' );
+		$this->supports = array( 'tev1', 'refunds', 'partial-refunds', 'auth-capture' );
 
 		$this->order_handler	= WPSC_Pro_Pay_Payments_Order_Handler::get_instance( $this );
 
@@ -82,7 +81,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function init() {
-		add_action( 'wp_ajax_pro-pay_order_action'        , array( $this, 'order_actions' ) );
 		add_action( 'admin_enqueue_scripts'               , array( $this, 'enqueue_admin_scripts' ) );
 		add_action( 'wp_enqueue_scripts'                  , array( $this, 'checkout_scripts' ) );
 		add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_spinner' ) );
@@ -773,46 +771,6 @@ class WPSC_Pro_Pay_Payments_Order_Handler {
 
 	public function set_purchase_log( $id ) {
 		$this->log = wpsc_get_order( $id );
-	}
-
-	/**
-	 * Perform order actions for Pro Pay
-	 */
-	public function order_actions() {
-		check_ajax_referer( 'wp_order_action', 'security' );
-
-		$order_id = absint( $_POST['order_id'] );
-		$id       = isset( $_POST['pro-pay_id'] ) ? sanitize_text_field( $_POST['pro-pay_id'] ) : '';
-		$action   = sanitize_title( $_POST['pro-pay_action'] );
-
-		$this->set_purchase_log( $order_id );
-
-		switch ( $action ) {
-			case 'capture' :
-				//Capture an AUTH
-				$this->capture_payment($id);
-			break;
-
-			case 'void' :
-				// void capture or auth before settled
-				$this->void_payment( $id );
-			break;
-
-			case 'refund' :
-				// refun
-				// d a settled payment
-				$this->refund_payment( $id );
-			break;
-
-			case 'void_refund' :
-				// void a refund request
-				$this->void_refund( $id );
-			break;
-		}
-
-		echo json_encode( array( 'action' => $action, 'order_id' => $order_id, 'pro-pay_id' => $id ) );
-
-		die();
 	}
 
 	/**
