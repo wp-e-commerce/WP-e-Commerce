@@ -137,6 +137,11 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			width: 100%;
 			background: url(<?php echo admin_url( 'images/spinner.gif' ) ?>) no-repeat 50% 50%;
 		}
+
+		.pro-pay-frame.loaded {
+			background: transparent;
+		}
+
 		</style>
 		<iframe scrolling="no"  id="pro_pay_iframe" name="pro_pay_iframe" class="pro-pay-iframe"></iframe>
 		<?php if ( defined( 'WPSC_DEBUG' ) && WPSC_DEBUG ) : ?>
@@ -157,7 +162,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 		.wpsc-purchase-loader {
 		  position: absolute;
-		  top: 50%;
+		  top: calc( 50% - 18px );
 		  width: 100%;
 		}
 

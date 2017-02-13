@@ -92,6 +92,8 @@ function signalR_OnStateChanged(e, data) {
         //var newState = getStateName(e.newState);
         echoSignalRMessage('<b style="color: Blue" >Changing state </b> from <b>' + getStateName(e.oldState) + '</b> to <b>' + getStateName(e.newState) + '</b>');
     }
+	jQuery( document.body ).trigger( 'pro-pay-connecting' );
+
 }
 
 // Invoked when the 'start' method is called and succeeds in connecting to the server.
@@ -120,6 +122,9 @@ function signalR_OnConnected(e, data) {
 
         echoSignalRMessage(msg);
     }
+
+	jQuery( document.body ).trigger( 'pro-pay-connected' );
+
 }
 
 // Invoked when the Connection.Start() method is called but fails to connect to the SignalR server.
@@ -135,6 +140,7 @@ function signalR_OnConnectionFailed(e, data) {
             echoSignalRMessage('<b style="color: red">Error Thrown: </b>Failed to connect to the server - Unknown, signalR_OnConnectionFailed() <b>Raised</b>');
         }
     }
+	jQuery( document.body ).trigger( 'pro-pay-connection-failed' );
 }
 
 // Invoked when the client detects a slow connection.
@@ -143,6 +149,8 @@ function signalR_OnConnectionSlow(e, data) {
     if (debug) {
         echoBrowserMessage('<b style="color: gold">Event: </b><span style="color: blue">Slow Connection Detected - </b>Keep Alive Timout % Threshold Exceeded, signalR_OnConnectionSlow() <b>Raised</b>');
     }
+	jQuery( document.body ).trigger( 'pro-pay-connection-slow' );
+
 }
 
 // Invoked when the underlying transport begins reconnecting.
@@ -151,6 +159,7 @@ function signalR_OnReconnecting(e, data) {
     if (debug) {
         echoBrowserMessage('<b style="color: gold">Event: </b><span style="color: red">Connection Loss Threshold - </span>Connection Lost OR Keep Alive Timout Exceede, signalR_OnReconnecting() <b>Raised</b>');
     }
+	jQuery( document.body ).trigger( 'pro-pay-reconnecting' );
 }
 
 // Invoked when the underlying transport reconnects.
@@ -159,6 +168,9 @@ function signalR_OnReconnect(e, data) {
     if (debug) {
         echoBrowserMessage('<b style="color: gold">Event: </b><span style="color: green">Connection Re-established</span>signalR_OnReconnect() <b>Raised</b>');
     }
+
+	jQuery( document.body ).trigger( 'pro-pay-reconnected' );
+
 }
 
 // Invoked when the client disconnects.
@@ -167,6 +179,8 @@ function signalR_OnDisconnect(e, data) {
     if (debug) {
         echoBrowserMessage('<b style="color: gold">Event: </b><span style="color: red">SignalR Connection Disconnected</span>signalR_OnDisconnect() <b>Raised</b>');
     }
+	jQuery( document.body ).trigger( 'pro-pay-disconnected' );
+
 }
 
 // This function is called when the server signalR issues a 'FormSubmitWasInvalid' message (indicating there was a problem validating the form data).
