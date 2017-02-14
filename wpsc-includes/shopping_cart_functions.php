@@ -320,7 +320,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 								. ' placeholder="'. esc_attr( $placeholder ) . '" '
 									. ' value="' . esc_attr( $billing_state ) . '" '
 										. $style
-											. '" />';
+											. ' />';
 
 	// setup the drop down field, aka 'billingregion'
 	// move the checkout item pointer to the billing country, so we
