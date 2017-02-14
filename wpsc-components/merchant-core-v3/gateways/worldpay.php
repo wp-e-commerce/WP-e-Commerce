@@ -45,7 +45,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	 *
 	 * @return bool Whether or not to load gateway.
 	 */
-	public static function load() {
+	public function load() {
 		return function_exists( '_wpsc_get_current_controller' );
 	}
 
@@ -206,7 +206,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	}
 
 	public function init() {
-
+		parent::init();
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 		add_action( 'wp_head'           , array( $this, 'head_script' ) );
 
@@ -259,7 +259,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 			default:
 
 				// Capture
-				$result = $this->capture_payment( $card_token );
+				$result = $this->capture_payment( $order, $card_token );
 
 				if ( $result ) {
 					// Payment complete
@@ -277,7 +277,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 	}
 
-	public function capture_payment( $token ) {
+	public function capture_payment( $log, $token ) {
 
 		if ( $this->purchase_log->get( 'gateway' ) == 'worldpay' ) {
 

@@ -239,15 +239,6 @@ final class WPSC_Payment_Gateways {
 			require_once $file;
 		}
 
-		if ( is_callable( array( $classname, 'load' ) ) && ! call_user_func( array( $classname, 'load' ) ) ) {
-
-			self::unregister_file( $filename );
-
-			$error = new WP_Error( 'wpsc-payment', __( 'Error', 'wp-e-commerce' ) );
-
-			return $error;
-		}
-
 		$meta = array(
 			'class'        => $classname,
 			'path'         => $file,
@@ -258,6 +249,14 @@ final class WPSC_Payment_Gateways {
 
 		if ( is_wp_error( $gateway ) ) {
 			return $gateway;
+		}
+
+		if ( ! $gateway->load() ) {
+			self::unregister_file( $filename );
+
+			$error = new WP_Error( 'wpsc-payment', __( 'Error', 'wp-e-commerce' ) );
+
+			return $error;
 		}
 
 		$meta['name']  = $gateway->get_title();
@@ -751,13 +750,17 @@ abstract class WPSC_Payment_Gateway {
 	 */
 	public function init() {}
 
+	public function load() {
+		return true;
+	}
+
 	/**
 	 * Process refund
 	 *
 	 * If the gateway declares 'refunds' support, this will allow it to refund
 	 * a passed in amount.
 	 *
-	 * @param  int    $order_id
+	 * @param  int     $purchase_log The WPSC_Purchase_Log object.
 	 * @param  float   $amount
 	 * @param  string  $reason
 	 * @param  boolean $manual If refund is a manual refund.
@@ -765,7 +768,22 @@ abstract class WPSC_Payment_Gateway {
 	 * @since 3.9.0
 	 * @return bool|WP_Error True or false based on success, or a WP_Error object
 	 */
-	public function process_refund( $order_id, $amount = 0.00, $reason = '', $manual = false ) {
+	public function process_refund( $purchase_log, $amount = 0.00, $reason = '', $manual = false ) {
+		return false;
+	}
+
+	/**
+	 * Capture Payment
+	 *
+	 * If the gateway declares 'auth-capture' or 'partial-refunds' support,
+	 * this allows a previously authorized payment to be captured.
+	 *
+	 * @param  int     $purchase_log The WPSC_Purchase_Log object.
+	 *
+	 * @since 3.12.0
+	 * @return bool|WP_Error True or false based on success, or a WP_Error object
+	 */
+	public function capture_payment( $purchase_log, $transaction_id ) {
 		return false;
 	}
 }

@@ -368,3 +368,20 @@ function _wpsc_update_log_total_with_item_update( $item_id, $purchase_log ) {
 	$purchase_log->set( 'totalprice', $purchase_log->get_total() )->save();
 }
 add_action( 'wpsc_purchase_log_update_item', '_wpsc_update_log_total_with_item_update', 10, 2 );
+
+
+function wpsc_update_order_status_partially_refunded( $log ) {
+	if ( WPSC_Purchase_Log::PARTIALLY_REFUNDED !== $log->get( 'processed' ) ) {
+		wpsc_update_purchase_log_status( $log, WPSC_Purchase_Log::PARTIALLY_REFUNDED );
+	}
+}
+
+add_action( 'wpsc_order_partially_refunded', 'wpsc_update_order_status_partially_refunded' );
+
+function wpsc_update_order_status_fully_refunded( $log ) {
+	if ( WPSC_Purchase_Log::REFUNDED !== $log->get( 'processed' ) ) {
+		wpsc_update_purchase_log_status( $log, WPSC_Purchase_Log::REFUNDED );
+	}
+}
+
+add_action( 'wpsc_order_fully_refunded', 'wpsc_update_order_status_fully_refunded' );

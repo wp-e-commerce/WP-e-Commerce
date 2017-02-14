@@ -1608,6 +1608,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @return WPSC_Purchase_Log         The current object (for method chaining)
 	 */
 	public function add_refund_note( $note_text, $reason_for_refund = '' ) {
+
 		if ( ! empty( $reason_for_refund ) ) {
 			$note_text .= sprintf( __( "\nReason: %s", 'wp-e-commerce' ), $reason_for_refund );
 		}

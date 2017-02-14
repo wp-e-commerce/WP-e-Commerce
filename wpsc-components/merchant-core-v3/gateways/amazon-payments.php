@@ -36,8 +36,15 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	private $user_is_authenticated = false;
 
 	public function __construct() {
-
 		parent::__construct();
+
+		// Define user set variables
+		$this->seller_id       = $this->setting->get( 'seller_id' );
+		$this->mws_access_key  = $this->setting->get( 'mws_access_key' );
+		$this->secret_key      = $this->setting->get( 'secret_key' );
+		$this->sandbox         = $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
+		$this->payment_capture = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
+		$this->client_id       = $this->setting->get( 'client_id' );
 
 		$this->title = __( 'Amazon Payments', 'wp-e-commerce' );
 
@@ -48,14 +55,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$this->order_handler    = WPSC_Amazon_Payments_Order_Handler::get_instance( $this );
 
 		add_action( 'init', array( $this->order_handler, 'process_ipn' ) );
-
-		// Define user set variables
-		$this->seller_id       = $this->setting->get( 'seller_id' );
-		$this->mws_access_key  = $this->setting->get( 'mws_access_key' );
-		$this->secret_key      = $this->setting->get( 'secret_key' );
-		$this->sandbox         = $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
-		$this->payment_capture = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
-		$this->client_id       = $this->setting->get( 'client_id' );
 
 		$base_country = new WPSC_Country( wpsc_get_base_country() );
 
@@ -105,7 +104,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 *
 	 * @return bool Whether or not to load gateway.
 	 */
-	public static function load() {
+	public function load() {
 		return version_compare( phpversion(), '5.3', '>=' ) && function_exists( 'curl_init' ) && function_exists( '_wpsc_get_current_controller' );
 	}
 
@@ -498,7 +497,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * Load handlers for cart and orders after cart is loaded.
 	 */
 	public function init() {
-
+		parent::init();
 		// Disable if no seller ID
 		if ( empty( $this->seller_id ) ) {
 			return;

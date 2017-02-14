@@ -34,7 +34,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 		if ( $log instanceof WPSC_Purchase_Log ) {
 			$this->log = $log;
 		} else {
-			$this->log = new WPSC_Purchase_Log( $log );
+			$this->log = wpsc_get_order( $log );
 		}
 
 		if ( empty( self::$map_text ) ) {
@@ -230,6 +230,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 		$meta = $this->log->get_meta();
 
 		$deleted = array();
+
 		if ( ! empty( $meta['notes'] ) ) {
 			foreach ( $meta['notes'] as $key => $note ) {
 				$deleted[] = wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'notes', $note );

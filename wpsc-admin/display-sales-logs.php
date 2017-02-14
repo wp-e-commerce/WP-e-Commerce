@@ -274,55 +274,16 @@ class WPSC_Purchase_Log_Page {
 						<th class='right-col'><?php esc_html_e( 'Total', 'wp-e-commerce' ); ?> </th>
 						<td><span><?php echo wpsc_display_purchlog_totalprice(); ?></span> <div class="spinner"></div></td>
 					</tr>
-
-					<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'refunds' ) ) : ?>
-					<tr>
-						<td colspan="<?php echo $this->cols + 2; ?>">
-							<p class="wpsc-add-row">
-								<button type="button" class="button refund-items"><?php _e( 'Refund', 'wp-e-commerce' ); ?></button>
-							</p>
+					<tr class="wpsc-row-actions">
+						<td class="wpsc-add-row" colspan="<?php echo $this->cols + 2; ?>">
+							<?php do_action( 'wpsc_order_row_actions', $this->log ); ?>
 						</td>
 					</tr>
-					<tr class="wpsc-refund-ui">
+					<tr class="wpsc-row-action-views">
 						<td colspan="<?php echo $this->cols + 2; ?>">
-							<table>
-								<tbody>
-									<tr>
-										<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
-										<td class="total"><?php echo wpsc_currency_display( $this->log->get_total_refunded() );?></td>
-									</tr>
-									<?php if ( wpsc_payment_gateway_supports( $this->log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
-									<tr>
-										<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'wp-e-commerce' ); ?>:</label></td>
-										<td class="total">
-											<input type="text" class="text" id="refund_amount" name="refund_amount" class="wpec_input_price" />
-											<div class="clear"></div>
-										</td>
-									</tr>
-									<?php endif; // gateway supports PARTIAL refunds ?>
-									<tr>
-										<td class="label"><label for="refund_reason"><?php _e( 'Reason for refund (optional)', 'wp-e-commerce' ); ?>:</label></td>
-										<td class="total">
-											<input type="text" class="text" id="refund_reason" name="refund_reason" />
-											<div class="clear"></div>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<p>
-												<button type="button" class="button tips button-primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), wpsc_get_payment_gateway( $this->log->get( 'gateway' ) )->get_title() ); ?></button>
-												<button type="button" class="button button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
-											</p>
-										</td>
-										<td>
-											<span class="spinner"></span>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+							<?php do_action( 'wpsc_order_row_actions_views', $this->log ); ?>
 						</td>
 					</tr>
-					<?php endif; // gateway supports refunds ?>
 				</tbody>
 			</table>
 		</form>
@@ -330,6 +291,65 @@ class WPSC_Purchase_Log_Page {
 		<?php do_action( 'wpsc_purchlogitem_metabox_end', $this->log_id ); ?>
 
 		<?php
+	}
+
+	public function add_refund_button( $log ) {
+		if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) ) :
+		?>
+		<button type="button" class="button refund-items"><?php _e( 'Refund', 'wp-e-commerce' ); ?></button>
+		<?php
+		endif;
+	}
+
+	public function add_refund_button_ui( $log ) {
+		if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) ) :
+	?>
+		<table class='wpsc-refund-ui'>
+			<tbody>
+				<tr>
+					<td class="label"><?php _e( 'Amount already refunded', 'wp-e-commerce' ); ?>:</td>
+					<td class="total"><?php echo wpsc_currency_display( $log->get_total_refunded() );?></td>
+				</tr>
+				<?php if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'partial-refunds' ) ) : ?>
+				<tr>
+					<td class="label"><label for="refund_amount"><?php _e( 'Refund amount', 'wp-e-commerce' ); ?>:</label></td>
+					<td class="total">
+						<input type="number" max="<?php echo floatval( $log->get_remaining_refund() ); ?>" class="text" id="refund_amount" name="refund_amount" class="wpec_input_price" />
+						<div class="clear"></div>
+					</td>
+				</tr>
+				<?php endif; // gateway supports PARTIAL refunds ?>
+				<tr>
+					<td class="label"><label for="refund_reason"><?php _e( 'Reason for refund (optional)', 'wp-e-commerce' ); ?>:</label></td>
+					<td class="total">
+						<input type="text" class="text" id="refund_reason" name="refund_reason" />
+						<div class="clear"></div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							<button type="button" class="button tips button-primary do-api-refund"><?php printf( __( 'Refund via %s', 'wp-e-commerce' ), wpsc_get_payment_gateway( $log->get( 'gateway' ) )->get_title() ); ?></button>
+							<button type="button" class="button button-secondary do-manual-refund tips"><?php _e( 'Manual Refund', 'wp-e-commerce' ); ?></button>
+						</p>
+					</td>
+					<td>
+						<span class="spinner"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+		endif;
+	}
+
+	public function add_capture_button( $log ) {
+		if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'auth-capture' ) && $log->is_order_received() ) :
+		?>
+		<button type="button" class="button-primary button capture-payment"><?php _e( 'Capture Payment', 'wp-e-commerce' ); ?></button>
+		<div class="spinner"></div>
+		<?php
+		endif;
 	}
 
 	public function purch_notes_box() {
@@ -517,6 +537,11 @@ class WPSC_Purchase_Log_Page {
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
 		add_action( 'wpsc_purchlog_before_metaboxes' , array( $this, 'register_metaboxes' ) );
+
+		add_action( 'wpsc_order_row_actions'         , array( $this, 'add_refund_button' ) );
+		add_action( 'wpsc_order_row_actions_views'   , array( $this, 'add_refund_button_ui' ) );
+
+		add_action( 'wpsc_order_row_actions'      , array( $this, 'add_capture_button' ) );
 	}
 
 	public function register_metaboxes() {

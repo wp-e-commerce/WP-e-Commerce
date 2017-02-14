@@ -456,7 +456,7 @@ function wpsc_display_purchlog_buyers_email() {
 
 function wpsc_display_purchlog_buyers_address() {
 	global $purchlogitem;
-	return esc_html( $purchlogitem->log()->buyers_address() );
+	return wp_kses_post( $purchlogitem->log()->buyers_address() );
 }
 
 function wpsc_display_purchlog_buyers_state_and_postcode() {
@@ -481,7 +481,7 @@ function wpsc_display_purchlog_shipping_name() {
 
 function wpsc_display_purchlog_shipping_address() {
 	global $purchlogitem;
-	return esc_html( $purchlogitem->log()->shipping_address() );
+	return wp_kses_post( $purchlogitem->log()->shipping_address() );
 }
 
 function wpsc_display_purchlog_shipping_city() {

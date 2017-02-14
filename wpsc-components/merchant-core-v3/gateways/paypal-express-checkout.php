@@ -21,9 +21,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @since 3.9.0
 	 */
 	public function __construct( $options, $child = false ) {
+		require_once( 'php-merchant/gateways/paypal-express-checkout.php' );
 		parent::__construct();
 
-		require_once( 'php-merchant/gateways/paypal-express-checkout.php' );
 		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout( $options );
 
 		if ( ! $child ) {
@@ -221,6 +221,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @return void
 	 */
 	public function init() {
+		parent::init();
 		add_filter(
 			'wpsc_payment_method_form_fields',
 			array( 'WPSC_Payment_Gateway_Paypal_Express_Checkout', 'filter_unselect_default' ), 100 , 1
@@ -1070,13 +1071,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		}
 	}
 
-	public function process_refund( $order_id, $amount = 0.00, $reason = '', $manual = false ) {
+	public function process_refund( $log, $amount = 0.00, $reason = '', $manual = false ) {
 
 		if ( 0.00 == $amount ) {
 			return new WP_Error( 'paypal_refund_error', __( 'Refund Error: You need to specify a refund amount.', 'wp-e-commerce' ) );
 		}
 
-		$log = wpsc_get_order( $order_id );
+		$log = wpsc_get_order( $log );
 
 		if ( ! $log->get( 'transactid' ) ) {
 			return new WP_Error( 'error', __( 'Refund Failed: No transaction ID', 'wp-e-commerce' ) );

@@ -24,7 +24,7 @@ function _wpsc_ajax_purchase_log_refund_items() {
 
 		if ( wpsc_payment_gateway_supports( $gateway_id, 'refunds' ) ) {
 			// Send api request to process refund. Returns Refund transaction ID
-			$result = $gateway->process_refund( $order_id, $refund_amount, $refund_reason, $manual );
+			$result = $gateway->process_refund( $log, $refund_amount, $refund_reason, $manual );
 
 			do_action( 'wpsc_refund_processed', $log, $result, $refund_amount, $refund_reason );
 
@@ -60,6 +60,58 @@ function _wpsc_ajax_purchase_log_refund_items() {
 
 	} catch ( Exception $e ) {
 		return new WP_Error( 'wpsc_ajax_purchase_log_refund_failed', $e->getMessage() );
+	}
+}
+
+function _wpsc_ajax_purchase_log_capture_payment() {
+	if ( ! isset( $_POST['order_id'] ) ) {
+		return new WP_Error( 'wpsc_ajax_invalid_purchase_log_capture_payment', __( 'Capture failed.', 'wp-e-commerce' ) );
+	}
+
+	if ( ! wpsc_is_store_admin() ) {
+		return new WP_Error( 'wpsc_ajax_not_allowed_purchase_log_capture_payment', __( 'Capture failed. (Incorrect Permissions)', 'wp-e-commerce' ) );
+	}
+
+	$order_id      = absint( $_POST['order_id'] );
+	$response_data = array();
+
+	$log           = wpsc_get_order( $order_id );
+	$gateway_id    = $log->get( 'gateway' );
+	$gateway       = wpsc_get_payment_gateway( $gateway_id );
+
+	try {
+
+		// Validate that the capture can occur
+		if ( wpsc_payment_gateway_supports( $gateway_id, 'auth-capture' ) ) {
+
+			if ( ! $log->is_order_received() ) {
+				throw new Exception( __( 'Order must be in "Order Received" status to be captured.', 'wp-e-commerce' ) );
+			}
+
+			$transaction_id = $log->get( 'transactid' );
+
+			if ( empty( $transaction_id ) ) {
+				throw new Exception( __( 'Order must have a transaction ID to be captured.', 'wp-e-commerce' ) );
+			}
+
+			// Send api request to process capture. Returns capture transaction ID
+			$result = $gateway->capture_payment( $log, $transaction_id );
+
+			do_action( 'wpsc_payment_captured', $log, $result );
+
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+
+			if ( ! $result ) {
+				throw new Exception( __( 'Refund failed', 'wp-e-commerce' ) );
+			}
+		}
+
+		return $response_data;
+
+	} catch ( Exception $e ) {
+		return new WP_Error( 'wpsc_ajax_purchase_log_payment_capture_failed', $e->getMessage() );
 	}
 }
 

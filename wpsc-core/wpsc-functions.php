@@ -308,6 +308,39 @@ function wpsc_core_load_purchase_log_statuses() {
 			),
 			'order'          => 6,
 		),
+		array(
+			'internalname'   => 'refunded',
+			'label'          => __( 'Refunded', 'wp-e-commerce' ),
+			'view_label'     => _nx_noop(
+				'Refunded <span class="count">(%d)</span>',
+				'Refunded <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wp-e-commerce'
+			),
+			'order'          => 7,
+		),
+		array(
+			'internalname'   => 'refund_pending',
+			'label'          => __( 'Refund Pending', 'wp-e-commerce' ),
+			'view_label'     => _nx_noop(
+				'Refund Pending <span class="count">(%d)</span>',
+				'Refund Pending <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wp-e-commerce'
+			),
+			'order'          => 8,
+		),
+		array(
+			'internalname'   => 'partially_refunded',
+			'label'          => __( 'Partially Refunded', 'wp-e-commerce' ),
+			'view_label'     => _nx_noop(
+				'Partially Refunded <span class="count">(%d)</span>',
+				'Partially Refunded <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wp-e-commerce'
+			),
+			'order'          => 9,
+		),
 	);
 	$wpsc_purchlog_statuses = apply_filters( 'wpsc_set_purchlog_statuses', $wpsc_purchlog_statuses );
 }

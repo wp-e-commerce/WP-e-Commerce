@@ -266,6 +266,14 @@ th#status {
 	border-right: 0;
 }
 
+.wpsc-add-row button.button {
+    margin-right: 6px;
+}
+
+.wpsc-add-row .spinner.is-active {
+	float: none;
+}
+
 .wpsc_item_qty {
 	width: 4em;
 }

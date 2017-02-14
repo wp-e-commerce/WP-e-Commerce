@@ -8,9 +8,10 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function __construct() {
-		parent::__construct();
 		$this->title = __( 'Manual Payment Gateway 3.0', 'wp-e-commerce' );
-	}
+
+		parent::__construct();
+}
 
 	/**
 	 * Displays the setup form
