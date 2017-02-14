@@ -37,7 +37,7 @@ function wpsc_is_order( $order ) {
  * @return WPSC_Purchase_Log
  */
 function wpsc_get_order_notes( $order_id ) {
-	return new WPSC_Purchase_Log_Notes( $order_id );
+	return WPSC_Purchase_Log_Notes::get_instance( $order_id );
 }
 
 function wpsc_get_plaintext_table( $headings, $rows ) {
