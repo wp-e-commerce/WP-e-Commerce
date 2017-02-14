@@ -344,7 +344,7 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function add_capture_button( $log ) {
-		if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'auth-capture' ) ) :
+		if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'auth-capture' ) && $log->is_order_received() ) :
 		?>
 		<button type="button" class="button-primary button capture-payment"><?php _e( 'Capture Payment', 'wp-e-commerce' ); ?></button>
 		<div class="spinner"></div>
