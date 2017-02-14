@@ -170,6 +170,10 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	pro_pay.create_payer_id = function() {
 		var val = $( 'input[name="custom_gateway"]:checked, .wpsc-field-wpsc_payment_method input:checked' ).val();
 
+		if ( $c.v1 && val == null ) {
+			val = $( 'input[name="custom_gateway"]' ).val();
+		}
+
 		if ( 'pro-pay' !== val ) {
 			$c.wrapper.off( 'submit', pro_pay.generate_hosted_id );
 			$c.buy_button.prop( 'disabled', false );
