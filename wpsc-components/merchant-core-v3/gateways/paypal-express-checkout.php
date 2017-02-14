@@ -116,7 +116,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		global $wpsc_cart;
 		//	Create a new PurchaseLog Object
-		$purchase_log = wpsc_get_order();
+		$purchase_log = new WPSC_Purchase_Log();
 
 		// Create a Sessionid
 		$sessionid = ( mt_rand( 100, 999 ) . time() );
