@@ -65,17 +65,14 @@ function _wpsc_ajax_purchase_log_refund_items() {
 
 function _wpsc_ajax_purchase_log_capture_payment() {
 	if ( ! isset( $_POST['order_id'] ) ) {
-		return new WP_Error( 'wpsc_ajax_invalid_purchase_log_refund_items', __( 'Refund failed.', 'wp-e-commerce' ) );
+		return new WP_Error( 'wpsc_ajax_invalid_purchase_log_capture_payment', __( 'Capture failed.', 'wp-e-commerce' ) );
 	}
 
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return new WP_Error( 'wpsc_ajax_not_allowed_purchase_log_refund', __( 'Refund failed. (Incorrect Permissions)', 'wp-e-commerce' ) );
+	if ( ! wpsc_is_store_admin() ) {
+		return new WP_Error( 'wpsc_ajax_not_allowed_purchase_log_capture_payment', __( 'Capture failed. (Incorrect Permissions)', 'wp-e-commerce' ) );
 	}
 
 	$order_id      = absint( $_POST['order_id'] );
-	$refund_reason = isset( $_POST['refund_reason'] ) ? sanitize_text_field( $_POST['refund_reason'] ) : '';
-	$refund_amount = isset( $_POST['refund_amount'] ) ? sanitize_text_field( $_POST['refund_amount'] ) : false;
-	$manual        = $_POST['api_refund'] === 'true' ? false : true;
 	$response_data = array();
 
 	$log           = wpsc_get_order( $order_id );
@@ -83,14 +80,24 @@ function _wpsc_ajax_purchase_log_capture_payment() {
 	$gateway       = wpsc_get_payment_gateway( $gateway_id );
 
 	try {
-		// Validate that the refund can occur
-		$refund_amount  = $refund_amount ? $refund_amount : $log->get( 'totalprice' );
 
-		if ( wpsc_payment_gateway_supports( $gateway_id, 'refunds' ) ) {
-			// Send api request to process refund. Returns Refund transaction ID
-			$result = $gateway->process_refund( $log, $refund_amount, $refund_reason, $manual );
+		// Validate that the capture can occur
+		if ( wpsc_payment_gateway_supports( $gateway_id, 'auth-capture' ) ) {
 
-			do_action( 'wpsc_refund_processed', $log, $result, $refund_amount, $refund_reason );
+			if ( ! $log->is_order_received() ) {
+				throw new Exception( __( 'Order must be in "Order Received" status to be captured.', 'wp-e-commerce' ) );
+			}
+
+			$transaction_id = $log->get( 'transactid' );
+
+			if ( empty( $transaction_id ) ) {
+				throw new Exception( __( 'Order must have a transaction ID to be captured.', 'wp-e-commerce' ) );
+			}
+
+			// Send api request to process capture. Returns capture transaction ID
+			$result = $gateway->capture_payment( $log, $transaction_id );
+
+			do_action( 'wpsc_payment_captured', $log, $result );
 
 			if ( is_wp_error( $result ) ) {
 				return $result;
@@ -101,29 +108,10 @@ function _wpsc_ajax_purchase_log_capture_payment() {
 			}
 		}
 
-		if ( $log->get_remaining_refund() > 0 ) {
-			/**
-			 * wpsc_order_partially_refunded.
-			 *
-			 * @since 3.11.5
-			 */
-			do_action( 'wpsc_order_partially_refunded', $log );
-			$response_data['status'] = 'partially_refunded';
-
-		} else {
-			/**
-			 * wpsc_order_fully_refunded.
-			 *
-			 * @since 3.11.5
-			 */
-			do_action( 'wpsc_order_fully_refunded', $log );
-			$response_data['status'] = 'fully_refunded';
-		}
-
 		return $response_data;
 
 	} catch ( Exception $e ) {
-		return new WP_Error( 'wpsc_ajax_purchase_log_refund_failed', $e->getMessage() );
+		return new WP_Error( 'wpsc_ajax_purchase_log_payment_capture_failed', $e->getMessage() );
 	}
 }
 

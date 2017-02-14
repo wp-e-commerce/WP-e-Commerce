@@ -21,9 +21,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @since 3.9.0
 	 */
 	public function __construct( $options, $child = false ) {
+		require_once( 'php-merchant/gateways/paypal-express-checkout.php' );
 		parent::__construct();
 
-		require_once( 'php-merchant/gateways/paypal-express-checkout.php' );
 		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout( $options );
 
 		if ( ! $child ) {
@@ -221,6 +221,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @return void
 	 */
 	public function init() {
+		parent::init();
 		add_filter(
 			'wpsc_payment_method_form_fields',
 			array( 'WPSC_Payment_Gateway_Paypal_Express_Checkout', 'filter_unselect_default' ), 100 , 1

@@ -2,6 +2,7 @@
 /**
  * @todo: Later,  Create a nice user sign-up flow, as a part of an overall onboarding experience
  * @todo: Later, integrate with subscriptions
+ * @todo: Later, support capturing a different amount than originally authorized.
  *
  * @todo: Flesh out auth/capture flow for auth-only/void.
  * @todo: Abstract out config files, API objects, etc.
@@ -44,7 +45,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	);
 
 	private $payment_capture;
-	private $order_handler;
 	private $endpoint;
 	private $sandbox;
 
@@ -70,8 +70,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$this->title    = __( 'ProPay (TSYS) Payment Gateway', 'wp-e-commerce' );
 		$this->supports = array( 'tev1', 'refunds', 'partial-refunds', 'auth-capture' );
 
-		$this->order_handler	= WPSC_Pro_Pay_Payments_Order_Handler::get_instance( $this );
-
 		// Define user set variables
 		$this->account_number      = $this->setting->get( 'account_number' );
 		$this->merchant_profile_id = $this->setting->get( 'merchant_profile_id' );
@@ -81,6 +79,8 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	public function init() {
+		parent::init();
+
 		add_action( 'admin_enqueue_scripts'               , array( $this, 'enqueue_admin_scripts' ) );
 		add_action( 'wp_enqueue_scripts'                  , array( $this, 'checkout_scripts' ) );
 		add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_spinner' ) );
@@ -622,8 +622,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$order->set( 'last_four', $last_four )->save();
 		$order->set( 'type', $type )->save();
 
-		$this->order_handler->set_purchase_log( $order->get( 'id' ) );
-
 		switch ( $this->payment_capture ) {
 			case 'authorize' :
 
@@ -642,27 +640,32 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$this->go_to_transaction_results();
 	}
 
-	public function capture_payment( $token ) {
+	public function capture_payment( $log, $transction_id ) {
 
-		if ( $this->purchase_log->get( 'gateway' ) == 'pro-pay' ) {
+		if ( $log->get( 'gateway' ) == 'pro-pay' ) {
 
-			$order = $this->purchase_log;
+			$config = new WPSC_Pro_Pay_Hosted_Capture_Payment_Config(
+				array(
+					'environment'         => $this->sandbox ? 'sandbox' : 'production',
+					'biller_account_id'   => $this->biller_account_id,
+					'auth_token'          => $this->auth_token,
+					'merchant_profile_id' => $this->merchant_profile_id,
+					'transaction_id'      => sanitize_text_field( $transaction_id ),
+					'amount'              => $log->get( 'totalprice' ),
+				)
+			);
 
-			$response = null;
+			$capture = new WPSC_Pro_Pay_Hosted_Capture_Payment( $config );
+
+			$results = $capture->capture()->get_transaction_id();
 
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
 			}
 
-			if ( isset( $response['ResponseBody']->transaction->transactionId ) ) {
-				$transaction_id = $response['ResponseBody']->transaction->transactionId;
-				$auth_code      = $response['ResponseBody']->transaction->authorizationCode;
-			} else {
-				return false;
-			}
-
-			// Store transaction ID and Auth code in the order
-
+			$log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
+			$log->set( 'transactid', $results )->save();
+			$log->set( 'pro_pay_capt_transactid', $transaction_id )->save();
 
 			return true;
 		}
@@ -738,283 +741,6 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 			return false;
 		}
 	}
-}
-
-class WPSC_Pro_Pay_Payments_Order_Handler {
-
-	private static $instance;
-	private $log;
-	private $gateway;
-
-	public function __construct( &$gateway ) {
-
-		$this->log     = $gateway->purchase_log;
-		$this->gateway = $gateway;
-
-		$this->init();
-	}
-
-	/**
-	 * Constructor
-	 */
-	public function init() {
-		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'meta_box' ), 8 );
-	}
-
-	public static function get_instance( $gateway ) {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new WPSC_Pro_Pay_Payments_Order_Handler( $gateway );
-		}
-
-		return self::$instance;
-	}
-
-	public function set_purchase_log( $id ) {
-		$this->log = wpsc_get_order( $id );
-	}
-
-	/**
-	 * meta_box function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function meta_box( $log_id ) {
-		$this->set_purchase_log( $log_id );
-
-		$gateway = $this->log->get( 'gateway' );
-
-		if ( $gateway == 'pro-pay' ) {
-			$this->authorization_box();
-		}
-	}
-
-	/**
-	 * pre_auth_box function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function authorization_box() {
-
-		$actions  = array();
-		$order_id = $this->log->get( 'id' );
-
-		// Get ids
-		$transaction_id 	= $this->log->get( 'transactid' );
-		$wp_auth_code		= $this->log->get( 'wp_authcode' );
-		$pro_pay_order_status	= $this->log->get( 'pro_pay_order_status' );
-
-		//Don't change order status if a refund has been requested
-		$wp_refund_set = wpsc_get_purchase_meta( $order_id, 'pro-pay_refunded', true );
-		?>
-
-		<div class="metabox-holder">
-			<div id="wpsc-pro-pay-payments" class="postbox">
-				<h3 class='hndle'><?php _e( 'ProPay Payments' , 'wp-e-commerce' ); ?></h3>
-				<div class='inside'>
-					<p><?php
-							_e( 'Current status: ', 'wp-e-commerce' );
-							echo wp_kses_data( $this->log->get( 'pro-pay-status' ) );
-						?>
-					</p>
-					<p><?php
-							_e( 'Transaction ID: ', 'wp-e-commerce' );
-							echo esc_html( $transaction_id );
-						?>
-					</p>
-		<?php
-
-		//Show actions based on order status
-		switch ( $pro_pay_order_status ) {
-			case 'Open' :
-				//Order is only authorized and still not captured/voided
-				$actions['capture'] = array(
-					'id'     => $wp_transaction_id,
-					'button' => __( 'Capture funds', 'wp-e-commerce' )
-				);
-
-				//
-				if ( ! $order_info['settled'] ) {
-					//Void
-					$actions['void'] = array(
-						'id'     => $wp_transaction_id,
-						'button' => __( 'Void order', 'wp-e-commerce' )
-					);
-				}
-
-				break;
-			case 'Completed' :
-				//Order has been captured or its a direct payment
-				if ( $order_info['settled'] ) {
-					//Refund
-					$actions['refund'] = array(
-						'id'     => $wp_transaction_id,
-						'button' => __( 'Refund order', 'wp-e-commerce' )
-					);
-				} else {
-					//Void
-					$actions['void'] = array(
-						'id'     => $wp_transaction_id,
-						'button' => __( 'Void order', 'wp-e-commerce' )
-					);
-				}
-
-			break;
-			case 'Refunded' :
-				//Order is settled and a refund has been requested
-				$wp_refund_id       = wpsc_get_purchase_meta( $order_id, 'pro-pay_refund_id', true );
-
-				if ( $wp_refund_id ) {
-					//Get refund order status to check if its eligible for a void (not settled)
-
-
-					if ( ! $refund_status['settled'] ) {
-						//Show void only if not settled.
-						$actions['void_refund'] = array(
-							'id'     => $wp_refund_id,
-							'button' => __( 'Void Refund request', 'wp-e-commerce' )
-						);
-					}
-				}
-
-				break;
-			case 'Voided' :
-			break;
-		}
-
-		if ( ! empty( $actions ) ) {
-
-			echo '<p class="buttons">';
-
-			foreach ( $actions as $action_name => $action ) {
-				echo '<a href="#" class="button" data-action="' . $action_name . '" data-id="' . $action['id'] . '">' . $action['button'] . '</a> ';
-			}
-
-			echo '</p>';
-
-		}
-		?>
-		</div>
-		</div>
-		</div>
-		<?php
-	}
-
-    /**
-     * Void auth/capture
-     *
-     * @param  string $transaction_id
-     */
-    public function void_payment( $transaction_id ) {
-
-		if ( $this->log->get( 'gateway' ) == 'pro-pay' ) {
-
-			$params = array(
-				'amount'		=> $this->log->get( 'totalprice' ),
-				'transactionId' => $transaction_id,
-			);
-
-			$response = $this->gateway->execute( 'Payments/Void', $params );
-
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message() );
-			}
-
-			$this->log->set( 'pro_pay_order_status', 'Voided' )->save();
-			$this->log->set( 'pro-pay-status', sprintf( __( 'Authorization voided (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
-			$this->log->set( 'processed'      , WPSC_Purchase_Log::INCOMPLETE_SALE )->save();
-			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
-		}
-    }
-
-    /**
-     * Refund payment
-     *
-     * @param  string $transaction_id
-     */
-    public function refund_payment( $transaction_id ) {
-
-		if ( $this->log->get( 'gateway' ) == 'pro-pay' ) {
-
-			$params = array(
-				'amount'		=> $this->log->get( 'totalprice' ),
-				'transactionId' => $transaction_id,
-
-			);
-
-			$response = $this->gateway->execute( 'Payments/Refund', $params );
-
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message() );
-			}
-
-			wpsc_add_purchase_meta( $this->log->get( 'id' ), 'pro-pay_refunded', true );
-			wpsc_add_purchase_meta( $this->log->get( 'id' ), 'pro-pay_refund_id', $response['ResponseBody']->transaction->transactionId );
-
-			$this->log->set( 'pro-pay-status', sprintf( __( 'Refunded (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
-			$this->log->set( 'processed'      , WPSC_Purchase_Log::REFUNDED )->save();
-			$this->log->set( 'pro_pay_order_status', 'Refunded' )->save();
-			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
-		}
-    }
-
-    /**
-     * Capture authorized payment
-     *
-     * @param  string $transaction_id
-     */
-    public function capture_payment( $transaction_id ) {
-
-		if ( $this->log->get( 'gateway' ) == 'pro-pay' ) {
-
-			$params = array(
-				'amount'		=> $this->log->get( 'totalprice' ),
-				'transactionId' => $transaction_id,
-			);
-
-			$response = $this->gateway->execute( 'Payments/Capture', $params );
-
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message() );
-			}
-
-			$this->log->set( 'pro_pay_order_status', 'Completed' )->save();
-			$this->log->set( 'pro-pay-status', sprintf( __( 'Authorization Captured (Auth ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->authorizationCode ) )->save();
-			$this->log->set( 'processed'      , WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
-			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
-		}
-    }
-
-    /**
-     * Void a refund request
-     *
-     * @param  string $transaction_id
-     */
-    public function void_refund( $transaction_id ) {
-
-		if ( $this->log->get( 'gateway' ) == 'pro-pay' ) {
-
-			$params = array(
-				'amount'		=> $this->log->get( 'totalprice' ),
-				'transactionId' => $transaction_id,
-			);
-
-			$response = $this->gateway->execute( 'Payments/Void', $params );
-
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message() );
-			}
-
-			wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'pro-pay_refunded' );
-			wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'pro-pay_refund_id' );
-
-			$this->log->set( 'processed'      , WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
-			$this->log->set( 'pro_pay_order_status', 'Completed' )->save();
-			$this->log->set( 'pro-pay-status', sprintf( __( 'Refund Voided (Transaction ID: %s)', 'wp-e-commerce' ), $response['ResponseBody']->transaction->transactionId ) )->save();
-			$this->log->set( 'transactid'     , $response['ResponseBody']->transaction->transactionId )->save();
-		}
-    }
 }
 
 class WPSC_ProPay_Request {
@@ -1394,5 +1120,57 @@ class WPSC_Pro_Pay_Refund_Config {
 		$this->amount              = $this->args->amount;
 		$this->merchant_id         = $this->args->merchant_id;
 
+	}
+}
+
+class WPSC_Pro_Pay_Hosted_Capture_Payment {
+
+	protected $config;
+	protected $response;
+
+	public function __construct( WPSC_Pro_Pay_Hosted_Capture_Payment_Config $config ) {
+		$this->config = $config;
+	}
+
+	public function capture() {
+		$request = new WPSC_ProPay_Request( $this->config );
+
+		$body = json_encode( array(
+			'TransactionHistoryId' => $this->config->transaction_id,
+			'MerchantProfileId'    => $this->config->merchant_profile_id,
+			'Amount'               => $this->config->amount * 100,
+			'CurrencyCode'         => 'USD'
+		) );
+
+		$this->response = $request->request( '/PaymentMethods/CapturedTransactions/', array( 'body' => $body ) );
+
+		return $this;
+	}
+
+	public function get_transaction_id() {
+		if ( $this->response->is_successful() ) {
+			return $this->response->get( 'TransactionHistoryId' );
+		}
+
+		return '';
+	}
+}
+
+class WPSC_Pro_Pay_Hosted_Capture_Payment_Config {
+
+	public $environment;
+	public $biller_account_id;
+	public $auth_token;
+	public $id;
+
+	public function __construct( $args ) {
+		$this->args = (object) $args;
+
+		$this->environment         = $this->args->environment;
+		$this->biller_account_id   = $this->args->biller_account_id;
+		$this->auth_token          = $this->args->auth_token;
+		$this->transaction_id      = $this->args->transaction_id;
+		$this->merchant_profile_id = $this->args->merchant_profile_id;
+		$this->amount              = $this->args->amount;
 	}
 }

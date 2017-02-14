@@ -432,6 +432,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'purchase_log_save_tracking_id_nonce'    => _wpsc_create_ajax_nonce( 'purchase_log_save_tracking_id' ),
 		'purchase_log_send_tracking_email_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_send_tracking_email' ),
 		'purchase_log_refund_items_nonce'        => _wpsc_create_ajax_nonce( 'purchase_log_refund_items' ),
+		'purchase_log_capture_payment_nonce'     => _wpsc_create_ajax_nonce( 'purchase_log_capture_payment' ),
 		'remove_log_item_nonce'                  => _wpsc_create_ajax_nonce( 'remove_log_item' ),
 		'update_log_item_qty_nonce'              => _wpsc_create_ajax_nonce( 'update_log_item_qty' ),
 		'add_log_item_nonce'                     => _wpsc_create_ajax_nonce( 'add_log_item' ),
