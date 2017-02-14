@@ -53,9 +53,52 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 		$c.spinner = $c.wrapper.find( '.spinner' );
 	};
 
+	/**
+	 * This works great in initial tev2 testing, but it's off in tev1.
+	 * Needs some tweaking.
+	 *
+	 * @return {[type]} [description]
+	 */
 	pro_pay.toggle_purchase_spinner = function() {
-		$c.buy_button.fadeToggle( 150 );
-		$c.purchase_spinner.fadeToggle( 150 );
+
+		if ( $c.v1 ) {
+			pro_pay.toggle_purchase_spinner_v1();
+		} else {
+
+			$c.buy_button.fadeToggle( 150 );
+			$c.purchase_spinner.fadeToggle( 150 );
+		}
+
+	};
+
+	pro_pay.toggle_purchase_spinner_v1 = function() {
+		$c.buy_button.fadeToggle( 150, function() {
+			if ( $c.buy_button.is( ':visible' ) ) {
+				$c.buy_button.css( {
+					'visibility' : 'visible',
+					'display'    : 'block'
+				} );
+			} else {
+				$c.buy_button.css( {
+					'visibility' : 'hidden',
+					'display'    : 'block'
+				} );
+			}
+		} );
+
+		$c.purchase_spinner.fadeToggle( 150, function() {
+			if ( $c.purchase_spinner.is( ':visible' ) ) {
+				$c.purchase_spinner.css( {
+					'visibility' : 'visible',
+					'display'    : 'block'
+				} );
+			} else {
+				$c.purchase_spinner.css( {
+					'visibility' : 'hidden',
+					'display'    : 'block'
+				} );
+			}
+		} );
 	};
 
 	pro_pay.init = function() {

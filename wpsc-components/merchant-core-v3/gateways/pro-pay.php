@@ -622,25 +622,10 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$order->set( 'last_four', $last_four )->save();
 		$order->set( 'type', $type )->save();
 
-		switch ( $this->payment_capture ) {
-			case 'authorize' :
-
-				// Mark as on-hold
-				$order->set( 'pro-pay-status', __( 'ProPay order opened. Capture the payment below.', 'wp-e-commerce' ) )->save();
-
-			break;
-			default:
-
-				$order->set( 'pro-pay-status', __( 'ProPay order completed.  Funds have been authorized and captured.', 'wp-e-commerce' ) );
-
-			break;
-		}
-
-		$order->save();
 		$this->go_to_transaction_results();
 	}
 
-	public function capture_payment( $log, $transction_id ) {
+	public function capture_payment( $log, $transaction_id ) {
 
 		if ( $log->get( 'gateway' ) == 'pro-pay' ) {
 
@@ -659,8 +644,8 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 
 			$results = $capture->capture()->get_transaction_id();
 
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message() );
+			if ( empty( $results ) ) {
+				throw new Exception( __( 'Could not generate a captured payment transaction ID.', 'wp-e-commerce' ) );
 			}
 
 			$log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
@@ -1144,12 +1129,15 @@ class WPSC_Pro_Pay_Hosted_Capture_Payment {
 
 		$this->response = $request->request( '/PaymentMethods/CapturedTransactions/', array( 'body' => $body ) );
 
+		trigger_error( var_export( $this->response, 1 ) );
+
 		return $this;
 	}
 
 	public function get_transaction_id() {
+
 		if ( $this->response->is_successful() ) {
-			return $this->response->get( 'TransactionHistoryId' );
+			return $this->response->get( 'Transaction' )->TransactionHistoryId;
 		}
 
 		return '';
