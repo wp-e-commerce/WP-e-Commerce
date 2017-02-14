@@ -27,8 +27,7 @@ Checkout
 	    width: 100%;
 	}
 	fieldset{
-	margin: 0 0 2em 0;
-	    display: inline-block;
+		margin: 0 0 2em 0;
 	    vertical-align: top;
 	    @include align-self(flex-start);
 	    @include flex-grow(1);

@@ -617,7 +617,6 @@ Shopping Cart
 
 .wpsc-checkout .wpsc-checkout-form fieldset {
 	margin: 0 0 2em 0;
-	display: inline-block;
 	vertical-align: top;
 	-webkit-align-self: flex-start;
 	-moz-align-self: flex-start;

@@ -513,7 +513,7 @@
 }
 
 .wpsc-controller .ui-helper-hidden {
-	display: none !important;
+	display: none;
 }
 
 .wpsc-controller .ui-helper-hidden-accessible {
