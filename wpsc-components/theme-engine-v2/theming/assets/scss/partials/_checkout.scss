@@ -9,14 +9,6 @@ Checkout
     margin-left: 5%;
 }
 
-fieldset{
-	margin: 0 0 2em 0;
-    display: inline-block;
-    vertical-align: top;
-    @include align-self(flex-start);
-    @include flex-grow(1);
-    @icnlude flex-basis(4%);
-}
 .wpsc-field-wpsc_shipping_option{
 	text-align: left;
 }
@@ -26,17 +18,23 @@ fieldset{
 .wpsc-payment-method {
 	@extend .wpsc-field-wpsc_shipping_option;
 }
-#wpsc-checkout-form {
+.wpsc-checkout-form {
 	@include flexbox();
 	@include flex-wrap(wrap);
 	@include justify-content(space-between);
-
 	.wpsc-form-actions {
 	    @extend .wpsc-field-wpsc_shipping_option;
 	    width: 100%;
 	}
+	fieldset{
+	margin: 0 0 2em 0;
+	    display: inline-block;
+	    vertical-align: top;
+	    @include align-self(flex-start);
+	    @include flex-grow(1);
+	    @include flex-basis(3%);
+	}
 }
-
 .wpsc-order-preview {
     margin-bottom: 1.5em;
 }
