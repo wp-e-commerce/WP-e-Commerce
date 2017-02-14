@@ -28,8 +28,6 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 			$c.buy_button           = $( '.wpsc-field-wpsc_submit_checkout' );
 		}
 
-		$c.buy_button_container.css( 'position', 'relative' );
-
 		pro_pay.purchase_spinner();
 		pro_pay.payment_method_spinner();
 		pro_pay.iframe();
@@ -40,6 +38,13 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	};
 
 	pro_pay.purchase_spinner = function() {
+
+		if ( $c.v1 ) {
+			$c.purchase_spinner.css( { 'position' : 'relative' } );
+		} else {
+			$c.buy_button_container.css( 'position', 'relative' );
+		}
+
 		$c.purchase_spinner.prependTo( $c.buy_button_container );
 		$c.purchase_spinner.css( {
 			'height'           : $c.buy_button.css( 'height' ),
@@ -61,44 +66,10 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	 */
 	pro_pay.toggle_purchase_spinner = function() {
 
-		if ( $c.v1 ) {
-			pro_pay.toggle_purchase_spinner_v1();
-		} else {
-
 			$c.buy_button.fadeToggle( 150 );
 			$c.purchase_spinner.fadeToggle( 150 );
-		}
 
-	};
 
-	pro_pay.toggle_purchase_spinner_v1 = function() {
-		$c.buy_button.fadeToggle( 150, function() {
-			if ( $c.buy_button.is( ':visible' ) ) {
-				$c.buy_button.css( {
-					'visibility' : 'visible',
-					'display'    : 'block'
-				} );
-			} else {
-				$c.buy_button.css( {
-					'visibility' : 'hidden',
-					'display'    : 'block'
-				} );
-			}
-		} );
-
-		$c.purchase_spinner.fadeToggle( 150, function() {
-			if ( $c.purchase_spinner.is( ':visible' ) ) {
-				$c.purchase_spinner.css( {
-					'visibility' : 'visible',
-					'display'    : 'block'
-				} );
-			} else {
-				$c.purchase_spinner.css( {
-					'visibility' : 'hidden',
-					'display'    : 'block'
-				} );
-			}
-		} );
 	};
 
 	pro_pay.init = function() {
