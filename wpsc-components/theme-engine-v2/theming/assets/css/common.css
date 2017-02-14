@@ -509,11 +509,11 @@
 
 	.ui-button-text-icon-primary .ui-button-icon-primary{
 			float:none;
-	}*/
+	} */
 }
 
 .wpsc-controller .ui-helper-hidden {
-	display: none;
+	display: none !important;
 }
 
 .wpsc-controller .ui-helper-hidden-accessible {
