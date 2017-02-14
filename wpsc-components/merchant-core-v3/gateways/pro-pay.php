@@ -3,11 +3,7 @@
  * @todo: Later,  Create a nice user sign-up flow, as a part of an overall onboarding experience
  * @todo: Later, integrate with subscriptions
  * @todo: Later, support capturing a different amount than originally authorized.
- *
- * @todo: Flesh out auth/capture flow for auth-only/void.
  * @todo: Abstract out config files, API objects, etc.
- *
- * @todo: What happens if a card gets declined?
  */
 class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 

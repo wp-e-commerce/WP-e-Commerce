@@ -65,11 +65,8 @@ window.WPSC_Pro_Pay_Checkout = window.WPSC_Pro_Pay_Checkout || {};
 	 * @return {[type]} [description]
 	 */
 	pro_pay.toggle_purchase_spinner = function() {
-
-			$c.buy_button.fadeToggle( 150 );
-			$c.purchase_spinner.fadeToggle( 150 );
-
-
+		$c.buy_button.fadeToggle( 150 );
+		$c.purchase_spinner.fadeToggle( 150 );
 	};
 
 	pro_pay.init = function() {
