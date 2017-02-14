@@ -580,38 +580,67 @@ Shopping Cart
   ********************/
 }
 
-.wpsc-checkout .entry-content .wpsc-field-textfield input {
+.wpsc-checkout .wpsc-field-textfield input {
 	width: 100%;
 }
 
-.wpsc-checkout .entry-content #wpsc-checkout-form-shipping {
+.wpsc-checkout #wpsc-checkout-form-shipping {
 	margin-left: 5%;
 }
 
-.wpsc-checkout .entry-content fieldset {
-	width: 47.5%;
-	margin-right: 0;
-	margin-left: 0;
-	display: inline-block;
-	vertical-align: top;
-}
-
-.wpsc-checkout .entry-content .wpsc-field-wpsc_shipping_option,
-.wpsc-checkout .entry-content .wpsc-shipping-method,
-.wpsc-checkout .entry-content .wpsc-payment-method,
-.wpsc-checkout .entry-content #wpsc-checkout-form .wpsc-form-actions {
+.wpsc-checkout .wpsc-field-wpsc_shipping_option,
+.wpsc-checkout .wpsc-shipping-method,
+.wpsc-checkout .wpsc-payment-method,
+.wpsc-checkout .wpsc-checkout-form .wpsc-form-actions {
 	text-align: left;
 }
 
-.wpsc-checkout .entry-content .wpsc-order-preview {
+.wpsc-checkout .wpsc-checkout-form {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	-moz-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-webkit-justify-content: space-between;
+	-moz-justify-content: space-between;
+	-ms-justify-content: space-between;
+	justify-content: space-between;
+}
+
+.wpsc-checkout .wpsc-checkout-form .wpsc-form-actions {
+	width: 100%;
+}
+
+.wpsc-checkout .wpsc-checkout-form fieldset {
+	margin: 0 0 2em 0;
+	vertical-align: top;
+	-webkit-align-self: flex-start;
+	-moz-align-self: flex-start;
+	-ms-align-self: flex-start;
+	align-self: flex-start;
+	-webkit-flex-grow: 1;
+	-moz-flex-grow: 1;
+	-ms-flex-grow: 1;
+	flex-grow: 1;
+	-webkit-flex-basis: 3%;
+	-moz-flex-basis: 3%;
+	-ms-flex-basis: 3%;
+	flex-basis: 3%;
+}
+
+.wpsc-checkout .wpsc-order-preview {
 	margin-bottom: 1.5em;
 }
 
-.wpsc-checkout .entry-content .wpsc-cart-quantity-input {
+.wpsc-checkout .wpsc-cart-quantity-input {
 	width: 40px;
 }
 
-.wpsc-checkout .entry-content .wpsc-form-radio-wrapper img {
+.wpsc-checkout .wpsc-form-radio-wrapper img {
 	vertical-align: middle;
 }
 
