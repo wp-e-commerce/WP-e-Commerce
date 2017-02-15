@@ -644,6 +644,10 @@ Shopping Cart
 	vertical-align: middle;
 }
 
+.wpsc-checkout .wpsc-paypal li {
+	list-style-type: none;
+}
+
 /**********************
 Accounts Page
 ***********************/
