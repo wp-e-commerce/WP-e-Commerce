@@ -518,7 +518,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 */
 	public function review_order_buyer_details( $output ) {
 		$payer = $this->paypal_data->get( 'payer' );
-		$output .= '<ul>';
+		$output .= '<ul class="wpsc-paypal wpsc-paypal-customer">';
 		$output .= '<li><strong>' . __( 'Email:', 'wp-e-commerce' ) . ' </strong>' . $payer->email . '</li>';
 		$output .= '<li><strong>' . __( 'First Name:', 'wp-e-commerce' ) . ' </strong>' . $payer->first_name . '</li>';
 		$output .= '<li><strong>' . __( 'Last Name:', 'wp-e-commerce' ) . ' </strong>' . $payer->last_name . '</li>';
@@ -534,12 +534,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 */
 	public function review_order_shipping_details( $output ) {
 		$address = $this->paypal_data->get( 'shipping_address' );
-		$output .= '<ul>';
+		$output .= '<ul class="wpsc-paypal wpsc-paypal-customer-address">';
 		$output .= '<li>' . $address[ 'name' ] . '</li>';
 		$output .= '<li>' . $address[ 'street' ] . '</li>';
-		$output .= '<li>' . $address[ 'city' ] . '</li>';
-		$output .= '<li>' . $address[ 'state' ] . '</li>';
-		$output .= '<li>' . $address[ 'zip' ] . '</li>';
+		$output .= '<li>' . $address[ 'city' ] . ', ' . $address[ 'state' ] . ' ' . $address[ 'zip' ] . '</li>';
 		$output .= '<li>' . $address[ 'country_code' ] . '</li>';
 		$output .= '</ul>';
 		return $output;
