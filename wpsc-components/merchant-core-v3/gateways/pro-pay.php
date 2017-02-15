@@ -44,7 +44,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	private $endpoint;
 	private $sandbox;
 
-	private $login_url = 'http://xmltest.propay.com/signup/?refid=WPECOMME';
+	private $login_url = 'https://epay.propay.com/signup/default.aspx?refid=WPECOMME';
 	private $auth_token = '745ef573-6fb0-4d9e-a410-24791e3769b6';
 
 	private $cert_string         = '511ed119b09498d93ad2ba9b40a57f';
@@ -330,12 +330,10 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	}
 
 	private function get_hpp_base_uri() {
-		// For use during development
-		$integration_url = 'https://protectpaytest.propay.com';
 
 		$base_url = $this->sandbox ? 'https://sbprotectpay.propay.com' : 'https://protectpay.propay.com';
 
-		return $integration_url;
+		return $base_url;
 	}
 
 	public function enqueue_admin_scripts( $hook ) {
