@@ -128,4 +128,3 @@ function wpsc_do_delete_visitor_ajax( $visitor_id ) {
 
 // add admin action for convenience
 add_action( '_wpsc_delete_expired_visitors_action' , '_wpsc_delete_expired_visitors' );
-
