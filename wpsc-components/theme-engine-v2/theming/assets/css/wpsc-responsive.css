@@ -35,6 +35,11 @@ Variables
 	margin: 0 0 7% 2.5%;
 	font-size: initial;
 	vertical-align: top;
+	padding-top: 0;
+}
+
+.wpsc-grid .wpsc-product + .wpsc-product {
+	margin-top: 0;
 }
 
 .wpsc-grid .wpsc-page-main-store .wpsc-product-summary {

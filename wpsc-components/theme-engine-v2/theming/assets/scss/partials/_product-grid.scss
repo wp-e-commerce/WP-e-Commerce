@@ -16,6 +16,10 @@ Product Grid on Archive Store Pages
     margin: 0 0 7% $grid_margin;
     font-size: initial;
     vertical-align: top;
+    padding-top: 0;
+    & + .wpsc-product {
+    	margin-top: 0;
+    }
 }
 
 .wpsc-page-main-store .wpsc-product-summary {
