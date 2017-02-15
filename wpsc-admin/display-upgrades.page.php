@@ -145,49 +145,6 @@ function wpec_licenses_action_stuff() {
 
 add_action( 'wpsc_upgrades_license_activation', 'wpec_licenses_action_stuff' );
 
-function wpec_lic_weekly_license_check() {
-
-		if ( ! empty( $_POST['product_license_key'] ) ) {
-			return; // Don't fire when saving settings
-		}
-
-		$active_licenses = get_option( 'wpec_licenses_active_products', array() );
-		if ( empty( $active_licenses ) ) {
-			return;
-		}
-
-		foreach ( (array) $active_licenses as $license ) {
-			$license_info = get_option( 'wpec_product_' . $license . '_license_active' );
-
-			// data to send in our API request
-			$api_params = array(
-				'wpec_lic_action'=> 'check_license',
-				'license' 	=> $license_info->license_key,
-				'item_id' 	=> $license_info->item_id,
-				'url'       => home_url()
-			);
-
-			// Call the API
-			$response = wp_safe_remote_post(
-				'https://wpecommerce.org/',
-				array(
-					'timeout'   => 15,
-					'sslverify' => false,
-					'body'      => $api_params
-				)
-			);
-
-			// make sure the response came back okay
-			if ( is_wp_error( $response ) ) {
-				return false;
-			}
-
-			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-			update_option( 'wpec_product_' . $license . '_license_active', $license_data );
-		}
-}
-add_action( 'wpsc_weekly_cron_task', 'wpec_lic_weekly_license_check' ); // For testing use admin_init
-
 function wpec_license_notices() {
 	static $showed_invalid_message;
 	

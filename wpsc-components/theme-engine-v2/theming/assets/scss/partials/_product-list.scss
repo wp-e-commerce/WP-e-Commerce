@@ -9,3 +9,18 @@ Product List
     display: inline-block;
     float: right;
 }
+
+.wpsc-add-to-cart-form {
+	@include flexbox();
+	@include justify-content(flex-start);
+	@include flex-wrap(wrap);
+	@include align-items(stretch);
+
+	.wpsc-form-actions {
+		margin-bottom: 0;
+	}
+	
+	.wpsc-field {
+		margin-right: 5%;
+	}
+}
