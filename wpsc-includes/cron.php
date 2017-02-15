@@ -2,6 +2,12 @@
 add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
 add_action( 'wpsc_hourly_cron_task', '_wpsc_delete_expired_visitors' );
 
+function wpsc_add_tracking_cron() {
+    $tracking = new WPSC_Tracking();
+    $tracking->send_data();
+}
+add_action( 'wpsc_weekly_cron_task', 'wpsc_add_tracking_cron' );
+
 /**
  * wpsc_clear_stock_claims, clears the stock claims, runs using wp-cron and when editing purchase log statuses via the dashboard
  */
