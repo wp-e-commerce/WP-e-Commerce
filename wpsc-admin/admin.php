@@ -1580,3 +1580,9 @@ function wpsc_admin_rate_us( $footer_text ) {
 	}
 }
 add_filter( 'admin_footer_text', 'wpsc_admin_rate_us' );
+
+function wpsc_product_category_edit_form_tag() {
+	echo 'enctype="multipart/form-data" ';
+}
+add_action( 'wpsc_product_category_term_new_form_tag', 'wpsc_product_category_edit_form_tag' );
+add_action( 'wpsc_product_category_term_edit_form_tag', 'wpsc_product_category_edit_form_tag' );
