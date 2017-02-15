@@ -1,6 +1,51 @@
 <?php
 add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
 add_action( 'wpsc_hourly_cron_task', '_wpsc_delete_expired_visitors' );
+add_action( 'wpsc_weekly_cron_task', 'wpsc_lic_weekly_license_check' );
+
+/** 
+ * Checks any active Addons license keys and updates license data
+ *
+ * @since 3.12.0
+ */
+function wpsc_lic_weekly_license_check() {
+
+	$active_licenses = get_option( 'wpec_licenses_active_products', array() );
+	
+	if ( empty( $active_licenses ) ) {
+		return;
+	}
+
+	foreach ( (array) $active_licenses as $license ) {
+		$license_info = get_option( 'wpec_product_' . $license . '_license_active' );
+
+		// data to send in our API request
+		$api_params = array(
+			'wpec_lic_action'=> 'check_license',
+			'license' 	=> $license_info->license_key,
+			'item_id' 	=> $license_info->item_id,
+			'url'       => home_url()
+		);
+
+		// Call the API
+		$response = wp_safe_remote_post(
+			'https://wpecommerce.org/',
+			array(
+				'timeout'   => 15,
+				'sslverify' => false,
+				'body'      => $api_params
+			)
+		);
+
+		// make sure the response came back okay
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+		update_option( 'wpec_product_' . $license . '_license_active', $license_data );
+	}
+}
 
 /**
  * wpsc_clear_stock_claims, clears the stock claims, runs using wp-cron and when editing purchase log statuses via the dashboard
