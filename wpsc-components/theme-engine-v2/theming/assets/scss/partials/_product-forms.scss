@@ -1,0 +1,27 @@
+/*******************
+Product Forms
+********************/
+
+.wpsc-field-quantity {
+	.wpsc-controls {
+	@include flexbox();
+	border: 1px solid #ccc;
+		input[type="text"] {
+			width: 40px;
+			@include flex-order(2);
+			text-align: center;
+			border: none;
+			box-shadow: none;
+		}
+		.dec {
+			@include flex-order(1);
+		}
+		.inc {
+			@include flex-order(3);
+		}
+	}
+	.wpsc-qty-button {
+		padding: .5em .75em;
+		cursor: pointer;
+	}
+}

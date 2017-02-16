@@ -109,6 +109,11 @@ class WPSC_Template_Engine {
 		'wpsc-fluidbox' => array(
 			'path'         => 'js/fluidbox.js',
 			'dependencies' => array( 'jquery', 'underscore' ),
+			'version'      => WPSC_VERSION
+		),
+		'wpsc-products' => array(
+			'path'         => 'js/products.js',
+			'dependencies' => array( 'jquery' ),
 			'version'      => WPSC_VERSION,
 		),
 	);
