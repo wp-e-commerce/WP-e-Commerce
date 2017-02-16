@@ -14,7 +14,7 @@ Product List
 	@include flexbox();
 	@include justify-content(flex-start);
 	@include flex-wrap(wrap);
-	@include align-items(stretch);
+	@include align-items(center);
 
 	.wpsc-form-actions {
 		margin-bottom: 0;
