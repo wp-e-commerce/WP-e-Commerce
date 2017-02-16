@@ -74,7 +74,7 @@ function _wpsc_enqueue_product_scripts() {
 }
 
 function _wpsc_action_enqueue_product_scripts() {
-    wpsc_enqueue_script( 'wpsc-product' );
+    wpsc_enqueue_script( 'wpsc-products' );
 }
 
 /**
