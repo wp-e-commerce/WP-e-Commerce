@@ -12,7 +12,7 @@ class WPSC_Controller_Register extends WPSC_Controller {
 	}
 
 	public function index() {
-		if ( isset( $_POST['action'] ) && $_POST['action'] == 'register' ) {
+		if ( isset( $_POST['action'] ) && 'register' === $_POST['action'] ) {
 			$this->callback_register();
 		}
 

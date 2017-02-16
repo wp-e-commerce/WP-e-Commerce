@@ -106,6 +106,11 @@ class WPSC_Template_Engine {
 			'dependencies' => array( 'jquery', 'wpsc-float-labels' ),
 			'version'      => WPSC_VERSION,
 		),
+		'wpsc-fluidbox' => array(
+			'path'         => 'js/fluidbox.js',
+			'dependencies' => array( 'jquery', 'underscore' ),
+			'version'      => WPSC_VERSION,
+		),
 	);
 
 	/**
