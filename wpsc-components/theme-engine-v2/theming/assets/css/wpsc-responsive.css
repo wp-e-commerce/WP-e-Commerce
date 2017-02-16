@@ -254,10 +254,10 @@ Variables
 	-moz-flex-wrap: wrap;
 	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
-	-webkit-align-items: stretch;
-	-moz-align-items: stretch;
-	-ms-align-items: stretch;
-	align-items: stretch;
+	-webkit-align-items: center;
+	-moz-align-items: center;
+	-ms-align-items: center;
+	align-items: center;
 }
 
 .wpsc-list .wpsc-add-to-cart-form .wpsc-form-actions {
@@ -296,10 +296,10 @@ Variables
 	-moz-flex-wrap: wrap;
 	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
-	-webkit-align-items: stretch;
-	-moz-align-items: stretch;
-	-ms-align-items: stretch;
-	align-items: stretch;
+	-webkit-align-items: center;
+	-moz-align-items: center;
+	-ms-align-items: center;
+	align-items: center;
 }
 
 .wpsc-single .wpsc-add-to-cart-form .wpsc-form-actions {
