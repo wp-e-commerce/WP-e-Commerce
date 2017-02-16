@@ -34,7 +34,6 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			} else {
 				$this->view = 'checkout-login-prompt';
 				_wpsc_enqueue_float_label_scripts();
-				_wpsc_enqueue_product_scripts();
 			}
 		} else {
 			wp_redirect( wpsc_get_checkout_url( 'shipping-and-billing' ) );
@@ -54,6 +53,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		// View Settings
 		$this->title .= ' → Review Order';
 		$this->view = 'checkout-review-order';
+		_wpsc_enqueue_product_scripts();
 
 		// If no shipping is available, show an error message.
 		if ( wpsc_uses_shipping() && ! $this->shipping_calculator->has_quotes ) {
@@ -367,6 +367,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 	public function shipping_method() {
 		$this->init_shipping_calculator();
 		$this->view = 'checkout-shipping-method';
+		_wpsc_enqueue_product_scripts();
 
 		add_action( 'wp_enqueue_scripts', array( $this, '_action_shipping_method_scripts' ) );
 
@@ -422,6 +423,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 	public function payment() {
 		$this->view = 'checkout-payment';
+		_wpsc_enqueue_product_scripts();
 
 		add_action( 'wp_enqueue_scripts', array( $this, '_action_payment_scripts' ) );
 
