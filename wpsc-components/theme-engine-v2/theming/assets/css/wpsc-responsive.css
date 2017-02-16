@@ -860,6 +860,38 @@ JS Float Label
 	padding-bottom: .5em;
 }
 
+/*******************
+Product Forms
+********************/
+
+.wpsc-field-quantity .wpsc-controls {
+	display: flex;
+	border: 1px solid #ccc;
+}
+
+.wpsc-field-quantity .wpsc-controls input {
+	width: 40px;
+	order: 2;
+	text-align: center;
+	border: none;
+	box-shadow: none;
+}
+
+.wpsc-field-quantity .wpsc-controls .dec {
+	order: 1;
+	flex-grow: 1;
+}
+
+.wpsc-field-quantity .wpsc-controls .inc {
+	order: 3;
+	flex-grow: 1;
+}
+
+.wpsc-field-quantity .wpsc-qty-button {
+	padding: .5em .75em;
+	cursor: pointer;
+}
+
 /*****************
 Media Queries
 *****************/
