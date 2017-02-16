@@ -1,9 +1,9 @@
-/* global console */
+/* global console, WPSC_Fluid_Box_Options */
 // the semi-colon before function invocation is a safety net against concatenated
 // scripts and/or other plugins which may not be closed properly.
 ;(function ( $, window, document, _, undefined ) {
 
-	"use strict";
+	'use strict';
 
 		// undefined is used here as the undefined global variable in ECMAScript 3 is
 		// mutable (ie. it can be changed by someone else). undefined isn't really being
@@ -705,3 +705,7 @@
 
 
 })(jQuery, window, document, _);
+
+(function($, wpsc) {
+	$( '.wpsc-product-thumbnail' ).fluidbox( wpsc );
+})(jQuery, WPSC_Fluid_Box_Options);

@@ -25,6 +25,7 @@ class WPSC_Controller_Single extends WPSC_Query_Controller {
 
 	public function _fluidbox_scripts() {
 		wp_enqueue_script( 'wpsc-fluidbox' );
+		wp_localize_script( 'wpsc-fluidbox', 'WPSC_Fluid_Box_Options', apply_filters( 'wpsc_fluidbox_options', array() ) );
 	}
 
 	public function get_native_template() {

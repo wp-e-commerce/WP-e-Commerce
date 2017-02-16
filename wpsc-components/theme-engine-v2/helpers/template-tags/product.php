@@ -350,6 +350,22 @@ function wpsc_get_product_thumbnail_id( $product_id = null ) {
 }
 
 /**
+ * Returns
+ * @return [type] [description]
+ */
+function wpsc_product_thumbnail_link() {
+
+	if ( ! wpsc_has_product_thumbnail() ) {
+		return wpsc_product_permalink();
+	}
+
+	return get_the_post_thumbnail_url(
+		wpsc_get_product_thumbnail_id(),
+		apply_filters( 'wpsc_product_thumbnail_link_size', 'full' )
+	);
+}
+
+/**
  * Sets the structured product name to the product title.
  *
  * @param  array $crumbs Array of breadcrumb elements.

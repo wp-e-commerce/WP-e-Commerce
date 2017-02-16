@@ -17,7 +17,7 @@
 	<div class="wpsc-thumbnail-wrapper">
 		<a
 			class="wpsc-thumbnail wpsc-product-thumbnail"
-			href="<?php wpsc_product_permalink(); ?>"
+			href="<?php wpsc_product_thumbnail_link(); ?>"
 		>
 			<?php if ( wpsc_has_product_thumbnail() ): ?>
 				<?php wpsc_product_thumbnail(); ?>
