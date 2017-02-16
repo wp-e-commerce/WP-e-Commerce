@@ -19,7 +19,9 @@
 			<?php endif; ?>
 			</div>
 			<div class="wpsc-cart-cell update-quantity">
-			<?php if ( $this->show_quantity_field ) : ?>
+				<div class="wpsc-quantity-field-wrapper">
+					<?php if ( $this->show_quantity_field ) : ?>
+				</div>
 				<input type="submit" class="wpsc-button wpsc-button-small wpsc-cart-update" name="update_quantity" value="<?php esc_html_e( 'Update Quantity', 'wp-e-commerce' ); ?>" />
 				<input type="hidden" name="action" value="update_quantity" />
 			<?php endif; ?>

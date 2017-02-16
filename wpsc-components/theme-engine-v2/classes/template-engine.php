@@ -106,6 +106,11 @@ class WPSC_Template_Engine {
 			'dependencies' => array( 'jquery', 'wpsc-float-labels' ),
 			'version'      => WPSC_VERSION,
 		),
+		'wpsc-products' => array(
+			'path'         => 'js/products.js',
+			'dependencies' => array( 'jquery' ),
+			'version'      => WPSC_VERSION,
+		),
 	);
 
 	/**

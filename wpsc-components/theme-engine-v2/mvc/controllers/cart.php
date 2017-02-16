@@ -5,6 +5,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table.php' );
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table-form.php' );
 		$this->view  = 'cart';
+		_wpsc_enqueue_product_scripts();
 		$this->title = wpsc_get_cart_title();
 		$this->init_cart_item_table();
 	}
