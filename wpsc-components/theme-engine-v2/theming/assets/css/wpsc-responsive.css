@@ -873,7 +873,7 @@ Product Forms
 	border: 1px solid #ccc;
 }
 
-.wpsc-field-quantity .wpsc-controls input {
+.wpsc-field-quantity .wpsc-controls input[type="text"] {
 	width: 40px;
 	-webkit-order: 2;
 	-moz-order: 2;

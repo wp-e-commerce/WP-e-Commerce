@@ -6,7 +6,7 @@ Product Forms
 	.wpsc-controls {
 	@include flexbox();
 	border: 1px solid #ccc;
-		input {
+		input[type="text"] {
 			width: 40px;
 			@include flex-order(2);
 			text-align: center;

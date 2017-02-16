@@ -1,7 +1,6 @@
 ;(function($) {
 
-  $(".wpsc-field-quantity .wpsc-controls").append('<div class="inc wpsc-qty-button">+</div><div class="dec wpsc-qty-button">-</div>');
-  $(".wpsc-cart-cell.quantity").append('<div class="inc wpsc-qty-button">+</div><div class="dec wpsc-qty-button">-</div>');
+  $( ".wpsc-field-quantity .wpsc-controls" ).append( '<div class="inc wpsc-qty-button">+</div><div class="dec wpsc-qty-button">-</div>' );
 
   $(".wpsc-qty-button").on("click", function() {
 
