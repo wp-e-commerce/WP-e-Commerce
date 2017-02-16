@@ -15,6 +15,7 @@ function _wpsc_te2_enqueue_styles() {
 
 	wp_enqueue_style( 'wpsc-common' );
 	wp_enqueue_style( 'wpsc-responsive' );
+	wp_enqueue_style( 'wpsc-responsive' );
 
 	if ( apply_filters( 'wpsc_add_inline_style', true ) ) {
 		wp_add_inline_style( 'wpsc-common', _wpsc_get_inline_style() );

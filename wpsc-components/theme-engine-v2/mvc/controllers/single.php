@@ -14,9 +14,13 @@ class WPSC_Controller_Single extends WPSC_Query_Controller {
 
 	public function load_lightbox() {
 		if ( apply_filters( 'wpsc_use_fluidbox', true ) ) {
-			wp_enqueue_style( 'wpsc-fluidbox' );
+			add_action( 'wpsc_enqueue_styles', array( $this, '_fluidbox_styles' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, '_fluidbox_scripts' ) );
 		}
+	}
+
+	public function _fluidbox_styles() {
+		wp_enqueue_style( 'wpsc-fluidbox' );
 	}
 
 	public function _fluidbox_scripts() {
