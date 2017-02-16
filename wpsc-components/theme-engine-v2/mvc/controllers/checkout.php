@@ -34,6 +34,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			} else {
 				$this->view = 'checkout-login-prompt';
 				_wpsc_enqueue_float_label_scripts();
+				_wpsc_enqueue_product_scripts();
 			}
 		} else {
 			wp_redirect( wpsc_get_checkout_url( 'shipping-and-billing' ) );
