@@ -242,6 +242,8 @@ class WPSC_Tracking {
 		// General site info
 		$data['url']                = home_url();
 		$data['email']              = get_option( 'admin_email' );
+		$data['first_name']         = wp_get_current_user()->first_name;
+		$data['last_name']          = wp_get_current_user()->last_name;
 
 		// Theme info
 		$data['theme']              = self::get_theme_info();
