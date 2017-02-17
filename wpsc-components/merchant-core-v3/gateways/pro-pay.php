@@ -35,8 +35,8 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		),
 		// REST API endpoint
 		'rest-api-endpoint' => array(
-			'sandbox'    => 'https://xmltestapi.propay.com/protectpay',
-			'production' => 'https://xmlapi.propay.com/protectpay',
+			'sandbox'    => 'https://sb01api.propay.com/protectpay',
+			'production' => 'https://api.propay.com/protectpay',
 		)
 	);
 
@@ -44,12 +44,12 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 	private $endpoint;
 	private $sandbox;
 
-	private $login_url = 'https://epay.propay.com/signup/default.aspx?refid=WPECOMME';
-	private $auth_token = '745ef573-6fb0-4d9e-a410-24791e3769b6';
+	private $login_url = 'https://www.propay.com/?refid=WPECOMM';
+	private $auth_token = 'd30280d2-74de-4418-ab3f-0f58055ee421';
 
-	private $cert_string         = '511ed119b09498d93ad2ba9b40a57f';
-	private $term_id             = '40a57f';
-	private $biller_account_id   = '3364620760318539';
+	private $cert_string         = '2df3f9620654ee8a52b5b6d411c760';
+	private $term_id             = '5b6d411c760';
+	private $biller_account_id   = '7929812732866007';
 	private $account_number      = '';
 	private $merchant_profile_id = '';
 
