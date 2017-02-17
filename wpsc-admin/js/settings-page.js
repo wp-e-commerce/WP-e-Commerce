@@ -1051,6 +1051,7 @@
 					$( '#gateway_settings_' + payment_gateway_id + '_form' ).remove();
 					$( '#wpsc_gateway_settings_'+ payment_gateway_id ).show( 400 );
 					$( '#wpsc_gateway_settings_'+ payment_gateway_id + '_container' ).append(response.obj.content);
+					$( document.body ).trigger( 'wpsc-payment-gateway-settings-form-loaded', response );
 				};
 
 			if ( $( '#gateway_settings_' + payment_gateway_id + '_form' ).is( ':visible' ) ) {

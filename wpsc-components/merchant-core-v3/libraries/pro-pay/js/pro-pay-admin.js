@@ -12,7 +12,7 @@ window.WPSC_Pro_Pay = window.WPSC_Pro_Pay || {};
 
 	pro_pay.cache = function() {
 		$c.body           = $( document.body );
-		$c.wrapper        = $( '#wpsc_gateway_settings_pro-pay' );
+		$c.wrapper        = $( '#wpsc-payment-gateway-settings' );
 		$c.spinner        = $c.wrapper.find( '.spinner' );
 	};
 
@@ -20,10 +20,8 @@ window.WPSC_Pro_Pay = window.WPSC_Pro_Pay || {};
 
 		pro_pay.cache();
 
-		if ( $c.wrapper.length ) {
-			$c.wrapper.on( 'click', '.create-merchant-profile', pro_pay.create_merchant_profile );
-		}
-
+		$c.wrapper.on( 'click', '.create-merchant-profile', pro_pay.create_merchant_profile );
+		$c.body.on( 'wpsc-payment-gateway-settings-form-loaded',  pro_pay.init );
 	};
 
 	pro_pay.create_merchant_profile = function( e ) {
