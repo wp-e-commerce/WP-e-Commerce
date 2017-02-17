@@ -72,12 +72,18 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		$this->sandbox			   = $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
 		$this->endpoint			   = $this->sandbox ? self::$endpoints['payment-processing-endpoint']['sandbox'] : self::$endpoints['payment-processing-endpoint']['production'];
 		$this->payment_capture 	   = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
+
+		$this->admin_scripts();
+	}
+
+	public function admin_scripts() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 	}
 
 	public function init() {
+
 		parent::init();
 
-		add_action( 'admin_enqueue_scripts'               , array( $this, 'enqueue_admin_scripts' ) );
 		add_action( 'wp_enqueue_scripts'                  , array( $this, 'checkout_scripts' ) );
 		add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_spinner' ) );
 		add_action( 'wpsc_inside_shopping_cart'           , array( $this, 'add_propay_iframe' ) );
