@@ -36,7 +36,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
-= 3.12.0 [2017-2-15] =
+= 3.12.0 [2017-2-17] =
 
 * Fix: When updating a pending order, ensure that the order object's total price is updated as well.
 * Fix: Update admin.js to not use deprecated size() method.
