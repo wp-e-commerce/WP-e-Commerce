@@ -12,7 +12,7 @@ window.WPSC_Pro_Pay = window.WPSC_Pro_Pay || {};
 
 	pro_pay.cache = function() {
 		$c.body           = $( document.body );
-		$c.wrapper        = $( '#gateway_settings_pro-pay_form' );
+		$c.wrapper        = $( '#wpsc_gateway_settings_pro-pay' );
 		$c.spinner        = $c.wrapper.find( '.spinner' );
 	};
 
