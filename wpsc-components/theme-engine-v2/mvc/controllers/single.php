@@ -9,7 +9,7 @@ class WPSC_Controller_Single extends WPSC_Query_Controller {
 	public function index() {
 		$this->title = get_queried_object()->post_title;
 		$this->view = 'single';
-
+		_wpsc_enqueue_product_scripts();
 		$this->load_lightbox();
 	}
 
@@ -27,7 +27,6 @@ class WPSC_Controller_Single extends WPSC_Query_Controller {
 	public function _fluidbox_scripts() {
 		wp_enqueue_script( 'wpsc-fluidbox' );
 		wp_localize_script( 'wpsc-fluidbox', 'WPSC_Fluid_Box_Options', apply_filters( 'wpsc_fluidbox_options', array() ) );
-		_wpsc_enqueue_product_scripts();
 	}
 
 	public function get_native_template() {
