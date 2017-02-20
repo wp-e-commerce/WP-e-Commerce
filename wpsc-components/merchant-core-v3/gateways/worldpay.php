@@ -2,7 +2,7 @@
 class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 	private $endpoints = array(
-		'sandbox' => 'https://gwapi.demo.securenet.com/api/',
+		'sandbox'    => 'https://gwapi.demo.securenet.com/api/',
 		'production' => 'https://gwapi.securenet.com/api/',
 	);
 
@@ -207,12 +207,11 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 
 	public function init() {
 		parent::init();
+
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 		add_action( 'wp_head'           , array( $this, 'head_script' ) );
 
 		add_action( 'wpsc_inside_shopping_cart', array( $this, 'te_v1_insert_hidden_field' ) );
-
-		add_filter( 'wpsc_gateway_checkout_form_worldpay', array( $this, 'payment_fields' ) );
 	}
 
 	public function te_v2_show_payment_fields( $args ) {

@@ -748,7 +748,11 @@ abstract class WPSC_Payment_Gateway {
 	 *
 	 * @return void
 	 */
-	public function init() {}
+	public function init() {
+		if ( $this->supports( 'tev1' ) ) {
+			add_filter( 'wpsc_gateway_checkout_form_' . str_replace( '_', '-', $this->setting->gateway_name ), array( $this, 'payment_fields' ) );
+		}
+	}
 
 	public function load() {
 		return true;
