@@ -41,15 +41,6 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Load gateway only if TEv2 for now
-	 *
-	 * @return bool Whether or not to load gateway.
-	 */
-	public function load() {
-		return function_exists( '_wpsc_get_current_controller' );
-	}
-
-	/**
 	 * Settings Form Template
 	 *
 	 * @since 3.9
@@ -212,19 +203,6 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		add_action( 'wp_head'           , array( $this, 'head_script' ) );
 
 		add_action( 'wpsc_inside_shopping_cart', array( $this, 'te_v1_insert_hidden_field' ) );
-	}
-
-	public function te_v2_show_payment_fields( $args ) {
-
-		$default = '<div class="wpsc-form-actions">';
-		ob_start();
-
-		$this->payment_fields();
-		$fields = ob_get_clean();
-
-		$args['before_form_actions'] = $fields . $default;
-
-		return $args;
 	}
 
 	public function process() {
