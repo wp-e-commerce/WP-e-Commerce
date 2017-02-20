@@ -215,7 +215,7 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 		update_option( 'wpsc_get_active_theme_engine', $new_theme_engine );
 
 		$location = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : home_url();
-		
+
 		// Redirect ensures that both templates will not be loaded, fixing fatal errors, etc.
 		wp_safe_redirect( esc_url_raw( $location ) );
 		exit;

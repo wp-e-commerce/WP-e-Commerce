@@ -522,14 +522,14 @@ abstract class WPSC_Payment_Gateway {
 			);
 			$fields = wp_parse_args( $fields, apply_filters( 'wpsc_default_credit_card_form_fields', $default_fields, $this->setting->gateway_name ) );
 			?>
-			<fieldset id="<?php echo $this->setting->gateway_name; ?>-cc-form">
-				<?php do_action( 'wpsc_default_credit_card_form_start', $this->setting->gateway_name ); ?>
-				<?php
+			<fieldset class="cc-form-fieldset" id="<?php echo $this->setting->gateway_name; ?>-cc-form">
+				<?php do_action( 'wpsc_default_credit_card_form_start', $this->setting->gateway_name );
+
 					foreach ( $fields as $field ) {
 						echo $field;
 					}
-				?>
-				<?php do_action( 'wpsc_default_credit_card_form_end', $this->setting->gateway_name ); ?>
+					
+					do_action( 'wpsc_default_credit_card_form_end', $this->setting->gateway_name ); ?>
 				<div class="clear"></div>
 			</fieldset>
 		<?php
@@ -754,20 +754,29 @@ abstract class WPSC_Payment_Gateway {
 			add_filter( 'wpsc_gateway_checkout_form_' . str_replace( '_', '-', $this->setting->gateway_name ), array( $this, 'payment_fields' ) );
 		}
 
-		add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'render_payment_fields' ) );
+		add_action( 'wpsc_field_after', array( $this, 'render_payment_fields' ), 10, 3 );
 	}
 
-	public function render_payment_fields( $args ) {
+	public function render_payment_fields( $output, $field, $args ) {
 
-		$default = '<div class="wpsc-form-actions">';
+		if ( 'wpsc_payment_method' !== $field['name'] ) {
+			return $output;
+		}
+
+		if ( $this->setting->gateway_name !== str_replace( '_', '-', $field['value'] ) ) {
+			return $output;
+		}
+
 		ob_start();
 
 		$this->payment_fields();
 		$fields = ob_get_clean();
 
-		$args['before_form_actions'] = $fields . $default;
+		if ( empty( $fields ) ) {
+			return $output;
+		}
 
-		return $args;
+		return $output . $fields;
 	}
 
 
