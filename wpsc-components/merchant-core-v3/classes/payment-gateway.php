@@ -749,10 +749,27 @@ abstract class WPSC_Payment_Gateway {
 	 * @return void
 	 */
 	public function init() {
+
 		if ( $this->supports( 'tev1' ) ) {
 			add_filter( 'wpsc_gateway_checkout_form_' . str_replace( '_', '-', $this->setting->gateway_name ), array( $this, 'payment_fields' ) );
 		}
+
+		add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'render_payment_fields' ) );
 	}
+
+	public function render_payment_fields( $args ) {
+
+		$default = '<div class="wpsc-form-actions">';
+		ob_start();
+
+		$this->payment_fields();
+		$fields = ob_get_clean();
+
+		$args['before_form_actions'] = $fields . $default;
+
+		return $args;
+	}
+
 
 	public function load() {
 		return true;
