@@ -709,6 +709,10 @@ Shopping Cart
 	list-style-type: none;
 }
 
+.wpsc-checkout .cc-form-fieldset {
+	display: none;
+}
+
 /**********************
 Accounts Page
 ***********************/

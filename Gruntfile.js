@@ -124,7 +124,7 @@ module.exports = function( grunt ) {
 						pot.headers['report-msgid-bugs-to'] = 'https://wpecommerce.org/';
 						pot.headers['last-translator'] = 'WP-Translations (http://wp-translations.org/)';
 						pot.headers['language-team'] = 'WP-Translations <wpt@wp-translations.org>';
-						pot.headers['language'] = 'en_US';
+						pot.headers.language = 'en_US';
 						return pot;
 					}
 				}
@@ -135,8 +135,8 @@ module.exports = function( grunt ) {
 				files: ['wpsc-components/theme-engine-v2/theming/assets/scss/**/*.scss'],
 				tasks: ['css'],
 				options: {
-					spawn: false,
-				},
+					spawn: false
+				}
 			},
 			js: {
 				files: ['<%= jshint.plugin %>'],

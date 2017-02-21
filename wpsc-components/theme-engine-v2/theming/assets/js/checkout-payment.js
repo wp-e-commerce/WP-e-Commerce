@@ -1,15 +1,18 @@
 ;(function($) {
-	"use strict";
+	'use strict';
 	var toggle_extra_form = function() {
 		var value = this.value;
-		var form = $('.wpsc-payment-gateway-extra-form-' + value);
-		if (form.size() === 0)
-			return;
+		var form = $('.wpsc-payment-gateway-extra-form-' + value + ', #' + value + '-cc-form' );
 
-		if (this.checked)
-			form[0].style.display = '';
-		else
+		if (form.size() === 0) {
+			return;
+		}
+
+		if (this.checked) {
+			form[0].style.display = 'block';
+		} else {
 			form[0].style.display = 'none';
+		}
 	};
 	$(function() {
 		var inputs = $('input[name="wpsc_payment_method"]');
