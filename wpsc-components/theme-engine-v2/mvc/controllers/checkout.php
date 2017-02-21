@@ -421,6 +421,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 	public function payment() {
 		$this->view = 'checkout-payment';
+		_wpsc_enqueue_float_label_scripts();
 
 		add_action( 'wp_enqueue_scripts', array( $this, '_action_payment_scripts' ) );
 
