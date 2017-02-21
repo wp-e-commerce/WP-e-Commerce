@@ -481,6 +481,8 @@ abstract class WPSC_Payment_Gateway {
 			// Show 2.0 gateway API table-based code
 			?>
 				<table class="wpsc_checkout_table <?php echo wpsc_gateway_form_field_style(); ?>">
+					<?php do_action( 'wpsc_tev1_default_credit_card_form_start', $name ); ?>
+
 					<tr>
 						<td><?php _e( 'Card Number', 'wp-e-commerce' ); ?></td>
 						<td>
@@ -499,6 +501,9 @@ abstract class WPSC_Payment_Gateway {
 							<input type="text" id="<?php esc_attr_e( $name ); ?>-card-cvc" value="" autocomplete="off" size="5" maxlength="4" placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
 						</td>
 					</tr>
+					
+					<?php do_action( 'wpsc_tev1_default_credit_card_form_end', $name ); ?>
+				
 				</table>
 			<?php
 		} else {
