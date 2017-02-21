@@ -475,6 +475,8 @@ abstract class WPSC_Payment_Gateway {
 	 */
 	public function default_credit_card_form( $args = array(), $fields = array() ) {
 
+		$name = str_replace( '_', '-', $this->setting->gateway_name );
+		
 		if ( $this->supports( 'tev1' ) && '1.0' == get_option( 'wpsc_get_active_theme_engine' ) ) {
 			// Show 2.0 gateway API table-based code
 			?>
@@ -482,20 +484,19 @@ abstract class WPSC_Payment_Gateway {
 					<tr>
 						<td><?php _e( 'Card Number', 'wp-e-commerce' ); ?></td>
 						<td>
-							<input type='text' id='card_number' value='' autocomplete="off" />
+							<input type="text" id="<?php esc_attr_e( $name ); ?>-card-number" value="" autocomplete="off" />
 						</td>
 					</tr>
 					<tr>
 						<td><?php _e( 'Expiration Date', 'wp-e-commerce' ); ?></td>
 						<td>
-							<input type='text' id='card_expiry_month' value='' autocomplete="off" maxlength='2' size='3' placeholder="<?php esc_attr_e( 'MM', 'wp-e-commerce' ); ?>" />&nbsp;
-							<input type='text' id='card_expiry_year' value='' autocomplete="off" maxlength='2' size='3' placeholder="<?php esc_attr_e( 'YY', 'wp-e-commerce' ); ?>" />
+							<input type="text" id="<?php esc_attr_e( $name ); ?>-card-expiry" value="" autocomplete="off" maxlength="" size="3" placeholder="<?php esc_attr_e( 'MM / YY', 'wp-e-commerce' ); ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td><?php _e( 'Card Code', 'wp-e-commerce' ); ?></td>
 						<td>
-							<input type='text' id='card_code' value='' autocomplete="off" size='5' maxlength='4' placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
+							<input type="text" id="<?php esc_attr_e( $name ); ?>-card-cvc" value="" autocomplete="off" size="5" maxlength="4" placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
 						</td>
 					</tr>
 				</table>
@@ -504,8 +505,6 @@ abstract class WPSC_Payment_Gateway {
 			$default_args = array(
 				'fields_have_names' => true, // Some gateways like stripe don't need names as the form is tokenized.
 			);
-
-			$name = str_replace( '_', '-', $this->setting->gateway_name );
 
 			$args = wp_parse_args( $args, apply_filters( 'wpsc_default_credit_card_form_args', $default_args, $this->setting->gateway_name ) );
 			$default_fields = array(
