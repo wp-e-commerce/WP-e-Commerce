@@ -476,7 +476,7 @@ abstract class WPSC_Payment_Gateway {
 	public function default_credit_card_form( $args = array(), $fields = array() ) {
 
 		$name = str_replace( '_', '-', $this->setting->gateway_name );
-		
+
 		if ( $this->supports( 'tev1' ) && '1.0' == get_option( 'wpsc_get_active_theme_engine' ) ) {
 			// Show 2.0 gateway API table-based code
 			?>
@@ -492,18 +492,18 @@ abstract class WPSC_Payment_Gateway {
 					<tr>
 						<td><?php _e( 'Expiration Date', 'wp-e-commerce' ); ?></td>
 						<td>
-							<input type="text" id="<?php esc_attr_e( $name ); ?>-card-expiry" value="" autocomplete="off" maxlength="" size="3" placeholder="<?php esc_attr_e( 'MM / YY', 'wp-e-commerce' ); ?>" />
+							<input type="text" id="<?php esc_attr_e( $name ); ?>-card-expiry" value="" autocomplete="off" placeholder="<?php esc_attr_e( 'MM / YY', 'wp-e-commerce' ); ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td><?php _e( 'Card Code', 'wp-e-commerce' ); ?></td>
 						<td>
-							<input type="text" id="<?php esc_attr_e( $name ); ?>-card-cvc" value="" autocomplete="off" size="5" maxlength="4" placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
+							<input type="text" id="<?php esc_attr_e( $name ); ?>-card-cvc" value="" autocomplete="off" placeholder="<?php esc_attr_e( 'CVC', 'wp-e-commerce' ); ?>" />
 						</td>
 					</tr>
-					
+
 					<?php do_action( 'wpsc_tev1_default_credit_card_form_end', $name ); ?>
-				
+
 				</table>
 			<?php
 		} else {
@@ -513,17 +513,21 @@ abstract class WPSC_Payment_Gateway {
 
 			$args = wp_parse_args( $args, apply_filters( 'wpsc_default_credit_card_form_args', $default_args, $this->setting->gateway_name ) );
 			$default_fields = array(
-				'card-number-field' => '<p class="form-row form-row-wide">
+				'card-number-field' => '<p class="wpsc-form-row wpsc-form-row-wide wpsc-cc-field">
 					<label for="' . esc_attr( $name ) . '-card-number">' . __( 'Card Number', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
-					<input id="' . esc_attr( $name ) . '-card-number" class="input-text wpsc-credit-card-form-card-number" type="number" maxlength="20" autocomplete="off" placeholder="•••• •••• •••• ••••" />
+					<input id="' . esc_attr( $name ) . '-card-number" class="input-text wpsc-cc-input wpsc-credit-card-form-card-number" type="tel" maxlength="20" autocomplete="off" placeholder="•••• •••• •••• ••••" />
 				</p>',
-				'card-expiry-field' => '<p class="form-row form-row-first">
-					<label for="' . esc_attr( $name ) . '-card-expiry">' . __( 'Expiration Date (MM/YY)', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
-					<input id="' . esc_attr( $name ) . '-card-expiry" class="input-text wpsc-credit-card-form-card-expiry" type="number" autocomplete="off" placeholder="' . esc_attr__( 'MM / YY', 'wp-e-commerce' ) . '" />
+				'card-name-field' => '<p class="wpsc-form-row-first wpsc-cc-field">
+					<label for="' . esc_attr( $name ) . '-card-name">' . __( 'Cardholder Name', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
+					<input id="' . esc_attr( $name ) . '-card-name" class="input-text wpsc-cc-input wpsc-credit-card-form-card-name" type="text" autocomplete="off" placeholder="Your Name" />
 				</p>',
-				'card-cvc-field' => '<p class="form-row form-row-last">
+				'card-expiry-field' => '<p class="wpsc-form-row-middle wpsc-cc-field">
+					<label for="' . esc_attr( $name ) . '-card-expiry">' . __( 'Expiration Date', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
+					<input id="' . esc_attr( $name ) . '-card-expiry" class="input-text wpsc-cc-input wpsc-credit-card-form-card-expiry" type="tel" autocomplete="off" placeholder="' . esc_attr__( 'MM / YY', 'wp-e-commerce' ) . '" />
+				</p>',
+				'card-cvc-field' => '<p class="wpsc-form-row-last wpsc-cc-field">
 					<label for="' . esc_attr( $name ) . '-card-cvc">' . __( 'Card Code', 'wp-e-commerce' ) . ' <span class="required">*</span></label>
-					<input id="' . esc_attr( $name ) . '-card-cvc" class="input-text wpsc-credit-card-form-card-cvc" type="number" autocomplete="off" placeholder="' . esc_attr__( 'CVC', 'wp-e-commerce' ) . '" />
+					<input id="' . esc_attr( $name ) . '-card-cvc" class="input-text wpsc-cc-input wpsc-credit-card-form-card-cvc" type="tel" maxlength="4" autocomplete="off" placeholder="' . esc_attr__( 'CVC', 'wp-e-commerce' ) . '" />
 				</p>'
 			);
 			$fields = wp_parse_args( $fields, apply_filters( 'wpsc_default_credit_card_form_fields', $default_fields, $name ) );

@@ -86,9 +86,14 @@ class WPSC_Template_Engine {
 			'dependencies' => array( 'jquery' ),
 			'version'      => WPSC_VERSION,
 		),
+		'jquery-payment' => array(
+			'path'         => 'js/jquery.payment.min.js',
+			'dependencies' => array( 'jquery' ),
+			'version'      => WPSC_VERSION,
+		),
 		'wpsc-checkout-payment' => array(
 			'path'         => 'js/checkout-payment.js',
-			'dependencies' => array( 'jquery' ),
+			'dependencies' => array( 'jquery', 'jquery-payment' ),
 			'version'      => WPSC_VERSION,
 		),
 		'wpsc-cart-notifications' => array(

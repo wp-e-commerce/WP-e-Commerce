@@ -713,6 +713,14 @@ Shopping Cart
 	display: none;
 }
 
+.wpsc-checkout .wpsc-credit-card-form-card-number {
+	width: 100%;
+}
+
+.wpsc-checkout .wpsc-form-row-wide {
+	width: 100%;
+}
+
 /**********************
 Accounts Page
 ***********************/
@@ -785,7 +793,8 @@ JS Float Label
 .wpsc-controller.wpsc-float-js .wpsc-field-textfield,
 .wpsc-controller.wpsc-float-js .wpsc-field-select_region,
 .wpsc-controller.wpsc-float-js .wpsc-field-select_country,
-.wpsc-controller.wpsc-float-js .wpsc-field-password {
+.wpsc-controller.wpsc-float-js .wpsc-field-password,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field {
 	position: relative;
 }
 
@@ -796,7 +805,9 @@ JS Float Label
 .wpsc-controller.wpsc-float-js .wpsc-field-select_country input,
 .wpsc-controller.wpsc-float-js .wpsc-field-select_country textarea,
 .wpsc-controller.wpsc-float-js .wpsc-field-password input,
-.wpsc-controller.wpsc-float-js .wpsc-field-password textarea {
+.wpsc-controller.wpsc-float-js .wpsc-field-password textarea,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field input,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field textarea {
 	padding: 1em;
 }
 
@@ -811,7 +822,10 @@ JS Float Label
 .wpsc-controller.wpsc-float-js .wpsc-field-select_country label,
 .wpsc-controller.wpsc-float-js .wpsc-field-password input,
 .wpsc-controller.wpsc-float-js .wpsc-field-password textarea,
-.wpsc-controller.wpsc-float-js .wpsc-field-password label {
+.wpsc-controller.wpsc-float-js .wpsc-field-password label,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field input,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field textarea,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field label {
 	-webkit-transition: 0.2s ease-in-out;
 	-moz-transition: 0.2s ease-in-out;
 	-ms-transition: 0.2s ease-in-out;
@@ -822,7 +836,8 @@ JS Float Label
 .wpsc-controller.wpsc-float-js .wpsc-field-textfield label,
 .wpsc-controller.wpsc-float-js .wpsc-field-select_region label,
 .wpsc-controller.wpsc-float-js .wpsc-field-select_country label,
-.wpsc-controller.wpsc-float-js .wpsc-field-password label {
+.wpsc-controller.wpsc-float-js .wpsc-field-password label,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field label {
 	position: absolute;
 	top: 1em;
 	left: 1em;
@@ -836,7 +851,9 @@ JS Float Label
 .wpsc-controller.wpsc-float-js .wpsc-field-select_country.focused label,
 .wpsc-controller.wpsc-float-js .wpsc-field-select_country.populated label,
 .wpsc-controller.wpsc-float-js .wpsc-field-password.focused label,
-.wpsc-controller.wpsc-float-js .wpsc-field-password.populated label {
+.wpsc-controller.wpsc-float-js .wpsc-field-password.populated label,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field.focused label,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field.populated label {
 	opacity: 1;
 	top: 0;
 	left: 1em;
@@ -859,7 +876,11 @@ JS Float Label
 .wpsc-controller.wpsc-float-js .wpsc-field-password.focused input,
 .wpsc-controller.wpsc-float-js .wpsc-field-password.focused textarea,
 .wpsc-controller.wpsc-float-js .wpsc-field-password.populated input,
-.wpsc-controller.wpsc-float-js .wpsc-field-password.populated textarea {
+.wpsc-controller.wpsc-float-js .wpsc-field-password.populated textarea,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field.focused input,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field.focused textarea,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field.populated input,
+.wpsc-controller.wpsc-float-js .wpsc-cc-field.populated textarea {
 	padding-top: 1.5em;
 	padding-bottom: .5em;
 }
@@ -1008,6 +1029,32 @@ Media Queries
 *****************/
 
 /*# sourceMappingURL=wpsc-responsive.css.map */
+
+@media (min-width: 550px) {
+
+.wpsc-checkout .wpsc-cc-field {
+	display: inline-block;
+	margin-right: 3%;
+}
+
+.wpsc-checkout .wpsc-cc-field:first-of-type,
+.wpsc-checkout .wpsc-cc-field:last-of-type {
+	margin-right: 0;
+}
+
+.wpsc-checkout .wpsc-form-row-first {
+	width: 46.7%;
+}
+
+.wpsc-checkout .wpsc-form-row-middle {
+	width: 27%;
+}
+
+.wpsc-checkout .wpsc-form-row-last {
+	width: 20%;
+}
+
+}
 
 @media (max-width: 960px) {
 
