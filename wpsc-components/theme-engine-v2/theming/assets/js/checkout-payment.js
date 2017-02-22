@@ -21,5 +21,8 @@
 		};
 		inputs.on('change', toggle_forms);
 		toggle_forms();
+		$( '.wpsc-credit-card-form-card-number' ).payment('formatCardNumber');
+		$( '.wpsc-credit-card-form-card-expiry' ).payment('formatCardExpiry');
+		$( '.wpsc-credit-card-form-card-cvc' ).payment('formatCardCVC');
 	});
 })(jQuery);
