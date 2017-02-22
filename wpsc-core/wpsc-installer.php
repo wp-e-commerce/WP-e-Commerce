@@ -53,6 +53,13 @@ function wpsc_install() {
 	$wpsc_version       = get_option( 'wpsc_version', 0 );
 	$wpsc_minor_version = get_option( 'wpsc_minor_version', 0 );
 
+	$wpsc_is_new = get_option( 'wpsc_is_new_install', false );
+	
+	if ( ! $wpsc_is_new ) {
+		update_option( 'wpsc_is_new_install', false );
+		update_option( 'wpsc_updated_from', WPSC_VERSION );
+	}
+	
 	if ( $wpsc_version === false ) {
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'no' );
 	} else {
@@ -452,6 +459,10 @@ function wpsc_create_or_update_tables( $debug = false ) {
 	foreach ( (array)$wpsc_database_template as $table_name => $table_data ) {
 		// check that the table does not exist under the correct name, then checkk if there was a previous name, if there was, check for the table under that name too.
 		if ( !$wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) && (!isset( $table_data['previous_names'] ) || (isset( $table_data['previous_names'] ) && !$wpdb->get_var( "SHOW TABLES LIKE '{$table_data['previous_names']}'" )) ) ) {
+
+			// Set a flag on new WP eCommerce installs
+			update_option( 'wpsc_is_new_install', true );
+
 			//if the table does not exixt, create the table
 			$constructed_sql_parts = array( );
 			$constructed_sql = "CREATE TABLE `{$table_name}` (\n";
