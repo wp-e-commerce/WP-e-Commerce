@@ -49,3 +49,34 @@ Checkout
 .cc-form-fieldset {
 	display: none;
 }
+.wpsc-credit-card-form-card-number {
+	width: 100%;
+}
+.wpsc-cc-field {
+	@media (min-width: 550px) {
+		display: inline-block;
+		margin-right: 3%;
+		&:first-of-type,
+		&:last-of-type {
+			margin-right: 0;
+		}
+	}
+}
+.wpsc-form-row-wide {
+	width: 100%;
+}
+.wpsc-form-row-first {
+	@media (min-width: 550px) {
+		width: 46.7%;
+	}
+}
+.wpsc-form-row-middle {
+	@media (min-width: 550px) {
+		width: 27%;
+	}
+}
+.wpsc-form-row-last {
+	@media (min-width: 550px) {
+		width: 20%;
+	}
+}

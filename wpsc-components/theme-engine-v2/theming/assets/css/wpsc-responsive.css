@@ -713,6 +713,14 @@ Shopping Cart
 	display: none;
 }
 
+.wpsc-checkout .wpsc-credit-card-form-card-number {
+	width: 100%;
+}
+
+.wpsc-checkout .wpsc-form-row-wide {
+	width: 100%;
+}
+
 /**********************
 Accounts Page
 ***********************/
@@ -1021,6 +1029,32 @@ Media Queries
 *****************/
 
 /*# sourceMappingURL=wpsc-responsive.css.map */
+
+@media (min-width: 550px) {
+
+.wpsc-checkout .wpsc-cc-field {
+	display: inline-block;
+	margin-right: 3%;
+}
+
+.wpsc-checkout .wpsc-cc-field:first-of-type,
+.wpsc-checkout .wpsc-cc-field:last-of-type {
+	margin-right: 0;
+}
+
+.wpsc-checkout .wpsc-form-row-first {
+	width: 46.7%;
+}
+
+.wpsc-checkout .wpsc-form-row-middle {
+	width: 27%;
+}
+
+.wpsc-checkout .wpsc-form-row-last {
+	width: 20%;
+}
+
+}
 
 @media (max-width: 960px) {
 
