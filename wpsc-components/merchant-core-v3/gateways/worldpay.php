@@ -26,7 +26,7 @@ class WPSC_Payment_Gateway_WorldPay extends WPSC_Payment_Gateway {
 		parent::__construct();
 
 		$this->title = __( 'WorldPay Payment Gateway', 'wp-e-commerce' );
-		$this->supports = array( 'default_credit_card_form', 'tev1' );
+		$this->supports = array( 'default_credit_card_form', 'tev1', 'tokenization' );
 
 		$this->order_handler	= WPSC_WorldPay_Payments_Order_Handler::get_instance( $this );
 
