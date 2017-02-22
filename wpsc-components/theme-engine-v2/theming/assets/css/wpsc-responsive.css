@@ -709,7 +709,7 @@ Shopping Cart
 	list-style-type: none;
 }
 
-.wpsc-checkout .cc-form-fieldset {
+.wpsc-checkout .wpsc-checkout .entry-content .cc-form-fieldset {
 	display: none;
 }
 

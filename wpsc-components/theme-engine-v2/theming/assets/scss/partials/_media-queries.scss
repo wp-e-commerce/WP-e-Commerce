@@ -19,7 +19,7 @@ Media Queries
 }
 
 @media (max-width: 700px) {
-	.wpsc-grid {	
+	.wpsc-grid {
 		.wpsc-column-6,
 		.wpsc-column-5,
 		.wpsc-column-4 {
@@ -84,7 +84,7 @@ Media Queries
 			display: block;
 			float: none;
 			width: $full-width;
-		}	
+		}
 	}
 	.wpsc-controller .wpsc-shopping-cart .wpsc-form-actions {
 		text-align: left;
@@ -97,7 +97,7 @@ Media Queries
 		display: block;
 		text-align: left;
 		margin-left: 0;
-	}	
+	}
 	.express-checkout-button {
 		margin-bottom: 20px;
 	}
@@ -132,7 +132,7 @@ Media Queries
 	}
 	.wpsc-checkout {
 		.entry-content {
-			fieldset{
+			fieldset {
 				min-width: 100%;
 			    display: block;
 			}
@@ -145,7 +145,7 @@ Media Queries
 	.wpsc-controller .wpsc-create-account-offer,
 	.wpsc-controller .wpsc-login-form-wrapper  {
 		float: none;
-		
+
 		width: 100%;
 	}
 	.wpsc-cart-cell.product,

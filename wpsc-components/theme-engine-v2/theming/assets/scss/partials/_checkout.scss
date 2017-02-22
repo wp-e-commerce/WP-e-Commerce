@@ -46,9 +46,15 @@ Checkout
 .wpsc-paypal li {
 	list-style-type: none;
 }
-.cc-form-fieldset {
-	display: none;
+
+.wpsc-checkout {
+	.entry-content {
+		.cc-form-fieldset {
+			display: none;
+		}
+	}
 }
+
 .wpsc-credit-card-form-card-number {
 	width: 100%;
 }
