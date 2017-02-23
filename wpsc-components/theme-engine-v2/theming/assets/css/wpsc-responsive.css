@@ -539,13 +539,18 @@ Shopping Cart
 	text-align: center;
 }
 
-.widget-area .wpsc-cart-subtotal-row .wpsc-cart-cell,
-.widget-area .wpsc-cart-subtotal-row .wpsc-cart-cell-header {
-	text-align: center;
+.widget-area .wpsc-cart-footer .wpsc-cart-cell-header,
+.widget-area .wpsc-cart-footer .wpsc-cart-cell {
+	display: inline-block;
 }
 
-.widget-area .wpsc-cart-subtotal-row .wpsc-cart-cell {
-	font-size: 1.35em;
+.widget-area .wpsc-cart-footer .wpsc-cart-cell-header {
+	float: left;
+	text-align: left;
+}
+
+.widget-area .wpsc-cart-footer .wpsc-cart-cell {
+	text-align: right;
 }
 
 .widget-area .wpsc-form-actions button {
@@ -1322,13 +1327,18 @@ Media Queries
 	text-align: center;
 }
 
-.wpsc-cart-subtotal-row .wpsc-cart-cell,
-.wpsc-cart-subtotal-row .wpsc-cart-cell-header {
-	text-align: center;
+.wpsc-cart-footer .wpsc-cart-cell-header,
+.wpsc-cart-footer .wpsc-cart-cell {
+	display: inline-block;
 }
 
-.wpsc-cart-subtotal-row .wpsc-cart-cell {
-	font-size: 1.35em;
+.wpsc-cart-footer .wpsc-cart-cell-header {
+	float: left;
+	text-align: left;
+}
+
+.wpsc-cart-footer .wpsc-cart-cell {
+	text-align: right;
 }
 
 .wpsc-form-actions button {
@@ -1434,6 +1444,7 @@ Media Queries
 
 .wpsc-form-actions {
 	display: block;
+	text-align: right;
 }
 
 .wpsc-begin-checkout,
@@ -1471,18 +1482,9 @@ Media Queries
 	display: inline-block;
 }
 
-.wpsc-cart-footer .wpsc-cart-aggregate {
-	text-align: left;
-}
-
 .wpsc-cart-footer .apply-coupon {
 	margin-bottom: 20px;
 	text-align: right;
-}
-
-.wpsc-cart-footer .wpsc-cart-cell,
-.wpsc-cart-footer .wpsc-row {
-	text-align: left;
 }
 
 .wpsc-checkout fieldset {

@@ -53,16 +53,32 @@ $titles: unit-price quantity item-total id date status tracking-id total;
     text-align: center;
 }
 
-.wpsc-cart-subtotal-row {
-	.wpsc-cart-cell, 
+.wpsc-cart-footer {
+	.wpsc-cart-cell-header,
+	.wpsc-cart-cell {
+		display: inline-block;
+	}
+
 	.wpsc-cart-cell-header {
-		text-align: center;
+		float: left;
+		text-align: left;
 	}
 
 	.wpsc-cart-cell {
-		font-size: $title-size-col-3;
+		text-align: right;
 	}
 }
+
+// .wpsc-cart-subtotal-row {
+// 	.wpsc-cart-cell, 
+// 	.wpsc-cart-cell-header {
+// 		text-align: center;
+// 	}
+
+// 	.wpsc-cart-cell {
+// 		font-size: $title-size-col-3;
+// 	}
+// }
 
 .wpsc-form-actions button {
  	margin-left: auto;

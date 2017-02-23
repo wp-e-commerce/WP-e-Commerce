@@ -91,6 +91,7 @@ Media Queries
 	}
 	.wpsc-form-actions {
 		display: block;
+		text-align: right;
 	}
 	.wpsc-begin-checkout,
 	.express-checkout-button {
@@ -121,16 +122,9 @@ Media Queries
 		.update-quantity {
 			display: inline-block;
 		}
-		.wpsc-cart-aggregate{
-			text-align: left;
-		}
 		.apply-coupon {
 			margin-bottom: 20px;
 			text-align: right;
-		}
-		.wpsc-cart-cell,
-		.wpsc-row {
-			text-align: left;
 		}
 	}
 	.wpsc-checkout {
