@@ -323,6 +323,10 @@ Shopping Cart
 	box-shadow: none !important;
 }
 
+.express-checkout-button {
+	border-bottom: none !important;
+}
+
 .paypal-express-separator {
 	margin: 0 0.5em;
 }
