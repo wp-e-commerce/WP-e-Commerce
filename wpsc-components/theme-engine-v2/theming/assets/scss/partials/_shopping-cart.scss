@@ -38,6 +38,9 @@ Shopping Cart
     vertical-align: bottom;
     box-shadow: none !important; //needed to override .entry-content a
 }
+.express-checkout-button {
+	border-bottom: none !important;
+}
 .paypal-express-separator {
 	margin: 0 0.5em;
 }

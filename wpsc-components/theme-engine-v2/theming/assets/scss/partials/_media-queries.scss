@@ -87,7 +87,7 @@ Media Queries
 		}
 	}
 	.wpsc-controller .wpsc-shopping-cart .wpsc-form-actions {
-		text-align: left;
+		text-align: center;
 	}
 	.wpsc-form-actions {
 		display: block;
@@ -95,11 +95,14 @@ Media Queries
 	.wpsc-begin-checkout,
 	.express-checkout-button {
 		display: block;
-		text-align: left;
 		margin-left: 0;
 	}
 	.express-checkout-button {
 		margin-bottom: 20px;
+		border-bottom: none !important;
+		img {
+			margin: 0 auto;
+		}
 	}
 	.wpsc-begin-checkout {
 		margin-top: 20px;

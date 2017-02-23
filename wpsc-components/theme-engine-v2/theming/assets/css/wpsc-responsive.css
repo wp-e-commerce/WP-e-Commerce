@@ -323,6 +323,10 @@ Shopping Cart
 	box-shadow: none !important;
 }
 
+.express-checkout-button {
+	border-bottom: none !important;
+}
+
 .paypal-express-separator {
 	margin: 0 0.5em;
 }
@@ -1425,7 +1429,7 @@ Media Queries
 }
 
 .wpsc-controller .wpsc-shopping-cart .wpsc-form-actions {
-	text-align: left;
+	text-align: center;
 }
 
 .wpsc-form-actions {
@@ -1435,12 +1439,16 @@ Media Queries
 .wpsc-begin-checkout,
 .express-checkout-button {
 	display: block;
-	text-align: left;
 	margin-left: 0;
 }
 
 .express-checkout-button {
 	margin-bottom: 20px;
+	border-bottom: none !important;
+}
+
+.express-checkout-button img {
+	margin: 0 auto;
 }
 
 .wpsc-begin-checkout {
