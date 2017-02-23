@@ -9,29 +9,28 @@ Checkout
     margin-left: 5%;
 }
 
-.wpsc-field-wpsc_shipping_option{
+.wpsc-field-wpsc_shipping_option,
+.wpsc-shipping-method,
+.wpsc-payment-method {
 	text-align: left;
 }
-.wpsc-shipping-method {
-	@extend .wpsc-field-wpsc_shipping_option;
-}
-.wpsc-payment-method {
-	@extend .wpsc-field-wpsc_shipping_option;
-}
-.wpsc-checkout-form {
-	@include flexbox();
-	@include flex-wrap(wrap);
-	@include justify-content(space-between);
-	.wpsc-form-actions {
-	    @extend .wpsc-field-wpsc_shipping_option;
-	    width: 100%;
-	}
-	fieldset {
-		margin: 0 0 2em 0;
-	    vertical-align: top;
-	    @include align-self(flex-start);
-	    @include flex-grow(1);
-	    @include flex-basis(3%);
+
+@media (min-width: 550px) {
+	.wpsc-checkout-form {
+		@include flexbox();
+		@include flex-wrap(wrap);
+		@include justify-content(space-between);
+		.wpsc-form-actions {
+		    text-align: left;
+		    width: 100%;
+		}
+		fieldset {
+			margin: 0 0 2em 0;
+		    vertical-align: top;
+		    @include align-self(flex-start);
+		    @include flex-grow(1);
+		    @include flex-basis(3%);
+		}
 	}
 }
 .wpsc-order-preview {
