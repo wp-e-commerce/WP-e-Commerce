@@ -1477,12 +1477,12 @@ Media Queries
 	text-align: left;
 }
 
-.wpsc-checkout .entry-content fieldset {
+.wpsc-checkout fieldset {
 	min-width: 100%;
 	display: block;
 }
 
-.wpsc-checkout .entry-content #wpsc-checkout-form-shipping {
+.wpsc-checkout #wpsc-checkout-form-shipping {
 	margin-left: 0;
 }
 
