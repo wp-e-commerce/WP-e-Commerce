@@ -52,25 +52,27 @@ ins.wpsc-sale-price {
 }
 
 /* Flexbox */
-#wpsc-products {
-	@include flexbox();
-	@include flex-wrap(wrap);
-}
-.wpsc-product,
-.wpsc-product-summary,
-.wpsc-product-header {
-	@include flexbox();
-	@include flex-direction(column);
-}
-.wpsc-product-summary,
-.wpsc-product-header {
-	@include justify-content(space-between);
-}
-.wpsc-product-summary {
-	height: 100%;
-}
-.wpsc-product-header {
-    @include flex(1 0 auto);
+@media (min-width: 550px) {
+	#wpsc-products {
+		@include flexbox();
+		@include flex-wrap(wrap);
+	}
+	.wpsc-product,
+	.wpsc-product-summary,
+	.wpsc-product-header {
+		@include flexbox();
+		@include flex-direction(column);
+	}
+	.wpsc-product-summary,
+	.wpsc-product-header {
+		@include justify-content(space-between);
+	}
+	.wpsc-product-summary {
+		height: 100%;
+	}
+	.wpsc-product-header {
+	    @include flex(1 0 auto);
+	}
 }
 
 
