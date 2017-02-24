@@ -420,9 +420,12 @@ class WPSC_Tracking {
 		$wpec_data = array();
 
 		$base_country = new WPSC_Country( wpsc_get_base_country() );
-
+		$wpsc_is_new = get_option( 'wpsc_is_new_install', false );
+		
+		
 		$wpec_data['version']      = WPSC_VERSION;
 		$wpec_data['url']          = WPSC_URL;
+		$wpec_data['since']        = $wpsc_is_new === true ? $wpsc_is_new : get_option( 'wpsc_updated_from' );
 		$wpec_data['base_country'] = $base_country->get_name();
 		$wpec_data['debug']        = WPSC_DEBUG;
 
