@@ -796,6 +796,27 @@ function _wpsc_enqueue_wp_e_commerce_admin( ) {
 add_action( 'admin_menu', 'wpsc_admin_pages' );
 
 /**
+ * Get completed purchase status string to use in database queries
+ *
+ * @return string comma delimited string of existing purchase log status that note completed transactions,
+ *                suitable to use in a SQL 'IN' clause to find completed transactions
+ */
+function _wpsc_get_completed_purchase_status_text() {
+	global $wpdb;
+	$sql = "SELECT DISTINCT processed FROM `" . WPSC_TABLE_PURCHASE_LOGS . "`";
+	$statii = $wpdb->get_col( $sql );
+	foreach( $statii as $index => $status ) {
+		if ( ! WPSC_Purchase_Log::is_order_status_completed( $status ) ) {
+			unset( $statii[$index] );
+		}
+	}
+
+	$statii = implode( ',', $statii );
+
+	return $statii;
+}
+
+/**
  * Displays latest activity in the Dashboard widget
  *
  * @uses $wpdb                          WordPress database object for queries
@@ -817,11 +838,14 @@ function wpsc_admin_latest_activity() {
 	echo "<strong class='dashboardHeading'>" . esc_html__( 'Current Month', 'wp-e-commerce' ) . "</strong><br />";
 	echo "<p class='dashboardWidgetSpecial'>";
 	// calculates total amount of orders for the month
+
+	$statii = _wpsc_get_completed_purchase_status_text();
+
 	$year = date( "Y" );
 	$month = date( "m" );
 	$start_timestamp = mktime( 0, 0, 0, $month, 1, $year );
 	$end_timestamp = mktime( 0, 0, 0, ( $month + 1 ), 0, $year );
-	$sql = "SELECT COUNT(*) FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' AND `processed` IN (2,3,4) ORDER BY `date` DESC";
+	$sql = "SELECT COUNT(*) FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' AND `processed` IN ($statii) ORDER BY `date` DESC";
 	$currentMonthOrders = $wpdb->get_var( $sql );
 
 	//calculates amount of money made for the month
@@ -1113,12 +1137,13 @@ function wpsc_dashboard_4months_widget() {
 	$months[] = mktime( 0, 0, 0, $this_month - 1, 1, $this_year );
 	$months[] = mktime( 0, 0, 0, $this_month, 1, $this_year );
 
+	$statii = _wpsc_get_completed_purchase_status_text();
 	$products = $wpdb->get_results( "SELECT `cart`.`prodid`,
 	 `cart`.`name`
 	 FROM `" . WPSC_TABLE_CART_CONTENTS . "` AS `cart`
 	 INNER JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` AS `logs`
 	 ON `cart`.`purchaseid` = `logs`.`id`
-	 WHERE `logs`.`processed` >= 2
+	 WHERE `logs`.`processed` IN ($statii)
 	 AND `logs`.`date` >= " . $months[0] . "
 	 GROUP BY `cart`.`prodid`
 	 ORDER BY SUM(`cart`.`price` * `cart`.`quantity`) DESC
@@ -1135,6 +1160,7 @@ function wpsc_dashboard_4months_widget() {
 	$timeranges[3]["end"] = time(); // using mktime here can generate a php runtime warning
 
 	$prod_data = array( );
+	$statii = _wpsc_get_completed_purchase_status_text();
 	foreach ( (array)$products as $product ) { //run through products and get each product income amounts and name
 		$sale_totals = array( );
 		foreach ( $timeranges as $timerange ) { //run through time ranges of product, and get its income over each time range
@@ -1143,7 +1169,7 @@ function wpsc_dashboard_4months_widget() {
 			FROM `" . WPSC_TABLE_CART_CONTENTS . "` AS `cart`
 			INNER JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` AS `logs`
 				ON `cart`.`purchaseid` = `logs`.`id`
-			WHERE `logs`.`processed` >= 2
+			WHERE `logs`.`processed` IN ($statii)
 				AND `logs`.`date` >= " . $timerange["start"] . "
 				AND `logs`.`date` < " . $timerange["end"] . "
 				AND `cart`.`prodid` = " . $product['prodid'] . "
