@@ -310,6 +310,7 @@ final class WPSC_Settings_Page {
 	 */
 	public function __construct( $tab_id = null ) {
 		do_action( 'wpsc_register_settings_tabs', $this );
+		do_action( 'wpsc_load_settings_tab_class', $this );
 		$this->tabs = apply_filters( 'wpsc_settings_tabs', $this->tabs );
 		$this->set_current_tab( $tab_id );
 	}
@@ -327,7 +328,6 @@ final class WPSC_Settings_Page {
 	 */
 	public function get_current_tab() {
 		if ( ! $this->current_tab ) {
-			do_action( 'wpsc_load_settings_tab_class', $this );
 			$class_name = ucwords( str_replace( array( '-', '_' ), ' ', $this->current_tab_id ) );
 			$class_name = str_replace( ' ', '_', $class_name );
 			$class_name = 'WPSC_Settings_Tab_' . $class_name;
@@ -364,15 +364,20 @@ final class WPSC_Settings_Page {
 	 * @param string $tab_id Optional. The Tab ID. If this is not specified, the $_GET['tab'] variable will be used. If that variable also does not exists, the first tab will be used.
 	 */
 	public function set_current_tab( $tab_id = null ) {
-		if ( ! $tab_id ) {
+
+		if ( is_null( $tab_id ) ) {
+
 			$tabs = array_keys( $this->tabs );
 
-			if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $this->tabs ) )
+			if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $tabs ) ) {
 				$this->current_tab_id = $_GET['tab'];
-			else
+			}
+			else {
 				$this->current_tab_id = array_shift( $tabs );
+			}
 
-		} else {
+		}
+		else {
 			$this->current_tab_id = $tab_id;
 		}
 
