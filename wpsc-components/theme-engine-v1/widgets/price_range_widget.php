@@ -138,22 +138,31 @@ function wpsc_price_range( $args = null ) {
 
 }
 
-if(isset($_GET['range'])){
+if ( isset( $_GET['range'] ) ) {
 	add_filter( 'posts_where', 'wpsc_range_where' );
 }
 
 function wpsc_range_where( $where ) {
-	global $wpdb, $wp_query;
-	$range = explode('-', $_GET['range']);
-	if(!strpos($where,'wpsc-product'))
-		return $where;
-	if(!$range[0]){
-		$where .= " AND $wpdb->posts.id IN ( SELECT $wpdb->posts.id FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->postmeta.meta_key=\"_wpsc_price\" AND $wpdb->postmeta.meta_value < " . ( $range[1] + 1 ) . ") ";
-	}elseif(!$range[1]){
-		$where .= " AND $wpdb->posts.id IN ( SELECT $wpdb->posts.id FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->postmeta.meta_key=\"_wpsc_price\" AND $wpdb->postmeta.meta_value > " . ( $range[0]-1 ) . ") ";
-	}elseif($range[1] && $range[0]){
-		$where .= " AND $wpdb->posts.id IN ( SELECT $wpdb->posts.id FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->postmeta.meta_key=\"_wpsc_price\" AND $wpdb->postmeta.meta_value > " . ( $range[0]-1 ) . " AND $wpdb->postmeta.meta_value < " . ( $range[1] + 1 ) . ") ";
+	global $wpdb;
+
+    if ( false === strpos( $where, 'wpsc-product' ) ) {
+        return $where;
+    }
+
+	$range = explode( '-', $_GET['range'] );
+
+    if ( empty( $range ) || $range[0] == 'all' ) {
+        return $where;
+    }
+
+	if ( ! $range[0] ) {
+		$where .= " AND ( $wpdb->posts.id IN ( SELECT $wpdb->posts.id FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->postmeta.meta_key='_wpsc_price' AND $wpdb->postmeta.meta_value < " . ( $range[1] + 1 ) . ") OR $wpdb->posts.id IN ( SELECT $wpdb->posts.post_parent FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->posts.post_type = 'wpsc-product' AND $wpdb->posts.post_status = 'inherit' AND $wpdb->postmeta.meta_key='_wpsc_price' AND $wpdb->postmeta.meta_value < " . ( $range[1] + 1 ) . ") ) ";
+	} elseif ( ! $range[1] ) {
+		$where .= " AND ( $wpdb->posts.id IN ( SELECT $wpdb->posts.id FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->postmeta.meta_key='_wpsc_price' AND $wpdb->postmeta.meta_value > " . ( $range[0] - 1 ) . ") OR $wpdb->posts.id IN ( SELECT $wpdb->posts.post_parent FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->posts.post_type = 'wpsc-product' AND $wpdb->posts.post_status = 'inherit' AND $wpdb->postmeta.meta_key='_wpsc_price' AND $wpdb->postmeta.meta_value > " . ( $range[0] - 1 ) . ") ) ";
+	} elseif( $range[1] && $range[0] ) {
+		$where .= " AND ( $wpdb->posts.id IN ( SELECT $wpdb->posts.id FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->postmeta.meta_key='_wpsc_price' AND $wpdb->postmeta.meta_value > " . ( $range[0] - 1 ) . " AND $wpdb->postmeta.meta_value < " . ( $range[1] + 1 ) . ") OR $wpdb->posts.id IN ( SELECT $wpdb->posts.post_parent FROM $wpdb->posts JOIN $wpdb->postmeta on $wpdb->postmeta.post_id = $wpdb->posts.id WHERE $wpdb->posts.post_type = 'wpsc-product' AND $wpdb->posts.post_status = 'inherit' AND $wpdb->postmeta.meta_key='_wpsc_price' AND  $wpdb->postmeta.meta_value > " . ( $range[0] - 1 ) . " AND $wpdb->postmeta.meta_value < " . ( $range[1] + 1 ) . ") ) ";
 	}
+
 	return $where;
 }
 ?>
