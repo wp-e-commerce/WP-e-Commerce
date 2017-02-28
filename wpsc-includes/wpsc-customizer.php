@@ -141,7 +141,7 @@ function wpsc_default_customizer_settings( $settings ) {
             'priority'        => 12,
             'section'         => 'wpsc_layout',
             'label'           => __( 'Products Per Row' ),
-            'default'         => 'auto',
+            'default'         => '4',
             'description'     => __( 'Set the maximum number of products per row. Defaults to showing 4 per row, up to six products per row', 'wp-e-commerce' ),
             'choices'         => apply_filters( 'wpsc_products_per_row_options', array(
                 '2'    => __( '2', 'wp-e-commerce' ),
@@ -154,7 +154,7 @@ function wpsc_default_customizer_settings( $settings ) {
         'setting' => array(
             'type'              => 'option',
             'capability'        => 'manage_options',
-            'default'           => 'auto',
+            'default'           => '4',
             'sanitize_callback' => 'wpsc_customizer_products_per_row',
         ),
         'partial' => array(
