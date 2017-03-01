@@ -17,7 +17,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		$cart_item_table->show_total = false;
 	}
 
-	public function add( $product_id ) {
+	public function add( $product_id, $redirect = true ) {
 		global $wpsc_cart;
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-add-to-cart-{$product_id}" ) ) {
@@ -115,8 +115,12 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		if ( $wpsc_cart->set_item( $product_id, $parameters ) ) {
 			$message = sprintf( __( 'You just added %s to your cart.', 'wp-e-commerce' ), $product->post_title );
 			$this->message_collection->add( $message, 'success', 'main', 'flash' );
-			wp_safe_redirect( wpsc_get_cart_url() );
-			exit;
+
+			if ( $redirect ) {
+				wp_safe_redirect( wpsc_get_cart_url() );
+				exit;
+			}
+
 		} else {
 			$this->message_collection->add( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
 			wp_safe_redirect( wpsc_get_cart_url() );
