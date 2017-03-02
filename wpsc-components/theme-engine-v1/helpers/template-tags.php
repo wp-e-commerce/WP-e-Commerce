@@ -1676,7 +1676,7 @@ function wpsc_the_product_price_display( $args = array() ) {
 	extract( $r );
 
 	// if the product has no variations, these amounts are straight forward...
-	$old_price           = wpsc_product_normal_price( $id );
+	$old_price           = wpsc_the_product_price( false, true, $id );
 	$current_price       = wpsc_the_product_price( false, false, $id );
 	$you_save            = wpsc_you_save( array( 'type' => 'amount', 'product_id' => $id, ) );
 
@@ -1702,7 +1702,7 @@ function wpsc_the_product_price_display( $args = array() ) {
 		// price should reflect the "normal" price, not the sales price, to avoid confusion
 		if ( $old_price_number == $current_price_number ) {
 			$show_old_price = false;
-			$current_price = wpsc_product_normal_price( $id );
+			$current_price = wpsc_the_product_price( false, true, $id );
 		}
 	}
 
