@@ -128,7 +128,7 @@
 				<?php $this->purchase_log_cart_items(); ?>
 
 				<tr class="wpsc_purchaselog_start_totals">
-					<td colspan="<?php echo $cols; ?>">
+					<td colspan="<?php echo $this->cols; ?>">
 						<?php if ( wpsc_purchlog_has_discount_data() ): ?>
 							<?php esc_html_e( 'Coupon Code', 'wp-e-commerce' ); ?>: <?php echo wpsc_display_purchlog_discount_data(); ?>
 						<?php endif; ?>
@@ -139,19 +139,19 @@
 
 				<?php if( ! wpec_display_product_tax() ): ?>
 					<tr>
-						<td colspan='<?php echo $cols; ?>'></td>
+						<td colspan='<?php echo $this->cols; ?>'></td>
 						<th><?php esc_html_e( 'Taxes', 'wp-e-commerce' ); ?> </th>
 						<td class="amount"><?php echo wpsc_display_purchlog_taxes(); ?></td>
 					</tr>
 				<?php endif; ?>
 
 				<tr>
-					<td colspan='<?php echo $cols; ?>'></td>
+					<td colspan='<?php echo $this->cols; ?>'></td>
 					<th><?php esc_html_e( 'Shipping', 'wp-e-commerce' ); ?> </th>
 					<td class="amount"><?php echo wpsc_display_purchlog_shipping(); ?></td>
 				</tr>
 				<tr>
-					<td colspan='<?php echo $cols; ?>'></td>
+					<td colspan='<?php echo $this->cols; ?>'></td>
 					<th><?php esc_html_e( 'Total', 'wp-e-commerce' ); ?> </th>
 					<td class="amount"><?php echo wpsc_display_purchlog_totalprice(); ?></td>
 				</tr>
