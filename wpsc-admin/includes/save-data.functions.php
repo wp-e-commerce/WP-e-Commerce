@@ -527,8 +527,12 @@ function wpsc_save_category_set( $category_id, $tt_id ) {
 		wpsc_update_categorymeta( $category_id, 'active', '1' );
 		wpsc_update_categorymeta( $category_id, 'order', '0' );
 
-		if ( isset( $_POST['display_type'] ) ) {
+		//Save category display type.
+		//If select option is "default" then remove the meta since the view will respect the setting under Presentation page.
+		if ( isset( $_POST['display_type'] ) && $_POST['display_type'] != 'default' ) {
 			wpsc_update_categorymeta( $category_id, 'display_type', esc_sql( stripslashes( $_POST['display_type'] ) ) );
+		} else {
+			wpsc_delete_categorymeta( $category_id, 'display_type' );
 		}
 
 		if ( isset( $_POST['image_height'] ) ) {
