@@ -141,7 +141,7 @@ function wpsc_default_customizer_settings( $settings ) {
             'priority'        => 12,
             'section'         => 'wpsc_layout',
             'label'           => __( 'Products Per Row' ),
-            'default'         => 'auto',
+            'default'         => '4',
             'description'     => __( 'Set the maximum number of products per row. Defaults to showing 4 per row, up to six products per row', 'wp-e-commerce' ),
             'choices'         => apply_filters( 'wpsc_products_per_row_options', array(
                 '2'    => __( '2', 'wp-e-commerce' ),
@@ -154,8 +154,8 @@ function wpsc_default_customizer_settings( $settings ) {
         'setting' => array(
             'type'              => 'option',
             'capability'        => 'manage_options',
-            'default'           => 'auto',
-            'sanitize_callback' => 'wpsc_customizer_products_per_row',
+            'default'           => '4',
+            'sanitize_callback' => 'absint',
         ),
         'partial' => array(
             'selector'            => '#wpsc-products',
@@ -192,9 +192,5 @@ add_action( 'customize_controls_enqueue_scripts', 'wpsc_customizer_assets' );
 function wpsc_customizer_render_products() {
     wpsc_get_template_part( 'loop', 'products' );
  }
-
-function wpsc_customizer_products_per_row( $value ) {
-    return $value === 'auto' || is_numeric( $value ) ? $value : 'auto';
-}
 
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-customizer.class.php' );
