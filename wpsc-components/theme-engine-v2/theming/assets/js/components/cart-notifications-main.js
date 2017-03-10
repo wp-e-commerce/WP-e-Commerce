@@ -21,7 +21,7 @@
 	};
 
 	notifs.collections = {
-		Products : require( './collections/products.js' )( notifs.currency, notifs.models.Product )
+		Products : require( './collections/products.js' )( notifs.currency, notifs.models.Product, notifs.baseRoute )
 	};
 
 	notifs.views = {
@@ -56,6 +56,8 @@
 	};
 
 	notifs.addProductToCart = function( $product ) {
+		// Experimental.
+		// TODO: Replace dom-to-model with actual localized JSON model data.
 		notifs.domToModel = notifs.domToModel || require( './utils/product-dom-to-model.js' )( notifs.currency );
 		notifs.CartView.trigger( 'add-to-cart', notifs.domToModel.prepare( $product ) );
 	};

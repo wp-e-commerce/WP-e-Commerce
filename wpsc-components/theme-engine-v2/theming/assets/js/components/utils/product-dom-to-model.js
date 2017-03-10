@@ -46,12 +46,14 @@ module.exports = function( currency ) {
 	return {
 		prepare : function( $product ) {
 			var $productForm = $product.find( '.wpsc-add-to-cart-form' );
+			var nonce        = $productForm.find( '[name="_wp_nonce"]' ).val();
 			var $thumb       = $product.find( '.wpsc-product-thumbnail' );
 			var $salePrice   = $product.find( '.wpsc-product-price .wpsc-sale-price .wpsc-amount' );
 			var price        = $salePrice.length ? $salePrice.text() : $product.find( '.wpsc-product-price .wpsc-amount' ).last().text();
 
 			return {
 				id             : $productForm.data( 'id' ),
+				nonce          : nonce,
 				url            : $thumb.length ? $thumb.attr( 'href' ) : $product.find( '.wpsc-product-title > a' ).attr( 'href' ),
 				price          : currency.deformat( price ),
 				formattedPrice : price,

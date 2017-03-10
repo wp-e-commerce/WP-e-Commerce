@@ -51,7 +51,7 @@ module.exports = function( log ) {
 		edit: function(e) {
 			e.preventDefault();
 
-			// Show quantity input.
+			// TODO: Show quantity input.
 		},
 
 		// Perform the Removal

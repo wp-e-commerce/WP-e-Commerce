@@ -1,8 +1,8 @@
 /**
- * WP eCommerce - v4.0.0 - 2016-05-29
+ * WP eCommerce - v4.0.0 - 2017-03-10
  * https://wpecommerce.org/
  *
- * Copyright (c) 2016;
+ * Copyright (c) 2017;
  * Licensed GPLv2+
  */
 
@@ -32,7 +32,7 @@
 	};
 
 	notifs.collections = {
-		Products: require('./collections/products.js')(notifs.currency, notifs.models.Product)
+		Products: require('./collections/products.js')(notifs.currency, notifs.models.Product, notifs.baseRoute)
 	};
 
 	notifs.views = {
@@ -64,6 +64,8 @@
 	};
 
 	notifs.addProductToCart = function ($product) {
+		// Experimental.
+		// TODO: Replace dom-to-model with actual localized JSON model data.
 		notifs.domToModel = notifs.domToModel || require('./utils/product-dom-to-model.js')(notifs.currency);
 		notifs.CartView.trigger('add-to-cart', notifs.domToModel.prepare($product));
 	};
@@ -82,9 +84,17 @@
 },{"./collections/products.js":2,"./models/product.js":3,"./models/status.js":4,"./utils/currency.js":5,"./utils/product-dom-to-model.js":6,"./views/cart.js":7,"./views/product-row.js":8}],2:[function(require,module,exports){
 'use strict';
 
-module.exports = function (currency, prodouctModel) {
+module.exports = function (currency, prodouctModel, baseRoute) {
 	return Backbone.Collection.extend({
 		model: prodouctModel,
+
+		url: function url(model) {
+			return baseRoute + model.get('id') + '?' + model.get('nonce');
+		},
+
+		initialize: function initialize() {
+			this.listenTo(this, 'add remove', this.sync);
+		},
 
 		getById: function getById(id) {
 			id = parseInt(id, 10);
@@ -354,12 +364,14 @@ module.exports = function (currency) {
 	return {
 		prepare: function prepare($product) {
 			var $productForm = $product.find('.wpsc-add-to-cart-form');
+			var nonce = $productForm.find('[name="_wp_nonce"]').val();
 			var $thumb = $product.find('.wpsc-product-thumbnail');
 			var $salePrice = $product.find('.wpsc-product-price .wpsc-sale-price .wpsc-amount');
 			var price = $salePrice.length ? $salePrice.text() : $product.find('.wpsc-product-price .wpsc-amount').last().text();
 
 			return {
 				id: $productForm.data('id'),
+				nonce: nonce,
 				url: $thumb.length ? $thumb.attr('href') : $product.find('.wpsc-product-title > a').attr('href'),
 				price: currency.deformat(price),
 				formattedPrice: price,
@@ -589,7 +601,7 @@ module.exports = function (log) {
 		edit: function edit(e) {
 			e.preventDefault();
 
-			// Show quantity input.
+			// TODO: Show quantity input.
 		},
 
 		// Perform the Removal

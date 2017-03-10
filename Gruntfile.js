@@ -52,6 +52,8 @@ module.exports = function( grunt ) {
 					'Gruntfile.js',
 					'wpsc-components/theme-engine-v2/theming/assets/js/**/*.js',
 					'!wpsc-components/theme-engine-v2/theming/assets/js/jquery.select-to-autocomplete.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/floatlabel.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/fluidbox.js',
 					'!wpsc-components/theme-engine-v2/theming/assets/js/cart-notifications.js',
 					'!**/*.min.js'
 				]
