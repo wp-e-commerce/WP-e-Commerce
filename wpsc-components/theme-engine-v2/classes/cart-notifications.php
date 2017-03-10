@@ -68,7 +68,7 @@ class WPSC_Cart_Notifications {
 		wpsc_localize_script( 'wpsc-cart-notifications', 'cartNotifications', array(
 			'debug'     => $this->debug,
 			'ajaxurl'   => admin_url( 'admin-ajax.php' ),
-			'baseRoute' => wpsc_get_cart_url( 'add' ),
+			'baseRoute' => wpsc_get_cart_url(),
 			'currency'  => $this->prepare_currency_vars_for_js(),
 			'CartView'  => array(
 				'items'  => $this->prepare_cart_items_for_js(),

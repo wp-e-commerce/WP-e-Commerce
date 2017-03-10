@@ -159,8 +159,19 @@ module.exports = function (currency, ajaxurl, baseRoute) {
 		},
 
 		url: function url() {
-			var url = baseRoute + encodeURIComponent(this.get('id')) + '?_wp_nonce=' + encodeURIComponent(this.get('nonce'));
+			var url = baseRoute + 'add/' + encodeURIComponent(this.get('id')) + '?_wp_nonce=' + encodeURIComponent(this.get('nonce'));
 
+			var qty = this.collection.pluck('quantity');
+			window.console.warn('qty', qty);
+			// /store/cart
+			// `/app/public/wp-content/plugins/WP-e-Commerce/wpsc-components/theme-engine-v2/mvc/controllers/cart.php:131:
+			// array (size=4)
+			//   '_wp_nonce' => string '78762affc4' (length=10)
+			//   'quantity' =>
+			//     array (size=1)
+			//       0 => string '4' (length=1)
+			//   'update_quantity' => string 'Update Quantity' (length=15)
+			//   'action' => string 'update_quantity' (length=15)
 			// switch( this.get( 'action' ) ) {
 
 			// 	case 'edit':
