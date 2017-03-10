@@ -51,6 +51,10 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form.class.php'         
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form-data.class.php'        );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-theme-engine-bootstrap.php'     );
 
+if ( defined( 'REST_API_VERSION' ) ) {
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-rest-api.class.php'         );
+}
+
 do_action( 'wpsc_loaded_module_'. basename( __FILE__ ) );
 
 // Taxes
