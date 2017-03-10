@@ -27,12 +27,12 @@
 	notifs.currency = require('./utils/currency.js')(notifs.currency);
 
 	notifs.models = {
-		Product: require('./models/product.js')(notifs.currency, notifs.ajaxurl),
+		Product: require('./models/product.js')(notifs.currency, notifs.ajaxurl, notifs.baseRoute),
 		Status: require('./models/status.js')(notifs.currency, notifs.strings)
 	};
 
 	notifs.collections = {
-		Products: require('./collections/products.js')(notifs.currency, notifs.models.Product, notifs.baseRoute)
+		Products: require('./collections/products.js')(notifs.currency, notifs.models.Product)
 	};
 
 	notifs.views = {
@@ -84,17 +84,9 @@
 },{"./collections/products.js":2,"./models/product.js":3,"./models/status.js":4,"./utils/currency.js":5,"./utils/product-dom-to-model.js":6,"./views/cart.js":7,"./views/product-row.js":8}],2:[function(require,module,exports){
 'use strict';
 
-module.exports = function (currency, prodouctModel, baseRoute) {
+module.exports = function (currency, prodouctModel) {
 	return Backbone.Collection.extend({
 		model: prodouctModel,
-
-		url: function url(model) {
-			return baseRoute + model.get('id') + '?' + model.get('nonce');
-		},
-
-		initialize: function initialize() {
-			this.listenTo(this, 'add remove', this.sync);
-		},
 
 		getById: function getById(id) {
 			id = parseInt(id, 10);
@@ -115,7 +107,7 @@ module.exports = function (currency, prodouctModel, baseRoute) {
 },{}],3:[function(require,module,exports){
 'use strict';
 
-module.exports = function (currency, ajaxurl) {
+module.exports = function (currency, ajaxurl, baseRoute) {
 	return Backbone.Model.extend({
 		defaults: {
 			id: 0,
@@ -128,6 +120,10 @@ module.exports = function (currency, ajaxurl) {
 			remove_url: '',
 			variations: [],
 			action: ''
+		},
+
+		initialize: function initialize() {
+			this.listenTo(this, 'add remove', this.sync);
 		},
 
 		getTotal: function getTotal() {
@@ -163,18 +159,18 @@ module.exports = function (currency, ajaxurl) {
 		},
 
 		url: function url() {
-			var url = ajaxurl + '?action=wpsc_cart_item&id=' + encodeURIComponent(this.get('id'));
+			var url = baseRoute + encodeURIComponent(this.get('id')) + '?_wp_nonce=' + encodeURIComponent(this.get('nonce'));
 
-			switch (this.get('action')) {
+			// switch( this.get( 'action' ) ) {
 
-				case 'edit':
-					url += '&action=edit&quantity=' + this.get('quantity');
-					break;
+			// 	case 'edit':
+			// 		url += '&action=edit&quantity=' + this.get( 'quantity' );
+			// 		break;
 
-				default:
-					url += '&action=' + this.get('action');
-					break;
-			}
+			// 	default:
+			// 		url += '&action=' + this.get( 'action' );
+			// 		break;
+			// }
 
 			return url;
 		}

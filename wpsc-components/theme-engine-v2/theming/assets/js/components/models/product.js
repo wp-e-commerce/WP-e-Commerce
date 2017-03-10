@@ -1,4 +1,4 @@
-module.exports = function( currency, ajaxurl ) {
+module.exports = function( currency, ajaxurl, baseRoute ) {
 	return Backbone.Model.extend({
 		defaults: {
 			id             : 0,
@@ -11,6 +11,10 @@ module.exports = function( currency, ajaxurl ) {
 			remove_url     : '',
 			variations     : [],
 			action         : ''
+		},
+
+		initialize: function() {
+			this.listenTo( this, 'add remove', this.sync );
 		},
 
 		getTotal : function() {
@@ -46,18 +50,18 @@ module.exports = function( currency, ajaxurl ) {
 		},
 
 		url: function() {
-			var url = ajaxurl +'?action=wpsc_cart_item&id='+ encodeURIComponent( this.get( 'id' ) );
+			var url = baseRoute + encodeURIComponent( this.get( 'id' ) ) + '?_wp_nonce='+ encodeURIComponent( this.get( 'nonce' ) );
 
-			switch( this.get( 'action' ) ) {
+			// switch( this.get( 'action' ) ) {
 
-				case 'edit':
-					url += '&action=edit&quantity=' + this.get( 'quantity' );
-					break;
+			// 	case 'edit':
+			// 		url += '&action=edit&quantity=' + this.get( 'quantity' );
+			// 		break;
 
-				default:
-					url += '&action=' + this.get( 'action' );
-					break;
-			}
+			// 	default:
+			// 		url += '&action=' + this.get( 'action' );
+			// 		break;
+			// }
 
 			return url;
 		}

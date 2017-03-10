@@ -16,12 +16,12 @@
 	notifs.currency = require( './utils/currency.js' )( notifs.currency );
 
 	notifs.models = {
-		Product : require( './models/product.js' )( notifs.currency, notifs.ajaxurl ),
+		Product : require( './models/product.js' )( notifs.currency, notifs.ajaxurl, notifs.baseRoute ),
 		Status  : require( './models/status.js' )( notifs.currency, notifs.strings )
 	};
 
 	notifs.collections = {
-		Products : require( './collections/products.js' )( notifs.currency, notifs.models.Product, notifs.baseRoute )
+		Products : require( './collections/products.js' )( notifs.currency, notifs.models.Product )
 	};
 
 	notifs.views = {
