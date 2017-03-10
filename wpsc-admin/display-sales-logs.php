@@ -643,7 +643,8 @@ class WPSC_Purchase_Log_Page {
 			'is_admin' => true,
 		) );
 
-		_wpsc_action_enqueue_shipping_billing_scripts();
+		wpsc_enqueue_script( 'wpsc-country-region' );
+		wpsc_enqueue_script( 'wpsc-copy-billing-info' );
 
 		foreach ( $engine->get_queued_scripts() as $handle => $data ) {
 			_wpsc_enqueue_and_localize_script( $handle, $data );
