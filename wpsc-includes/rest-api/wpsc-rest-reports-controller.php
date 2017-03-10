@@ -1,2 +1,2 @@
 <?php
-class WPSC_REST_Coupons_Controller extends WP_REST_Controller {}
+class WPSC_REST_Reports_Controller extends WP_REST_Controller {}
