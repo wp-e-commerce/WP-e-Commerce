@@ -30,7 +30,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	public function register_routes() {
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/add' . '/(?P<id>[\d]+)', array(
 			array(
-				'methods'         => WP_REST_Server::CREATABLE,
+				'methods'         => WP_REST_Server::EDITABLE,
 				'callback'        => array( $this, 'create_item' ),
 				'permission_callback' => array( $this, 'create_item_permissions_check' ),
 				'args'            => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
