@@ -131,6 +131,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			$this->product_id = apply_filters( 'wpsc_add_to_cart_product_id', absint( $this->request['id'] ) );
 
 			if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-add-to-cart-{$this->product_id}" ) ) {
+
 				// TODO: Determine proper status code.
 				throw new Exception( __( 'Request expired. Please try refreshing the page and adding the item to your cart again.', 'wp-e-commerce' ), 4002 );
 			}
@@ -147,8 +148,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 				$parameters['provided_price'] = (float) $request['donation_price'];
 			}
 
-			// Make sure all array keys are present and accounted for.
-			$parameters = array_merge( array(
+			$defaults = array(
 				'variation_values' => array(),
 				'quantity'         => 1,
 				'provided_price'   => null,
@@ -158,7 +158,10 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 				'file_data'        => null,
 				'is_customisable'  => false,
 				'meta'             => null, // Needed?
-			), $parameters );
+			);
+
+			// Make sure all array keys are present and accounted for.
+			$parameters = array_merge( $defaults, $parameters );
 
 			if ( $parameters['quantity'] <= 0 ) {
 				throw new Exception( __( 'Sorry, but the quantity you entered is not valid. Please try again.', 'wp-e-commerce' ), 4004 );
@@ -182,14 +185,14 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 
 					$message = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, the product "%s" is out of stock.', 'wp-e-commerce' ) );
 
-					throw new Exception( $message, 4006 );
+					throw new Exception( sprintf( $message, $product->post_title ), 4006 );
 				}
 
 				if ( $remaining_quantity < $parameters['quantity'] ) {
 
 					$message = __( 'Sorry, but the quantity you just specified is larger than the available stock. There are only %d of the item in stock.', 'wp-e-commerce' );
 
-					throw new Exception( $message, 4007 );
+					throw new Exception( sprintf( $message, $remaining_quantity ), 4007 );
 				}
 			}
 
@@ -212,8 +215,10 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			);
 
 		} catch ( Exception $e ) {
-			$status = substr( $e->getCode(), 3 );
-			return new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
+			$status = substr( $e->getCode(), 0, 3 );
+			$error = new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
+
+			return $error;
 		}
 
 		return new WP_REST_Response( $item, 200 );
