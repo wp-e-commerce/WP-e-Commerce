@@ -18,7 +18,7 @@ class WPSC_REST_API {
 
 	public static function hooks() {
 		add_filter( 'wpsc_register_post_types_products_args', array( __CLASS__, 'register_post_type_rest_args' ) );
-		add_action( 'rest_api_init', array( __CLASS__, 'includes' ), 999 );
+		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ), 999 );
 	}
 
 	public static function register_post_type_rest_args( $args ) {
@@ -30,7 +30,7 @@ class WPSC_REST_API {
 		return $args;
 	}
 
-	public static function includes() {
+	public static function register_routes() {
 		$dir = WPSC_FILE_PATH . '/wpsc-includes/rest-api/';
 
 		// scan files in dir
@@ -43,15 +43,13 @@ class WPSC_REST_API {
 				continue;
 			}
 
-			if ( in_array( $file, self::$core_types, true ) ) {
-				continue;
-			}
-
 			require_once $path;
 
 			$class_name = str_replace( array( '-', '.php' ), array( '_', '' ), $file );
 
-			new $class_name();
+			$controller = new $class_name();
+
+			$controller->register_routes();
 		}
 	}
 

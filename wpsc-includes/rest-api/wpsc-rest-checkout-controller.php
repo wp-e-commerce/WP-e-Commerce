@@ -25,7 +25,9 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	public function __construct() {
 		$this->namespace = 'wpsc/v1';
 		$this->rest_base = 'cart';
+	}
 
+	public function register_routes() {
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/add' . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'         => WP_REST_Server::CREATABLE,
@@ -292,6 +294,8 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Update one item from the collection
 	 *
+	 * @access public
+	 * @since 4.0.0
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
@@ -313,6 +317,8 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Delete one item from the collection
 	 *
+	 * @access public
+	 * @since 4.0.0
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
@@ -335,6 +341,8 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to get items
 	 *
+	 * @access public
+	 * @since 4.0.0
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|bool
 	 */
@@ -345,6 +353,8 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to get a specific item
 	 *
+	 * @access public
+	 * @since 4.0.0
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|bool
 	 */
@@ -355,6 +365,8 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to create items
 	 *
+	 * @access public
+	 * @since 4.0.0
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|bool
 	 */
@@ -365,6 +377,8 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to update a specific item
 	 *
+	 * @access public
+	 * @since 4.0.0
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|bool
 	 */
@@ -375,6 +389,8 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to delete a specific item
 	 *
+	 * @access public
+	 * @since 4.0.0
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|bool
 	 */
@@ -385,6 +401,8 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Prepare the item for create or update operation
 	 *
+	 * @access public
+	 * @since 4.0.0
 	 * @param WP_REST_Request $request Request object
 	 * @return WP_Error|object $prepared_item
 	 */
@@ -392,6 +410,10 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		return array();
 	}
 
+	/**
+	 * [prepare_item description]
+	 * @return [type] [description]
+	 */
 	public function prepare_item() {
 
 		$product = array();
