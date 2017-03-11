@@ -231,7 +231,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 */
 	protected function get_customization_values( $parameters ) {
 		if ( empty( $request['is_customisable'] ) ) {
-			return;
+			return $parameters;
 		}
 
 		$parameters['is_customisable'] = true;
