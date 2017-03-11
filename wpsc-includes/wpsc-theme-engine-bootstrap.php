@@ -182,7 +182,7 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 		$activate = false;
 	}
 
-	// In the future, this check will be more refined.  As of 3.9, the current Gold Cart release is incompatible with the 2.0 theme engine.
+	// In the future, this check will be more refined.  As of 4.0, the current Gold Cart release is incompatible with the 2.0 theme engine.
 	if ( defined( 'WPSC_GOLD_VERSION' ) ) {
 		$activate = false;
 	}

@@ -16,6 +16,12 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	protected $product_id = 0;
 	protected $request;
 
+	/**
+	 * Constructor.
+	 *
+	 * @since 4.0.0
+	 * @access public
+	 */
 	public function __construct() {
 		register_rest_route( $this->namespace, '/add' . '/(?P<id>[\d]+)', array(
 			array(
@@ -64,6 +70,9 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Get products in the cart.
 	 *
+	 * @since 4.0.0
+	 *
+	 * @access public
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
@@ -81,8 +90,11 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Get one produt from the cart.
+	 * Get one product from the cart.
 	 *
+	 * @since 4.0.0
+	 *
+	 * @access public
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
@@ -101,6 +113,9 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	/**
 	 * Add a product to the cart. Product ID is required.
 	 *
+	 * @since 4.0.0
+	 *
+	 * @access public
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
@@ -112,7 +127,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 				throw new Exception( __( 'Cannot add item to cart', 'wp-e-commerce' ), 4001 );
 			}
 
-			$this->request = $request;
+			$this->request    = $request;
 			$this->product_id = apply_filters( 'wpsc_add_to_cart_product_id', absint( $this->request['id'] ) );
 
 			if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-add-to-cart-{$this->product_id}" ) ) {
@@ -149,6 +164,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 				throw new Exception( __( 'Sorry, but the quantity you entered is not valid. Please try again.', 'wp-e-commerce' ), 4004 );
 			}
 
+			// TODO Use WPSC_Product. Create wpsc_get_product() wrapper. Has a stock helper for L176
 			$product = apply_filters( 'wpsc_add_to_cart_product_object', get_post( $this->product_id, OBJECT, 'display' ) );
 
 			if ( ! $product ) {
@@ -202,6 +218,16 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		return new WP_REST_Response( $item, 200 );
 	}
 
+	/**
+	 * Adds files and custom message to product in cart.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @todo References $request, which is not passed.
+	 * @access public
+	 * @param array $parameters Full data about the request.
+	 * @return array $parameters
+	 */
 	protected function get_customization_values( $parameters ) {
 		if ( empty( $request['is_customisable'] ) ) {
 			return;
@@ -221,6 +247,15 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		return $parameters;
 	}
 
+	/**
+	 * Adds files and custom message to product in cart.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @access public
+	 * @param array $parameters Full data about the request.
+	 * @return array $parameters
+	 */
 	protected function get_variation_values( $parameters ) {
 		if ( empty( $this->request['wpsc_product_variations'] ) ) {
 			return $parameters;
