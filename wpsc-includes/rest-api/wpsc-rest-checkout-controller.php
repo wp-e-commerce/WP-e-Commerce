@@ -12,6 +12,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		4006 => 'item-out-of-stock',
 		4007 => 'item-not-enough-stock',
 		4008 => 'item-variation-missing',
+		4009 => 'cannot-remove-item',
 	);
 	protected $product_id = 0;
 	protected $request;
@@ -138,7 +139,6 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 
 			if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-add-to-cart-{$this->product_id}" ) ) {
 
-				// TODO: Determine proper status code.
 				throw new Exception( __( 'Request expired. Please try refreshing the page and adding the item to your cart again.', 'wp-e-commerce' ), 4002 );
 			}
 
@@ -216,7 +216,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			}
 
 			$item = array(
-				'id'      => $product->ID,
+				'id'      => $this->product_id,
 				'message' => sprintf( __( 'You just added %s to your cart.', 'wp-e-commerce' ), $product->post_title ),
 			);
 
@@ -284,7 +284,6 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		if ( $variation_product_id > 0 ) {
 			$this->product_id = $variation_product_id;
 		} else {
-			// TODO: Determine proper status code.
 			throw new Exception( __( 'This variation combination is no longer available.  Please choose a different combination.', 'wp-e-commerce' ), 4003 );
 		}
 
@@ -323,19 +322,51 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function delete_item( $request ) {
-		$this->request = $request;
+		global $wpsc_cart;
 
-		if ( ! isset( $this->request['id'] ) ) {
-			return new WP_Error( 'cant-delete', __( 'Cannot delete item from cart', 'wp-e-commerce' ), array( 'status' => 500 ) );
+		try {
+
+			if ( ! isset( $this->request['id'] ) ) {
+				throw new Exception( __( 'Cannot remove item from cart', 'wp-e-commerce' ), 4009 );
+			}
+
+			$this->request    = $request;
+			$this->product_id = apply_filters( 'wpsc_remove_from_cart_product_id', absint( $this->request['id'] ) );
+
+			if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-remove-cart-item-{$this->product_id}" ) ) {
+
+				throw new Exception( __( 'Request expired. Please try refreshing the page and removing the item from your cart again.', 'wp-e-commerce' ), 4002 );
+			}
+
+			$item_removed = $wpsc_cart->remove_item( $this->product_id );
+
+			if ( ! $item_removed ) {
+				throw new Exception( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wp-e-commerce' ), 4000 );
+			}
+
+			// TODO Use WPSC_Product. Create wpsc_get_product() wrapper. Has a stock helper for L176
+			$product = apply_filters( 'wpsc_remove_from_cart_product_object', get_post( $this->product_id, OBJECT, 'display' ) );
+
+			if ( ! $product ) {
+				throw new Exception( __( 'Sorry, we could not find that item to remove it from the cart.', 'wp-e-commerce' ), 4005 );
+			}
+
+			$this->product_id = $product->ID;
+
+			$wpsc_cart->remove_item( $this->product_id );
+
+			$item = array(
+				'id'      => $this->product_id,
+				'message' => sprintf( __( 'You just removed %s from your cart.', 'wp-e-commerce' ), $product->post_title ),
+			);
+
+		} catch ( Exception $e ) {
+			$status = substr( $e->getCode(), 0, 3 );
+			$error = new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
+			return $error;
 		}
 
-		$deleted = false;
-
-		if ( $deleted ) {
-			return new WP_REST_Response( true, 200 );
-		}
-
-		return new WP_Error( 'cant-delete', __( 'Cannot delete cart', 'wp-e-commerce' ), array( 'status' => 500 ) );
+		return new WP_REST_Response( $item, 200 );
 	}
 
 	/**
