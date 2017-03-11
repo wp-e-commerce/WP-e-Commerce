@@ -1,6 +1,7 @@
 <?php
 class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 
+	public $namespace = 'wpsc/v1';
 	protected static $codes = array(
 		4000 => 'unknown-error',
 		4001 => 'cannot-add-item',
@@ -71,76 +72,6 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Retrieves the cart's schema, conforming to JSON Schema.
-	 *
-	 * @since 4.7.0
-	 * @access public
-	 *
-	 * @return array Item schema data.
-	 */
-	public function get_item_schema() {
-		$schema = array(
-			'$schema'              => 'http://json-schema.org/schema#',
-			'title'                => 'type',
-			'type'                 => 'object',
-			'properties'           => array(
-				'capabilities'     => array(
-					'description'  => __( 'All capabilities used by the post type.' ),
-					'type'         => 'object',
-					'context'      => array( 'edit' ),
-					'readonly'     => true,
-				),
-				'description'      => array(
-					'description'  => __( 'A human-readable description of the post type.' ),
-					'type'         => 'string',
-					'context'      => array( 'view', 'edit' ),
-					'readonly'     => true,
-				),
-				'hierarchical'     => array(
-					'description'  => __( 'Whether or not the post type should have children.' ),
-					'type'         => 'boolean',
-					'context'      => array( 'view', 'edit' ),
-					'readonly'     => true,
-				),
-				'labels'           => array(
-					'description'  => __( 'Human-readable labels for the post type for various contexts.' ),
-					'type'         => 'object',
-					'context'      => array( 'edit' ),
-					'readonly'     => true,
-				),
-				'name'             => array(
-					'description'  => __( 'The title for the post type.' ),
-					'type'         => 'string',
-					'context'      => array( 'view', 'edit', 'embed' ),
-					'readonly'     => true,
-				),
-				'slug'             => array(
-					'description'  => __( 'An alphanumeric identifier for the post type.' ),
-					'type'         => 'string',
-					'context'      => array( 'view', 'edit', 'embed' ),
-					'readonly'     => true,
-				),
-				'taxonomies'       => array(
-					'description'  => __( 'Taxonomies associated with post type.' ),
-					'type'         => 'array',
-					'items'        => array(
-						'type' => 'string',
-					),
-					'context'      => array( 'view', 'edit' ),
-					'readonly'     => true,
-				),
-				'rest_base'            => array(
-					'description'  => __( 'REST base route for the post type.' ),
-					'type'         => 'string',
-					'context'      => array( 'view', 'edit', 'embed' ),
-					'readonly'     => true,
-				),
-			),
-		);
-		return $this->add_additional_fields_schema( $schema );
-	}
-
-	/**
 	 * Get products in the cart.
 	 *
 	 * @since 4.0.0
@@ -204,6 +135,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			$this->product_id = apply_filters( 'wpsc_add_to_cart_product_id', absint( $this->request['id'] ) );
 
 			if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-add-to-cart-{$this->product_id}" ) ) {
+
 				// TODO: Determine proper status code.
 				throw new Exception( __( 'Request expired. Please try refreshing the page and adding the item to your cart again.', 'wp-e-commerce' ), 4002 );
 			}
@@ -220,8 +152,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 				$parameters['provided_price'] = (float) $request['donation_price'];
 			}
 
-			// Make sure all array keys are present and accounted for.
-			$parameters = array_merge( array(
+			$defaults = array(
 				'variation_values' => array(),
 				'quantity'         => 1,
 				'provided_price'   => null,
@@ -231,7 +162,10 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 				'file_data'        => null,
 				'is_customisable'  => false,
 				'meta'             => null, // Needed?
-			), $parameters );
+			);
+
+			// Make sure all array keys are present and accounted for.
+			$parameters = array_merge( $defaults, $parameters );
 
 			if ( $parameters['quantity'] <= 0 ) {
 				throw new Exception( __( 'Sorry, but the quantity you entered is not valid. Please try again.', 'wp-e-commerce' ), 4004 );
@@ -255,14 +189,14 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 
 					$message = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, the product "%s" is out of stock.', 'wp-e-commerce' ) );
 
-					throw new Exception( $message, 4006 );
+					throw new Exception( sprintf( $message, $product->post_title ), 4006 );
 				}
 
 				if ( $remaining_quantity < $parameters['quantity'] ) {
 
 					$message = __( 'Sorry, but the quantity you just specified is larger than the available stock. There are only %d of the item in stock.', 'wp-e-commerce' );
 
-					throw new Exception( $message, 4007 );
+					throw new Exception( sprintf( $message, $remaining_quantity ), 4007 );
 				}
 			}
 
@@ -285,7 +219,10 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			);
 
 		} catch ( Exception $e ) {
-			return new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
+			$status = substr( $e->getCode(), 0, 3 );
+			$error = new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
+
+			return $error;
 		}
 
 		return new WP_REST_Response( $item, 200 );
@@ -303,7 +240,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 */
 	protected function get_customization_values( $parameters ) {
 		if ( empty( $request['is_customisable'] ) ) {
-			return;
+			return $parameters;
 		}
 
 		$parameters['is_customisable'] = true;
@@ -464,35 +401,23 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		return apply_filters( 'wpsc_cart_rest_prepare_item', $product, $this );
 	}
 
-	/**
-	 * Get the query params for collections
-	 *
-	 * @return array
-	 */
-	public function get_collection_params() {
-		return array(
-			// 'page'                   => array(
-			// 	'description'        => 'Current page of the collection.',
-			// 	'type'               => 'integer',
-			// 	'default'            => 1,
-			// 	'sanitize_callback'  => 'absint',
-			// ),
-			// 'per_page'               => array(
-			// 	'description'        => 'Maximum number of items to be returned in result set.',
-			// 	'type'               => 'integer',
-			// 	'default'            => 10,
-			// 	'sanitize_callback'  => 'absint',
-			// ),
-			// 'component'              => array(
-			// 	'description'        => 'Limit results to those matching a specific component.',
-			// 	'type'               => 'string',
-			// 	'sanitize_callback'  => 'sanitize_text_field', // @todo: limit to registered components
-			// ),
-			// 'is_new'                 => array(
-			// 	'description'        => 'Limit results to those matching a specific component.',
-			// 	'type'               => 'boolean',
-			// 	'sanitize_callback'  => 'wp_validate_boolean'
-			// ),
+	public function get_item_schema() {
+		// TODO: Add proper schema.
+		$schema = array(
+			'$schema'              => 'http://json-schema.org/draft-04/schema#',
+			'title'                => 'WPSC',
+			'type'                 => 'object',
+			'properties'           => array(
+				'description' => array(
+					'description' => __( 'A human-readable description of the object.', 'wp-e-commerce' ),
+					'type'        => 'string',
+					'context'     => array(
+						'view',
+					),
+				),
+			),
 		);
+
+		return $this->add_additional_fields_schema( $schema );
 	}
 }
