@@ -1,7 +1,7 @@
 <?php
 class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 
-	public $namespace = 'wpsc/v1/cart';
+	public $namespace = 'wpsc/v1';
 	protected static $codes = array(
 		4000 => 'unknown-error',
 		4001 => 'cannot-add-item',
@@ -23,7 +23,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 * @access public
 	 */
 	public function __construct() {
-		register_rest_route( $this->namespace, '/add' . '/(?P<id>[\d]+)', array(
+		register_rest_route( $this->namespace, '/cart/add' . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'         => WP_REST_Server::CREATABLE,
 				'callback'        => array( $this, 'create_item' ),
@@ -32,7 +32,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			),
 		) );
 
-		register_rest_route( $this->namespace, '/(?P<id>[\d]+)', array(
+		register_rest_route( $this->namespace, '/cart/(?P<id>[\d]+)', array(
 			array(
 				'methods'         => WP_REST_Server::READABLE,
 				'callback'        => array( $this, 'get_item' ),
@@ -61,7 +61,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			),
 		) );
 
-		register_rest_route( $this->namespace, '/schema', array(
+		register_rest_route( $this->namespace, '/cart/schema', array(
 			'methods'  => WP_REST_Server::READABLE,
 			'callback' => array( $this, 'get_public_item_schema' ),
 		) );
@@ -212,6 +212,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			);
 
 		} catch ( Exception $e ) {
+			$status = substr( $e->getCode(), 3 );
 			return new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
 		}
 
@@ -391,35 +392,23 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		return apply_filters( 'wpsc_cart_rest_prepare_item', $product, $this );
 	}
 
-	/**
-	 * Get the query params for collections
-	 *
-	 * @return array
-	 */
-	public function get_collection_params() {
-		return array(
-			// 'page'                   => array(
-			// 	'description'        => 'Current page of the collection.',
-			// 	'type'               => 'integer',
-			// 	'default'            => 1,
-			// 	'sanitize_callback'  => 'absint',
-			// ),
-			// 'per_page'               => array(
-			// 	'description'        => 'Maximum number of items to be returned in result set.',
-			// 	'type'               => 'integer',
-			// 	'default'            => 10,
-			// 	'sanitize_callback'  => 'absint',
-			// ),
-			// 'component'              => array(
-			// 	'description'        => 'Limit results to those matching a specific component.',
-			// 	'type'               => 'string',
-			// 	'sanitize_callback'  => 'sanitize_text_field', // @todo: limit to registered components
-			// ),
-			// 'is_new'                 => array(
-			// 	'description'        => 'Limit results to those matching a specific component.',
-			// 	'type'               => 'boolean',
-			// 	'sanitize_callback'  => 'wp_validate_boolean'
-			// ),
+	public function get_item_schema() {
+		// TODO: Add proper schema.
+		$schema = array(
+			'$schema'              => 'http://json-schema.org/draft-04/schema#',
+			'title'                => 'WPSC',
+			'type'                 => 'object',
+			'properties'           => array(
+				'description' => array(
+					'description' => __( 'A human-readable description of the object.', 'wp-e-commerce' ),
+					'type'        => 'string',
+					'context'     => array(
+						'view',
+					),
+				),
+			),
 		);
+
+		return $this->add_additional_fields_schema( $schema );
 	}
 }
