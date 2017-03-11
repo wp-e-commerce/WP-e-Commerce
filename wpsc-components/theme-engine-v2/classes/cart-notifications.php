@@ -9,14 +9,14 @@ class WPSC_Cart_Notifications {
 
 	/**
 	 * wpsc_cart instance
-	 * @since 4.0
+	 * @since 4.0.0
 	 * @var wpsc_cart
 	 */
 	protected $wpsc_cart;
 
 	/**
 	 * Return the singleton instance
-	 * @since  4.0
+	 * @since  4.0.0
 	 * @return WPSC_Template_Engine
 	 */
 	public static function initiate() {
@@ -31,7 +31,7 @@ class WPSC_Cart_Notifications {
 	/**
 	 * Constructor
 	 *
-	 * @since 4.0
+	 * @since 4.0.0
 	 */
 	public function __construct( wpsc_cart $wpsc_cart, $debug = false ) {
 		$this->wpsc_cart = $wpsc_cart;
@@ -44,7 +44,7 @@ class WPSC_Cart_Notifications {
 	 * It is ok to be in the footer since the elements are all hidden/non-existent
 	 * when the page initially loads.
 	 *
-	 * @since  4.0
+	 * @since  4.0.0
 	 *
 	 * @return $this
 	 */
@@ -59,7 +59,7 @@ class WPSC_Cart_Notifications {
 	/**
 	 * Handles localizing the data we want to pass to the Cart JS.
 	 *
-	 * @since  4.0
+	 * @since  4.0.0
 	 *
 	 * @return $this
 	 */
@@ -87,7 +87,7 @@ class WPSC_Cart_Notifications {
 	/**
 	 * Handles outputting the JS templates we'll neeed available for the Cart JS.
 	 *
-	 * @since  4.0
+	 * @since  4.0.0
 	 *
 	 * @return $this
 	 */
@@ -133,7 +133,7 @@ class WPSC_Cart_Notifications {
 	/**
 	 * Gets the wpsc_cart data needed for the Cart JS.
 	 *
-	 * @since  4.0
+	 * @since  4.0.0
 	 *
 	 * @return array  Array of prepared cart items.
 	 */
@@ -149,7 +149,7 @@ class WPSC_Cart_Notifications {
 	/**
 	 * Gets the required wpsc_cart item data.
 	 *
-	 * @since  4.0
+	 * @since  4.0.0
 	 *
 	 * @return array  Prepared cart item array.
 	 */
@@ -210,7 +210,7 @@ class WPSC_Cart_Notifications {
 	/**
 	 * Gets the general cart status for the Cart JS.
 	 *
-	 * @since  4.0
+	 * @since  4.0.0
 	 *
 	 * @return array  Prepared cart status array.
 	 */
@@ -231,7 +231,7 @@ class WPSC_Cart_Notifications {
 	/**
 	 * Gets the currency vars needed for the Cart JS.
 	 *
-	 * @since  4.0
+	 * @since  4.0.0
 	 *
 	 * @return array  Prepared currency vars array.
 	 */
