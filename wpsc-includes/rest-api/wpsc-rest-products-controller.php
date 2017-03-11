@@ -2,12 +2,15 @@
 
 class WPSC_REST_Products_Controller extends WP_REST_Posts_Controller {
 
+	public function __construct( $post_type = 'wpsc-product' ) {
+		parent::__construct( $post_type );
+		$this->namespace = 'wpsc/v1';
+	}
+
 	/**
 	 * Register the routes for the objects of the controller.
 	 */
 	public function register_routes() {
-
-		$base = $this->get_post_type_base( $this->post_type );
 
 		$posts_args = array(
 			'context'               => array(
@@ -29,7 +32,7 @@ class WPSC_REST_Products_Controller extends WP_REST_Posts_Controller {
 			}
 		}
 
-		register_rest_route( 'wpsc/v1', '/' . $base, array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
 			array(
 				'methods'         => WP_REST_Server::READABLE,
 				'callback'        => array( $this, 'get_items' ),
@@ -42,7 +45,7 @@ class WPSC_REST_Products_Controller extends WP_REST_Posts_Controller {
 				'args'            => $this->get_endpoint_args_for_item_schema( true ),
 			),
 		) );
-		register_rest_route( 'wpsc/v1', '/' . $base . '/(?P<id>[\d]+)', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'         => WP_REST_Server::READABLE,
 				'callback'        => array( $this, 'get_item' ),
@@ -70,7 +73,7 @@ class WPSC_REST_Products_Controller extends WP_REST_Posts_Controller {
 				),
 			),
 		) );
-		register_rest_route( 'wpsc/v1', '/' . $base . '/schema', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/schema', array(
 			'methods'         => WP_REST_Server::READABLE,
 			'callback'        => array( $this, 'get_item_schema' ),
 		) );

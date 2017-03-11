@@ -2,6 +2,20 @@
 
 class WPSC_REST_API {
 
+	/**
+	 * Core types are controllers that extend core functionality.
+	 * This would include custom post types and taxonomies.
+	 *
+	 * We don't want to load these ourselves, as core handles that for us.
+	 * @var array
+	 */
+	protected static $core_types = array(
+		'wpsc-rest-categories-controller.php',
+		'wpsc-rest-products-controller.php',
+		'wpsc-rest-tags-controller.php',
+		'wpsc-rest-variations-controller.php',
+	);
+
 	public static function hooks() {
 		add_filter( 'wpsc_register_post_types_products_args', array( __CLASS__, 'register_post_type_rest_args' ) );
 		add_action( 'rest_api_init', array( __CLASS__, 'includes' ), 999 );
@@ -29,10 +43,14 @@ class WPSC_REST_API {
 				continue;
 			}
 
+			if ( in_array( $file, self::$core_types, true ) ) {
+				continue;
+			}
 
 			require_once $path;
 
 			$class_name = str_replace( array( '-', '.php' ), array( '_', '' ), $file );
+
 			new $class_name();
 		}
 	}

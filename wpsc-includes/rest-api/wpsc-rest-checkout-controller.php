@@ -1,7 +1,6 @@
 <?php
 class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 
-	public $namespace = 'wpsc/v1/cart';
 	protected static $codes = array(
 		4000 => 'unknown-error',
 		4001 => 'cannot-add-item',
@@ -23,7 +22,10 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 * @access public
 	 */
 	public function __construct() {
-		register_rest_route( $this->namespace, '/add' . '/(?P<id>[\d]+)', array(
+		$this->namespace = 'wpsc/v1';
+		$this->rest_base = 'cart';
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/add' . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'         => WP_REST_Server::CREATABLE,
 				'callback'        => array( $this, 'create_item' ),
@@ -32,7 +34,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			),
 		) );
 
-		register_rest_route( $this->namespace, '/(?P<id>[\d]+)', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'         => WP_REST_Server::READABLE,
 				'callback'        => array( $this, 'get_item' ),
@@ -61,10 +63,81 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 			),
 		) );
 
-		register_rest_route( $this->namespace, '/schema', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/schema', array(
 			'methods'  => WP_REST_Server::READABLE,
 			'callback' => array( $this, 'get_public_item_schema' ),
 		) );
+
+	}
+
+	/**
+	 * Retrieves the cart's schema, conforming to JSON Schema.
+	 *
+	 * @since 4.7.0
+	 * @access public
+	 *
+	 * @return array Item schema data.
+	 */
+	public function get_item_schema() {
+		$schema = array(
+			'$schema'              => 'http://json-schema.org/schema#',
+			'title'                => 'type',
+			'type'                 => 'object',
+			'properties'           => array(
+				'capabilities'     => array(
+					'description'  => __( 'All capabilities used by the post type.' ),
+					'type'         => 'object',
+					'context'      => array( 'edit' ),
+					'readonly'     => true,
+				),
+				'description'      => array(
+					'description'  => __( 'A human-readable description of the post type.' ),
+					'type'         => 'string',
+					'context'      => array( 'view', 'edit' ),
+					'readonly'     => true,
+				),
+				'hierarchical'     => array(
+					'description'  => __( 'Whether or not the post type should have children.' ),
+					'type'         => 'boolean',
+					'context'      => array( 'view', 'edit' ),
+					'readonly'     => true,
+				),
+				'labels'           => array(
+					'description'  => __( 'Human-readable labels for the post type for various contexts.' ),
+					'type'         => 'object',
+					'context'      => array( 'edit' ),
+					'readonly'     => true,
+				),
+				'name'             => array(
+					'description'  => __( 'The title for the post type.' ),
+					'type'         => 'string',
+					'context'      => array( 'view', 'edit', 'embed' ),
+					'readonly'     => true,
+				),
+				'slug'             => array(
+					'description'  => __( 'An alphanumeric identifier for the post type.' ),
+					'type'         => 'string',
+					'context'      => array( 'view', 'edit', 'embed' ),
+					'readonly'     => true,
+				),
+				'taxonomies'       => array(
+					'description'  => __( 'Taxonomies associated with post type.' ),
+					'type'         => 'array',
+					'items'        => array(
+						'type' => 'string',
+					),
+					'context'      => array( 'view', 'edit' ),
+					'readonly'     => true,
+				),
+				'rest_base'            => array(
+					'description'  => __( 'REST base route for the post type.' ),
+					'type'         => 'string',
+					'context'      => array( 'view', 'edit', 'embed' ),
+					'readonly'     => true,
+				),
+			),
+		);
+		return $this->add_additional_fields_schema( $schema );
 	}
 
 	/**
