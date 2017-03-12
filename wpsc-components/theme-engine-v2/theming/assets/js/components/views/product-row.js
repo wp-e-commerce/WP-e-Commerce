@@ -64,9 +64,9 @@ module.exports = function( log ) {
 				log( 'destroyError', response );
 
 				// for now:
-				_this.$el.remove();
+				// _this.$el.remove();
 				// whoops.. re-show row and add error message
-				// _this.$el.fadeIn( 300 );
+				_this.$el.fadeIn( 300 );
 			};
 
 			// Ajax success handler

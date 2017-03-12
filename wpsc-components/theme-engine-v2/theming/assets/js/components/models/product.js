@@ -1,4 +1,5 @@
-module.exports = function( currency, ajaxurl, baseRoute ) {
+module.exports = function( notifs ) {
+
 	return Backbone.Model.extend({
 		defaults: {
 			id             : 0,
@@ -14,7 +15,7 @@ module.exports = function( currency, ajaxurl, baseRoute ) {
 		},
 
 		initialize: function() {
-			this.listenTo( this, 'add remove', this.sync );
+			this.listenTo( this, 'create add remove', this.sync );
 		},
 
 		getTotal : function() {
@@ -35,7 +36,7 @@ module.exports = function( currency, ajaxurl, baseRoute ) {
 					break;
 
 				case 'formattedPrice':
-					value = currency.format( this.get( 'price' ) );
+					value = notifs.currency.format( this.get( 'price' ) );
 					break;
 
 				case 'variations':
@@ -49,32 +50,30 @@ module.exports = function( currency, ajaxurl, baseRoute ) {
 			return value;
 		},
 
+		sync: function( method, model, options ) {
+			var beforeSend;
+
+			options = options || {};
+
+			if ( ! _.isUndefined( notifs.apiNonce ) && ! _.isNull( notifs.apiNonce ) ) {
+				beforeSend = options.beforeSend;
+
+				options.beforeSend = function( xhr ) {
+					xhr.setRequestHeader( 'X-WP-Nonce', notifs.apiNonce );
+
+					if ( beforeSend ) {
+						return beforeSend.apply( this, arguments );
+					}
+				};
+			}
+
+			return Backbone.sync( method, model, options );
+		},
+
 		url: function() {
-			var url = baseRoute + 'add/' + encodeURIComponent( this.get( 'id' ) ) + '?_wp_nonce='+ encodeURIComponent( this.get( 'nonce' ) );
+			var modelurl = notifs.baseRoute + '/cart/add/' + encodeURIComponent( this.get( 'id' ) ) + '?_wp_nonce='+ encodeURIComponent( this.get( 'nonce' ) );
 
-			var qty = this.collection.pluck( 'quantity' );
-			window.console.warn('qty', qty);
-			// /store/cart
-			// `/app/public/wp-content/plugins/WP-e-Commerce/wpsc-components/theme-engine-v2/mvc/controllers/cart.php:131:
-			// array (size=4)
-			//   '_wp_nonce' => string '78762affc4' (length=10)
-			//   'quantity' =>
-			//     array (size=1)
-			//       0 => string '4' (length=1)
-			//   'update_quantity' => string 'Update Quantity' (length=15)
-			//   'action' => string 'update_quantity' (length=15)
-			// switch( this.get( 'action' ) ) {
-
-			// 	case 'edit':
-			// 		url += '&action=edit&quantity=' + this.get( 'quantity' );
-			// 		break;
-
-			// 	default:
-			// 		url += '&action=' + this.get( 'action' );
-			// 		break;
-			// }
-
-			return url;
+			return modelurl;
 		}
 	});
 };
