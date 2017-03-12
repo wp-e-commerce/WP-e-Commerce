@@ -87,9 +87,9 @@ module.exports = function( args, $, log ) {
 
 			// create a sub view for every model in the collection
 			this.collection.each( function( model ) {
-				var row = new args.rowView({ model: model });
+				var row = new args.rowView( { model: model } );
 				productNodes.appendChild( row.render().el );
-			});
+			} );
 
 			return productNodes;
 		},
@@ -155,5 +155,5 @@ module.exports = function( args, $, log ) {
 			this.status.set( 'view', jQuery( evt.target ).data( 'view' ) );
 		}
 
-	});
+	} );
 };

@@ -63,8 +63,6 @@ module.exports = function( log ) {
 			var destroyError = function( model, response ) {
 				log( 'destroyError', response );
 
-				// for now:
-				// _this.$el.remove();
 				// whoops.. re-show row and add error message
 				_this.$el.fadeIn( 300 );
 			};
@@ -72,8 +70,9 @@ module.exports = function( log ) {
 			// Ajax success handler
 			var destroySuccess = function( model, response ) {
 				// If our response reports success
-				if ( response.success ) {
+				if ( response.id ) {
 					log( 'destroySuccess', response );
+
 					// remove our row completely
 					_this.$el.remove();
 				} else {
@@ -87,7 +86,7 @@ module.exports = function( log ) {
 			_this.$el.fadeOut( 300 );
 
 			// Remove model and fire ajax event
-			this.model.destroy({ success: destroySuccess, error: destroyError, wait: true });
+			this.model.destroy({ success: destroySuccess, error: destroyError, wait: true } );
 		}
-	});
+	} );
 };

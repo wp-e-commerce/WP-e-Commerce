@@ -60,5 +60,5 @@ module.exports = function( currency, strings ) {
 		toJSON: function() {
 			return _.mapObject( Backbone.Model.prototype.toJSON.call( this ), _.bind( this._get, this ) );
 		}
-	});
+	} );
 };

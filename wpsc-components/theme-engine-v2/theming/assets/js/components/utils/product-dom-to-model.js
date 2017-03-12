@@ -38,7 +38,7 @@ module.exports = function( currency ) {
 				label : $variationLabel.length ? $variationLabel.text() : '',
 				value : variationValue
 			} );
-		});
+		} );
 
 		return variations;
 	};

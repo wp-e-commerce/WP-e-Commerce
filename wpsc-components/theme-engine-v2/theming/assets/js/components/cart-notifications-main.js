@@ -46,7 +46,7 @@
 		// Kick it off.
 		notifs.CartView = new notifs.views.Cart({
 			collection : new notifs.collections.Products( notifs.CartView.items )
-		});
+		} );
 	};
 
 	notifs.clickAddProductToCart = function( evt ) {

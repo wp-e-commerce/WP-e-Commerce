@@ -87,7 +87,7 @@
 module.exports = function (notifs) {
 	return Backbone.Collection.extend({
 		model: notifs.models.Product,
-		url: notifs.baseRoute,
+		url: notifs.baseRoute + '/cart',
 
 		getById: function getById(id) {
 			id = parseInt(id, 10);
@@ -100,26 +100,6 @@ module.exports = function (notifs) {
 			return this.reduce(function (memo, model) {
 				return memo + model.getTotal();
 			}, 0).toFixed(2);
-		},
-
-		sync: function sync(method, model, options) {
-			var beforeSend;
-
-			options = options || {};
-
-			if (!_.isUndefined(notifs.apiNonce) && !_.isNull(notifs.apiNonce)) {
-				beforeSend = options.beforeSend;
-
-				options.beforeSend = function (xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', notifs.apiNonce);
-
-					if (beforeSend) {
-						return beforeSend.apply(this, arguments);
-					}
-				};
-			}
-
-			return Backbone.sync(method, model, options);
 		}
 	});
 };
@@ -132,6 +112,8 @@ module.exports = function (notifs) {
 	return Backbone.Model.extend({
 		defaults: {
 			id: 0,
+			nonce: '',
+			deleteNonce: '',
 			url: '',
 			price: '',
 			formattedPrice: '',
@@ -141,10 +123,6 @@ module.exports = function (notifs) {
 			remove_url: '',
 			variations: [],
 			action: ''
-		},
-
-		initialize: function initialize() {
-			this.listenTo(this, 'create add remove', this.sync);
 		},
 
 		getTotal: function getTotal() {
@@ -183,6 +161,15 @@ module.exports = function (notifs) {
 			var beforeSend;
 
 			options = options || {};
+			options.url = model.url();
+
+			if ('update' === method) {
+				options.url = model.collection.url;
+				options.url += '/add/' + encodeURIComponent(this.get('id'));
+			}
+
+			var nonce = 'delete' === method ? this.get('deleteNonce') : this.get('nonce');
+			options.url += '?_wp_nonce=' + encodeURIComponent(nonce);
 
 			if (!_.isUndefined(notifs.apiNonce) && !_.isNull(notifs.apiNonce)) {
 				beforeSend = options.beforeSend;
@@ -197,12 +184,6 @@ module.exports = function (notifs) {
 			}
 
 			return Backbone.sync(method, model, options);
-		},
-
-		url: function url() {
-			var modelurl = notifs.baseRoute + '/cart/add/' + encodeURIComponent(this.get('id')) + '?_wp_nonce=' + encodeURIComponent(this.get('nonce'));
-
-			return modelurl;
 		}
 	});
 };
@@ -639,8 +620,6 @@ module.exports = function (log) {
 			var destroyError = function destroyError(model, response) {
 				log('destroyError', response);
 
-				// for now:
-				// _this.$el.remove();
 				// whoops.. re-show row and add error message
 				_this.$el.fadeIn(300);
 			};
@@ -648,8 +627,9 @@ module.exports = function (log) {
 			// Ajax success handler
 			var destroySuccess = function destroySuccess(model, response) {
 				// If our response reports success
-				if (response.success) {
+				if (response.id) {
 					log('destroySuccess', response);
+
 					// remove our row completely
 					_this.$el.remove();
 				} else {

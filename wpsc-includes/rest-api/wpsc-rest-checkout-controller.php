@@ -127,107 +127,110 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function create_item( $request ) {
+		$this->request = $request;
+		return $this->try( 'add_item_to_cart' );
+	}
+
+	/**
+	 * Add a product to the cart. Product ID is required.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @access public
+	 * @return WP_Error|WP_REST_Request
+	 */
+	public function add_item_to_cart() {
 		global $wpsc_cart;
 
-		try {
-			if ( ! isset( $request['id'] ) ) {
-				throw new Exception( __( 'Cannot add item to cart', 'wp-e-commerce' ), 4001 );
-			}
-
-			$this->request    = $request;
-			$this->product_id = apply_filters( 'wpsc_add_to_cart_product_id', absint( $this->request['id'] ) );
-
-			if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-add-to-cart-{$this->product_id}" ) ) {
-
-				throw new Exception( __( 'Request expired. Please try refreshing the page and adding the item to your cart again.', 'wp-e-commerce' ), 4002 );
-			}
-
-			$parameters = array();
-			$parameters = $this->get_variation_values( $parameters );
-			$parameters = $this->get_customization_values( $parameters );
-
-			if ( ! empty( $request['quantity'] ) ) {
-				$parameters['quantity'] = (int) $request['quantity'];
-			}
-
-			if ( ! empty( $request['donation_price'] ) && (float) $request['donation_price'] > 0 ) {
-				$parameters['provided_price'] = (float) $request['donation_price'];
-			}
-
-			$defaults = array(
-				'variation_values' => array(),
-				'quantity'         => 1,
-				'provided_price'   => null,
-				'comment'          => null, // Needed?
-				'time_requested'   => null, // Needed?
-				'custom_message'   => '',
-				'file_data'        => null,
-				'is_customisable'  => false,
-				'meta'             => null, // Needed?
-			);
-
-			// Make sure all array keys are present and accounted for.
-			$parameters = array_merge( $defaults, $parameters );
-
-			if ( $parameters['quantity'] <= 0 ) {
-				throw new Exception( __( 'Sorry, but the quantity you entered is not valid. Please try again.', 'wp-e-commerce' ), 4004 );
-			}
-
-			// TODO Use WPSC_Product. Create wpsc_get_product() wrapper. Has a stock helper for L176
-			$product = apply_filters( 'wpsc_add_to_cart_product_object', get_post( $this->product_id, OBJECT, 'display' ) );
-
-			if ( ! $product ) {
-				throw new Exception( __( 'Sorry, we could not find that item to add it to the cart.', 'wp-e-commerce' ), 4005 );
-			}
-
-			$this->product_id = $product->ID;
-
-			$stock = get_post_meta( $this->product_id, '_wpsc_stock', true );
-
-			$remaining_quantity = $wpsc_cart->get_remaining_quantity( $this->product_id, $parameters['variation_values'] );
-
-			if ( '' !== $stock && true !== $remaining_quantity ) {
-				if ( $remaining_quantity <= 0 ) {
-
-					$message = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, the product "%s" is out of stock.', 'wp-e-commerce' ) );
-
-					throw new Exception( sprintf( $message, $product->post_title ), 4006 );
-				}
-
-				if ( $remaining_quantity < $parameters['quantity'] ) {
-
-					$message = __( 'Sorry, but the quantity you just specified is larger than the available stock. There are only %d of the item in stock.', 'wp-e-commerce' );
-
-					throw new Exception( sprintf( $message, $remaining_quantity ), 4007 );
-				}
-			}
-
-			if ( wpsc_product_has_variations( $this->product_id ) && null === $parameters['variation_values'] ) {
-
-				$message = apply_filters( 'wpsc_api_add_to_cart_variation_missing_message', __( 'This product has several options to choose from. Please select one to add to cart.', 'wp-e-commerce' ), $this->product_id );
-
-				throw new Exception( $message, 4008 );
-			}
-
-			$item_added = $wpsc_cart->set_item( $this->product_id, $parameters );
-
-			if ( ! $item_added ) {
-				throw new Exception( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wp-e-commerce' ), 4000 );
-			}
-
-			$item = array(
-				'id'      => $this->product_id,
-				'message' => sprintf( __( 'You just added %s to your cart.', 'wp-e-commerce' ), $product->post_title ),
-			);
-
-		} catch ( Exception $e ) {
-			$status = substr( $e->getCode(), 0, 3 );
-			$error = new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
-
-			return $error;
+		if ( ! isset( $this->request['id'] ) ) {
+			throw new Exception( __( 'Cannot add item to cart', 'wp-e-commerce' ), 4001 );
 		}
 
-		return new WP_REST_Response( $item, 200 );
+		$this->product_id = apply_filters( 'wpsc_add_to_cart_product_id', absint( $this->request['id'] ) );
+
+		if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-add-to-cart-{$this->product_id}" ) ) {
+
+			throw new Exception( __( 'Request expired. Please try refreshing the page and adding the item to your cart again.', 'wp-e-commerce' ), 4002 );
+		}
+
+		$parameters = array();
+		$parameters = $this->get_variation_values( $parameters );
+		$parameters = $this->get_customization_values( $parameters );
+
+		if ( ! empty( $this->request['quantity'] ) ) {
+			$parameters['quantity'] = (int) $this->request['quantity'];
+		}
+
+		if ( ! empty( $this->request['donation_price'] ) && (float) $this->request['donation_price'] > 0 ) {
+			$parameters['provided_price'] = (float) $this->request['donation_price'];
+		}
+
+		$defaults = array(
+			'variation_values' => array(),
+			'quantity'         => 1,
+			'provided_price'   => null,
+			'comment'          => null, // Needed?
+			'time_requested'   => null, // Needed?
+			'custom_message'   => '',
+			'file_data'        => null,
+			'is_customisable'  => false,
+			'meta'             => null, // Needed?
+		);
+
+		// Make sure all array keys are present and accounted for.
+		$parameters = array_merge( $defaults, $parameters );
+
+		if ( $parameters['quantity'] <= 0 ) {
+			throw new Exception( __( 'Sorry, but the quantity you entered is not valid. Please try again.', 'wp-e-commerce' ), 4004 );
+		}
+
+		// TODO Use WPSC_Product. Create wpsc_get_product() wrapper. Has a stock helper for L176
+		$product = apply_filters( 'wpsc_add_to_cart_product_object', get_post( $this->product_id, OBJECT, 'display' ) );
+
+		if ( ! $product ) {
+			throw new Exception( __( 'Sorry, we could not find that item to add it to the cart.', 'wp-e-commerce' ), 4005 );
+		}
+
+		$this->product_id = $product->ID;
+
+		$stock = get_post_meta( $this->product_id, '_wpsc_stock', true );
+
+		$remaining_quantity = $wpsc_cart->get_remaining_quantity( $this->product_id, $parameters['variation_values'] );
+
+		if ( '' !== $stock && true !== $remaining_quantity ) {
+			if ( $remaining_quantity <= 0 ) {
+
+				$message = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, the product "%s" is out of stock.', 'wp-e-commerce' ) );
+
+				throw new Exception( sprintf( $message, $product->post_title ), 4006 );
+			}
+
+			if ( $remaining_quantity < $parameters['quantity'] ) {
+
+				$message = __( 'Sorry, but the quantity you just specified is larger than the available stock. There are only %d of the item in stock.', 'wp-e-commerce' );
+
+				throw new Exception( sprintf( $message, $remaining_quantity ), 4007 );
+			}
+		}
+
+		if ( wpsc_product_has_variations( $this->product_id ) && null === $parameters['variation_values'] ) {
+
+			$message = apply_filters( 'wpsc_api_add_to_cart_variation_missing_message', __( 'This product has several options to choose from. Please select one to add to cart.', 'wp-e-commerce' ), $this->product_id );
+
+			throw new Exception( $message, 4008 );
+		}
+
+		$item_added = $wpsc_cart->set_item( $this->product_id, $parameters );
+
+		if ( ! $item_added ) {
+			throw new Exception( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wp-e-commerce' ), 4000 );
+		}
+
+		return array(
+			'id'          => $this->product_id,
+			'message'     => sprintf( __( 'You just added %s to your cart.', 'wp-e-commerce' ), $product->post_title ),
+			'deleteNonce' => wp_create_nonce( "wpsc-remove-cart-item-{$this->product_id}" ),
+		);
 	}
 
 	/**
@@ -241,14 +244,14 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 * @return array $parameters
 	 */
 	protected function get_customization_values( $parameters ) {
-		if ( empty( $request['is_customisable'] ) ) {
+		if ( empty( $this->request['is_customisable'] ) ) {
 			return $parameters;
 		}
 
 		$parameters['is_customisable'] = true;
 
-		if ( ! empty( $request['custom_text'] ) ) {
-			$parameters['custom_message'] = $request['custom_text'];
+		if ( ! empty( $this->request['custom_text'] ) ) {
+			$parameters['custom_message'] = $this->request['custom_text'];
 		}
 
 		// TODO - How should we work this?
@@ -322,51 +325,51 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function delete_item( $request ) {
+		$this->request = $request;
+		return $this->try( 'delete_item_from_cart' );
+	}
+
+	/**
+	 * Delete one item from the collection
+	 *
+	 * @access public
+	 * @since 4.0.0
+	 * @return WP_Error|WP_REST_Request
+	 */
+	public function delete_item_from_cart() {
 		global $wpsc_cart;
 
-		try {
-
-			if ( ! isset( $this->request['id'] ) ) {
-				throw new Exception( __( 'Cannot remove item from cart', 'wp-e-commerce' ), 4009 );
-			}
-
-			$this->request    = $request;
-			$this->product_id = apply_filters( 'wpsc_remove_from_cart_product_id', absint( $this->request['id'] ) );
-
-			if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-remove-cart-item-{$this->product_id}" ) ) {
-
-				throw new Exception( __( 'Request expired. Please try refreshing the page and removing the item from your cart again.', 'wp-e-commerce' ), 4002 );
-			}
-
-			$item_removed = $wpsc_cart->remove_item( $this->product_id );
-
-			if ( ! $item_removed ) {
-				throw new Exception( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wp-e-commerce' ), 4000 );
-			}
-
-			// TODO Use WPSC_Product. Create wpsc_get_product() wrapper. Has a stock helper for L176
-			$product = apply_filters( 'wpsc_remove_from_cart_product_object', get_post( $this->product_id, OBJECT, 'display' ) );
-
-			if ( ! $product ) {
-				throw new Exception( __( 'Sorry, we could not find that item to remove it from the cart.', 'wp-e-commerce' ), 4005 );
-			}
-
-			$this->product_id = $product->ID;
-
-			$wpsc_cart->remove_item( $this->product_id );
-
-			$item = array(
-				'id'      => $this->product_id,
-				'message' => sprintf( __( 'You just removed %s from your cart.', 'wp-e-commerce' ), $product->post_title ),
-			);
-
-		} catch ( Exception $e ) {
-			$status = substr( $e->getCode(), 0, 3 );
-			$error = new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
-			return $error;
+		if ( ! isset( $this->request['id'] ) ) {
+			throw new Exception( __( 'Cannot remove item from cart', 'wp-e-commerce' ), 4009 );
 		}
 
-		return new WP_REST_Response( $item, 200 );
+		$this->product_id = apply_filters( 'wpsc_remove_from_cart_product_id', absint( $this->request['id'] ) );
+
+		if ( empty( $this->request['_wp_nonce'] ) || ! wp_verify_nonce( $this->request['_wp_nonce'], "wpsc-remove-cart-item-{$this->product_id}" ) ) {
+
+			throw new Exception( __( 'Request expired. Please try refreshing the page and removing the item from your cart again.', 'wp-e-commerce' ), 4002 );
+		}
+
+		// TODO Use WPSC_Product. Create wpsc_get_product() wrapper. Has a stock helper for L176
+		$product = apply_filters( 'wpsc_remove_from_cart_product_object', get_post( $this->product_id, OBJECT, 'display' ) );
+
+		if ( ! $product ) {
+			throw new Exception( __( 'Sorry, we could not find that item to remove it from the cart.', 'wp-e-commerce' ), 4005 );
+		}
+
+		$this->product_id = $product->ID;
+
+		$item_removed = $wpsc_cart->remove_item_by_id( $this->product_id );
+
+		if ( ! $item_removed ) {
+			throw new Exception( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wp-e-commerce' ), 4000 );
+		}
+
+		return array(
+			'id'      => $this->product_id,
+			'message' => sprintf( __( 'You just removed %s from your cart.', 'wp-e-commerce' ), $product->post_title ),
+		);
+
 	}
 
 	/**
@@ -452,6 +455,23 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		) );
 
 		return apply_filters( 'wpsc_cart_rest_prepare_item', $product, $this );
+	}
+
+	public function try( $callback ) {
+		try {
+
+			$item = $this->$callback();
+			$result = new WP_REST_Response( $item, 200 );
+
+		} catch ( Exception $e ) {
+
+			$status = substr( $e->getCode(), 0, 3 );
+			$result = new WP_Error( self::$codes[ $e->getCode() ], $e->getMessage(), array( 'status' => $status ) );
+
+		}
+
+		// error_log( 'try $result: '. print_r( $result, true ) );
+		return $result;
 	}
 
 	public function get_item_schema() {

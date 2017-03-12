@@ -3,6 +3,8 @@ module.exports = function( notifs ) {
 	return Backbone.Model.extend({
 		defaults: {
 			id             : 0,
+			nonce          : '',
+			deleteNonce    : '',
 			url            : '',
 			price          : '',
 			formattedPrice : '',
@@ -12,10 +14,6 @@ module.exports = function( notifs ) {
 			remove_url     : '',
 			variations     : [],
 			action         : ''
-		},
-
-		initialize: function() {
-			this.listenTo( this, 'create add remove', this.sync );
 		},
 
 		getTotal : function() {
@@ -54,6 +52,15 @@ module.exports = function( notifs ) {
 			var beforeSend;
 
 			options = options || {};
+			options.url = model.url();
+
+			if ( 'update' === method ) {
+				options.url = model.collection.url;
+				options.url += '/add/' + encodeURIComponent( this.get( 'id' ) );
+			}
+
+			var nonce = 'delete' === method ? this.get( 'deleteNonce' ) : this.get( 'nonce' );
+			options.url += '?_wp_nonce='+ encodeURIComponent( nonce );
 
 			if ( ! _.isUndefined( notifs.apiNonce ) && ! _.isNull( notifs.apiNonce ) ) {
 				beforeSend = options.beforeSend;
@@ -68,12 +75,6 @@ module.exports = function( notifs ) {
 			}
 
 			return Backbone.sync( method, model, options );
-		},
-
-		url: function() {
-			var modelurl = notifs.baseRoute + '/cart/add/' + encodeURIComponent( this.get( 'id' ) ) + '?_wp_nonce='+ encodeURIComponent( this.get( 'nonce' ) );
-
-			return modelurl;
 		}
-	});
+	} );
 };
