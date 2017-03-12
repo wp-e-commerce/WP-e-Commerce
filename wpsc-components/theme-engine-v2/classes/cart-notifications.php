@@ -195,6 +195,8 @@ class WPSC_Cart_Notifications {
 
 		$prepared = array(
 			'id'             => $item->product_id,
+			'nonce'          => wp_create_nonce( "wpsc-add-to-cart-{$item->product_id}" ),
+			'deleteNonce'    => wp_create_nonce( "wpsc-remove-cart-item-{$item->product_id}" ),
 			'url'            => $permalink,
 			'price'          => $item->unit_price, // @todo correct property?
 			'formattedPrice' => wpsc_format_currency( $item->unit_price ), // @todo correct property?
