@@ -43,7 +43,7 @@ module.exports = function( grunt ) {
 					'!wpsc-admin/js/admin-legacy.js',
 					'!wpsc-admin/js/jquery-*.js',
 					'!wpsc-components/theme-engine-v2/admin/js/select2*.js',
-					'!wpsc-components/theme-engine-v2/theming/assets/js/jquery.select-to-autocomplete.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/jquery.*.js',
 					'!*.min.js'
 				]
 			},
@@ -51,7 +51,7 @@ module.exports = function( grunt ) {
 				src : [
 					'Gruntfile.js',
 					'wpsc-components/theme-engine-v2/theming/assets/js/**/*.js',
-					'!wpsc-components/theme-engine-v2/theming/assets/js/jquery.select-to-autocomplete.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/jquery.*.js',
 					'!wpsc-components/theme-engine-v2/theming/assets/js/floatlabel.js',
 					'!wpsc-components/theme-engine-v2/theming/assets/js/fluidbox.js',
 					'!wpsc-components/theme-engine-v2/theming/assets/js/cart-notifications.js',
@@ -75,25 +75,30 @@ module.exports = function( grunt ) {
 		},
 
 		uglify: {
-			options: {
-				banner: compactBannerTemplate,
-				mangle: false
-			},
 			all: {
+				options: {
+					banner: compactBannerTemplate,
+					mangle: false
+				},
 				files: [{
 					expand: true,
 					cwd: 'wpsc-components/theme-engine-v2/theming/assets/js',
 					src: ['*.js', '!*.min.js'],
 					dest: 'wpsc-components/theme-engine-v2/theming/assets/js',
+					extDot: 'last',
 					ext: '.min.js'
 				}]
 			},
-			watch : {
+			noBanner : {
+				options: {
+					mangle: false
+				},
 				files: [{
 					expand: true,
 					cwd: 'wpsc-components/theme-engine-v2/theming/assets/js',
-					src: ['*.js', '!*.min.js'],
+					src: ['jquery.*.js', '!jquery.*.min.js'],
 					dest: 'wpsc-components/theme-engine-v2/theming/assets/js',
+					extDot: 'last',
 					ext: '.min.js'
 				}]
 			}
@@ -211,7 +216,8 @@ module.exports = function( grunt ) {
 				}
 			},
 			js: {
-				files: ['<%= jshint.watch.src %>'],
+				// files: ['<%= jshint.watch.src %>'],
+				files: ['**/*.js', '!**/*.min.js'],
 				tasks: ['watchjs'],
 				options: {
 					debounceDelay: 500
@@ -223,7 +229,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask('css', ['asciify', 'sass', 'cmq', 'cssmin']);
 	grunt.registerTask('js', ['asciify', 'jshint', 'browserify', 'uglify']);
-	grunt.registerTask('watchjs', ['asciify', 'jshint:watch', 'browserify', 'uglify:watch']);
+	grunt.registerTask('watchjs', ['asciify', 'jshint:watch', 'browserify', 'uglify']);
 	grunt.registerTask('default', ['asciify', 'js', 'css', 'makepot']);
 
 	/**

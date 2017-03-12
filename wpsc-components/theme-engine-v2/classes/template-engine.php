@@ -195,7 +195,7 @@ class WPSC_Template_Engine {
 				),
 			),
 			'wpsc-float-labels' => array(
-				'path'         => "js/floatlabel{$suffix}.js",
+				'path'         => "js/jquery.floatlabel{$suffix}.js",
 				'dependencies' => array( 'jquery' ),
 				'version'      => WPSC_VERSION,
 			),

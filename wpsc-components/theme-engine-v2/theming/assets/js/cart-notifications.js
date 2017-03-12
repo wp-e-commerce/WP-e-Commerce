@@ -1,5 +1,5 @@
 /**
- * WP eCommerce - v4.0.0 - 2017-03-11
+ * WP eCommerce - v4.0.0 - 2017-03-12
  * https://wpecommerce.org/
  *
  * Copyright (c) 2017;
