@@ -730,6 +730,25 @@ class WPSC_Cart {
 	}
 
 	/**
+	 * Remove Item by the product ID.
+	 *
+	 * @access public
+	 *
+	 * @param integer the product ID
+	 * @return boolean true on sucess, false on failure
+	 */
+	function remove_item_by_id( $product_id ) {
+		$product_id = absint( $product_id );
+		foreach ( $this->cart_items as $key => $cart_item ) {
+			if ( absint( $cart_item->product_id ) === $product_id ) {
+				return $this->remove_item( $key );
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Empty Cart method
 	 *
 	 * @access public
