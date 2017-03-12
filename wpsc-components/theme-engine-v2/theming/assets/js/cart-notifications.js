@@ -1,5 +1,5 @@
 /**
- * WP eCommerce - v4.0.0 - 2017-03-10
+ * WP eCommerce - v4.0.0 - 2017-03-11
  * https://wpecommerce.org/
  *
  * Copyright (c) 2017;
@@ -27,12 +27,12 @@
 	notifs.currency = require('./utils/currency.js')(notifs.currency);
 
 	notifs.models = {
-		Product: require('./models/product.js')(notifs.currency, notifs.ajaxurl, notifs.baseRoute),
+		Product: require('./models/product.js')(notifs),
 		Status: require('./models/status.js')(notifs.currency, notifs.strings)
 	};
 
 	notifs.collections = {
-		Products: require('./collections/products.js')(notifs.currency, notifs.models.Product)
+		Products: require('./collections/products.js')(notifs)
 	};
 
 	notifs.views = {
@@ -84,9 +84,10 @@
 },{"./collections/products.js":2,"./models/product.js":3,"./models/status.js":4,"./utils/currency.js":5,"./utils/product-dom-to-model.js":6,"./views/cart.js":7,"./views/product-row.js":8}],2:[function(require,module,exports){
 'use strict';
 
-module.exports = function (currency, prodouctModel) {
+module.exports = function (notifs) {
 	return Backbone.Collection.extend({
-		model: prodouctModel,
+		model: notifs.models.Product,
+		url: notifs.baseRoute,
 
 		getById: function getById(id) {
 			id = parseInt(id, 10);
@@ -99,15 +100,35 @@ module.exports = function (currency, prodouctModel) {
 			return this.reduce(function (memo, model) {
 				return memo + model.getTotal();
 			}, 0).toFixed(2);
-		}
+		},
 
+		sync: function sync(method, model, options) {
+			var beforeSend;
+
+			options = options || {};
+
+			if (!_.isUndefined(notifs.apiNonce) && !_.isNull(notifs.apiNonce)) {
+				beforeSend = options.beforeSend;
+
+				options.beforeSend = function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', notifs.apiNonce);
+
+					if (beforeSend) {
+						return beforeSend.apply(this, arguments);
+					}
+				};
+			}
+
+			return Backbone.sync(method, model, options);
+		}
 	});
 };
 
 },{}],3:[function(require,module,exports){
 'use strict';
 
-module.exports = function (currency, ajaxurl, baseRoute) {
+module.exports = function (notifs) {
+
 	return Backbone.Model.extend({
 		defaults: {
 			id: 0,
@@ -123,7 +144,7 @@ module.exports = function (currency, ajaxurl, baseRoute) {
 		},
 
 		initialize: function initialize() {
-			this.listenTo(this, 'add remove', this.sync);
+			this.listenTo(this, 'create add remove', this.sync);
 		},
 
 		getTotal: function getTotal() {
@@ -144,7 +165,7 @@ module.exports = function (currency, ajaxurl, baseRoute) {
 					break;
 
 				case 'formattedPrice':
-					value = currency.format(this.get('price'));
+					value = notifs.currency.format(this.get('price'));
 					break;
 
 				case 'variations':
@@ -158,32 +179,30 @@ module.exports = function (currency, ajaxurl, baseRoute) {
 			return value;
 		},
 
+		sync: function sync(method, model, options) {
+			var beforeSend;
+
+			options = options || {};
+
+			if (!_.isUndefined(notifs.apiNonce) && !_.isNull(notifs.apiNonce)) {
+				beforeSend = options.beforeSend;
+
+				options.beforeSend = function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', notifs.apiNonce);
+
+					if (beforeSend) {
+						return beforeSend.apply(this, arguments);
+					}
+				};
+			}
+
+			return Backbone.sync(method, model, options);
+		},
+
 		url: function url() {
-			var url = baseRoute + 'add/' + encodeURIComponent(this.get('id')) + '?_wp_nonce=' + encodeURIComponent(this.get('nonce'));
+			var modelurl = notifs.baseRoute + '/cart/add/' + encodeURIComponent(this.get('id')) + '?_wp_nonce=' + encodeURIComponent(this.get('nonce'));
 
-			var qty = this.collection.pluck('quantity');
-			window.console.warn('qty', qty);
-			// /store/cart
-			// `/app/public/wp-content/plugins/WP-e-Commerce/wpsc-components/theme-engine-v2/mvc/controllers/cart.php:131:
-			// array (size=4)
-			//   '_wp_nonce' => string '78762affc4' (length=10)
-			//   'quantity' =>
-			//     array (size=1)
-			//       0 => string '4' (length=1)
-			//   'update_quantity' => string 'Update Quantity' (length=15)
-			//   'action' => string 'update_quantity' (length=15)
-			// switch( this.get( 'action' ) ) {
-
-			// 	case 'edit':
-			// 		url += '&action=edit&quantity=' + this.get( 'quantity' );
-			// 		break;
-
-			// 	default:
-			// 		url += '&action=' + this.get( 'action' );
-			// 		break;
-			// }
-
-			return url;
+			return modelurl;
 		}
 	});
 };
@@ -621,9 +640,9 @@ module.exports = function (log) {
 				log('destroyError', response);
 
 				// for now:
-				_this.$el.remove();
+				// _this.$el.remove();
 				// whoops.. re-show row and add error message
-				// _this.$el.fadeIn( 300 );
+				_this.$el.fadeIn(300);
 			};
 
 			// Ajax success handler
