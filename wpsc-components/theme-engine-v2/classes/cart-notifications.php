@@ -79,6 +79,7 @@ class WPSC_Cart_Notifications {
 				'status_added'   => _x( 'item(s) added', 'Number of items added to the shopping cart', 'wp-e-commerce' ),
 				'status_removed' => _x( 'item(s) removed', 'Number of items removed from the shopping cart', 'wp-e-commerce' ),
 				'status_none'    => __( 'Your item(s)', 'wp-e-commerce' ),
+				'sure_remove'    => __( 'Are you sure you want to remove this item from your cart?', 'wp-e-commerce' ),
 			) ),
 		) );
 
@@ -93,7 +94,11 @@ class WPSC_Cart_Notifications {
 	 * @return $this
 	 */
 	public function output_js_templates() {
-		?>
+		$cart_button_hidden = wpsc_is_cart() || wpsc_is_checkout() || ! wpsc_cart_has_items();
+
+		if ( apply_filters( 'wpsc_do_cart_button', true ) ) : ?>
+			<button id="wpsc-view-cart-button" class="wpsc-button wpsc-button-primary wpsc-view-cart<?php if ( $cart_button_hidden ) : ?> wpsc-hide<?php endif; ?>" name=""><i class="wpsc-icon-white wpsc-icon-shopping-cart"></i><span class="wpsc-hide"><?php _e( 'Cart', 'wp-e-commerce' ); ?></span></button>
+		<?php endif; ?>
 		<script type="text/html" id="tmpl-wpsc-modal">
 			<div class="wpsc-hide" id="wpsc-modal-overlay"></div>
 			<div class="wpsc-hide" id="wpsc-cart-notification"></div>

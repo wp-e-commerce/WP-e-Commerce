@@ -1,6 +1,8 @@
 ( function( window, document, $, notifs, undefined ) {
 	'use strict';
 
+	var ESCAPE = 27;
+
 	var $id = function( id ) {
 		return $( document.getElementById( id ) );
 	};
@@ -25,7 +27,7 @@
 	};
 
 	notifs.views = {
-		ProductRow : require( './views/product-row.js' )( log )
+		ProductRow : require( './views/product-row.js' )( log, notifs )
 	};
 
 	notifs.views.Cart = require( './views/cart.js' )( {
@@ -39,9 +41,16 @@
 	notifs.init = function() {
 		$( document.body )
 			.on( 'click', '.wpsc-add-to-cart', notifs.clickAddProductToCart )
-			// .on( 'submit', '.wpsc-add-to-cart-form', notifs.clickAddProductToCart )
 			.on( 'click', '#wpsc-modal-overlay', notifs.closeModal )
+			.on( 'click', '#wpsc-view-cart-button', notifs.openModal )
 			.append( $id( 'tmpl-wpsc-modal' ).html() );
+
+
+		$( document ).on( 'keydown', function( evt ) {
+			if ( ESCAPE === evt.which ) {
+				notifs.closeModal();
+			}
+		} );
 
 		// Kick it off.
 		notifs.CartView = new notifs.views.Cart({

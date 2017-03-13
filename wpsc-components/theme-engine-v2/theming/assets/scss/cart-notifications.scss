@@ -188,6 +188,19 @@
 	}
 }
 
+// TODO: figure out why these rules exist:
+// .wpsc-grid .wpsc-field-quantity, .wpsc-grid .wpsc-field {
+//    display: none;
+// }
+.wpsc-cart-item-edit-wrap {
+	.wpsc-field-quantity {
+		display: block;
+		&.wpsc-hide {
+			display: none;
+		}
+	}
+
+}
 
 .wpsc-form-actions {
 	@include wpsc-cart-item();
@@ -210,4 +223,18 @@
 	background: #000;
 	opacity: 0.5;
 	z-index: 159900;
+}
+
+// TODO -- possibly more opinionated style.
+#wpsc-view-cart-button {
+	font-size: 1.2em;
+	position: fixed;
+	bottom: 25%;
+	right: 0;
+	border-top-left-radius: 100%;
+	border-bottom-left-radius: 100%;
+	box-shadow: none;
+	width: 3em;
+	height: 3em;
+	line-height: 1.5em;
 }

@@ -1,6 +1,8 @@
-module.exports = function( args, $, log ) {
+module.exports = function( args, $id, log ) {
 	return Backbone.View.extend({
 		el: '#wpsc-cart-notification',
+		$btn : '',
+		$overlay : '',
 		template  : wp.template( 'wpsc-modal-inner' ),
 		status: {},
 		events   : {
@@ -9,7 +11,8 @@ module.exports = function( args, $, log ) {
 		},
 
 		initialize: function() {
-			this.$overlay = $( 'wpsc-modal-overlay' );
+			this.$btn     = $id( 'wpsc-view-cart-button' );
+			this.$overlay = $id( 'wpsc-modal-overlay' );
 
 			this.status = new args.statusModel( args.initialStatus );
 			this.status.set( 'numberItems', this.collection.length );
@@ -18,22 +21,17 @@ module.exports = function( args, $, log ) {
 			this.listenTo( this.collection, 'remove', this.checkEmpty );
 			this.listenTo( this.collection, 'add remove', this.updateStatusandRender );
 			this.listenTo( this.collection, 'render', this.render );
-			this.listenTo( this.collection, 'change', this.render );
+			this.listenTo( this.collection, 'change:quantity', this.setTotal );
+			this.listenTo( this.collection, 'change:editQty', this.calculateHeight );
 			this.listenTo( this.collection, 'error', this.handleError );
-			// this.listenTo( this.collection, 'sync', this.didSync );
 
 			this.listenTo( this.status, 'change', this.maybeUpdateView );
 			this.listenTo( this, 'open', this.renderNoAction );
 			this.listenTo( this, 'close', this.close );
 			this.listenTo( this, 'add-to-cart', this.maybeAdd );
 
-			// this.render();
 			this.renderNoShow();
 		},
-
-		// didSync: function( didSync ) {
-		// 	// log( 'Collection didSync', didSync );
-		// },
 
 		handleError: function( errorObject ) {
 			log( 'Collection handleError', errorObject );
@@ -56,10 +54,16 @@ module.exports = function( args, $, log ) {
 		},
 
 		render: function() {
-
 			this.renderNoShow();
 			this.$overlay.removeClass( 'wpsc-hide' );
+			this.status.set( 'status', 'open' );
 
+			this.calculateHeight();
+
+			return this;
+		},
+
+		calculateHeight: function() {
 			// Now that it's open, calculate it's inner height...
 			var newHeight = this.$el
 				.removeClass( 'wpsc-hide' ).removeClass( 'wpsc-cart-set-height' )
@@ -78,8 +82,6 @@ module.exports = function( args, $, log ) {
 
 			// And set the height of the modal to match.
 			this.$el.height( Math.round( newHeight ) ).addClass( 'wpsc-cart-set-height' );
-
-			return this;
 		},
 
 		_getProducts: function() {
@@ -107,6 +109,8 @@ module.exports = function( args, $, log ) {
 		},
 
 		close: function() {
+			this.status.set( 'status', 'closed' );
+			this.collection.trigger( 'closeModal' );
 			this.$overlay.addClass( 'wpsc-hide' );
 			this.$el.addClass( 'wpsc-hide' );
 		},
@@ -122,6 +126,12 @@ module.exports = function( args, $, log ) {
 
 			this.status.set( 'numberChanged', numberChanged );
 			this.status.set( 'numberItems', this.collection.length );
+			this.setTotal();
+
+			this.$btn[ this.collection.length ? 'removeClass' : 'addClass' ]( 'wpsc-hide' );
+		},
+
+		setTotal: function() {
 			this.status.set( 'total', this.collection.totalPrice() );
 		},
 
@@ -134,7 +144,7 @@ module.exports = function( args, $, log ) {
 				// Update quantity.
 				model.set( 'quantity', qty );
 
-				this.status.set( 'total', this.collection.totalPrice() );
+				this.setTotal();
 
 			} else {
 				model = this.collection.create( data );

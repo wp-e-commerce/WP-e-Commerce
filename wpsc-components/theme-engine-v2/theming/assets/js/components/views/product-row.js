@@ -1,5 +1,6 @@
-module.exports = function( log ) {
+module.exports = function( log, notifs ) {
 	return Backbone.View.extend({
+		$quantity : null,
 		template : wp.template( 'wpsc-modal-product' ),
 
 		tagName : 'div',
@@ -16,30 +17,27 @@ module.exports = function( log ) {
 
 		// Attach events
 		events : {
-			// 'click .wpsc-cart-item-edit' : 'edit'
-			'click .wpsc-cart-item-remove' : 'removeIt'
+			'click .wpsc-cart-item-edit'   : 'editQty',
+			'click .wpsc-cart-item-remove' : 'maybeRemoveIt',
+			'click .wpsc-qty-button'       : 'modifyQty',
+			'change .modify-cart-quantity' : 'quantityChanged'
 		},
 
 		initialize: function() {
-			this.listenTo( this, 'change', this.maybeRender );
-			this.listenTo( this, 'sync', this.didSync );
+			// this.listenTo( this, 'change', function( changedModel ) {
+			// 	window.console.log( 'changedModel.changed', changedModel.changed );
+			// } );
+
+			this.listenTo( this.model, 'change:price', this.render );
+			this.listenTo( this.model, 'change:formattedPrice', this.render );
+			this.listenTo( this.model, 'change:editQty', this.render );
+			this.listenTo( this.model.collection, 'closeModal', this.hideQty );
+
 			this.listenTo( this, 'error', this.handleError );
 		},
 
 		handleError: function( errorObject ) {
 			log( 'Model handleError', errorObject );
-		},
-
-		didSync: function( didSync ) {
-			log( 'Model didSync', didSync );
-		},
-
-		// Render the row
-		maybeRender: function( changedModel ) {
-			if ( changedModel.changed.quantity ) {
-				return;
-			}
-			this.render();
 		},
 
 		// Render the row
@@ -48,15 +46,47 @@ module.exports = function( log ) {
 			return this;
 		},
 
-		edit: function(e) {
-			e.preventDefault();
+		editQty: function( evt ) {
+			evt.preventDefault();
+			var editQty = this.model.get( 'editQty' );
+			this.model.set( 'editQty', ! editQty );
+		},
 
-			// TODO: Show quantity input.
+		hideQty : function() {
+			this.model.set( 'editQty', false );
+		},
+
+		quantityChanged: function( evt ) {
+			var $input = this.$( '.modify-cart-quantity' );
+			var qty = $input.val();
+
+			if ( qty < 1 ) {
+				// Check if they meant to remove the item.
+				if ( this.maybeRemoveIt( evt ) ) {
+					return;
+				}
+				// Ok, that was an oops, so keep the item around.
+				qty = 1;
+				$input.val( qty );
+			}
+
+			// Update cart item quantity.
+			this.model.save( { quantity: qty } );
 		},
 
 		// Perform the Removal
-		removeIt: function(e) {
-			e.preventDefault();
+		maybeRemoveIt: function( evt ) {
+			if ( window.confirm( notifs.strings.sure_remove ) ) {
+				this.removeIt( evt );
+				return true;
+			}
+
+			return false;
+		},
+
+		// Perform the Removal
+		removeIt: function( evt ) {
+			evt.preventDefault();
 			var _this     = this;
 
 			// Ajax error handler
@@ -87,6 +117,27 @@ module.exports = function( log ) {
 
 			// Remove model and fire ajax event
 			this.model.destroy({ success: destroySuccess, error: destroyError, wait: true } );
+
+			return true;
+		},
+
+		modifyQty: function( evt ) {
+			var $button = this.$( evt.currentTarget );
+			var $input  = $button.parent().find( 'input' );
+			var oldVal  = parseInt( $input.val(), 10 );
+			var newVal  = oldVal + 1;
+
+			if ( '-' === $button.text() ) {
+			  // Don't allow decrementing below zero
+			  if ( oldVal > 0 ) {
+			      newVal = oldVal - 1;
+			  } else {
+			      newVal = 0;
+			  }
+			}
+
+			$input.val( newVal ).trigger( 'change' );
 		}
+
 	} );
 };

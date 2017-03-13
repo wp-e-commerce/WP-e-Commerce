@@ -12,6 +12,8 @@
 (function (window, document, $, notifs, undefined) {
 	'use strict';
 
+	var ESCAPE = 27;
+
 	var $id = function $id(id) {
 		return $(document.getElementById(id));
 	};
@@ -36,7 +38,7 @@
 	};
 
 	notifs.views = {
-		ProductRow: require('./views/product-row.js')(log)
+		ProductRow: require('./views/product-row.js')(log, notifs)
 	};
 
 	notifs.views.Cart = require('./views/cart.js')({
@@ -47,9 +49,13 @@
 	}, $id, log);
 
 	notifs.init = function () {
-		$(document.body).on('click', '.wpsc-add-to-cart', notifs.clickAddProductToCart)
-		// .on( 'submit', '.wpsc-add-to-cart-form', notifs.clickAddProductToCart )
-		.on('click', '#wpsc-modal-overlay', notifs.closeModal).append($id('tmpl-wpsc-modal').html());
+		$(document.body).on('click', '.wpsc-add-to-cart', notifs.clickAddProductToCart).on('click', '#wpsc-modal-overlay', notifs.closeModal).on('click', '#wpsc-view-cart-button', notifs.openModal).append($id('tmpl-wpsc-modal').html());
+
+		$(document).on('keydown', function (evt) {
+			if (ESCAPE === evt.which) {
+				notifs.closeModal();
+			}
+		});
 
 		// Kick it off.
 		notifs.CartView = new notifs.views.Cart({
@@ -122,6 +128,7 @@ module.exports = function (notifs) {
 			quantity: 0,
 			remove_url: '',
 			variations: [],
+			editQty: false,
 			action: ''
 		},
 
@@ -149,6 +156,10 @@ module.exports = function (notifs) {
 				case 'variations':
 					break;
 
+				case 'editQty':
+					value = Boolean(value);
+					break;
+
 				default:
 					value = value.trim();
 					break;
@@ -164,12 +175,16 @@ module.exports = function (notifs) {
 			options.url = model.url();
 
 			if ('update' === method) {
-				options.url = model.collection.url;
-				options.url += '/add/' + encodeURIComponent(this.get('id'));
+				if ('quantity' in model.changed) {
+					options.url = this.addQueryVar(options.url, 'quantity', encodeURIComponent(this.get('quantity')));
+				} else {
+					options.url = model.collection.url;
+					options.url += '/add/' + encodeURIComponent(this.get('id'));
+				}
 			}
 
 			var nonce = 'delete' === method ? this.get('deleteNonce') : this.get('nonce');
-			options.url += '?_wp_nonce=' + encodeURIComponent(nonce);
+			options.url = this.addQueryVar(options.url, '_wp_nonce', encodeURIComponent(nonce));
 
 			if (!_.isUndefined(notifs.apiNonce) && !_.isNull(notifs.apiNonce)) {
 				beforeSend = options.beforeSend;
@@ -183,7 +198,20 @@ module.exports = function (notifs) {
 				};
 			}
 
+			// window.console.warn('method', method);
+			// window.console.warn('model.changed', model.changed);
+			// window.console.warn('options.url', options.url);
 			return Backbone.sync(method, model, options);
+		},
+
+		addQueryVar: function addQueryVar(uri, key, value) {
+			var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+
+			if (uri.match(re)) {
+				return uri.replace(re, '$1' + key + '=' + value + '$2');
+			}
+
+			return uri + (-1 !== uri.indexOf('?') ? '&' : '?') + key + '=' + value;
 		}
 	});
 };
@@ -198,6 +226,7 @@ module.exports = function (currency, strings) {
 		},
 
 		defaults: {
+			status: 'closed',
 			action: 'added',
 			actionText: strings.status_added,
 			actionIcon: 'wpsc-icon-check',
@@ -395,9 +424,11 @@ module.exports = function (currency) {
 },{}],7:[function(require,module,exports){
 'use strict';
 
-module.exports = function (args, $, log) {
+module.exports = function (args, $id, log) {
 	return Backbone.View.extend({
 		el: '#wpsc-cart-notification',
+		$btn: '',
+		$overlay: '',
 		template: wp.template('wpsc-modal-inner'),
 		status: {},
 		events: {
@@ -406,7 +437,8 @@ module.exports = function (args, $, log) {
 		},
 
 		initialize: function initialize() {
-			this.$overlay = $('wpsc-modal-overlay');
+			this.$btn = $id('wpsc-view-cart-button');
+			this.$overlay = $id('wpsc-modal-overlay');
 
 			this.status = new args.statusModel(args.initialStatus);
 			this.status.set('numberItems', this.collection.length);
@@ -415,22 +447,17 @@ module.exports = function (args, $, log) {
 			this.listenTo(this.collection, 'remove', this.checkEmpty);
 			this.listenTo(this.collection, 'add remove', this.updateStatusandRender);
 			this.listenTo(this.collection, 'render', this.render);
-			this.listenTo(this.collection, 'change', this.render);
+			this.listenTo(this.collection, 'change:quantity', this.setTotal);
+			this.listenTo(this.collection, 'change:editQty', this.calculateHeight);
 			this.listenTo(this.collection, 'error', this.handleError);
-			// this.listenTo( this.collection, 'sync', this.didSync );
 
 			this.listenTo(this.status, 'change', this.maybeUpdateView);
 			this.listenTo(this, 'open', this.renderNoAction);
 			this.listenTo(this, 'close', this.close);
 			this.listenTo(this, 'add-to-cart', this.maybeAdd);
 
-			// this.render();
 			this.renderNoShow();
 		},
-
-		// didSync: function( didSync ) {
-		// 	// log( 'Collection didSync', didSync );
-		// },
 
 		handleError: function handleError(errorObject) {
 			log('Collection handleError', errorObject);
@@ -453,10 +480,16 @@ module.exports = function (args, $, log) {
 		},
 
 		render: function render() {
-
 			this.renderNoShow();
 			this.$overlay.removeClass('wpsc-hide');
+			this.status.set('status', 'open');
 
+			this.calculateHeight();
+
+			return this;
+		},
+
+		calculateHeight: function calculateHeight() {
 			// Now that it's open, calculate it's inner height...
 			var newHeight = this.$el.removeClass('wpsc-hide').removeClass('wpsc-cart-set-height').find('.wpsc-cart-notification-inner').outerHeight();
 
@@ -473,8 +506,6 @@ module.exports = function (args, $, log) {
 
 			// And set the height of the modal to match.
 			this.$el.height(Math.round(newHeight)).addClass('wpsc-cart-set-height');
-
-			return this;
 		},
 
 		_getProducts: function _getProducts() {
@@ -502,6 +533,8 @@ module.exports = function (args, $, log) {
 		},
 
 		close: function close() {
+			this.status.set('status', 'closed');
+			this.collection.trigger('closeModal');
 			this.$overlay.addClass('wpsc-hide');
 			this.$el.addClass('wpsc-hide');
 		},
@@ -517,6 +550,12 @@ module.exports = function (args, $, log) {
 
 			this.status.set('numberChanged', numberChanged);
 			this.status.set('numberItems', this.collection.length);
+			this.setTotal();
+
+			this.$btn[this.collection.length ? 'removeClass' : 'addClass']('wpsc-hide');
+		},
+
+		setTotal: function setTotal() {
 			this.status.set('total', this.collection.totalPrice());
 		},
 
@@ -529,7 +568,7 @@ module.exports = function (args, $, log) {
 				// Update quantity.
 				model.set('quantity', qty);
 
-				this.status.set('total', this.collection.totalPrice());
+				this.setTotal();
 			} else {
 				model = this.collection.create(data);
 			}
@@ -555,8 +594,9 @@ module.exports = function (args, $, log) {
 },{}],8:[function(require,module,exports){
 'use strict';
 
-module.exports = function (log) {
+module.exports = function (log, notifs) {
 	return Backbone.View.extend({
+		$quantity: null,
 		template: wp.template('wpsc-modal-product'),
 
 		tagName: 'div',
@@ -573,30 +613,27 @@ module.exports = function (log) {
 
 		// Attach events
 		events: {
-			// 'click .wpsc-cart-item-edit' : 'edit'
-			'click .wpsc-cart-item-remove': 'removeIt'
+			'click .wpsc-cart-item-edit': 'editQty',
+			'click .wpsc-cart-item-remove': 'maybeRemoveIt',
+			'click .wpsc-qty-button': 'modifyQty',
+			'change .modify-cart-quantity': 'quantityChanged'
 		},
 
 		initialize: function initialize() {
-			this.listenTo(this, 'change', this.maybeRender);
-			this.listenTo(this, 'sync', this.didSync);
+			// this.listenTo( this, 'change', function( changedModel ) {
+			// 	window.console.log( 'changedModel.changed', changedModel.changed );
+			// } );
+
+			this.listenTo(this.model, 'change:price', this.render);
+			this.listenTo(this.model, 'change:formattedPrice', this.render);
+			this.listenTo(this.model, 'change:editQty', this.render);
+			this.listenTo(this.model.collection, 'closeModal', this.hideQty);
+
 			this.listenTo(this, 'error', this.handleError);
 		},
 
 		handleError: function handleError(errorObject) {
 			log('Model handleError', errorObject);
-		},
-
-		didSync: function didSync(_didSync) {
-			log('Model didSync', _didSync);
-		},
-
-		// Render the row
-		maybeRender: function maybeRender(changedModel) {
-			if (changedModel.changed.quantity) {
-				return;
-			}
-			this.render();
 		},
 
 		// Render the row
@@ -605,15 +642,47 @@ module.exports = function (log) {
 			return this;
 		},
 
-		edit: function edit(e) {
-			e.preventDefault();
+		editQty: function editQty(evt) {
+			evt.preventDefault();
+			var editQty = this.model.get('editQty');
+			this.model.set('editQty', !editQty);
+		},
 
-			// TODO: Show quantity input.
+		hideQty: function hideQty() {
+			this.model.set('editQty', false);
+		},
+
+		quantityChanged: function quantityChanged(evt) {
+			var $input = this.$('.modify-cart-quantity');
+			var qty = $input.val();
+
+			if (qty < 1) {
+				// Check if they meant to remove the item.
+				if (this.maybeRemoveIt(evt)) {
+					return;
+				}
+				// Ok, that was an oops, so keep the item around.
+				qty = 1;
+				$input.val(qty);
+			}
+
+			// Update cart item quantity.
+			this.model.save({ quantity: qty });
 		},
 
 		// Perform the Removal
-		removeIt: function removeIt(e) {
-			e.preventDefault();
+		maybeRemoveIt: function maybeRemoveIt(evt) {
+			if (window.confirm(notifs.strings.sure_remove)) {
+				this.removeIt(evt);
+				return true;
+			}
+
+			return false;
+		},
+
+		// Perform the Removal
+		removeIt: function removeIt(evt) {
+			evt.preventDefault();
 			var _this = this;
 
 			// Ajax error handler
@@ -644,7 +713,28 @@ module.exports = function (log) {
 
 			// Remove model and fire ajax event
 			this.model.destroy({ success: destroySuccess, error: destroyError, wait: true });
+
+			return true;
+		},
+
+		modifyQty: function modifyQty(evt) {
+			var $button = this.$(evt.currentTarget);
+			var $input = $button.parent().find('input');
+			var oldVal = parseInt($input.val(), 10);
+			var newVal = oldVal + 1;
+
+			if ('-' === $button.text()) {
+				// Don't allow decrementing below zero
+				if (oldVal > 0) {
+					newVal = oldVal - 1;
+				} else {
+					newVal = 0;
+				}
+			}
+
+			$input.val(newVal).trigger('change');
 		}
+
 	});
 };
 

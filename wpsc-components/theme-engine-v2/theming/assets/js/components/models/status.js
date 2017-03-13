@@ -3,6 +3,7 @@ module.exports = function( currency, strings ) {
 		sync: function () { return false; },
 
 		defaults: {
+			status         : 'closed',
 			action         : 'added',
 			actionText     : strings.status_added,
 			actionIcon     : 'wpsc-icon-check',

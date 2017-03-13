@@ -183,6 +183,14 @@ Global Classes
 	float: left;
 }
 
+.wpsc-cart-item-edit-wrap .wpsc-field-quantity {
+	display: block;
+}
+
+.wpsc-cart-item-edit-wrap .wpsc-field-quantity.wpsc-hide {
+	display: none;
+}
+
 .wpsc-form-actions {
 	display: block;
 	padding: 20px 0;
@@ -208,6 +216,19 @@ Global Classes
 	background: #000;
 	opacity: 0.5;
 	z-index: 159900;
+}
+
+#wpsc-view-cart-button {
+	font-size: 1.2em;
+	position: fixed;
+	bottom: 25%;
+	right: 0;
+	border-top-left-radius: 100%;
+	border-bottom-left-radius: 100%;
+	box-shadow: none;
+	width: 3em;
+	height: 3em;
+	line-height: 1.5em;
 }
 
 /*# sourceMappingURL=cart-notifications.css.map */
