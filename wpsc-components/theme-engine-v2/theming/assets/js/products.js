@@ -18,7 +18,7 @@
       }
     }
 
-    $input.val( newVal );
+    $input.val( newVal ).trigger( 'change' );
   } );
 
 } )( jQuery );
