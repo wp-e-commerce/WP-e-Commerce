@@ -529,10 +529,6 @@ class WPSC_Purchase_Log_Page {
 
 			$this->include_te_v2_resources();
 			$this->enqueue_te_v2_resources();
-
-			wpsc_enqueue_script( 'wpsc-select-autocomplete' );
-			wpsc_enqueue_script( 'wpsc-country-region' );
-			wpsc_enqueue_script( 'wpsc-copy-billing-info' );
 		}
 
 		add_filter( 'admin_title', array( $this, 'doc_title' ), 10, 2 );
@@ -637,6 +633,9 @@ class WPSC_Purchase_Log_Page {
 	public function enqueue_te_v2_resources() {
 		_wpsc_te2_register_styles();
 		wp_enqueue_style( 'wpsc-common' );
+		wpsc_enqueue_script( 'wpsc-select-autocomplete' );
+		wpsc_enqueue_script( 'wpsc-country-region' );
+		wpsc_enqueue_script( 'wpsc-copy-billing-info' );
 	}
 
 	public function doc_title( $admin_title, $title ) {
