@@ -880,8 +880,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		<label for="wpsc-paypal-express-cart-border"><?php _e( 'Enable In-Context Checkout', 'wp-e-commerce' ); ?></label>
 	</td>
 	<td>
-		<label><input <?php checked( $this->setting->get( 'incontext' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'incontext' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
-		<label><input <?php checked( (bool) $this->setting->get( 'incontext' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'incontext' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
+		<label><input <?php checked( $this->setting->get( 'incontext', '1' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'incontext' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+		<label><input <?php checked( (bool) $this->setting->get( 'incontext', '1' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'incontext' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 	</td>
 </tr>
 
