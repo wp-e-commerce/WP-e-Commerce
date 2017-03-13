@@ -100,20 +100,20 @@ class WPSC_REST_Products_Controller extends WP_REST_Posts_Controller {
 	}
 }
 
-class WPSC_REST_Product_Files_Controller extends WP_REST_Posts_Controller {}
+// class WPSC_REST_Product_Files_Controller extends WP_REST_Posts_Controller {}
 
-class WPSC_REST_Orders_Controller extends WP_REST_Controller {}
+// class WPSC_REST_Orders_Controller extends WP_REST_Controller {}
 
-class WPSC_REST_Coupons_Controller extends WP_REST_Controller {}
+// class WPSC_REST_Coupons_Controller extends WP_REST_Controller {}
 
-class WPSC_REST_Reports_Controller extends WP_REST_Controller {}
+// class WPSC_REST_Reports_Controller extends WP_REST_Controller {}
 
-class WPSC_REST_Customers_Controller extends WP_REST_Users_Controller {}
+// class WPSC_REST_Customers_Controller extends WP_REST_Users_Controller {}
 
-class WPSC_REST_Variations_Controller extends WP_REST_Posts_Terms_Controller {}
+// class WPSC_REST_Variations_Controller extends WP_REST_Posts_Terms_Controller {}
 
-class WPSC_REST_Categories_Controller extends WP_REST_Posts_Terms_Controller {}
+// class WPSC_REST_Categories_Controller extends WP_REST_Posts_Terms_Controller {}
 
-class WPSC_REST_Tags_Controller extends WP_REST_Posts_Terms_Controller {}
+// class WPSC_REST_Tags_Controller extends WP_REST_Posts_Terms_Controller {}
 
-class WPSC_REST_Checkout_Controller extends WP_REST_Controller {}
+// class WPSC_REST_Checkout_Controller extends WP_REST_Controller {}
