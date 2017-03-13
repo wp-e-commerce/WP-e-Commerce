@@ -39,7 +39,7 @@ class WPSC_Fancy_Notifications {
 		if ( 1 == get_option( 'fancy_notifications' ) ) {
 			$output .= '<div id="fancy_notification">';
 			$output .= '   <div id="loading_animation">';
-			$output .= '      <img id="fancy_notificationimage" title="' . esc_attr__( 'Loading', 'wpsc' ) . '" alt="' . esc_attr__( 'Loading', 'wpsc' ) . '" src="' . esc_url( wpsc_loading_animation_url() ) . '" />' . esc_html__( 'Updating', 'wpsc' ) . '...';
+			$output .= '      <img id="fancy_notificationimage" title="' . esc_attr__( 'Loading', 'wp-e-commerce' ) . '" alt="' . esc_attr__( 'Loading', 'wp-e-commerce' ) . '" src="' . esc_url( wpsc_loading_animation_url() ) . '" />' . esc_html__( 'Updating', 'wp-e-commerce' ) . '...';
 			$output .= '   </div>';
 			$output .= '   <div id="fancy_notification_content"></div>';
 			$output .= '</div>';
@@ -68,8 +68,8 @@ class WPSC_Fancy_Notifications {
 		foreach ( (array)$cart_messages as $cart_message ) {
 			$output .= '<span>' . $cart_message . '</span><br />';
 		}
-		$output .= sprintf( '<a href="%s" class="go_to_checkout">%s</a>', esc_url( get_option( 'shopping_cart_url' ) ), esc_html__( 'Go to Checkout', 'wpsc' ) );
-		$output .= sprintf( '<a href="#" onclick="jQuery( \'#fancy_notification\' ).css( \'display\', \'none\' ); return false;" class="continue_shopping">%s</a>', esc_html__( 'Continue Shopping', 'wpsc' ) );
+		$output .= sprintf( '<a href="%s" class="go_to_checkout">%s</a>', esc_url( get_option( 'shopping_cart_url' ) ), esc_html__( 'Go to Checkout', 'wp-e-commerce' ) );
+		$output .= sprintf( '<a href="#" onclick="jQuery( \'#fancy_notification\' ).css( \'display\', \'none\' ); return false;" class="continue_shopping">%s</a>', esc_html__( 'Continue Shopping', 'wp-e-commerce' ) );
 
 		return $output;
 
