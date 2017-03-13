@@ -2,8 +2,6 @@
 
 	$.fn.FloatLabel = function( options ){
 
-		$('body').addClass( 'wpsc-float-js' );
-
 		var defaults = {
 			populatedClass : 'populated',
 			focusedClass : 'focused'
@@ -24,7 +22,7 @@
 
 			input.on( 'focus', function(){
 				element.addClass( settings.focusedClass );
-				
+
 				if( input.val() === label.text() ){
 					input.val('');
 				} else {
@@ -35,7 +33,7 @@
 
 			input.on( 'blur', function(){
 				element.removeClass( settings.focusedClass );
-				
+
 				if( !input.val() ){
 					input.val( label.text() );
 					element.removeClass( settings.populatedClass );

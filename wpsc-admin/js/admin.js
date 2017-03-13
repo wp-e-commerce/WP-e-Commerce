@@ -653,8 +653,7 @@ function hideelement1(id, item_value) {
 }
 
 function show_status_box(id,image_id) {
-	var state;
-	state = document.getElementById(id).style.display;
+	var state = document.getElementById(id).style.display;
 	if(state !== 'block') {
 		document.getElementById(id).style.display = 'block';
 		document.getElementById(image_id).src =  wpsc_adminL10n.wpsc_core_images_url + '/icon_window_collapse.gif';

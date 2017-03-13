@@ -8,7 +8,7 @@ class WPSC_Controller_Category extends WPSC_Query_Controller {
 
 	public function index() {
 		$this->view = 'category';
-		_wpsc_enqueue_product_scripts();
+		wpsc_enqueue_script( 'wpsc-products' );
 		$this->title = get_queried_object()->name;
 	}
 

@@ -4,7 +4,7 @@
 		var value = this.value;
 		var form = $('.wpsc-payment-gateway-extra-form-' + value + ', #' + value + '-cc-form' );
 
-		if (form.size() === 0) {
+		if ( 0 === form.size() ) {
 			return;
 		}
 

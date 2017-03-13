@@ -10,7 +10,7 @@ class WPSC_Controller_Main_Store extends WPSC_Query_Controller {
 	public function index() {
 		$this->title = wpsc_get_store_title();
 		$this->view = 'main-store';
-		_wpsc_enqueue_product_scripts();
+		wpsc_enqueue_script( 'wpsc-products' );
 	}
 
 	protected function get_native_template() {

@@ -1,31 +1,107 @@
-/*global exports:false, module:false, require:false */
+/*global module:false, require:false */
 
 module.exports = function( grunt ) {
 	'use strict';
 
 	require('matchdep').filterDev('grunt-*').forEach( grunt.loadNpmTasks );
 
+	var bannerTemplate = '/**\n' + ' * <%= pkg.title %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' + ' * <%= pkg.author.url %>\n' + ' *\n' + ' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' + ' * Licensed GPLv2+\n' + ' */\n';
+
+	var compactBannerTemplate = '/** ' + '<%= pkg.title %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> | <%= pkg.author.url %> | Copyright (c) <%= grunt.template.today("yyyy") %>; | Licensed GPLv2+' + ' **/\n';
+
 	grunt.initConfig({
+		pkg: grunt.file.readJSON('package.json'),
+
+		asciify: {
+			banner: {
+				text    : 'WP eCommerce',
+				options : {
+					font : 'speed',
+					log  : true
+				}
+			}
+		},
 
 		jshint: {
 			options: {
 				jshintrc: '.jshintrc'
 			},
-			plugin: [
-				'Gruntfile.js',
-				'wpsc-admin/js/*.js',
-				'wpsc-components/marketplace-core-v1/static/*.js',
-				'wpsc-components/merchant-core-v3/gateways/*.js',
-				'wpsc-components/theme-engine-v2/admin/js/*.js',
-				'wpsc-components/theme-engine-v2/theming/assets/js/*.js',
-				'wpsc-components/merchant-core-v3/*.js',
-				'wpsc-core/js/*.js',
-				'!wpsc-core/js/tinymce/*.js',
-				'!wpsc-core/js/*-min.js',
-				'!wpsc-core/js/jquery*.js',
-				'!wpsc-admin/js/admin-legacy.js',
-				'!wpsc-admin/js/jquery-*.js'
-			]
+
+			all: {
+				src: [
+					'Gruntfile.js',
+					'wpsc-admin/js/*.js',
+					'wpsc-components/marketplace-core-v1/static/*.js',
+					'wpsc-components/merchant-core-v3/gateways/*.js',
+					'wpsc-components/theme-engine-v2/admin/js/*.js',
+					'wpsc-components/theme-engine-v2/theming/assets/js/*.js',
+					'wpsc-components/merchant-core-v3/*.js',
+					'wpsc-core/js/*.js',
+					'!wpsc-core/js/tinymce/*.js',
+					'!wpsc-core/js/*-min.js',
+					'!wpsc-core/js/jquery*.js',
+					'!wpsc-admin/js/admin-legacy.js',
+					'!wpsc-admin/js/jquery-*.js',
+					'!wpsc-components/theme-engine-v2/admin/js/select2*.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/jquery.*.js',
+					'!*.min.js'
+				]
+			},
+			watch: {
+				src : [
+					'Gruntfile.js',
+					'wpsc-components/theme-engine-v2/theming/assets/js/**/*.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/jquery.*.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/floatlabel.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/fluidbox.js',
+					'!wpsc-components/theme-engine-v2/theming/assets/js/cart-notifications.js',
+					'!**/*.min.js'
+				]
+			}
+		},
+
+		browserify: {
+			options: {
+				banner: bannerTemplate,
+				stripBanners: true,
+				transform: [
+					'babelify',
+					'browserify-shim'
+				]
+			},
+			dist: { files: {
+				'wpsc-components/theme-engine-v2/theming/assets/js/cart-notifications.js' : 'wpsc-components/theme-engine-v2/theming/assets/js/components/cart-notifications-main.js'
+			} }
+		},
+
+		uglify: {
+			all: {
+				options: {
+					banner: compactBannerTemplate,
+					mangle: false
+				},
+				files: [{
+					expand: true,
+					cwd: 'wpsc-components/theme-engine-v2/theming/assets/js',
+					src: ['*.js', '!*.min.js'],
+					dest: 'wpsc-components/theme-engine-v2/theming/assets/js',
+					extDot: 'last',
+					ext: '.min.js'
+				}]
+			},
+			noBanner : {
+				options: {
+					mangle: false
+				},
+				files: [{
+					expand: true,
+					cwd: 'wpsc-components/theme-engine-v2/theming/assets/js',
+					src: ['jquery.*.js', '!jquery.*.min.js'],
+					dest: 'wpsc-components/theme-engine-v2/theming/assets/js',
+					extDot: 'last',
+					ext: '.min.js'
+				}]
+			}
 		},
 
 		sass: {
@@ -130,6 +206,7 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
+
 		watch: {
 			css: {
 				files: ['wpsc-components/theme-engine-v2/theming/assets/scss/**/*.scss'],
@@ -139,15 +216,21 @@ module.exports = function( grunt ) {
 				}
 			},
 			js: {
-				files: ['<%= jshint.plugin %>'],
-				tasks: ['jshint']
+				// files: ['<%= jshint.watch.src %>'],
+				files: ['**/*.js', '!**/*.min.js'],
+				tasks: ['watchjs'],
+				options: {
+					debounceDelay: 500
+				}
 			}
 		}
 
 	});
 
-	grunt.registerTask('css', ['sass', 'cmq', 'cssmin']);
-	grunt.registerTask('default', ['jshint', 'css', 'makepot']);
+	grunt.registerTask('css', ['asciify', 'sass', 'cmq', 'cssmin']);
+	grunt.registerTask('js', ['asciify', 'jshint', 'browserify', 'uglify']);
+	grunt.registerTask('watchjs', ['asciify', 'jshint:watch', 'browserify', 'uglify']);
+	grunt.registerTask('default', ['asciify', 'js', 'css', 'makepot']);
 
 	/**
 	 * PHP Code Sniffer using WordPress Coding Standards.

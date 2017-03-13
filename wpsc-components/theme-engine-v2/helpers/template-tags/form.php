@@ -30,9 +30,10 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 
 	$args = array(
 		// attributes of the form
-		'class'  => 'wpsc-form wpsc-form-horizontal wpsc-add-to-cart-form',
-		'action' => $select_options ? get_permalink( $id ) : wpsc_get_cart_url( "add/{$id}" ),
-		'id'     => "wpsc-add-to-cart-form-{$id}",
+		'class'   => 'wpsc-form wpsc-form-horizontal wpsc-add-to-cart-form',
+		'action'  => $select_options ? get_permalink( $id ) : wpsc_get_cart_url( "add/{$id}" ),
+		'id'      => "wpsc-add-to-cart-form-{$id}",
+		'data-id' => $id,
 
 		// array containing form fields
 		'fields' => array(
@@ -111,7 +112,11 @@ function wpsc_get_add_to_cart_form( $id = null ) {
 		$id = wpsc_get_product_id();
 	}
 
+	// Enqueue Cart Notifications script.
+	wpsc_enqueue_script( 'wpsc-cart-notifications' );
+
 	$args = wpsc_get_add_to_cart_form_args( $id );
+
 	return apply_filters( 'wpsc_get_add_to_cart_form', wpsc_get_form_output( $args ) );
 }
 

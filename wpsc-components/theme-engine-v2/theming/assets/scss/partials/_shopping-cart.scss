@@ -1,5 +1,5 @@
 /*******************
-Shopping Cart 
+Shopping Cart
 ********************/
 
 .wpsc-cart-table {
@@ -8,9 +8,7 @@ Shopping Cart
 .wpsc-cart-item,
 .wpsc-row,
 .wpsc-cart-footer {
-    display: block;
-    padding: 20px 0;
-    border-bottom: $cart_border;
+	@include wpsc-cart-item();
 }
 .wpsc-cart-header {
 	border-top: $cart_border;

@@ -605,6 +605,13 @@ class WPSC_Purchase_Log_Page {
 		}
 	}
 
+	/**
+	 * Include files/resources from TEV2.
+	 *
+	 * @since  4.0.0
+	 *
+	 * @return void
+	 */
 	public function include_te_v2_resources() {
 		if ( ! defined( 'WPSC_TE_V2_CLASSES_PATH' ) ) {
 			require_once WPSC_FILE_PATH . '/wpsc-components/theme-engine-v2/core.php';
@@ -616,38 +623,19 @@ class WPSC_Purchase_Log_Page {
 		require_once( WPSC_TE_V2_HELPERS_PATH . '/template-tags/form.php' );
 	}
 
+	/**
+	 * Enqueue resources from tev2.
+	 *
+	 * @since  4.0.0
+	 *
+	 * @return void
+	 */
 	public function enqueue_te_v2_resources() {
 		_wpsc_te2_register_styles();
 		wp_enqueue_style( 'wpsc-common' );
-
-		$engine     = WPSC_Template_Engine::get_instance();
-		$scripts    = $engine->get_core_scripts_data();
-		$to_enqueue = array(
-			'wpsc-select-autocomplete',
-			'wpsc-country-region',
-			'wpsc-copy-billing-info'
-		);
-
-		foreach ( $to_enqueue as $handle ) {
-			wp_register_script(
-				$handle,
-				WPSC_TE_V2_URL . '/theming/assets/' . $scripts[ $handle ]['path'],
-				$scripts[ $handle ]['dependencies'],
-				$scripts[ $handle ]['version'],
-				true
-			);
-			wpsc_enqueue_script( $handle );
-		}
-
-		wp_localize_script( 'wpsc-copy-billing-info', 'WPSC', array(
-			'is_admin' => true,
-		) );
-
-		_wpsc_action_enqueue_shipping_billing_scripts();
-
-		foreach ( $engine->get_queued_scripts() as $handle => $data ) {
-			_wpsc_enqueue_and_localize_script( $handle, $data );
-		}
+		wpsc_enqueue_script( 'wpsc-select-autocomplete' );
+		wpsc_enqueue_script( 'wpsc-country-region' );
+		wpsc_enqueue_script( 'wpsc-copy-billing-info' );
 	}
 
 	public function doc_title( $admin_title, $title ) {

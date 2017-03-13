@@ -182,7 +182,7 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 		$activate = false;
 	}
 
-	// In the future, this check will be more refined.  As of 3.9, the current Gold Cart release is incompatible with the 2.0 theme engine.
+	// In the future, this check will be more refined.  As of 4.0, the current Gold Cart release is incompatible with the 2.0 theme engine.
 	if ( defined( 'WPSC_GOLD_VERSION' ) ) {
 		$activate = false;
 	}
@@ -194,6 +194,12 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 
 	// If any plugins or theme functionality are hooking into 1.0 template hooks, we don't activate 2.0.
 	if ( _wpsc_theme_engine_v1_has_actions() ) {
+		$activate = false;
+	}
+
+	// Our checkout process uses a custom REST API endpoint by default, requiring the REST API.
+	// An alternative approach here would be to filter the fancy notifications to be turned off.
+	if ( version_compare( $GLOBALS['wp_version'], '4.7.0', '<' ) ) {
 		$activate = false;
 	}
 

@@ -535,7 +535,7 @@ function wpsc_product_thumbnail( $size = false, $attr = '' ) {
  * @param string $size Optional. If this is not specified, the appropriate size will be detected based on the current page being viewed. See {@link wpsc_get_product_thumbnail()} for a list of available sizes you can use.
  * @param string $attr Optional. Query string or array of attributes. Defaults to ''.
  */
-function wpsc_product_no_thumbnail_image( $size = false, $attr = '' ) {
+function wpsc_product_no_thumbnail_image( $size = false, $attr = '', $echo = true ) {
 	global $_wp_additional_image_sizes;
 
 	// automatically detect the correct $size if it's not specified
@@ -578,7 +578,11 @@ function wpsc_product_no_thumbnail_image( $size = false, $attr = '' ) {
 	$html       = '<img alt="' . $title . '" src="' . $src . '" title="' . $title . '" width="' . $dimensions['width'] . '" height="' . $dimensions['height'] . '" />';
 	$html       = apply_filters( 'wpsc_product_no_thumbnail_html', $html, $size, $attr );
 
-	echo $html;
+	if ( $echo ) {
+		echo $html;
+	} else {
+		return $html;
+	}
 }
 
 /**

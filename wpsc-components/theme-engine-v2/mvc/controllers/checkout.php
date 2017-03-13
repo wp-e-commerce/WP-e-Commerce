@@ -27,14 +27,16 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 	public function index() {
 		if ( ! is_user_logged_in() ) {
+
 			wpsc_update_customer_meta( 'checkout_after_login', true );
+			wpsc_enqueue_script( 'wpsc-checkout' );
+
 			if ( get_option( 'require_register' ) ) {
 				$this->view = 'checkout-login-required';
-				_wpsc_enqueue_float_label_scripts();
 			} else {
 				$this->view = 'checkout-login-prompt';
-				_wpsc_enqueue_float_label_scripts();
 			}
+
 		} else {
 			wp_redirect( wpsc_get_checkout_url( 'shipping-and-billing' ) );
 			exit;
@@ -70,9 +72,8 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		);
 
 		// Shipping Selector Scripts and Filters
-		add_action( 'wp_enqueue_scripts',
-			array( $this, '_action_shipping_method_scripts' )
-		);
+		$this->enqueue_shipping_price_simulator();
+
 		add_filter( 'wpsc_checkout_shipping_method_form_button_title', array( &$this, 'review_order_button_title' ), 1, 100 );
 
 		// Handle POST request
@@ -178,8 +179,10 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 	public function shipping_and_billing() {
 		$this->view = 'checkout-shipping-and-billing';
-		_wpsc_enqueue_shipping_billing_scripts();
-		_wpsc_enqueue_float_label_scripts();
+
+		wpsc_enqueue_script( 'wpsc-country-region' );
+		wpsc_enqueue_script( 'wpsc-copy-billing-info' );
+		wpsc_enqueue_script( 'wpsc-checkout' );
 
 		$this->maybe_add_guest_account();
 
@@ -367,7 +370,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$this->init_shipping_calculator();
 		$this->view = 'checkout-shipping-method';
 
-		add_action( 'wp_enqueue_scripts', array( $this, '_action_shipping_method_scripts' ) );
+		$this->enqueue_shipping_price_simulator();
 
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_shipping_method' ) {
 			$this->submit_shipping_method();
@@ -421,9 +424,9 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 	public function payment() {
 		$this->view = 'checkout-payment';
-		_wpsc_enqueue_float_label_scripts();
 
-		add_action( 'wp_enqueue_scripts', array( $this, '_action_payment_scripts' ) );
+		wpsc_enqueue_script( 'wpsc-checkout' );
+		wpsc_enqueue_script( 'wpsc-checkout-payment' );
 
 		if ( $this->maybe_add_guest_account() ) {
 			add_filter( 'wpsc_get_checkout_payment_method_form_args', 'wpsc_create_account_checkbox' );
@@ -579,17 +582,11 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		return $js_var;
 	}
 
-	public function _action_shipping_method_scripts() {
-		wp_enqueue_script( 'wpsc-shipping-price-simulator' );
-		wp_localize_script(
-			'wpsc-shipping-price-simulator',
-			'WPSC_Price_Table',
-			$this->get_shipping_method_js_vars()
-		);
-	}
-
-	public function _action_payment_scripts() {
-		wp_enqueue_script( 'wpsc-checkout-payment' );
+	private function enqueue_shipping_price_simulator() {
+		wpsc_enqueue_script( 'wpsc-shipping-price-simulator', array(
+			'property_name' => 'priceTable',
+			'data' => $this->get_shipping_method_js_vars(),
+		) );
 	}
 
 	public function _action_shutdown() {

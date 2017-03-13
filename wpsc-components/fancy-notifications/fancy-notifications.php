@@ -4,8 +4,7 @@
  * WP eCommerce Fancy Notifications
  */
 
-add_action( 'wp_enqueue_scripts', array( 'WPSC_Fancy_Notifications', 'enqueue_styles' ) );
-add_action( 'wp_enqueue_scripts', array( 'WPSC_Fancy_Notifications', 'enqueue_scripts' ) );
+add_action( 'wp_enqueue_scripts', array( 'WPSC_Fancy_Notifications', 'maybe_enqueue' ) );
 add_action( 'wpsc_add_to_cart_button_form_begin', array( 'WPSC_Fancy_Notifications', 'add_fancy_notifications' ) );
 add_action( 'wpsc_theme_footer', array( 'WPSC_Fancy_Notifications', 'fancy_notifications' ) );
 add_filter( 'wpsc_add_to_cart_json_response', array( 'WPSC_Fancy_Notifications', 'wpsc_add_to_cart_json_response' ) );
@@ -16,6 +15,23 @@ add_filter( 'wpsc_add_to_cart_json_response', array( 'WPSC_Fancy_Notifications',
  * @since  4.0
  */
 class WPSC_Fancy_Notifications {
+
+	/**
+	 * Enqueue Fancy Notifications Scripts/Styles if the option is enabled.
+	 *
+	 * @since  4.0
+	 */
+	public static function maybe_enqueue() {
+		if ( wpsc_get_option( 'fancy_notifications' ) ) {
+
+			$url_path = self::plugin_url();
+
+			wp_enqueue_style( 'wpsc-fancy-notifications', $url_path . '/css/fancy-notifications.css', false, '1.0' );
+
+			wp_enqueue_script( 'wpsc-fancy-notifications', $url_path . '/js/fancy-notifications.js', array( 'jquery' ), '1.0' );
+
+		}
+	}
 
 	/**
 	 * Fancy Notifications
@@ -36,7 +52,7 @@ class WPSC_Fancy_Notifications {
 		}
 
 		$output = '';
-		if ( 1 == get_option( 'fancy_notifications' ) ) {
+		if ( get_option( 'fancy_notifications' ) ) {
 			$output .= '<div id="fancy_notification">';
 			$output .= '   <div id="loading_animation">';
 			$output .= '      <img id="fancy_notificationimage" title="' . esc_attr__( 'Loading', 'wp-e-commerce' ) . '" alt="' . esc_attr__( 'Loading', 'wp-e-commerce' ) . '" src="' . esc_url( wpsc_loading_animation_url() ) . '" />' . esc_html__( 'Updating', 'wp-e-commerce' ) . '...';
@@ -87,7 +103,7 @@ class WPSC_Fancy_Notifications {
 	 */
 	public static function wpsc_add_to_cart_json_response( $json_response ) {
 
-		if ( is_numeric( $json_response['product_id'] ) && 1 == get_option( 'fancy_notifications' ) ) {
+		if ( is_numeric( $json_response['product_id'] ) && get_option( 'fancy_notifications' ) ) {
 			$json_response['fancy_notification'] = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), self::fancy_notification_content( $json_response['cart_messages'] ) );
 		}
 
@@ -103,28 +119,6 @@ class WPSC_Fancy_Notifications {
 	public static function add_fancy_notifications() {
 
 		add_action( 'wp_footer', array( 'WPSC_Fancy_Notifications', 'fancy_notifications' ) );
-
-	}
-
-	/**
-	 * Enqueue Styles
-	 *
-	 * @since  4.0
-	 */
-	public static function enqueue_styles() {
-
-		wp_enqueue_style( 'wpsc-fancy-notifications', self::plugin_url() . '/css/fancy-notifications.css', false, '1.0' );
-
-	}
-
-	/**
-	 * Enqueue Scripts
-	 *
-	 * @since  4.0
-	 */
-	public static function enqueue_scripts() {
-
-		wp_enqueue_script( 'wpsc-fancy-notifications', self::plugin_url() . '/js/fancy-notifications.js', array( 'jquery' ), '1.0' );
 
 	}
 

@@ -9,7 +9,7 @@ class WPSC_Controller_Single extends WPSC_Query_Controller {
 	public function index() {
 		$this->title = get_queried_object()->post_title;
 		$this->view = 'single';
-		_wpsc_enqueue_product_scripts();
+		wpsc_enqueue_script( 'wpsc-products' );
 		$this->load_lightbox();
 	}
 

@@ -1,0 +1,15 @@
+/*******************
+Global Classes
+*******************/
+
+.wpsc-clearfix {
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
+
+.wpsc-hide {
+	display: none;
+}

@@ -25,7 +25,7 @@ class WPSC_Controller_Login extends WPSC_Controller
 		}
 
 		$this->view = 'login';
-		_wpsc_enqueue_float_label_scripts();
+		wpsc_enqueue_script( 'wpsc-checkout' );
 	}
 
 	private function callback_login() {

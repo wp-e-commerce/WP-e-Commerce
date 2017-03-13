@@ -1,6 +1,7 @@
 <?php
 
 add_action( 'wp_enqueue_scripts', '_wpsc_te2_register_scripts', 1 );
+add_action( 'admin_enqueue_scripts', '_wpsc_te2_register_scripts', 1 );
 
 function _wpsc_te2_register_scripts() {
 
@@ -9,13 +10,30 @@ function _wpsc_te2_register_scripts() {
 	$scripts = apply_filters( 'wpsc_registered_scripts', $engine->get_core_scripts_data() );
 
 	foreach ( $scripts as $handle => $script_data ) {
+
+		if ( empty( $script_data['url'] ) ) {
+			$script_data['url'] = is_admin()
+				? WPSC_TE_V2_URL . '/theming/assets/' . $script_data['path']
+				: wpsc_locate_asset_uri( $script_data['path'] );
+		}
+
 		wp_register_script(
 			$handle,
-			wpsc_locate_asset_uri( $script_data['path'] ),
+			$script_data['url'],
 			$script_data['dependencies'],
 			$script_data['version'],
 			! isset( $script_data['in_footer'] ) || $script_data['in_footer']
 		);
+
+		if ( isset( $script_data['data'] ) ) {
+
+			wpsc_localize_script(
+				$handle,
+				$script_data['data']['property_name'],
+				$script_data['data']['data']
+			);
+
+		}
 	}
 
 	$enqueued = false;
@@ -29,52 +47,43 @@ function _wpsc_te2_register_scripts() {
 	// Output our namespace.
 	?><script type='text/javascript'>/* <![CDATA[ */window.WPSC = window.WPSC || {};/* ]]> */</script><?php
 
-	do_action( 'wpsc_register_scripts' );
-	do_action( 'wpsc_enqueue_scripts' );
+	if ( is_admin() ) {
+		do_action( 'wpsc_register_admin_scripts' );
+		do_action( 'wpsc_enqueue_admin_scripts' );
+	} else {
+		do_action( 'wpsc_register_scripts' );
+		do_action( 'wpsc_enqueue_scripts' );
+	}
 }
 
-function _wpsc_enqueue_shipping_billing_scripts() {
-	add_action(
-		'wp_enqueue_scripts',
-		'_wpsc_action_enqueue_shipping_billing_scripts'
+function _wpsc_cart_notifications() {
+
+	// Check if cart-notifications should be disabled for any reason.
+	if ( ! apply_filters( 'wpsc_do_cart_notifications', true ) ) {
+
+		// If no, then dequeue the JS...
+		wp_dequeue_script( 'wpsc-cart-notifications' );
+
+		// and bail.
+		return;
+	}
+
+	// Ensure the cart object exists.
+	if ( ! isset( $GLOBALS['wpsc_cart'] ) ) {
+		$GLOBALS['wpsc_cart'] = new wpsc_cart();
+	}
+
+	// Get our class file.
+	require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-notifications.php' );
+
+	// And initiate..
+	$cart_notifications = new WPSC_Cart_Notifications(
+		$GLOBALS['wpsc_cart'],
+		defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG
 	);
-}
 
-function _wpsc_action_enqueue_shipping_billing_scripts() {
-	wpsc_enqueue_script( 'wpsc-country-region' );
-	wpsc_enqueue_script( 'wpsc-copy-billing-info', array(
-		'property_name' => 'copyBilling',
-		'data' => array(
-			'strings' => array(
-				'billing_and_shipping' => apply_filters( 'wpsc_checkout_billing_header_label' , __( '<h2>Billing &amp; Shipping Details</h2>', 'wp-e-commerce' ) ),
-				'shipping'             => apply_filters( 'wpsc_checkout_shipping_header_label' , __( '<h2>Shipping Details</h2>', 'wp-e-commerce' ) ),
-				'billing'              => apply_filters( 'wpsc_checkout_billing_only_header_label', __( '<h2>Billing Details</h2>', 'wp-e-commerce' ) ),
-			),
-		),
-	) );
-}
-
-function _wpsc_enqueue_float_label_scripts() {
-    add_action(
-        'wp_enqueue_scripts',
-        '_wpsc_action_enqueue_float_label_scripts'
-    );
-}
-
-function _wpsc_action_enqueue_float_label_scripts() {
-    wpsc_enqueue_script( 'wpsc-float-labels' );
-    wpsc_enqueue_script( 'wpsc-checkout' );
-}
-
-function _wpsc_enqueue_product_scripts() {
-    add_action(
-        'wp_enqueue_scripts',
-        '_wpsc_action_enqueue_product_scripts'
-    );
-}
-
-function _wpsc_action_enqueue_product_scripts() {
-    wpsc_enqueue_script( 'wpsc-products' );
+	// Kick it off!
+	$cart_notifications->enqueue_css()->localize_data()->output_js_templates();
 }
 
 /**
@@ -91,7 +100,9 @@ function _wpsc_action_enqueue_product_scripts() {
  * @param array  $script_data (Optional) data to send to wp_localize_script under the WPSC namespace.
  */
 function wpsc_enqueue_script( $handle, $script_data = array() ) {
-	if ( ! did_action( 'wpsc_enqueue_scripts' ) ) {
+	$did_enqueue = is_admin() ? did_action( 'wpsc_enqueue_admin_scripts' ) : did_action( 'wpsc_enqueue_scripts' );
+
+	if ( ! $did_enqueue ) {
 		WPSC_Template_Engine::get_instance()->register_queued_script( $handle, $script_data );
 	} else {
 		_wpsc_enqueue_and_localize_script( $handle, $script_data );
@@ -166,6 +177,21 @@ function wpsc_localize_script( $handle, $property_name, $data, $add_to_namespace
 		$property_name = 'WPSC.' . sanitize_html_class( maybe_serialize( $property_name ) );
 	}
 
+	if ( isset( $data['_templates'] ) && is_array( $data['_templates'] ) ) {
+
+		foreach ( $data['_templates'] as $tmpl_id => $callback ) {
+			if ( is_callable( $callback ) ) {
+
+				// Reset callback value as we won't that need that in JS.
+				$data['_templates'][ $tmpl_id ] = $tmpl_id;
+
+				// Hook in template callback.
+				add_action( 'wp_footer', $callback );
+			}
+		}
+
+	}
+
 	$result = wp_localize_script( $handle, $property_name, $data );
 
 	if ( $add_to_namespace ) {
@@ -174,7 +200,7 @@ function wpsc_localize_script( $handle, $property_name, $data, $add_to_namespace
 
 		$script = str_replace(
 			"var {$property_name} = {",
-			"window.{$property_name} = window.{$property_name} || {",
+			"window.{$property_name} = {",
 			$script
 		);
 

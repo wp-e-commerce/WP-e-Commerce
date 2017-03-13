@@ -5,6 +5,7 @@ function _wpsc_te2_register_styles() {
 
 	wpsc_te2_register_style( 'wpsc-common', "common{$suffix}.css" );
 	wpsc_te2_register_style( 'wpsc-responsive', "wpsc-responsive{$suffix}.css" );
+	wpsc_te2_register_style( 'wpsc-cart-notifications', "cart-notifications{$suffix}.css" );
 
 	do_action( 'wpsc_register_styles' );
 }
@@ -13,7 +14,6 @@ function _wpsc_te2_enqueue_styles() {
 	_wpsc_te2_register_styles();
 
 	wp_enqueue_style( 'wpsc-common' );
-	wp_enqueue_style( 'wpsc-responsive' );
 	wp_enqueue_style( 'wpsc-responsive' );
 
 	if ( apply_filters( 'wpsc_add_inline_style', true ) ) {

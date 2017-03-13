@@ -5,7 +5,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table.php' );
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table-form.php' );
 		$this->view  = 'cart';
-		_wpsc_enqueue_product_scripts();
+		wpsc_enqueue_script( 'wpsc-products' );
 		$this->title = wpsc_get_cart_title();
 		$this->init_cart_item_table();
 	}
@@ -204,7 +204,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		if ( isset( $_POST['apply_coupon'] ) && empty( $_POST['coupon_code'] ) ) {
 			$this->_callback_remove_coupon();
 		}
-	
+
 		if ( isset( $_POST['apply_coupon'] ) && isset( $_POST['coupon_code'] ) ) {
 			$this->_callback_apply_coupon();
 		}
@@ -213,14 +213,14 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 			$this->_callback_update_quantity();
 		}
 	}
-	
+
 	public function _callback_remove_coupon() {
 		global $wpsc_cart;
-		
+
 		$wpsc_cart->coupons_amount = 0;
 		$wpsc_cart->coupons_name = '';
 		wpsc_delete_customer_meta( 'coupon' );
-		
+
 		$this->message_collection->add( __( 'Coupon removed.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
 
 		wp_safe_redirect( wpsc_get_cart_url() );
@@ -243,7 +243,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		} else {
 			$this->message_collection->add( __( 'Coupon applied.', 'wp-e-commerce' ), 'success', 'main', 'flash' );
 		}
-	
+
 		wp_safe_redirect( wpsc_get_cart_url() );
 		exit;
 

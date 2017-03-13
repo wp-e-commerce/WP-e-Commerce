@@ -529,6 +529,8 @@ function wpsc_register_post_types() {
 	$args = array(
 		'hierarchical' => false,
 		'labels' => $labels,
+		'show_in_rest' => true,
+		'rest_controller_class' => 'WPSC_REST_Tags_Controller',
 		'rewrite' => array(
 			'slug' => '/' . sanitize_title_with_dashes( _x( 'tagged', 'slug, part of url', 'wp-e-commerce' ) ),
 			'with_front' => false )
@@ -553,6 +555,8 @@ function wpsc_register_post_types() {
 	$args = array(
 		'labels'       => $labels,
 		'hierarchical' => true,
+		'show_in_rest' => true,
+		'rest_controller_class' => 'WPSC_REST_Categories_Controller',
 		'rewrite'      => array(
 			'slug'         => str_replace( basename( home_url() ), '', $wpsc_page_titles['products'] ),
 			'with_front'   => false,
@@ -576,6 +580,8 @@ function wpsc_register_post_types() {
 	);
 	$args = array(
 		'hierarchical' => true,
+		'show_in_rest' => true,
+		'rest_controller_class' => 'WPSC_REST_Variations_Controller',
 		'query_var'    => 'variations',
 		'rewrite'      => false,
 		'public'       => true,

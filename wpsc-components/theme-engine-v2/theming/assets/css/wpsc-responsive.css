@@ -1,18 +1,18 @@
 /*******************
-Variables 
+Global Classes
 *******************/
 
-/* Typography */
+.wpsc-clearfix:after {
+	content: "";
+	display: table;
+	clear: both;
+}
 
-/* Shopping Cart Single Product Cells (Needs to add up to 100%) */
+.wpsc-hide {
+	display: none;
+}
 
 /* value x 4 i.e. 2.5 x 4 = 10% */
-
-/* Account Orders  */
-
-/* Digital Orders (Needs to add up to 100%) */
-
-/*Product Grid*/
 
 .wpsc-grid { /**********************************
   Product Grid on Archive Store Pages 
@@ -265,7 +265,7 @@ Variables
 }
 
 /*******************
-Shopping Cart 
+Shopping Cart
 ********************/
 
 .wpsc-cart-table {
@@ -277,7 +277,7 @@ Shopping Cart
 .wpsc-cart-footer {
 	display: block;
 	padding: 20px 0;
-	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #ccc;
 }
 
 .wpsc-cart-header {

@@ -662,6 +662,24 @@ class WPSC_Cart {
 	}
 
 	/**
+	 * Edit Item by the product ID.
+	 *
+	 * @access public
+	 *
+	 * @param integer the product ID
+	 * @param array an array of parameters to change
+	 * @return boolean true on sucess, false on failure
+	 */
+	function edit_item_by_id( $product_id, $parameters ) {
+		$key = $this->get_cart_item_by_id( $product_id, true );
+		if ( false !== $key ) {
+			return $this->edit_item( $key, $parameters );
+		}
+
+		return false;
+	}
+
+	/**
 	 * check remaining quantity method
 	 * currently only checks remaining stock, in future will do claimed stock and quantity limits
 	 * will need to return errors, then, rather than true/false, maybe use the wp_error object?
@@ -727,6 +745,42 @@ class WPSC_Cart {
 			$this->clear_cache();
 			return false;
 		}
+	}
+
+	/**
+	 * Remove Item by the product ID.
+	 *
+	 * @access public
+	 *
+	 * @param integer the product ID
+	 * @return boolean true on sucess, false on failure
+	 */
+	function remove_item_by_id( $product_id ) {
+		$key = $this->get_cart_item_by_id( $product_id, true );
+		if ( false !== $key ) {
+			return $this->remove_item( $key );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get Cart Item by the product ID.
+	 *
+	 * @access public
+	 *
+	 * @param integer the product ID
+	 * @return mixed Item or item key on sucess, false on failure
+	 */
+	public function get_cart_item_by_id( $product_id, $key_only = false ) {
+		$product_id = absint( $product_id );
+		foreach ( $this->cart_items as $key => $cart_item ) {
+			if ( absint( $cart_item->product_id ) === $product_id ) {
+				return $key_only ? $key : $cart_item;
+			}
+		}
+
+		return false;
 	}
 
 	/**

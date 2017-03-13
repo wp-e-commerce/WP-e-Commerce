@@ -65,63 +65,7 @@ class WPSC_Template_Engine {
 	 * @since 4.0
 	 * @var array
 	 */
-	private $core_scripts = array(
-		'wpsc-select-autocomplete' => array(
-			'path'         => 'js/jquery.select-to-autocomplete.js',
-			'dependencies' => array( 'jquery-ui-autocomplete' ),
-			'version'      => '1.0.5',
-		),
-		'wpsc-country-region' => array(
-			'path'         => 'js/country-region.js',
-			'dependencies' => array( 'wpsc-select-autocomplete', 'jquery' ),
-			'version'      => WPSC_VERSION,
-		),
-		'wpsc-copy-billing-info' => array(
-			'path'         => 'js/copy-billing-info.js',
-			'dependencies' => array( 'jquery' ),
-			'version'      => WPSC_VERSION,
-		),
-		'wpsc-shipping-price-simulator' => array(
-			'path'         => 'js/shipping-price-simulator.js',
-			'dependencies' => array( 'jquery' ),
-			'version'      => WPSC_VERSION,
-		),
-		'jquery-payment' => array(
-			'path'         => 'js/jquery.payment.min.js',
-			'dependencies' => array( 'jquery' ),
-			'version'      => WPSC_VERSION,
-		),
-		'wpsc-checkout-payment' => array(
-			'path'         => 'js/checkout-payment.js',
-			'dependencies' => array( 'jquery', 'jquery-payment' ),
-			'version'      => WPSC_VERSION,
-		),
-		'wpsc-cart-notifications' => array(
-			'path'         => 'js/cart-notifications.js',
-			'dependencies' => array( 'jquery' ),
-			'version'      => WPSC_VERSION,
-		),
-		'wpsc-float-labels' => array(
-			'path'         => 'js/jquery.FloatLabel.js',
-			'dependencies' => array( 'jquery' ),
-			'version'      => WPSC_VERSION,
-		),
-		'wpsc-checkout' => array(
-			'path'         => 'js/checkout.js',
-			'dependencies' => array( 'jquery', 'wpsc-float-labels' ),
-			'version'      => WPSC_VERSION,
-		),
-		'wpsc-fluidbox' => array(
-			'path'         => 'js/fluidbox.js',
-			'dependencies' => array( 'jquery', 'underscore' ),
-			'version'      => WPSC_VERSION
-		),
-		'wpsc-products' => array(
-			'path'         => 'js/products.js',
-			'dependencies' => array( 'jquery' ),
-			'version'      => WPSC_VERSION,
-		),
-	);
+	private $core_scripts = array();
 
 	/**
 	 * Constructor
@@ -188,12 +132,101 @@ class WPSC_Template_Engine {
 	}
 
 	/**
+	 * Register default core scripts data.
+	 *
+	 * @since 4.0
+	 */
+	private function register_default_core_scripts() {
+		$do_minified = apply_filters( 'wpsc_use_minified_scripts', ! ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) );
+		$suffix = $do_minified ? '.min' : '';
+
+		$this->core_scripts = array(
+			'wpsc-select-autocomplete' => array(
+				'path'         => "js/jquery.select-to-autocomplete{$suffix}.js",
+				'dependencies' => array( 'jquery-ui-autocomplete' ),
+				'version'      => '1.0.5',
+			),
+			'wpsc-country-region' => array(
+				'path'         => "js/country-region{$suffix}.js",
+				'dependencies' => array( 'wpsc-select-autocomplete', 'jquery' ),
+				'version'      => WPSC_VERSION,
+			),
+			'wpsc-copy-billing-info' => array(
+				'path'         => "js/copy-billing-info{$suffix}.js",
+				'dependencies' => array( 'jquery' ),
+				'version'      => WPSC_VERSION,
+				'data'         => array(
+					'property_name' => 'copyBilling',
+					'data' => array(
+						'strings' => array(
+							'billing_and_shipping' => apply_filters( 'wpsc_checkout_billing_header_label' , __( '<h2>Billing &amp; Shipping Details</h2>', 'wp-e-commerce' ) ),
+							'shipping'             => apply_filters( 'wpsc_checkout_shipping_header_label' , __( '<h2>Shipping Details</h2>', 'wp-e-commerce' ) ),
+							'billing'              => apply_filters( 'wpsc_checkout_billing_only_header_label', __( '<h2>Billing Details</h2>', 'wp-e-commerce' ) ),
+						),
+					),
+				),
+			),
+			'wpsc-shipping-price-simulator' => array(
+				'path'         => "js/shipping-price-simulator{$suffix}.js",
+				'dependencies' => array( 'jquery' ),
+				'version'      => WPSC_VERSION,
+			),
+			'jquery-payment' => array(
+				'path'         => 'js/jquery.payment.min.js',
+				'dependencies' => array( 'jquery' ),
+				'version'      => WPSC_VERSION,
+			),
+			'wpsc-checkout-payment' => array(
+				'path'         => "js/checkout-payment{$suffix}.js",
+				'dependencies' => array( 'jquery', 'jquery-payment' ),
+				'version'      => WPSC_VERSION,
+			),
+			'wpsc-cart-notifications' => array(
+				'path'         => "js/cart-notifications{$suffix}.js",
+				'dependencies' => array( 'jquery', 'wp-backbone' ),
+				'version'      => WPSC_VERSION,
+				'data'         => array(
+					'property_name' => 'cartNotifications',
+					'data' => array(
+						'_templates' => array(
+							'wpsc-modal-inner' => '_wpsc_cart_notifications',
+						),
+					),
+				),
+			),
+			'wpsc-float-labels' => array(
+				'path'         => "js/jquery.floatlabel{$suffix}.js",
+				'dependencies' => array( 'jquery' ),
+				'version'      => WPSC_VERSION,
+			),
+			'wpsc-checkout' => array(
+				'path'         => "js/checkout{$suffix}.js",
+				'dependencies' => array( 'jquery', 'wpsc-float-labels' ),
+				'version'      => WPSC_VERSION,
+			),
+			'wpsc-fluidbox' => array(
+				'path'         => "js/fluidbox{$suffix}.js",
+				'dependencies' => array( 'jquery', 'underscore' ),
+				'version'      => WPSC_VERSION
+			),
+			'wpsc-products' => array(
+				'path'         => "js/products{$suffix}.js",
+				'dependencies' => array( 'jquery' ),
+				'version'      => WPSC_VERSION,
+			),
+
+		);
+
+	}
+
+	/**
 	 * Get all the registered core scripts data.
 	 *
 	 * @since  4.0
 	 * @return array
 	 */
 	public function get_core_scripts_data() {
+		$this->register_default_core_scripts();
 		return $this->core_scripts;
 	}
 
