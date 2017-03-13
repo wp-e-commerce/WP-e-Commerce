@@ -1,6 +1,7 @@
 <?php
 
 add_action( 'wp_enqueue_scripts', '_wpsc_te2_register_scripts', 1 );
+add_action( 'admin_enqueue_scripts', '_wpsc_te2_register_scripts', 1 );
 
 function _wpsc_te2_register_scripts() {
 
@@ -10,9 +11,15 @@ function _wpsc_te2_register_scripts() {
 
 	foreach ( $scripts as $handle => $script_data ) {
 
+		if ( empty( $script_data['url'] ) ) {
+			$script_data['url'] = is_admin()
+				? WPSC_TE_V2_URL . '/theming/assets/' . $script_data['path']
+				: wpsc_locate_asset_uri( $script_data['path'] );
+		}
+
 		wp_register_script(
 			$handle,
-			wpsc_locate_asset_uri( $script_data['path'] ),
+			$script_data['url'],
 			$script_data['dependencies'],
 			$script_data['version'],
 			! isset( $script_data['in_footer'] ) || $script_data['in_footer']
@@ -40,8 +47,13 @@ function _wpsc_te2_register_scripts() {
 	// Output our namespace.
 	?><script type='text/javascript'>/* <![CDATA[ */window.WPSC = window.WPSC || {};/* ]]> */</script><?php
 
-	do_action( 'wpsc_register_scripts' );
-	do_action( 'wpsc_enqueue_scripts' );
+	if ( is_admin() ) {
+		do_action( 'wpsc_register_admin_scripts' );
+		do_action( 'wpsc_enqueue_admin_scripts' );
+	} else {
+		do_action( 'wpsc_register_scripts' );
+		do_action( 'wpsc_enqueue_scripts' );
+	}
 }
 
 function _wpsc_cart_notifications() {
@@ -88,7 +100,9 @@ function _wpsc_cart_notifications() {
  * @param array  $script_data (Optional) data to send to wp_localize_script under the WPSC namespace.
  */
 function wpsc_enqueue_script( $handle, $script_data = array() ) {
-	if ( ! did_action( 'wpsc_enqueue_scripts' ) ) {
+	$did_enqueue = is_admin() ? did_action( 'wpsc_enqueue_admin_scripts' ) : did_action( 'wpsc_enqueue_scripts' );
+
+	if ( ! $did_enqueue ) {
 		WPSC_Template_Engine::get_instance()->register_queued_script( $handle, $script_data );
 	} else {
 		_wpsc_enqueue_and_localize_script( $handle, $script_data );
