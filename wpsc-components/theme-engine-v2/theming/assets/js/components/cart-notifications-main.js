@@ -59,16 +59,28 @@
 	};
 
 	notifs.clickAddProductToCart = function( evt ) {
-		evt.preventDefault();
-		var $product = $( this ).parents( '.wpsc-product' );
-		notifs.addProductToCart( $product );
+		var $productForm = null;
+		var $this = $( this );
+		var $product = $this.parents( '.wpsc-product' );
+			evt.preventDefault();
+
+		if ( ! $product.length ) {
+			$productForm = $this.parents( '.wpsc-add-to-cart-form' );
+			if ( $productForm.length ) {
+				$product = $id( 'product-' + $productForm.data( 'id' ) );
+			}
+		}
+
+		if ( $product.length ) {
+			notifs.addProductToCart( $product, $productForm );
+		}
 	};
 
-	notifs.addProductToCart = function( $product ) {
+	notifs.addProductToCart = function( $product, $productForm ) {
 		// Experimental.
 		// TODO: Replace dom-to-model with actual localized JSON model data.
 		notifs.domToModel = notifs.domToModel || require( './utils/product-dom-to-model.js' )( notifs.currency );
-		notifs.CartView.trigger( 'add-to-cart', notifs.domToModel.prepare( $product ) );
+		notifs.CartView.trigger( 'add-to-cart', notifs.domToModel.prepare( $product, $productForm ) );
 	};
 
 	notifs.closeModal = function() {

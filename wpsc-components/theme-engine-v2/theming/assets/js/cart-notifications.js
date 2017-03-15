@@ -1,5 +1,5 @@
 /**
- * WP eCommerce - v4.0.0 - 2017-03-12
+ * WP eCommerce - v4.0.0 - 2017-03-15
  * https://wpecommerce.org/
  *
  * Copyright (c) 2017;
@@ -64,16 +64,28 @@
 	};
 
 	notifs.clickAddProductToCart = function (evt) {
+		var $productForm = null;
+		var $this = $(this);
+		var $product = $this.parents('.wpsc-product');
 		evt.preventDefault();
-		var $product = $(this).parents('.wpsc-product');
-		notifs.addProductToCart($product);
+
+		if (!$product.length) {
+			$productForm = $this.parents('.wpsc-add-to-cart-form');
+			if ($productForm.length) {
+				$product = $id('product-' + $productForm.data('id'));
+			}
+		}
+
+		if ($product.length) {
+			notifs.addProductToCart($product, $productForm);
+		}
 	};
 
-	notifs.addProductToCart = function ($product) {
+	notifs.addProductToCart = function ($product, $productForm) {
 		// Experimental.
 		// TODO: Replace dom-to-model with actual localized JSON model data.
 		notifs.domToModel = notifs.domToModel || require('./utils/product-dom-to-model.js')(notifs.currency);
-		notifs.CartView.trigger('add-to-cart', notifs.domToModel.prepare($product));
+		notifs.CartView.trigger('add-to-cart', notifs.domToModel.prepare($product, $productForm));
 	};
 
 	notifs.closeModal = function () {
@@ -398,8 +410,8 @@ module.exports = function (currency) {
 	};
 
 	return {
-		prepare: function prepare($product) {
-			var $productForm = $product.find('.wpsc-add-to-cart-form');
+		prepare: function prepare($product, $productForm) {
+			$productForm = $productForm && $productForm.length ? $productForm : $product.find('.wpsc-add-to-cart-form');
 			var nonce = $productForm.find('[name="_wp_nonce"]').val();
 			var $thumb = $product.find('.wpsc-product-thumbnail');
 			var $salePrice = $product.find('.wpsc-product-price .wpsc-sale-price .wpsc-amount');
@@ -413,7 +425,7 @@ module.exports = function (currency) {
 				formattedPrice: price,
 				title: $product.find('.wpsc-product-title > a').text(),
 				thumb: $thumb.length ? $thumb.html() : '',
-				quantity: $product.find('[name="quantity"]').val(),
+				quantity: $productForm.find('[name="quantity"]').val(),
 				remove_url: '',
 				variations: getVariationsFromProductForm($productForm)
 			};

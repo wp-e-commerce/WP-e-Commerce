@@ -44,12 +44,12 @@ module.exports = function( currency ) {
 	};
 
 	return {
-		prepare : function( $product ) {
-			var $productForm = $product.find( '.wpsc-add-to-cart-form' );
-			var nonce        = $productForm.find( '[name="_wp_nonce"]' ).val();
-			var $thumb       = $product.find( '.wpsc-product-thumbnail' );
-			var $salePrice   = $product.find( '.wpsc-product-price .wpsc-sale-price .wpsc-amount' );
-			var price        = $salePrice.length ? $salePrice.text() : $product.find( '.wpsc-product-price .wpsc-amount' ).last().text();
+		prepare : function( $product, $productForm ) {
+			$productForm   = $productForm && $productForm.length ? $productForm : $product.find( '.wpsc-add-to-cart-form' );
+			var nonce      = $productForm.find( '[name="_wp_nonce"]' ).val();
+			var $thumb     = $product.find( '.wpsc-product-thumbnail' );
+			var $salePrice = $product.find( '.wpsc-product-price .wpsc-sale-price .wpsc-amount' );
+			var price      = $salePrice.length ? $salePrice.text() : $product.find( '.wpsc-product-price .wpsc-amount' ).last().text();
 
 			return {
 				id             : $productForm.data( 'id' ),
@@ -59,7 +59,7 @@ module.exports = function( currency ) {
 				formattedPrice : price,
 				title          : $product.find( '.wpsc-product-title > a' ).text(),
 				thumb          : $thumb.length ? $thumb.html() : '',
-				quantity       : $product.find( '[name="quantity"]' ).val(),
+				quantity       : $productForm.find( '[name="quantity"]' ).val(),
 				remove_url     : '',
 				variations     : getVariationsFromProductForm( $productForm )
 			};
