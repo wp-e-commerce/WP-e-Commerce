@@ -1109,7 +1109,7 @@ class WPSC_Cart {
 	 */
 	function calculate_per_item_shipping( $method = null ) {
 		global $wpsc_shipping_modules;
-		$total = '';
+		$total = 0.0;
 		if ( $method == null ) {
 			$method = $this->selected_shipping_method;
 		}
