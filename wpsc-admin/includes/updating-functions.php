@@ -858,7 +858,7 @@ function wpsc_update_database() {
 
 		$result = $wpdb->get_results("SHOW COLUMNS FROM ". WPSC_TABLE_PURCHASE_LOGS."", ARRAY_A);
 	if (!$result) {
-		echo 'Could not run query: ' . mysql_error();
+		echo 'Could not run query: ' . $wpdb->last_error;
 		exit;
 	}
 	foreach($result as $row_key=>$value) {
