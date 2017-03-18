@@ -140,7 +140,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 */
 	public function create_item( $request ) {
 		$this->request = $request;
-		return $this->try( 'add_item_to_cart' );
+		return $this->request( 'add_item_to_cart' );
 	}
 
 	/**
@@ -372,7 +372,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 */
 	public function update_item( $request ) {
 		$this->request = $request;
-		return $this->try( 'update_item_in_cart' );
+		return $this->request( 'update_item_in_cart' );
 	}
 
 	/**
@@ -396,7 +396,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 		$this->request = $request;
-		return $this->try( 'delete_item_from_cart' );
+		return $this->request( 'delete_item_from_cart' );
 	}
 
 	/**
@@ -509,7 +509,7 @@ class WPSC_REST_Checkout_Controller extends WP_REST_Controller {
 		return apply_filters( 'wpsc_cart_rest_prepare_item', $product, $this );
 	}
 
-	public function try( $callback ) {
+	public function request( $callback ) {
 		// error_log( '$_REQUEST: '. print_r( $_REQUEST, true ) );
 		// error_log( '$callback: '. print_r( $callback, true ) );
 		try {
