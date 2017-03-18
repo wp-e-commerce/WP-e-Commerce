@@ -19,6 +19,8 @@ class ash_ups {
 	public $cust_types = array();
 
 	public function __construct() {
+		include_once WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php';
+
 		$this->internal_name = 'ups';
 		$this->name = _x( 'UPS', 'Shipping Module', 'wp-e-commerce' );
 		$this->is_external = true;
@@ -28,10 +30,6 @@ class ash_ups {
 		$this->_setServiceURL();
 		$this->_includeUPSData();
 		return true;
-	}
-
-	function __autoload ( $name ) {
-		include_once( '../wpsc-includes/shipping.helper.php' );
 	}
 
 	function getId () {
