@@ -320,19 +320,6 @@ class WPSC_Product {
 	}
 
 	/**
-	 * Implement __empty() magic method.
-	 * Lazy loads properties where required.
-	 *
-	 * @since  3.9
-	 * @param  string  $name Property name to check.
-	 * @return boolean       True if the property is empty(), otherwise false.
-	 */
-	public function __empty( $name ) {
-		$this->_maybe_lazy_load_property( $name );
-		return empty( $this->$name );
-	}
-
-	/**
 	 * Magic properties
 	 *
 	 * @since 3.8.14
