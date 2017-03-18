@@ -170,7 +170,6 @@ function _wpsc_force_download_file( $file_id ) {
 	$file_path = WPSC_FILE_DIR . $file_name;
 
 	if ( is_file( $file_path ) ) {
-		if( !ini_get('safe_mode') ) set_time_limit(0);
 		header( 'Content-Type: ' . $file_data->post_mime_type );
 		header( 'Content-Length: ' . filesize( $file_path ) );
 		header( 'Content-Transfer-Encoding: binary' );
