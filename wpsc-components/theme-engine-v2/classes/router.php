@@ -293,7 +293,7 @@ class WPSC_Router {
 		$this->controller_slug   = $slug;
 		$this->controller_method = $method;
 		$this->controller_name   = $controller;
-		$this->controller        = _wpsc_load_controller( $controller );
+		$this->controller        = _wpsc_load_controller( $controller, $method );
 
 		// If method/path not found, show the 404 page
 		if ( ! is_callable( array( $this->controller, $method ) ) ) {
