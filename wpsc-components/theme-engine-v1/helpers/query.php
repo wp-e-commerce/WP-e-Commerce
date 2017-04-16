@@ -172,11 +172,42 @@ function _wpsc_pre_get_posts_reset_taxonomy_globals( $query ) {
  * wpsc_start_the_query
  */
 function wpsc_start_the_query() {
+
 	if ( is_404() ) {
 		return;
 	}
 
 	global $wpsc_page_titles, $wp_query, $wpsc_query, $wpsc_query_vars;
+
+	if ( isset( $wp_query->post ) && is_object( $wp_query->post ) && isset( $wp_query->post->ID ) ) {
+		$post_id = $wp_query->post->ID;
+		$post_content = $wp_query->post->post_content;
+	} else {
+		$post_id = 0;
+		$post_content = '';
+	}
+
+	if ( ( get_permalink( $post_id ) == get_option( 'shopping_cart_url' ) ) ) {
+		$_SESSION['wpsc_has_been_to_checkout'] = true;
+		return; // we don't need to setup a query if we are on the checkout page
+	}
+
+	$need_product_query = false;
+
+	if ( false !== stripos( $post_content, '[productspage]' ) ) {
+		$need_product_query = true;
+	} else {
+		$queried_post_type = get_query_var( 'post_type' );
+		if ( is_string( $queried_post_type ) && ( $queried_post_type == 'wpsc-product' ) ) {
+			$need_product_query = true;
+		} else if ( is_array( $queried_post_type ) && in_array( 'wpsc-product', $queried_post_type  ) ) {
+			$need_product_query = true;
+		}
+	}
+ 
+	if ( ! $need_product_query ) {
+		return;
+	}
 
 	$is_404 = $wp_query->is_404;
 	if ( null == $wpsc_query ) {
@@ -224,9 +255,7 @@ function wpsc_start_the_query() {
 				$wpsc_query_vars['paged'] = get_query_var('paged');
 				if(isset($wpsc_query_vars['paged']) && empty($wpsc_query_vars['paged'])){
 					$wpsc_query_vars['paged'] = get_query_var('page');
-
 				}
-
 			}
 
 			$orderby = ( isset( $_GET['product_order'] ) ) ? 'title' : null;
@@ -262,13 +291,7 @@ function wpsc_start_the_query() {
 			$wp_query = new WP_Query( 'page_id='.$product_page_id);
 		}
 	}
-	if ( isset( $wp_query->post ) && is_object( $wp_query->post ) && isset( $wp_query->post->ID ) )
-		$post_id = $wp_query->post->ID;
-	else
-		$post_id = 0;
 
-	if ( get_permalink( $post_id ) == get_option( 'shopping_cart_url' ) )
-		$_SESSION['wpsc_has_been_to_checkout'] = true;
 }
 
 /**

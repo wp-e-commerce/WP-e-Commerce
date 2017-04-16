@@ -1416,8 +1416,9 @@ function wpsc_set_aioseop_description( $data ) {
 function wpsc_this_page_url() {
 
 	global $wpsc_query, $wp_query;
-
-	if ( $wpsc_query->is_single === true ) {
+	if ( empty( $wpsc_query ) ) {
+		$output = get_permalink( $wp_query->post->ID );
+	} else if ( $wpsc_query->is_single === true ) {
 		$output = get_permalink( $wp_query->post->ID );
 	} else if ( isset( $wpsc_query->category ) && $wpsc_query->category != null ) {
 		$output = wpsc_category_url( $wpsc_query->category );
@@ -1428,10 +1429,11 @@ function wpsc_this_page_url() {
 				$output = add_query_arg( 'page_number', $wpsc_query->query_vars['page'], $output );
 			}
 		}
+	} elseif ( isset( $id ) ) {
+		$output = get_permalink( $id );
 	} else {
 		$output = get_permalink( get_the_ID() );
 	}
-
 	return esc_url( $output );
 }
 
