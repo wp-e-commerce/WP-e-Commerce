@@ -620,17 +620,12 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 		) );
 	} else {
 		$price = $full_price = get_post_meta( $product_id, '_wpsc_price', true );
-
+		
 		if ( ! $only_normal_price ) {
 			$special_price = get_post_meta( $product_id, '_wpsc_special_price', true );
 
 			if ( ( $full_price > $special_price ) && ( $special_price > 0 ) )
 				$price = $special_price;
-		}
-
-		if ( $no_decimals ) {
-			$price = explode( ".", $price );
-			$price = array_shift( $price );
 		}
 
 		$price = apply_filters( 'wpsc_do_convert_price', $price, $product_id );
