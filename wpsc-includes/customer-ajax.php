@@ -38,8 +38,17 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	 */
 	function wpsc_validate_customer_ajax() {
 		// most of the validation should be done by the WPEC initialization, just return the current customer values
-		$response = array( 'valid' => (_wpsc_validate_customer_cookie() !== false), 'id' => wpsc_get_current_customer_id() );
+		$cookie_value = _wpsc_validate_customer_cookie() ? $_COOKIE[ WPSC_CUSTOMER_COOKIE ] : '';
+		$response = array(
+			'valid' => (_wpsc_validate_customer_cookie() !== false),
+			'id' => wpsc_get_current_customer_id(),
+			'cookie_name' => WPSC_CUSTOMER_COOKIE,
+			'cookie_value' => $cookie_value,
+			'cookie_expire' => time() + WPSC_CUSTOMER_DATA_EXPIRATION, // valid for 48 hours
+		);
+
 		$response = apply_filters( '_wpsc_validate_customer_ajax', $response );
+
 		wp_send_json_success( $response );
 	}
 
