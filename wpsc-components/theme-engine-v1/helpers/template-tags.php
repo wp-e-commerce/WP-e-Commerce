@@ -853,7 +853,6 @@ function wpsc_product_on_special( $id = 0 ) {
 				SELECT COUNT(*)
 				FROM {$wpdb->posts} AS p
 				INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_special_price' AND pm.meta_value != '0' AND pm.meta_value != ''
-				INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_stock' AND pm2.meta_value != '0'
 				INNER JOIN {$wpdb->postmeta} AS pm3 ON pm3.post_id = p.id AND pm3.meta_key = '_wpsc_price' AND CAST(pm3.meta_value AS DECIMAL(10,2)) > CAST(pm.meta_value AS DECIMAL(10,2))
 				WHERE
 					p.post_type = 'wpsc-product'
