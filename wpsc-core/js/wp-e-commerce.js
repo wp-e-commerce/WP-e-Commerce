@@ -1111,6 +1111,18 @@ jQuery(document).ready(function ($) {
 
 	});
 
+
+	/**
+	 * Disable the submit button on the checkout form when the form is submitted
+	 * to prevent double-submission, (Double submission is confirmed to happen
+	 * in IE10. See https://github.com/wp-e-commerce/WP-e-Commerce/issues/1038 )
+	 */
+	
+	jQuery( 'form.wpsc_checkout_forms' ).on( 'submit', function( evt ) {
+		jQuery( 'input[type="submit"]', this ).prop( { 'disabled': true } );
+	});
+	// Finished with disabling the checkout submit button.
+
 	// Submit the product form using AJAX
 	jQuery( 'form.product_form, .wpsc-add-to-cart-button-form' ).on( 'submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
