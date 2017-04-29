@@ -1178,12 +1178,12 @@ function wpsc_product_comments() {
  */
 function wpsc_have_custom_meta() {
 	global $wpsc_custom_meta;
-	return esc_html( $wpsc_custom_meta->have_custom_meta() );
+	return $wpsc_custom_meta->have_custom_meta();
 }
 
 /**
- * wpsc the custom meta function
- * @return nothing - iterate through the custom meta vallues
+ * wpsc the custom meta function - makes the next meta item current
+ * @returns nothing     present to emulate the WordPress loop API
  */
 function wpsc_the_custom_meta() {
 	global $wpsc_custom_meta;
@@ -1196,7 +1196,8 @@ function wpsc_the_custom_meta() {
  */
 function wpsc_custom_meta_name() {
 	global $wpsc_custom_meta;
-	return esc_html( $wpsc_custom_meta->custom_meta_values['meta_key'] );
+	$name =  $wpsc_custom_meta->key();
+	return esc_html( $name );
 }
 
 /**
@@ -1204,8 +1205,15 @@ function wpsc_custom_meta_name() {
  * @return string - the custom meta value
  */
 function wpsc_custom_meta_value() {
+
 	global $wpsc_custom_meta;
-	return esc_html( $wpsc_custom_meta->custom_meta_values['meta_value'] );
+	$meta_value = $wpsc_custom_meta->value();
+
+	if ( ! is_scalar( $meta_value ) ) {
+		$meta_value = var_export( $meta_value, true );
+	}
+
+	return esc_html( $meta_value );
 }
 
 /**
