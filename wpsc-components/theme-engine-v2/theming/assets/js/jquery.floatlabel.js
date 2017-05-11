@@ -15,27 +15,21 @@
 				input = element.find('textarea, input');
 
       if( input.val() == '' ) {
-        input.val( label.text() );
+        input.attr( 'placeholder', label.text() );
       } else {
         element.addClass( settings.populatedClass );
       }
 
 			input.on( 'focus', function(){
 				element.addClass( settings.focusedClass );
-
-				if( input.val() === label.text() ){
-					input.val('');
-				} else {
-					element.addClass( settings.populatedClass );
-				}
-
+				input.attr( 'placeholder', '' );	
 			});
 
 			input.on( 'blur', function(){
 				element.removeClass( settings.focusedClass );
 
 				if( !input.val() ){
-					input.val( label.text() );
+					input.attr( 'placeholder', label.text() );
 					element.removeClass( settings.populatedClass );
 				}
 
