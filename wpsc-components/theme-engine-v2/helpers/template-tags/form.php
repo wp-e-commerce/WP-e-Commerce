@@ -14,7 +14,6 @@
  * @uses   wpsc_get_cart_url() Get cart URL for the form action
  * @uses   WPSC_Product::get_instance() get the WPSC_Product object to fetch variation sets and terms
  *
- * @param  int   $id Optional. Product ID. Defaults to the current product in the loop.
  * @return array     Form argument array
  */
 function wpsc_get_add_to_cart_form_args( $id = null ) {
@@ -22,16 +21,12 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 		$id = wpsc_get_product_id();
 	}
 
-	$product = WPSC_Product::get_instance( $id );
-	$has_variations = $product->has_variations;
-	$classes = get_body_class();
-
-	$select_options = $has_variations != false && in_array( 'wpsc-grid', $classes );
+	$product        = WPSC_Product::get_instance( $id );
 
 	$args = array(
 		// attributes of the form
 		'class'   => 'wpsc-form wpsc-form-horizontal wpsc-add-to-cart-form',
-		'action'  => $select_options ? get_permalink( $id ) : wpsc_get_cart_url( "add/{$id}" ),
+		'action'  => wpsc_get_cart_url( "add/{$id}" ),
 		'id'      => "wpsc-add-to-cart-form-{$id}",
 		'data-id' => $id,
 
@@ -64,18 +59,16 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
         array(
             'type'         => 'button',
             'primary'      => true,
-            'button_class' => $select_options ? 'wpsc-select-options' : 'wpsc-add-to-cart',
+            'button_class' => 'wpsc-add-to-cart',
             'icon'         => apply_filters(
                 'wpsc_add_to_cart_button_icon',
-                array( $select_options ? '' : 'shopping-cart', 'white' )
+                array( 'shopping-cart', 'white' )
             ),
             'title'        => apply_filters(
                 'wpsc_add_to_cart_button_title',
-                $select_options ? __( 'Select Options', 'wp-e-commerce' ) : __( 'Add to Cart', 'wp-e-commerce' ),
-                $select_options
-            ),
+                __( 'Add to Cart', 'wp-e-commerce' )
+			),
         ),
-
 
 		// set the current page as the referer so that user can be redirected back
 		array(
@@ -92,7 +85,7 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 		),
 	);
 
-	$args = apply_filters( 'wpsc_get_add_to_cart_form_args', $args );
+	$args = apply_filters( 'wpsc_get_add_to_cart_form_args', $args, $product, $id );
 
 	return $args;
 }
@@ -117,7 +110,7 @@ function wpsc_get_add_to_cart_form( $id = null ) {
 
 	$args = wpsc_get_add_to_cart_form_args( $id );
 
-	return apply_filters( 'wpsc_get_add_to_cart_form', wpsc_get_form_output( $args ) );
+	return apply_filters( 'wpsc_get_add_to_cart_form', wpsc_get_form_output( $args ), $id );
 }
 
 /**
