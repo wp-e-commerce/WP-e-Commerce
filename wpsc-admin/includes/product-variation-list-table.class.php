@@ -603,7 +603,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 			if ( $column_name == 'cb' )
 				echo '<td></td>';
 			elseif ( method_exists( $this, 'bulk_edit_column_' . $column_name ) ) {
-				echo "<td $attributes>";
+				echo "<td $attributes data-colname='".$column_display_name."'>";
 				echo call_user_func( array( &$this, 'bulk_edit_column_' . $column_name ) );
 				echo "</td>";
 			}
