@@ -2616,8 +2616,33 @@ a.wpsc_remove_meta {
 	.wpsc-product-variation-iframe .tablenav.bottom .displaying-num {
 		font-size: 12px;
 	}
-
+	.wpsc-product-variation-iframe .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.check-column) {
+    	display: table-cell;
+	}
+	.wpsc-product-variation-iframe .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+	    display: table-cell;
+	    position: static;
+	}
 }
+
+@media screen and (max-width: 550px) {
+	.wpsc-product-variation-iframe .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.check-column) {
+	    display: inline-block;
+	}
+
+	.wpsc-product-variation-iframe .wp-list-table tr th.check-column {
+		display: inline-block;
+	}
+
+	.wpsc-product-variation-iframe .wp-list-table thead {
+		display: none;
+	}
+
+	.wpsc-product-variation-iframe .wp-list-table tr {
+		display: block;
+	}
+}
+
 
 
 /**
