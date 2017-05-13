@@ -169,20 +169,22 @@ function wpsc_body_class( $classes ) {
 			}
 		}
 
+		$page_url = set_url_scheme( $page_url, 'relative' );
+
 		// If viewing the shopping cart...
-		if ( get_option( 'shopping_cart_url' ) == $page_url ) {
+		if ( set_url_scheme( get_option( 'shopping_cart_url' ), 'relative' ) === $page_url ) {
 			$classes[] = 'wp-e-commerce';
 			$classes[] = 'wpsc-shopping-cart';
 		}
 
 		// If viewing the transaction...
-		if ( get_option( 'transact_url' ) == $page_url ) {
+		if ( set_url_scheme( get_option( 'transact_url' ), 'relative' ) === $page_url ) {
 			$classes[] = 'wp-e-commerce';
 			$classes[] = 'wpsc-transaction-details';
 		}
 
 		// If viewing your account...
-		if ( get_option( 'user_account_url' ) == $page_url ) {
+		if ( set_url_scheme( get_option( 'user_account_url' ), 'relative' ) === $page_url ) {
 			$classes[] = 'wp-e-commerce';
 			$classes[] = 'wpsc-user-account';
 		}
