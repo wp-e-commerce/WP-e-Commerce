@@ -902,18 +902,19 @@ function wpsc_get_add_to_cart_form_external_link_args( $args, $product, $id ) {
 	if ( isset( $product_meta['external_link'] ) && ! empty( $product_meta['external_link'] ) ) {
 
 		$external_link      = $product_meta['external_link'];
-		$external_link_text = __( 'Buy Now', 'wp-e-commerce' );
+		$external_link_text = __( 'View Details', 'wp-e-commerce' );
 
 		if ( isset( $product_meta['external_link_text'] ) && ! empty( $product_meta['external_link_text'] ) ) {
 			$external_link_text = $product_meta['external_link_text'];
 		}
 
 		$args['action'] =  $external_link;
+		$args['method'] = 'get';
 
 		foreach ( $args['form_actions'] as $index => $action ) {
 			if ( isset( $action['primary'] ) &&  $action['primary'] ) {
 				$args['form_actions'][ $index ]['icon']         = array();
-				$args['form_actions'][ $index ]['title']        = __( 'View Details', 'wp-e-commerce' );
+				$args['form_actions'][ $index ]['title']        = $external_link_text;
 			}
 		}
 	}
