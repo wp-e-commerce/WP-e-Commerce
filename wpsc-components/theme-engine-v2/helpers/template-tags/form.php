@@ -27,7 +27,6 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 		// attributes of the form
 		'class'   => 'wpsc-form wpsc-form-horizontal wpsc-add-to-cart-form',
 		'action'  => wpsc_get_cart_url( "add/{$id}" ),
-		'method'  => 'post',
 		'id'      => "wpsc-add-to-cart-form-{$id}",
 		'data-id' => $id,
 

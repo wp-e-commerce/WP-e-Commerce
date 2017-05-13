@@ -909,7 +909,6 @@ function wpsc_get_add_to_cart_form_external_link_args( $args, $product, $id ) {
 		}
 
 		$args['action'] =  $external_link;
-		$args['method'] = 'get';
 
 		foreach ( $args['form_actions'] as $index => $action ) {
 			if ( isset( $action['primary'] ) &&  $action['primary'] ) {
