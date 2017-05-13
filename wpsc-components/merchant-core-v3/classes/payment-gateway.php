@@ -224,7 +224,7 @@ final class WPSC_Payment_Gateways {
 			self::$payment_gateway_cache = get_option( 'wpsc_payment_gateway_cache', array() );
 		}
 
-		$filename = basename( $file, '.php' );
+		$filename = strtolower( basename( $file, '.php' ) );
 
 		// payment gateway already exists in cache
 		if ( isset( self::$payment_gateway_cache[ $filename ] ) ) {
