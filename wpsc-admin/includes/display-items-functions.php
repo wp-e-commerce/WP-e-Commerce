@@ -37,7 +37,6 @@ $wpsc_product_defaults = array(
 	'meta' => array(
 		'external_link' => NULL,
 		'external_link_text' => NULL,
-		'external_link_target' => NULL,
 		'merchant_notes' => NULL,
 		'sku' => NULL,
 		'engraved' => '0',
@@ -824,7 +823,6 @@ function wpsc_product_external_link_forms() {
 	$product_meta = wp_parse_args( $product_meta, array(
 		'external_link'        => '',
 		'external_link_text'   => '',
-		'external_link_target' => ''
 	) );
 
 	?>
@@ -837,27 +835,6 @@ function wpsc_product_external_link_forms() {
 			<tr class="form-field">
 				<th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wp-e-commerce' ); ?></label></th>
 				<td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php echo esc_attr( $product_meta['external_link_text'] ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wp-e-commerce' ); ?>" /></td>
-			</tr>
-			<tr class="form-field">
-				<th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wp-e-commerce' ); ?></label></th>
-				<td id="external_link_target">
-
-					<label>
-						<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value=""<?php checked( '', $product_meta['external_link_target'] ); ?> />
-						<?php _ex( 'Default (set by theme)', 'External product link target', 'wp-e-commerce' ); ?>
-					</label>
-
-					<label>
-						<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self"<?php checked( '_self', $product_meta['external_link_target'] ); ?> />
-						<?php esc_html_e( 'Force open in same window', 'wp-e-commerce' ); ?>
-					</label>
-
-					<label>
-						<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank"<?php checked( '_blank', $product_meta['external_link_target'] ); ?> />
-						<?php esc_html_e( 'Force open in new window', 'wp-e-commerce' ); ?>
-					</label>
-
-				</td>
 			</tr>
 		</tbody>
 	</table>

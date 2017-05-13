@@ -2430,19 +2430,6 @@ body.edit-tags-php img.wpsc_category_image {
 	width: 50px;
 }
 
-#external_link_target {
-	padding-top: 21px;
-}
-
-#external_link_target input {
-	width: auto;
-}
-
-#external_link_target span {
-	margin-left: 10px;
-	margin-right: 30px;
-}
-
 #wpsc_product_gallery li {
 	float: left;
 	margin-right: 10px;

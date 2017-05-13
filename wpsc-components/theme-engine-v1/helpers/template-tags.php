@@ -220,6 +220,9 @@ function wpsc_product_external_link_text( $id = null, $default = null ) {
  * @return string - the product external link target
  */
 function wpsc_product_external_link_target( $id = null, $external_link_target = '' ) {
+	
+	_wpsc_deprecated_function( __FUNCTION__, '4.0.0' );
+	
 	if ( is_numeric( $id ) && ( $id > 0 ) )
 		$id = absint( $id );
 	else
