@@ -163,7 +163,6 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], array(
 			'external_link'        => '',
 			'external_link_text'   => '',
-			'external_link_target' => ''
 		) );
 
 	}
@@ -196,7 +195,6 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		'no_shipping'              => 0,
 		'external_link'            => '',
 		'external_link_text'       => '',
-		'external_link_target'     => '',
 		'engraved'                 => 0,
 		'can_have_uploaded_image'  => 0
 	) );
