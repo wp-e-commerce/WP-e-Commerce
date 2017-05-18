@@ -16,6 +16,18 @@
 	box-sizing: border-box;
 	padding: 20px;
 	overflow: hidden;
+
+	.wpsc-form-actions {
+		@include wpsc-cart-item();
+		text-align: right;
+		button {
+			font-size: .8em;
+		}
+
+		.wpsc-close-modal {
+			float: left;
+		}
+	}
 }
 
 .wpsc-cart-set-height {
@@ -202,17 +214,6 @@
 
 }
 
-.wpsc-form-actions {
-	@include wpsc-cart-item();
-	text-align: right;
-	button {
-		font-size: .8em;
-	}
-
-	.wpsc-close-modal {
-		float: left;
-	}
-}
 #wpsc-modal-overlay {
 	position: fixed;
 	top: 0;
