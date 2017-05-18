@@ -301,7 +301,8 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 		$raw_message = '';
 
 		if ( ! $this->purchase_log->is_transaction_completed() ) {
-			$raw_message = __( 'Thank you, your purchase is pending. You will be sent an email once the order clears.', 'wp-e-commerce' ) . "\n\r";
+			$raw_message = __( '<em>Your purchase is pending. You will be sent an email once the order clears.</em>
+', 'wp-e-commerce' ) . "\n\r";
 		}
 
 		$raw_message .= get_option( 'wpsc_email_receipt' );
