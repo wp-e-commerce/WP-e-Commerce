@@ -3,19 +3,23 @@
 
 #wpsc-cart-notification {
 	position: fixed;
-	top: 10%;
-	left: 50%;
-	margin-left: -364px;
-	width: 728px;
-	height: 450px;
-	z-index: 160000;
-	border: $cart_border;
 	background: #fff;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	padding: 20px;
 	overflow: hidden;
+	z-index: 160000;
+	border: $cart_border;
+	top: 10%;
+	left: 5%;
+	right: 5%;
+	@media screen and (min-width: 768px) {
+		left: 50%;
+		margin-left: -364px;
+		width: 728px;
+		height: 450px;
+	}
 
 	.wpsc-form-actions {
 		@include wpsc-cart-item();
@@ -27,15 +31,24 @@
 		.wpsc-close-modal {
 			float: left;
 		}
-	}
+	}	
 }
 
 .wpsc-cart-set-height {
 	.wpsc-cart-notification-inner, .wpsc-cart-table, .wpsc-cart-what-was-added, .wpsc-cart-body {
-		height: 100%;
-		overflow: hidden;
+		@media screen and (min-width: 768px) {
+			height: 100%;
+			overflow: hidden;
+		}
 	}
 }
+
+.wpsc-cart-notification-inner {
+	.wpsc-begin-checkout {
+		margin-top: 0;
+	}
+}
+
 
 .wpsc-overflow {
 	.wpsc-cart-body {
@@ -64,9 +77,9 @@
 	}
 
 	.wpsc-cart-item {
-		// padding: 0;
-		// border: 0;
-		// padding-bottom: 0;
+		@media screen and (max-width: 768px) {
+			display: none
+		}
 
 		&:first-child {
 			padding-top: 15px;
@@ -158,10 +171,12 @@
 .wpsc-cart-what-was-added {
 	display: block;
 	position: relative;
-	// overflow: scroll;
-	width: 40%;
-	float: left;
 	padding: 0 20px 0 0;
+	// overflow: scroll;
+	@media screen and (min-width: 768px) {
+		width: 40%;
+		float: left;	
+	}
 }
 
 .wpsc-confirmation-message {
@@ -173,9 +188,11 @@
 }
 
 .wpsc-confirmation-totals {
-	width: 60%;
-	float: right;
-	padding: 0 0 0;
+	@media screen and (min-width: 768px) {
+		width: 60%;
+		float: right;
+		padding: 0 0 0;
+	}
 }
 
 .wpsc-cart-status {
@@ -214,6 +231,7 @@
 
 }
 
+
 #wpsc-modal-overlay {
 	position: fixed;
 	top: 0;
@@ -227,15 +245,17 @@
 }
 
 // TODO -- possibly more opinionated style.
+// @lizkaraffa added some
 #wpsc-view-cart-button {
 	font-size: 1.2em;
-	position: fixed;
-	bottom: 25%;
-	right: 0;
-	border-top-left-radius: 100%;
-	border-bottom-left-radius: 100%;
-	box-shadow: none;
-	width: 3em;
-	height: 3em;
-	line-height: 1.5em;
+    position: fixed;
+    bottom: 25%;
+    right: 0;
+    border-top-left-radius: 100%;
+    border-bottom-left-radius: 100%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+    width: 1px;
+    padding: 1em 2em 1em 1.25em;
 }
