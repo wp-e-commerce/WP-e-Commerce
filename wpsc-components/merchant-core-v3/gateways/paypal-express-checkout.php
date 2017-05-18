@@ -42,7 +42,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				'cart_border'      => $this->setting->get( 'cart_border' ),
 				'incontext'        => (bool) $this->setting->get( 'incontext', '1' ),
 				'shortcut'         => (bool) $this->setting->get( 'shortcut' , '1' ),
-				'credit'           => (bool) $this->setting->get( 'credit' , '0' ),
+				'credit'           => (bool) $this->setting->get( 'credit' , '1' ),
 			) );
 
 			// Express Checkout Button
