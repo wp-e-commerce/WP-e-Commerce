@@ -119,10 +119,10 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return void
      */
-	public function get_shortcut_url() {
+	public function get_shortcut_url( $callback = 'shortcut_process' ) {
 		$location = add_query_arg( array(
 			'payment_gateway'          => 'paypal-digital-goods',
-			'payment_gateway_callback' => 'shortcut_process',
+			'payment_gateway_callback' => $callback,
 		), home_url( 'index.php' ) );
 
 		return apply_filters( 'wpsc_paypal_digital_goods_shortcut_url', $location );
