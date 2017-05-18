@@ -226,17 +226,15 @@
 }
 
 // TODO -- possibly more opinionated style.
-// @lizkaraffa added some
 #wpsc-view-cart-button {
 	font-size: 1.2em;
-    position: fixed;
-    bottom: 25%;
-    right: 0;
-    border-top-left-radius: 100%;
-    border-bottom-left-radius: 100%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right: none;
-    width: 1px;
-    padding: 1em 2em 1em 1.25em;
+	position: fixed;
+	bottom: 25%;
+	right: 0;
+	border-top-left-radius: 100%;
+	border-bottom-left-radius: 100%;
+	box-shadow: none;
+	width: 3em;
+	height: 3em;
+	line-height: 1.5em;
 }
