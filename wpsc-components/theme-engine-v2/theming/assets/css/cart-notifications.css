@@ -33,6 +33,21 @@ Global Classes
 	overflow: hidden;
 }
 
+#wpsc-cart-notification .wpsc-form-actions {
+	display: block;
+	padding: 20px 0;
+	border-top: 1px solid #ccc;
+	text-align: right;
+}
+
+#wpsc-cart-notification .wpsc-form-actions button {
+	font-size: .8em;
+}
+
+#wpsc-cart-notification .wpsc-form-actions .wpsc-close-modal {
+	float: left;
+}
+
 .wpsc-cart-set-height .wpsc-cart-notification-inner,
 .wpsc-cart-set-height .wpsc-cart-table,
 .wpsc-cart-set-height .wpsc-cart-what-was-added,
@@ -189,21 +204,6 @@ Global Classes
 
 .wpsc-cart-item-edit-wrap .wpsc-field-quantity.wpsc-hide {
 	display: none;
-}
-
-.wpsc-form-actions {
-	display: block;
-	padding: 20px 0;
-	border-top: 1px solid #ccc;
-	text-align: right;
-}
-
-.wpsc-form-actions button {
-	font-size: .8em;
-}
-
-.wpsc-form-actions .wpsc-close-modal {
-	float: left;
 }
 
 #wpsc-modal-overlay {
