@@ -1,13 +1,11 @@
 /*****************
 Product List
 *****************/
-.wpsc-thumbnail-wrapper {
-    display: inline-block;
-}
-
-.wpsc-product-summary {
-    display: inline-block;
-    float: right;
+.wpsc-product {
+	@media screen and (min-width: 550px) {
+		@include flexbox();
+		@include justify-content(space-between);
+	}
 }
 
 .wpsc-add-to-cart-form {
@@ -22,5 +20,12 @@ Product List
 	
 	.wpsc-field {
 		margin-right: 5%;
+	}
+}
+
+h2.wpsc-product-title {
+	margin-top: 1em;
+	@media screen and (min-width: 550px) {
+		margin-top: 0;
 	}
 }
