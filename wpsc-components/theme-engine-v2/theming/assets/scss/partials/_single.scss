@@ -1,11 +1,11 @@
 /*****************
-Product List
+Single Product
 *****************/
-.wpsc-product {
+@import 'product-excerpt';
+
+.single-product {
 	@media screen and (min-width: 550px) {
 		@include flexbox();
 		@include justify-content(space-between);
 	}
 }
-
-@import 'product-excerpt';

@@ -42,11 +42,14 @@ function _wpsc_get_inline_style() {
 
 	ob_start();
 	?>
-	.wpsc-page-main-store .wpsc-product-summary,
-	.archive .wpsc-product-summary {
+	.wpsc-list .wpsc-product-summary {
 		width: -moz-calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
 		width: -webkit-calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
 		width: calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
+	}
+
+	.wpsc-list .wpsc-thumbnail-wrapper {
+		width: <?php echo $archive_width; ?>px;
 	}
 
 	.wpsc-page-single .wpsc-product-summary {
@@ -55,10 +58,18 @@ function _wpsc_get_inline_style() {
 		width: calc(100% - <?php echo $single_width + $thumbnail_padding; ?>px);
 	}
 
+	.wpsc-page-single .wpsc-thumbnail-wrapper {
+		width: <?php echo $single_width; ?>px;
+	}
+
 	.wpsc-page-taxonomy .wpsc-product-summary {
 		width: -moz-calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 		width: -webkit-calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 		width: calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
+	}
+
+	.wpsc-page-taxonomy .wpsc-thumbnail-wrapper {
+		width: <?php echo $tax_width; ?>px;
 	}
 <?php
 	return ob_get_clean();

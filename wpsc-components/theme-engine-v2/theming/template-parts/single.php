@@ -11,8 +11,8 @@
 ?>
 
 <?php wpsc_user_messages(); ?>
-<div id="product-<?php wpsc_product_id(); ?>" itemscope itemtype="http://schema.org/Product">
-	<?php wpsc_breadcrumb(); ?>
+<?php wpsc_breadcrumb(); ?>
+<div id="product-<?php wpsc_product_id(); ?>" class="single-product" itemscope itemtype="http://schema.org/Product">
 
 	<div class="wpsc-thumbnail-wrapper">
 		<a
