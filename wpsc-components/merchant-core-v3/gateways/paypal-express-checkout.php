@@ -54,12 +54,22 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			if ( (bool) $this->setting->get( 'incontext' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'incontext_load_scripts' ) );
 			}
-			
+
 			// PayPal Credit Button
 			if ( (bool) $this->setting->get( 'credit' ) ) {
+				add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_credit_button_tev1' ) );
 				add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_credit_button' ), 1, 2 );
 			}
+
 		}
+	}
+
+	public function add_credit_button_tev1( $gateway ) {
+		if ( 'paypal-express-checkout' !== $gateway ) { return; }
+
+		$url = $this->get_shortcut_url( 'credit_process' );
+		echo '<em class="paypal-express-credit-separator">' . __( '&mdash; or &mdash;', 'wp-e-commerce' ) . '</em>';
+		echo '<a class="express-checkout-credit-button" href="'. esc_url( $url ) .'" id="express-checkout-cart-button"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/ppcredit-logo-small.png" alt="' . __( 'PayPal Credit', 'wp-e-commerce' ) . '" /></a>';
 	}
 
 	public function incontext_load_scripts() {
@@ -113,7 +123,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			echo '<em class="paypal-express-credit-separator">' . __( '&mdash; or &mdash;', 'wp-e-commerce' ) . '</em>';
 		}
 	}
-	
+
 	/**
 	 * Return the ExpressCheckout Shortcut redirection URL
 	 *
@@ -237,7 +247,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'sessionid'      => $sessionid,
 		) );
 
-		if ( wpsc_is_tax_included() ) {
+		if ( wpsc_tax_isincluded() ) {
 			$tax            = $wpsc_cart->calculate_total_tax();
 			$tax_percentage = $wpsc_cart->tax_percentage;
 		} else {
@@ -272,7 +282,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		// Save an empty Form
 		$form   = WPSC_Checkout_Form::get();
 		$fields = $form->get_fields();
-		WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields );
+
+		WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields, array(), false );
 
 		// Return Customer to Review Order Page if there is Shipping
 		add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
@@ -526,7 +537,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		}
 
 		// Save details to the Forms Table
-		WPSC_Checkout_Form_Data::save_form( $this->purchase_log, $fields );
+		WPSC_Checkout_Form_Data::save_form( $this->purchase_log, $fields, array(), false );
 	}
 
 	/**
@@ -1004,8 +1015,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		<label for="wpsc-paypal-express-cart-border"><?php _e( 'Enable PayPal Credit', 'wp-e-commerce' ); ?></label>
 	</td>
 	<td>
-		<label><input <?php checked( $this->setting->get( 'credit', '0' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
-		<label><input <?php checked( (bool) $this->setting->get( 'credit', '0' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
+		<label><input <?php checked( $this->setting->get( 'credit', '1' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+		<label><input <?php checked( (bool) $this->setting->get( 'credit', '1' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 	</td>
 </tr>
 <!-- Currency Conversion -->
