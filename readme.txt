@@ -39,6 +39,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 = 3.12.1 [2017-2-17] =
 
 * New: Addition of PayPal Credit to PayPal Express Checkout.
+* Fix: Ensure WPEC works via WP-CLI.
 
 = 3.12.0 [2017-2-17] =
 
