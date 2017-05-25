@@ -650,12 +650,14 @@ function wpsc_serialize_shopping_cart() {
 		$wpsc_cart->errors = array();
 	}
 
-	// need to prevent set_cookie from being called at this stage in case the user just logged out
-	// because by now, some output must have been printed out
-	$customer_id = wpsc_get_current_customer_id();
+	if ( function_exists( 'wpsc_get_current_customer_id' ) ) {
+		// Need to prevent set_cookie from being called at this stage in case the user
+		// just logged out because by now, some output must have been printed out.
+		$customer_id = wpsc_get_current_customer_id();
 
-	if ( $customer_id ) {
-		wpsc_update_customer_cart( $wpsc_cart, $customer_id );
+		if ( $customer_id ) {
+			wpsc_update_customer_cart( $wpsc_cart, $customer_id );
+		}
 	}
 
 	return true;
