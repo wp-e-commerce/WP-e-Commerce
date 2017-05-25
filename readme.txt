@@ -4,7 +4,7 @@ Donate link: https://wpecommerce.org
 Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 4.5
 Tested up to: 4.7.2
-Stable tag: 3.12.1
+Stable tag: 3.12.2
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -36,7 +36,11 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
-= 3.12.1 [2017-2-17] =
+= 3.12.2 [2017-3-25] =
+
+* Enhancement: Default PayPal Credit to On, and ensure it is functional for our 1.0 theme engine.
+
+= 3.12.1 [2017-3-24] =
 
 * New: Addition of PayPal Credit to PayPal Express Checkout.
 * Fix: Ensure WPEC works via WP-CLI.
