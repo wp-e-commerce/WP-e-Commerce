@@ -599,6 +599,18 @@ Shopping Cart
 	width: 100%;
 }
 
+/*****************
+Single Product
+*****************/
+
+.wpsc-page-single .wpsc-thumbnail-wrapper {
+	float: left;
+}
+
+.wpsc-page-single .wpsc-product-summary {
+	float: right;
+}
+
 /**********************
 Accounts Page
 ***********************/

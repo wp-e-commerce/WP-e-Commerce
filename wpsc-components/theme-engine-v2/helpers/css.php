@@ -55,6 +55,10 @@ function _wpsc_get_inline_style() {
 		width: calc(100% - <?php echo $single_width + $thumbnail_padding; ?>px);
 	}
 
+	.wpsc-page-single .wpsc-thumbnail-wrapper {
+		width: <?php echo $single_width; ?>px;
+	}
+
 	.wpsc-page-taxonomy .wpsc-product-summary {
 		width: -moz-calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 		width: -webkit-calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
