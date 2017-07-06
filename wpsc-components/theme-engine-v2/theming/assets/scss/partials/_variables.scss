@@ -31,7 +31,7 @@ $cart_item-total_width: 12%;
 
 $cart_border: 1px solid #ccc;
 
-// /* Account Orders  */
+// /* Account Orders (Needs to add up to 100%) */
 $account_id_width: 10%;
 $account_date_width: 20%;
 $account_status_width: 20%;
@@ -56,11 +56,3 @@ $full-width: 100%;
 $toggle-width: 35px;
 $qty-width: 40px;
 $qty-btn-width: ($toggle-width * 2) + $qty-width;
-
-// Mixins
-
-@mixin wpsc-cart-item() {
-	display: block;
-	padding: 20px 0;
-	border-top: $cart_border;
-}
