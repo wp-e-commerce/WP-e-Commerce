@@ -786,6 +786,7 @@ Product Forms
 	display: -webkit-flex;
 	display: flex;
 	border: 1px solid #ccc;
+	width: 115px;
 }
 
 .wpsc-field-quantity .wpsc-controls input[type="text"] {
