@@ -30,10 +30,13 @@ $titles: unit-price quantity item-total id date status tracking-id total;
 //Shopping Cart Widget
 .wpsc-cart-item-title {
     font-size: $title-size-col-5;
+    //Have title break where we want instead of hypenating words
+    hyphens: initial;
+    word-wrap: normal;
 }
 
 .wpsc-cart-item:first-of-type {
-    padding-top: 0;
+    border-top: none;
 }
 
 .wpsc-form-actions.bottom {
