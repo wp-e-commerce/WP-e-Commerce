@@ -8,24 +8,11 @@ Product List
 	}
 }
 
-.wpsc-add-to-cart-form {
-	@include flexbox();
-	@include justify-content(flex-start);
-	@include flex-wrap(wrap);
-	@include align-items(center);
-
-	.wpsc-form-actions {
-		margin-bottom: 0;
-	}
-	
-	.wpsc-field {
-		margin-right: 5%;
-	}
-}
-
 h2.wpsc-product-title {
 	margin-top: 1em;
 	@media screen and (min-width: 550px) {
 		margin-top: 0;
 	}
 }
+
+@import 'modules/single-product/_product-module';
