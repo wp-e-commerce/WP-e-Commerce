@@ -806,6 +806,7 @@ Product Forms
 	text-align: center;
 	border: none;
 	box-shadow: none;
+	box-sizing: border-box;
 }
 
 .wpsc-field-quantity .wpsc-controls .dec {
