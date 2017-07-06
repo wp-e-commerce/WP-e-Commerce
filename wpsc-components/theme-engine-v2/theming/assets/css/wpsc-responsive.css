@@ -55,6 +55,12 @@ Global Classes
 	height: auto;
 }
 
+.wpsc-grid .wpsc-product-title {
+	margin-top: 0;
+	word-wrap: normal;
+	hyphens: initial;
+}
+
 .wpsc-grid .wpsc-column-2 {
 	width: 47.5%;
 }
