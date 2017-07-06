@@ -7,6 +7,13 @@
   }
 }
 
+//Single Cart Item Styling
+@mixin wpsc-cart-item() {
+  display: block;
+  padding: 20px 0;
+  border-top: $cart_border;
+}
+
 // Flexbox display
 // flex or inline-flex
 @mixin flexbox() {

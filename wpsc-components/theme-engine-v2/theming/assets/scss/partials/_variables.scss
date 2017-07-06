@@ -56,11 +56,3 @@ $full-width: 100%;
 $toggle-width: 35px;
 $qty-width: 40px;
 $qty-btn-width: ($toggle-width * 2) + $qty-width;
-
-// Mixins
-
-@mixin wpsc-cart-item() {
-	display: block;
-	padding: 20px 0;
-	border-top: $cart_border;
-}
