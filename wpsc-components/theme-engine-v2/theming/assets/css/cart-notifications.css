@@ -1,235 +1,82 @@
-/*******************
-Global Classes
-*******************/
+/*
+Error: Undefined mixin 'wpsc-cart-item'.
+        on line 21 of wpsc-components/theme-engine-v2/theming/assets/scss/cart-notifications.scss, in `wpsc-cart-item'
+        from line 21 of wpsc-components/theme-engine-v2/theming/assets/scss/cart-notifications.scss
 
-.wpsc-clearfix:after,
-.wpsc-cart-notification-inner:after,
-.wpsc-totals-table:after {
-	content: "";
-	display: table;
-	clear: both;
-}
+16: 	box-sizing: border-box;
+17: 	padding: 20px;
+18: 	overflow: hidden;
+19: 
+20: 	.wpsc-form-actions {
+21: 		@include wpsc-cart-item();
+22: 		text-align: right;
+23: 		button {
+24: 			font-size: .8em;
+25: 		}
+26: 
 
-.wpsc-hide {
-	display: none;
-}
-
-/* value x 4 i.e. 2.5 x 4 = 10% */
-
-#wpsc-cart-notification {
-	position: fixed;
-	top: 10%;
-	left: 50%;
-	margin-left: -364px;
-	width: 728px;
-	height: 450px;
-	z-index: 160000;
-	border: 1px solid #ccc;
-	background: #fff;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-	padding: 20px;
-	overflow: hidden;
-}
-
-#wpsc-cart-notification .wpsc-form-actions {
-	display: block;
-	padding: 20px 0;
-	border-top: 1px solid #ccc;
-	text-align: right;
-}
-
-#wpsc-cart-notification .wpsc-form-actions button {
-	font-size: .8em;
-}
-
-#wpsc-cart-notification .wpsc-form-actions .wpsc-close-modal {
-	float: left;
-}
-
-.wpsc-cart-set-height .wpsc-cart-notification-inner,
-.wpsc-cart-set-height .wpsc-cart-table,
-.wpsc-cart-set-height .wpsc-cart-what-was-added,
-.wpsc-cart-set-height .wpsc-cart-body {
-	height: 100%;
-	overflow: hidden;
-}
-
-.wpsc-overflow .wpsc-cart-body {
-	overflow: scroll;
-}
-
-.wpsc-cart-notification-inner .wpsc-cart-cell.image {
-	width: 50%;
-	float: left;
-}
-
-.wpsc-cart-notification-inner .wpsc-cart-cell.image img {
-	max-height: 100%;
-	max-width: 90%;
-	width: auto;
-	height: auto;
-	margin-right: 10%;
-}
-
-.wpsc-cart-notification-inner .wpsc-cart-item:first-child {
-	padding-top: 15px;
-}
-
-.wpsc-cart-notification-inner .wpsc-cart-item.wpsc-cart-no-thumb .wpsc-cart-cell.items {
-	width: 100%;
-}
-
-.wpsc-cart-notification-inner .wpsc-cart-item-row-actions {
-	line-height: initial;
-}
-
-.wpsc-cart-notification-inner .wpsc-cart-item-row-actions .wpsc-button {
-	display: inline-block;
-}
-
-.wpsc-cart-notification-inner .wpsc-cart-view-toggle {
-	float: right;
-}
-
-.wpsc-cart-notification-inner .wpsc-cart-view-toggle i {
-	cursor: pointer;
-}
-
-.wpsc-modal-normal-view.wpsc-cart-notification-inner .wpsc-cart-cell.image {
-	display: none;
-}
-
-.wpsc-modal-normal-view .wpsc-cart-cell.items {
-	width: 100%;
-}
-
-.wpsc-modal-normal-view .wpsc-cart-cell.items .wpsc-cart-quantity,
-.wpsc-modal-normal-view .wpsc-cart-cell.items .wpsc-cart-item-total,
-.wpsc-modal-normal-view .wpsc-cart-cell.items .wpsc-cart-item-row-actions {
-	display: inline;
-}
-
-.wpsc-modal-normal-view .wpsc-cart-cell.items .wpsc-cart-quantity:after,
-.wpsc-modal-normal-view .wpsc-cart-cell.items .wpsc-cart-item-total:after {
-	content: ', ';
-}
-
-.wpsc-modal-normal-view .wpsc-cart-cell.items .wpsc-cart-item-details {
-	display: none;
-}
-
-.wpsc-modal-normal-view .wpsc-cart-label,
-.wpsc-modal-normal-view .wpsc-cart-item-details {
-	display: none;
-}
-
-.wpsc-modal-normal-view .wpsc-cart-item-row-actions .wpsc-button {
-	display: inline;
-}
-
-.wpsc-modal-normal-view .wpsc-cart-item-row-actions .wpsc-button span {
-	display: none;
-}
-
-.wpsc-close-modal {
-	cursor: pointer;
-}
-
-.wpsc-close-modal.wpsc-icon-remove {
-	color: transparent;
-	width: 1.8em;
-	height: 1.8em;
-	display: block;
-	text-align: center;
-	position: absolute;
-	top: 0;
-	right: 0;
-	line-height: 1.8em;
-	font-size: 16px;
-	overflow: hidden;
-}
-
-.wpsc-close-modal.wpsc-icon-remove:before {
-	color: initial;
-}
-
-.wpsc-cart-what-was-added {
-	display: block;
-	position: relative;
-	width: 40%;
-	float: left;
-	padding: 0 20px 0 0;
-}
-
-.wpsc-confirmation-message .wpsc-cart-action-icon {
-	line-height: 0em;
-	font-size: 1.4em;
-	padding-right: 7px;
-}
-
-.wpsc-confirmation-totals {
-	width: 60%;
-	float: right;
-	padding: 0 0 0;
-}
-
-.wpsc-cart-status {
-	font-weight: bold;
-}
-
-.wpsc-totals-table {
-	display: block;
-	padding: 20px 0;
-	border-top: 1px solid #ccc;
-}
-
-.wpsc-totals-table .wpsc-totals-row-label {
-	width: 68%;
-	float: left;
-	padding-right: 2%;
-	clear: both;
-	text-align: left;
-}
-
-.wpsc-totals-table .wpsc-totals-row-total {
-	width: 30%;
-	float: left;
-}
-
-.wpsc-cart-item-edit-wrap .wpsc-field-quantity {
-	display: block;
-}
-
-.wpsc-cart-item-edit-wrap .wpsc-field-quantity.wpsc-hide {
-	display: none;
-}
-
-#wpsc-modal-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	min-height: 360px;
-	background: #000;
-	opacity: 0.5;
-	z-index: 159900;
-}
-
-#wpsc-view-cart-button {
-	font-size: 1.2em;
-	position: fixed;
-	bottom: 25%;
-	right: 0;
-	border-top-left-radius: 100%;
-	border-bottom-left-radius: 100%;
-	box-shadow: none;
-	width: 3em;
-	height: 3em;
-	line-height: 1.5em;
-}
-
-/*# sourceMappingURL=cart-notifications.css.map */
-
+Backtrace:
+wpsc-components/theme-engine-v2/theming/assets/scss/cart-notifications.scss:21:in `wpsc-cart-item'
+wpsc-components/theme-engine-v2/theming/assets/scss/cart-notifications.scss:21
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:351:in `block in visit_mixin'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:98:in `block in with_mixin'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:115:in `with_frame'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:98:in `with_mixin'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:349:in `visit_mixin'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:160:in `block in visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:79:in `block in with_base'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:115:in `with_frame'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:79:in `with_base'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:160:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:433:in `block (2 levels) in visit_rule'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:433:in `map'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:433:in `block in visit_rule'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:181:in `with_environment'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:431:in `visit_rule'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:160:in `block in visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:79:in `block in with_base'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:115:in `with_frame'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:79:in `with_base'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:160:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:433:in `block (2 levels) in visit_rule'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:433:in `map'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:433:in `block in visit_rule'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:181:in `with_environment'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:431:in `visit_rule'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:160:in `block in visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:79:in `block in with_base'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:115:in `with_frame'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/stack.rb:79:in `with_base'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:160:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:52:in `map'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:169:in `block in visit_children'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:181:in `with_environment'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:168:in `visit_children'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:188:in `visit_root'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:159:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/root_node.rb:36:in `css_tree'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/engine.rb:381:in `_render_with_sourcemap'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/engine.rb:298:in `render_with_sourcemap'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/exec/sass_scss.rb:391:in `run'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/exec/sass_scss.rb:63:in `process_result'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/exec/base.rb:52:in `parse'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/lib/sass/exec/base.rb:19:in `parse!'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/gems/sass-3.4.22/bin/sass:13:in `<top (required)>'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/bin/sass:22:in `load'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/bin/sass:22:in `<main>'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/bin/ruby_executable_hooks:15:in `eval'
+/Users/lizkaraffa/.rvm/gems/ruby-2.3.1/bin/ruby_executable_hooks:15:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Undefined mixin 'wpsc-cart-item'.\A         on line 21 of wpsc-components/theme-engine-v2/theming/assets/scss/cart-notifications.scss, in `wpsc-cart-item'\A         from line 21 of wpsc-components/theme-engine-v2/theming/assets/scss/cart-notifications.scss\A \A 16: 	box-sizing: border-box;\A 17: 	padding: 20px;\A 18: 	overflow: hidden;\A 19: \A 20: 	.wpsc-form-actions {\A 21: 		@include wpsc-cart-item();\A 22: 		text-align: right;\A 23: 		button {\A 24: 			font-size: .8em;\A 25: 		}\A 26: "; }
