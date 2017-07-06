@@ -6,6 +6,8 @@ Product Forms
 	.wpsc-controls {
 	@include flexbox();
 	border: 1px solid #ccc;
+	width: 115px;
+
 		input[type="text"] {
 			width: 40px;
 			@include flex-order(2);
@@ -13,13 +15,16 @@ Product Forms
 			border: none;
 			box-shadow: none;
 		}
+
 		.dec {
 			@include flex-order(1);
 		}
+		
 		.inc {
 			@include flex-order(3);
 		}
 	}
+
 	.wpsc-qty-button {
 		padding: .5em .75em;
 		cursor: pointer;
