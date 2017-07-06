@@ -35,6 +35,10 @@ $titles: unit-price quantity item-total id date status tracking-id total;
     word-wrap: normal;
 }
 
+.wpsc-cart-item:first-of-type {
+    border-top: none;
+}
+
 .wpsc-form-actions.bottom {
     padding-top: 20px;
 }

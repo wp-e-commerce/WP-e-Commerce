@@ -479,6 +479,10 @@ Shopping Cart
 	word-wrap: normal;
 }
 
+.widget .wpsc-cart-item:first-of-type {
+	border-top: none;
+}
+
 .widget .wpsc-form-actions.bottom {
 	padding-top: 20px;
 }
@@ -1296,6 +1300,10 @@ Media Queries
 	font-size: 1.15em;
 	hyphens: initial;
 	word-wrap: normal;
+}
+
+.wpsc-cart-item:first-of-type {
+	border-top: none;
 }
 
 .wpsc-form-actions.bottom {
