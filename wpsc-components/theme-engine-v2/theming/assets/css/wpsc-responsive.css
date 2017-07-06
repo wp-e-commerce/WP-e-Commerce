@@ -480,7 +480,7 @@ Shopping Cart
 }
 
 .widget .wpsc-cart-item:first-of-type {
-	padding-top: 0;
+	border-top: none;
 }
 
 .widget .wpsc-form-actions.bottom {
@@ -1303,7 +1303,7 @@ Media Queries
 }
 
 .wpsc-cart-item:first-of-type {
-	padding-top: 0;
+	border-top: none;
 }
 
 .wpsc-form-actions.bottom {

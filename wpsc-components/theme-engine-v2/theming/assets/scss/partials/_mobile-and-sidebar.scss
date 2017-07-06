@@ -36,7 +36,7 @@ $titles: unit-price quantity item-total id date status tracking-id total;
 }
 
 .wpsc-cart-item:first-of-type {
-    padding-top: 0;
+    border-top: none;
 }
 
 .wpsc-form-actions.bottom {
