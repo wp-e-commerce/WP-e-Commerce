@@ -475,6 +475,8 @@ Shopping Cart
 
 .widget .wpsc-cart-item-title {
 	font-size: 1.15em;
+	hyphens: initial;
+	word-wrap: normal;
 }
 
 .widget .wpsc-cart-item:first-of-type {
@@ -1296,6 +1298,8 @@ Media Queries
 
 .wpsc-cart-item-title {
 	font-size: 1.15em;
+	hyphens: initial;
+	word-wrap: normal;
 }
 
 .wpsc-cart-item:first-of-type {
