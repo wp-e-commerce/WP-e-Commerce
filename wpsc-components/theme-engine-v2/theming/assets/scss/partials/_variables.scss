@@ -52,6 +52,11 @@ $columns-5: 20% - $grid_margin;
 $columns-6: 16.666% - $grid_margin;
 $full-width: 100%;
 
+// /* Product Form */
+$toggle-width: 35px;
+$qty-width: 40px;
+$qty-btn-width: ($toggle-width * 2) + $qty-width;
+
 // Mixins
 
 @mixin wpsc-cart-item() {

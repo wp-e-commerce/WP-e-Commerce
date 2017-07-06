@@ -6,10 +6,10 @@ Product Forms
 	.wpsc-controls {
 	@include flexbox();
 	border: 1px solid #ccc;
-	width: 115px;
+	width: $qty-btn-width;
 
 		input[type="text"] {
-			width: 40px;
+			width: $qty-width;
 			@include flex-order(2);
 			text-align: center;
 			border: none;
@@ -18,10 +18,14 @@ Product Forms
 
 		.dec {
 			@include flex-order(1);
+			width: $toggle-width;
+			text-align: center;
 		}
 		
 		.inc {
 			@include flex-order(3);
+			width: $toggle-width;
+			text-align: center;
 		}
 	}
 
