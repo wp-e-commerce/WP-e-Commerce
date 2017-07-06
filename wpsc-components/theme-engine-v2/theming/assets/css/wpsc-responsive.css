@@ -786,7 +786,7 @@ Product Forms
 	display: -webkit-flex;
 	display: flex;
 	border: 1px solid #ccc;
-	width: 115px;
+	width: 110px;
 }
 
 .wpsc-field-quantity .wpsc-controls input[type="text"] {
@@ -805,6 +805,8 @@ Product Forms
 	-moz-order: 1;
 	-ms-order: 1;
 	order: 1;
+	width: 35px;
+	text-align: center;
 }
 
 .wpsc-field-quantity .wpsc-controls .inc {
@@ -812,6 +814,8 @@ Product Forms
 	-moz-order: 3;
 	-ms-order: 3;
 	order: 3;
+	width: 35px;
+	text-align: center;
 }
 
 .wpsc-field-quantity .wpsc-qty-button {
