@@ -12,16 +12,13 @@
 	@import 'partials/product-list';
 }
 
-.wpsc-single {
-	@import 'partials/product-list';
-}
-
 @import 'partials/shopping-cart';
 
 .wpsc-checkout {
 	@import 'partials/checkout';
 }
 
+@import 'partials/product-single';
 @import 'partials/account';
 @import 'partials/js-float-label';
 @import 'partials/product-forms';
