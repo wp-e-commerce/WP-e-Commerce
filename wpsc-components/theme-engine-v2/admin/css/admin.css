@@ -65,3 +65,47 @@ input[id$="-slug"].regular-text {
 	margin: .5em 0;
 	padding: 2px;
 }
+
+@media screen and (min-width: 551px) {
+	#wpsc-product-variations-wrapper .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.check-column) {	
+		display: table-cell;
+	}
+
+	#wpsc-product-variations-wrapper .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+		display: none;
+	}
+
+	#wpsc-product-variations-wrapper .widefat td, #wpsc-product-variations-wrapper .widefat th {
+	    padding: 8px 5px;
+	}
+
+	#wpsc-product-variations-wrapper .wp-list-table thead tr,
+	#wpsc-product-variations-wrapper .wp-list-table tr.wpsc-bulk-edit.active {
+	    display: table-row;
+	}
+
+	#wpsc-product-variations-wrapper .wpsc-bulk-edit.active td.column-title strong {
+		display: inline;
+	}
+}
+
+@media screen and (max-width: 550px) { 
+	#wpsc-product-variations-wrapper .wp-list-table,
+	#wpsc-product-variations-wrapper .wp-list-table thead,
+	#wpsc-product-variations-wrapper .wp-list-table tbody,
+	#wpsc-product-variations-wrapper .wp-list-table tr:not(.inline-edit-row):not(.no-items) {
+		display: block;
+	}
+
+	#wpsc-product-variations-wrapper .wp-list-table tr .column-title::before {
+		display: none;
+	}
+
+	#wpsc-product-variations-wrapper .wp-list-table .wpsc-bulk-edit.active td:not(.column-primary):not(.column-title)::before {
+	    position: absolute;
+	    left: 100px;
+	    top: 25%;
+	    content: attr(data-colname);
+	}
+}
+
