@@ -1213,7 +1213,37 @@ Media Queries
 
 }
 
+@media screen and (max-width: 550px) {
+
+.wpsc-list h2.wpsc-product-title {
+	text-align: center;
+}
+
+.wpsc-list .wpsc-product-price {
+	text-align: center;
+}
+
+.wpsc-list .wpsc-product-meta {
+	text-align: center;
+}
+
+}
+
 @media (max-width: 550px) {
+
+.wpsc-list .wpsc-add-to-cart-form {
+	-webkit-justify-content: center;
+	-moz-justify-content: center;
+	-ms-justify-content: center;
+	justify-content: center;
+}
+
+.wpsc-page-single .wpsc-add-to-cart-form {
+	-webkit-justify-content: center;
+	-moz-justify-content: center;
+	-ms-justify-content: center;
+	justify-content: center;
+}
 
 /* Mobile and Sidebar Table Styling */
 
@@ -1472,7 +1502,7 @@ Media Queries
 
 .wpsc-form-actions {
 	display: block;
-	text-align: right;
+	text-align: center;
 }
 
 .wpsc-begin-checkout,

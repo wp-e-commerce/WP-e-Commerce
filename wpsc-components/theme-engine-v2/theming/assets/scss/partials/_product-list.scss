@@ -13,6 +13,19 @@ h2.wpsc-product-title {
 	@media screen and (min-width: 550px) {
 		margin-top: 0;
 	}
+	@media screen and (max-width: 550px) {
+		text-align: center;
+	}
 }
 
+.wpsc-product-price {
+    @media screen and (max-width: 550px) {
+		text-align: center;
+	}
+}
+.wpsc-product-meta {
+	@media screen and (max-width: 550px) {
+		text-align: center;
+	}
+}
 @import '../modules/single-product/product-module';
