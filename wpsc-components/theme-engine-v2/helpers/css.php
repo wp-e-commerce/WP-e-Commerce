@@ -42,7 +42,7 @@ function _wpsc_get_inline_style() {
 
 	ob_start();
 	?>
-	.wpsc-page-main-store .wpsc-product-summary,
+	.wpsc-main-store .wpsc-product-summary,
 	.archive .wpsc-product-summary {
 		width: -moz-calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
 		width: -webkit-calc(100% - <?php echo $archive_width + $thumbnail_padding; ?>px);
@@ -59,7 +59,7 @@ function _wpsc_get_inline_style() {
 		width: <?php echo $single_width; ?>px;
 	}
 
-	.wpsc-page-taxonomy .wpsc-product-summary {
+	.wpsc-category .wpsc-product-summary {
 		width: -moz-calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 		width: -webkit-calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
 		width: calc(100% - <?php echo $tax_width + $thumbnail_padding; ?>px);
