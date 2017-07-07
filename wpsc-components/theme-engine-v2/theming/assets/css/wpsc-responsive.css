@@ -1213,6 +1213,22 @@ Media Queries
 
 }
 
+@media screen and (max-width: 550px) {
+
+.wpsc-list h2.wpsc-product-title {
+	text-align: center;
+}
+
+.wpsc-list .wpsc-product-price {
+	text-align: center;
+}
+
+.wpsc-list .wpsc-product-meta {
+	text-align: center;
+}
+
+}
+
 @media (max-width: 550px) {
 
 .wpsc-list .wpsc-add-to-cart-form {
