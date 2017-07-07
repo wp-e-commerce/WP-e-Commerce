@@ -1215,6 +1215,20 @@ Media Queries
 
 @media (max-width: 550px) {
 
+.wpsc-list .wpsc-add-to-cart-form {
+	-webkit-justify-content: center;
+	-moz-justify-content: center;
+	-ms-justify-content: center;
+	justify-content: center;
+}
+
+.wpsc-page-single .wpsc-add-to-cart-form {
+	-webkit-justify-content: center;
+	-moz-justify-content: center;
+	-ms-justify-content: center;
+	justify-content: center;
+}
+
 /* Mobile and Sidebar Table Styling */
 
 .wpsc-cart-cell,
@@ -1472,7 +1486,7 @@ Media Queries
 
 .wpsc-form-actions {
 	display: block;
-	text-align: right;
+	text-align: center;
 }
 
 .wpsc-begin-checkout,

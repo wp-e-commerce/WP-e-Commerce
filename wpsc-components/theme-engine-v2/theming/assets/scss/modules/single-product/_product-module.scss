@@ -4,6 +4,10 @@
 	@include flex-wrap(wrap);
 	@include align-items(center);
 
+	@media (max-width: 550px) {
+		@include justify-content(center);
+	}
+
 	.wpsc-form-actions {
 		margin-bottom: 0;
 	}
