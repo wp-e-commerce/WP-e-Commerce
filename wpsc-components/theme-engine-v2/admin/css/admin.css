@@ -103,9 +103,10 @@ input[id$="-slug"].regular-text {
 
 	#wpsc-product-variations-wrapper .wp-list-table .wpsc-bulk-edit.active td:not(.column-primary):not(.column-title)::before {
 	    position: absolute;
-	    left: 100px;
+	    left: 10px;
 	    top: 25%;
 	    content: attr(data-colname);
+	    width: initial;
 	}
 }
 
