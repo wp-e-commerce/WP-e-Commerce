@@ -598,7 +598,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 			if ( in_array( $column_name, $hidden ) )
 				$style = ' style="display:none;"';
 
-			$attributes = "$class$style";
+			$attributes = "$class$style data-colname='$column_display_name'";
 
 			if ( $column_name == 'cb' )
 				echo '<td></td>';
