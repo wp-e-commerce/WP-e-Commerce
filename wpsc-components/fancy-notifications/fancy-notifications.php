@@ -22,7 +22,7 @@ class WPSC_Fancy_Notifications {
 	 * @since  4.0
 	 */
 	public static function maybe_enqueue() {
-		if ( wpsc_get_option( 'fancy_notifications' ) ) {
+		if ( get_option( 'fancy_notifications' ) ) {
 
 			$url_path = self::plugin_url();
 
