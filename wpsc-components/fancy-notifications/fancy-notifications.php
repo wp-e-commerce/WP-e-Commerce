@@ -4,11 +4,7 @@
  * WP eCommerce Fancy Notifications
  */
 
-add_action( 'wp_enqueue_scripts', array( 'WPSC_Fancy_Notifications', 'enqueue_styles' ) );
-add_action( 'wp_enqueue_scripts', array( 'WPSC_Fancy_Notifications', 'enqueue_scripts' ) );
-add_action( 'wpsc_add_to_cart_button_form_begin', array( 'WPSC_Fancy_Notifications', 'add_fancy_notifications' ) );
-add_action( 'wpsc_theme_footer', array( 'WPSC_Fancy_Notifications', 'fancy_notifications' ) );
-add_filter( 'wpsc_add_to_cart_json_response', array( 'WPSC_Fancy_Notifications', 'wpsc_add_to_cart_json_response' ) );
+add_action( 'plugins_loaded', array( 'WPSC_Fancy_Notifications', 'setup_hooks' ) );
 
 /**
  * WP eCommerce Fancy Notifications Class
@@ -16,6 +12,23 @@ add_filter( 'wpsc_add_to_cart_json_response', array( 'WPSC_Fancy_Notifications',
  * @since  4.0
  */
 class WPSC_Fancy_Notifications {
+
+	/**
+	 * Setup Hooks
+	 */
+	public static function setup_hooks() {
+
+		if ( self::is_active() ) {
+
+			add_action( 'wp_enqueue_scripts', array( get_class(), 'enqueue_styles' ) );
+			add_action( 'wp_enqueue_scripts', array( get_class(), 'enqueue_scripts' ) );
+			add_action( 'wpsc_add_to_cart_button_form_begin', array( get_class(), 'add_fancy_notifications' ) );
+			add_action( 'wpsc_theme_footer', array( get_class(), 'fancy_notifications' ) );
+			add_filter( 'wpsc_add_to_cart_json_response', array( get_class(), 'wpsc_add_to_cart_json_response' ) );
+
+		}
+
+	}
 
 	/**
 	 * Fancy Notifications
@@ -125,6 +138,17 @@ class WPSC_Fancy_Notifications {
 	public static function enqueue_scripts() {
 
 		wp_enqueue_script( 'wpsc-fancy-notifications', self::plugin_url() . '/js/fancy-notifications.js', array( 'jquery' ), '1.0' );
+
+	}
+
+	/**
+	 * Is Active?
+	 *
+	 * @return  boolean
+	 */
+	public static function is_active() {
+
+		return get_option( 'fancy_notifications' ) == 1;
 
 	}
 

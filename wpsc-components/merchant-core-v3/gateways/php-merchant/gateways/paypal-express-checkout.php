@@ -193,6 +193,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 			'MSGSUBID'	   => 'message_id',
 			'INVOICEID'	   => 'invoice',
 			'NOTE'         => 'note',
+			'USERSELECTEDFUNDINGSOURCE' => 'user_funding_source',
 		) );
 
 		// Cart Customization Fields
@@ -243,7 +244,6 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( array( 'amount', 'return_url', 'cancel_url' ) );
 		$request = $this->build_checkout_request( $action, $options );
-
 		$response_str = $this->commit( 'SetExpressCheckout', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
