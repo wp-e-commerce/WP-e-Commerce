@@ -480,30 +480,34 @@ abstract class WPSC_Payment_Gateway {
 		if ( $this->supports( 'tev1' ) && '1.0' == get_option( 'wpsc_get_active_theme_engine' ) ) {
 			// Show 2.0 gateway API table-based code
 			$default_fields = array(
-				'card-number-field' => '<tr><td class="wpsc-form-row wpsc-form-row-wide wpsc-cc-field">
-					<label for="' . esc_attr( $name ) . '-card-number">' . __( 'Card Number', 'wp-e-commerce' ) . ' <span class="required">*</span></label></td>
+				'card-number-field' => '<tr><td><p class="wpsc-form-row wpsc-form-row-wide wpsc-cc-field">
+					<label for="' . esc_attr( $name ) . '-card-number">' . __( 'Card Number', 'wp-e-commerce' ) . ' <span class="required">*</span></label></p></td>
 					<td><input id="' . esc_attr( $name ) . '-card-number" class="input-text wpsc-cc-input wpsc-credit-card-form-card-number" type="tel" maxlength="20" autocomplete="off" placeholder="•••• •••• •••• ••••" ' . $this->field_name( $name .'-card-number' ) . ' /></td>
 				</tr>',
-				'card-expiry-field' => '<tr><td class="wpsc-form-row-middle wpsc-cc-field">
-					<label for="' . esc_attr( $name ) . '-card-expiry">' . __( 'Expiration Date', 'wp-e-commerce' ) . ' <span class="required">*</span></label></td>
+				'card-name-field' => '<tr><td><p class="wpsc-form-row-first wpsc-cc-field">
+					<label for="' . esc_attr( $name ) . '-card-name">' . __( 'Cardholder Name', 'wp-e-commerce' ) . ' <span class="required">*</span></label></p></td>
+					<td><input id="' . esc_attr( $name ) . '-card-name" class="input-text wpsc-cc-input wpsc-credit-card-form-card-name" type="text" autocomplete="off" placeholder="Your Name" ' . $this->field_name( $name .'-card-name' ) . ' /></td>
+				</tr>',				
+				'card-expiry-field' => '<tr><td><p class="wpsc-form-row-middle wpsc-cc-field">
+					<label for="' . esc_attr( $name ) . '-card-expiry">' . __( 'Expiration Date', 'wp-e-commerce' ) . ' <span class="required">*</span></label></p></td>
 					<td><input id="' . esc_attr( $name ) . '-card-expiry" class="input-text wpsc-cc-input wpsc-credit-card-form-card-expiry" type="tel" autocomplete="off" placeholder="' . esc_attr__( 'MM / YY', 'wp-e-commerce' ) . '" ' . $this->field_name( $name .'-card-expiry' ) . ' /></td>
 				</tr>',
-				'card-cvc-field' => '<tr><td class="wpsc-form-row-last wpsc-cc-field">
-					<label for="' . esc_attr( $name ) . '-card-cvc">' . __( 'Card Code', 'wp-e-commerce' ) . ' <span class="required">*</span></label></td>
+				'card-cvc-field' => '<tr><td><p class="wpsc-form-row-last wpsc-cc-field">
+					<label for="' . esc_attr( $name ) . '-card-cvc">' . __( 'Card Code', 'wp-e-commerce' ) . ' <span class="required">*</span></label></p></td>
 					<td><input id="' . esc_attr( $name ) . '-card-cvc" class="input-text wpsc-cc-input wpsc-credit-card-form-card-cvc" type="tel" maxlength="4" autocomplete="off" placeholder="' . esc_attr__( 'CVC', 'wp-e-commerce' ) . '" ' . $this->field_name( $name .'-card-cvc' ) . ' /></td>
 				</tr>'
 			);
-			$fields = wp_parse_args( $fields, apply_filters( 'wpsc_tev1_default_credit_card_form_fields', $default_fields, $name ) );
+			$fields = wp_parse_args( $fields, apply_filters( 'wpsc_tev1_default_credit_card_form_fields_' . $name, $default_fields, $name ) );
 			?>
 			<table class="wpsc_checkout_table <?php echo wpsc_gateway_form_field_style(); ?>">
-				<?php do_action( 'wpsc_tev1_default_credit_card_form_start', $name );
-					
+				<?php do_action( 'wpsc_tev1_default_credit_card_form_start_' . $name, $name );
+
 					foreach ( $fields as $field ) {
 						echo $field;
-					}					
+					}
 
-				do_action( 'wpsc_tev1_default_credit_card_form_end', $name ); ?>
-		</table>
+				do_action( 'wpsc_tev1_default_credit_card_form_end_' . $name, $name ); ?>
+			</table>
 			<?php
 		} else {
 			$default_args = array(
@@ -530,16 +534,16 @@ abstract class WPSC_Payment_Gateway {
 					<input id="' . esc_attr( $name ) . '-card-cvc" class="input-text wpsc-cc-input wpsc-credit-card-form-card-cvc" type="tel" maxlength="4" autocomplete="off" placeholder="' . esc_attr__( 'CVC', 'wp-e-commerce' ) . '" ' . $this->field_name( $name .'-card-cvc' ) . ' />
 				</p>'
 			);
-			$fields = wp_parse_args( $fields, apply_filters( 'wpsc_default_credit_card_form_fields', $default_fields, $name ) );
+			$fields = wp_parse_args( $fields, apply_filters( 'wpsc_default_credit_card_form_fields_' . $name, $default_fields, $name ) );
 			?>
 			<fieldset class="cc-form-fieldset" id="<?php echo esc_attr( $name ); ?>-cc-form">
-				<?php do_action( 'wpsc_default_credit_card_form_start', $name );
+				<?php do_action( 'wpsc_default_credit_card_form_start_' . $name, $name );
 
 					foreach ( $fields as $field ) {
 						echo $field;
 					}
 
-					do_action( 'wpsc_default_credit_card_form_end', $name ); ?>
+					do_action( 'wpsc_default_credit_card_form_end_' . $name, $name ); ?>
 				<div class="clear"></div>
 			</fieldset>
 		<?php
