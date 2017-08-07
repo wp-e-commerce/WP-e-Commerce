@@ -294,7 +294,7 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function add_refund_button( $log ) {
-		if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) ) :
+		if ( wpsc_payment_gateway_supports( $log->get( 'gateway' ), 'refunds' ) && $log->get_remaining_refund() != 0 ) :
 		?>
 		<button type="button" class="button refund-items"><?php _e( 'Refund', 'wp-e-commerce' ); ?></button>
 		<?php
