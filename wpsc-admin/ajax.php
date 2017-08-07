@@ -104,7 +104,7 @@ function _wpsc_ajax_purchase_log_capture_payment() {
 			}
 
 			if ( ! $result ) {
-				throw new Exception( __( 'Refund failed', 'wp-e-commerce' ) );
+				throw new Exception( __( 'Capture failed', 'wp-e-commerce' ) );
 			}
 		}
 
