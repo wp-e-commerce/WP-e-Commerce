@@ -141,7 +141,7 @@ function wpsc_get_login_form_args() {
 				'id'    => 'wpsc-login-username',
 				'name'  => 'username',
 				'type'  => 'textfield',
-				'title' => __( 'Username', 'wp-e-commerce' ),
+				'title' => __( 'Username or Email', 'wp-e-commerce' ),
 				'value' => wpsc_submitted_value( 'username' ),
 				'rules' => 'required',
 			),
