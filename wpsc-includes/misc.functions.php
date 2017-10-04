@@ -591,10 +591,15 @@ function get_the_product_category( $id ) {
 
 	$categories = wpsc_get_product_terms( $id, 'wpsc_product_category' );
 
-	if ( !empty( $categories ) )
-		usort( $categories, '_usort_terms_by_name' );
-	else
+	if ( !empty( $categories ) ) {
+		if ( function_exists( 'wp_list_sort' ) ) {
+			$categories = wp_list_sort( $categories, 'name', 'ASC' );
+		} else {
+			usort( $categories, '_usort_terms_by_name' );
+		}
+	} else {
 		$categories = array();
+	}
 
 	foreach ( (array)array_keys( $categories ) as $key ) {
 		_make_cat_compat( $categories[$key] );
