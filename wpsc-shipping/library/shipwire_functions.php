@@ -92,7 +92,7 @@ class WPSC_Shipwire {
 	 * @return boolean
 	 */
 	public static function is_active() {
-		return ( (bool) get_option( 'shipwire' ) && function_exists( 'simplexml_load_string' ) ) || isset( $_POST['server'] );
+		return (bool) get_option( 'shipwire' ) && function_exists( 'simplexml_load_string' );
 	}
 
 	/**
