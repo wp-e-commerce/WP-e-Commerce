@@ -195,7 +195,10 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 						</tr>
 						<tr>
 							<th><?php esc_html_e( 'Use Test Server?', 'wp-e-commerce' ); ?></th>
-							<td><input type="checkbox" name='wpsc_options[shipwire_test_server]' value="0" <?php checked( '1',  get_option( 'shipwire_test_server', '0' ) ); ?> /></td>
+							<td>
+								<input <?php checked( get_option( 'shipwire_test_server', '0' ) ); ?> type="radio" name="wpsc_options[shipwire_test_server]" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?>
+								<input <?php checked( (bool) get_option( 'shipwire_test_server', '0' ), false ); ?> type="radio" name="wpsc_options[shipwire_test_server]" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?>
+							</td>
 						</tr>
 						<tr>
 							<th><?php esc_html_e( 'Force Sync with Shipwire', 'wp-e-commerce' ); ?></th>
