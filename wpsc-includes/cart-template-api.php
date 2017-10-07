@@ -614,7 +614,7 @@ function wpsc_allow_free_cart_checkout() {
 		/* Required for compatibility with the 3.0 payment gateway API and the 2.0 theme engine */
 		add_filter( 'wpsc_payment_method_form_fields', '__return_empty_array' );
 
-		/* Sets the status entered to the "Accepted Payment" status.   */
+		/* Sets the status entered to the "Accepted Payment" status and sets a 'free' gateway name.   */
 		add_filter( 'wpsc_purchase_log_insert_data', 'wpsc_free_checkout_insert_order_status' );
 
 		/* Handles what a gateway would properly handle, updating the "processed" key in the database. */
@@ -626,16 +626,19 @@ function wpsc_allow_free_cart_checkout() {
 add_action( 'init', 'wpsc_allow_free_cart_checkout', 2 );
 
 /**
- * Updates the 'statusno' parameter when a new order is submitted with a free cart.
+ * Updates the 'statusno' and 'gateway' parameters when a new order is submitted with a free cart.
  *
  * @param  array $data    Array of arguments passed to WPSC_Purchase_Log on a new order.
  * @uses   apply_filters  'wpsc_free_checkout_order_status' allows developers to change the status a free cart is saved with.
+ * @uses   apply_filters  'wpsc_free_checkout_order_gateway' allows developers to change the gateway a free cart is saved with
  * @since  3.9.0
  *
  * @return array $data  Modified array of arguments passed to WPSC_Purchase_Log on a new order.
  */
 function wpsc_free_checkout_insert_order_status( $data ) {
 	$data['statusno'] = apply_filters( 'wpsc_free_checkout_order_status', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+	$data['gateway']  = apply_filters( 'wpsc_free_checkout_order_gateway', 'free' );
+
 	return $data;
 }
 
