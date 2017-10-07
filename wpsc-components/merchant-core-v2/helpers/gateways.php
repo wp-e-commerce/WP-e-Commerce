@@ -282,7 +282,7 @@ function _wpsc_action_merchant_v2_validate_payment_method( $valid, $controller )
 		'cctype',
 	);
 
-	$selected_gateway = $_POST['wpsc_payment_method'];
+	$selected_gateway = isset( $_POST['wpsc_payment_method'] ) && $_POST['wpsc_payment_method'] ? $_POST['wpsc_payment_method'] : '';
 	if (
 		   ! isset( $_POST['extra_form'] )
 		|| ! isset( $_POST['extra_form'][$selected_gateway] )
