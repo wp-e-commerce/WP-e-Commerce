@@ -37,15 +37,15 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 
 		$fields['card-number-field'] = '<p class="wpsc-form-row wpsc-form-row-wide wpsc-cc-field">
 				<label for="' . esc_attr( $name ) . '-card-number" class="bt-hosted-fields--label">' . __( 'Card Number', 'wpec-pp-braintree' ) . ' <span class="required">*</span></label>
-				<div id="braintree-credit-cards-card-number" class="hosted-field"></div>
+				<div id="braintree-credit-cards-card-number" class="bt-hosted-field"></div>
 			</p>';
 		$fields['card-expiry-field'] = '<p class="wpsc-form-row-middle wpsc-cc-field">
 				<label for="' . esc_attr( $name ) . '-card-expiry" class="bt-hosted-fields--label">' . __( 'Expiration Date', 'wpec-pp-braintree' ) . ' <span class="required">*</span></label>
-				<div id="braintree-credit-cards-card-expiry" class="hosted-field"></div>
+				<div id="braintree-credit-cards-card-expiry" class="bt-hosted-field"></div>
 			</p>';
 		$fields['card-cvc-field'] = '<p class="wpsc-form-row-last wpsc-cc-field">
 				<label for="' . esc_attr( $name ) . '-card-cvc" class="bt-hosted-fields--label">' . __( 'Card Code', 'wpec-pp-braintree' ) . ' <span class="required">*</span></label>
-				<div id="braintree-credit-cards-card-cvc" class="hosted-field"></div></td>
+				<div id="braintree-credit-cards-card-cvc" class="bt-hosted-field"></div></td>
 			</p>';
 
 		return $fields;

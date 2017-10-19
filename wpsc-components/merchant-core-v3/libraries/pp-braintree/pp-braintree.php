@@ -30,7 +30,6 @@ class WPEC_Btree_Helpers {
 		add_action( 'wpsc_loaded', array( self::$instance, 'init' ), 2 );
 		add_action( 'admin_enqueue_scripts', array( self::$instance, 'admin_scripts' ) );
 		add_action( 'wp_enqueue_scripts' , array( self::$instance, 'pp_braintree_enqueue_js' ), 100 );
-		add_action( 'wp_head' , array( self::$instance, 'add_css' ), 100 );
 		add_action( 'wpsc_submit_gateway_options', array( self::$instance, 'update_payment_gateway_settings' ), 90 );
 	}
 
@@ -139,6 +138,9 @@ class WPEC_Btree_Helpers {
 				'is_pp_active' => self::is_gateway_active( 'braintree-paypal' ),
 				)
 			);
+			
+			wp_enqueue_style( 'pp-braintree-css', WPSC_MERCHANT_V3_SDKS_URL . '/pp-braintree/assets/css/style.css' );
+			
 			wp_enqueue_script( 'pp-braintree' );
 			wp_enqueue_script( 'ppbtclient', 'https://js.braintreegateway.com/web/3.20.0/js/client.min.js', array(), null, true );
 			wp_enqueue_script( 'ppbthosted', 'https://js.braintreegateway.com/web/3.20.0/js/hosted-fields.min.js', array(), null, true );
@@ -147,95 +149,6 @@ class WPEC_Btree_Helpers {
 			wp_enqueue_script( 'ppbtthreeds', 'https://js.braintreegateway.com/web/3.20.0/js/three-d-secure.min.js', array(), null, true );
 			wp_enqueue_script( 'ppbtdata', 'https://js.braintreegateway.com/web/3.20.0/js/data-collector.min.js', array(), null, true );
 		}
-	}
-
-	public static function add_css() {
-		if ( ! self::is_gateway_active( 'braintree-credit-cards' ) && ! self::is_gateway_active( 'braintree-paypal' ) ) {
-			return;
-		}
-		?>
-			<style>
-			#pp-btree-hosted-fields-modal {
-			  position: absolute;
-			  top: 0;
-			  left: 0;
-			  display: flex;
-			  align-items: center;
-			  height: 100vh;
-			  z-index: 100;
-			}
-			.pp-btree-hosted-fields-modal-hidden {
-				display: none !important;
-			}
-			.pp-btree-hosted-fields-bt-modal-frame {
-			  height: 480px;
-			  width: 440px;
-			  margin: auto;
-			  background-color: #eee;
-			  z-index: 2;
-			  border-radius: 6px;
-			}
-			.pp-btree-hosted-fields-bt-modal-body {
-			  height: 400px;
-			  margin: 0 20px;
-			  background-color: white;
-			  border: 1px solid lightgray;
-			}
-			.pp-btree-hosted-fields-bt-modal-header, .pp-btree-hosted-fields-bt-modal-footer {
-			  height: 40px;
-			  text-align: center;
-			  line-height: 40px;
-			}
-			.pp-btree-hosted-fields-bt-mask {
-			  position: fixed;
-			  top: 0;
-			  left: 0;
-			  height: 100%;
-			  width: 100%;
-			  background-color: black;
-			  opacity: 0.8;
-			}
-			<!-- Card fields styles -->
-			.bt-hosted-field {
-			  height: 10px;
-			  box-sizing: border-box;
-			  width: 100%;
-			  padding: 12px;
-			  display: inline-block;
-			  box-shadow: none;
-			  font-weight: 600;
-			  font-size: 14px;
-			  border-radius: 6px;
-			  border: 1px solid #dddddd;
-			  line-height: 20px;
-			  background: #fcfcfc;
-			  margin-bottom: 12px;
-			  background: linear-gradient(to right, white 50%, #fcfcfc 50%);
-			  background-size: 200% 100%;
-			  background-position: right bottom;
-			  transition: all 300ms ease-in-out;
-			}
-			.bt-hosted-fields--label {
-			  font-family: courier, monospace;
-			  text-transform: uppercase;
-			  font-size: 14px;
-			  display: block;
-			  margin-bottom: 6px;
-			}			
-			.braintree-hosted-fields-focused {
-			  border: 1px solid #64d18a;
-			  border-radius: 1px;
-			  background-position: left bottom;
-			}
-
-			.braintree-hosted-fields-invalid {
-			  border: 1px solid #ed574a;
-			}
-
-			.braintree-hosted-fields-valid {
-			}		
-			</style>
-		<?php
 	}
 
 	public static function is_gateway_active( $gateway ) {

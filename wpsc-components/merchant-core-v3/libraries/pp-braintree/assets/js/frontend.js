@@ -78,7 +78,7 @@
 			  expirationDate: {
 				selector: '#braintree-credit-cards-card-expiry',
 				placeholder: 'MM/YYYY'
-			  },
+			  }
 			}
 		}, function (hostedFieldsErr, hostedFieldsInstance) {
 			if (hostedFieldsErr) {
