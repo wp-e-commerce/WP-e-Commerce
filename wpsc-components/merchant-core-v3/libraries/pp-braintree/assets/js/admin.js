@@ -1,0 +1,4 @@
+/*global jQuery*/
+( function($) {
+
+} )( jQuery );
