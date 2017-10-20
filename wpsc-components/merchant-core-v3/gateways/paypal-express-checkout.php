@@ -73,8 +73,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	public function show_credit_banner() {
 		echo '<div class="wpsc-paypal-credit-banner">';
 		echo '<script type="text/javascript" data-pp-payerid="DTH9KXN7USFL6" data-pp-placementtype="728x90" data-pp-style="BLUWHTYMED">
- (function (d, t) {"use strict";var s = d.getElementsByTagName(t)[0], n = d.createElement(t);n.src = "//www.paypalobjects.com/upstream/bizcomponents/js/merchant.js";s.parentNode.insertBefore(n, s);}(document, "script"));
-</script>';
+		 (function (d, t) {"use strict";var s = d.getElementsByTagName(t)[0], n = d.createElement(t);n.src = "//www.paypalobjects.com/upstream/bizcomponents/js/merchant.js";s.parentNode.insertBefore(n, s);}(document, "script"));
+		</script>';
 		echo '</div>';
 	}
 
