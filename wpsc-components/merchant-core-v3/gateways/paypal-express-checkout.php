@@ -43,6 +43,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				'incontext'        => (bool) $this->setting->get( 'incontext', '1' ),
 				'shortcut'         => (bool) $this->setting->get( 'shortcut' , '1' ),
 				'credit'           => (bool) $this->setting->get( 'credit' , '1' ),
+				'credit-banner'    => (bool) $this->setting->get( 'credit-banner', '0' )
 			) );
 
 			// Express Checkout Button
@@ -59,9 +60,22 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			if ( (bool) $this->setting->get( 'credit' ) ) {
 				add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_credit_button_tev1' ) );
 				add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_credit_button' ), 1, 2 );
+				
+				if ( (bool) $this->setting->get( 'credit-banner' ) ) {
+					add_action( 'wpsc_before_form_of_shopping_cart' , array( $this, 'show_credit_banner' ) );
+				}
+				
 			}
 
 		}
+	}
+	
+	public function show_credit_banner() {
+		echo '<div class="wpsc-paypal-credit-banner">';
+		echo '<script type="text/javascript" data-pp-payerid="DTH9KXN7USFL6" data-pp-placementtype="728x90" data-pp-style="BLUWHTYMED">
+ (function (d, t) {"use strict";var s = d.getElementsByTagName(t)[0], n = d.createElement(t);n.src = "//www.paypalobjects.com/upstream/bizcomponents/js/merchant.js";s.parentNode.insertBefore(n, s);}(document, "script"));
+</script>';
+		echo '</div>';
 	}
 
 	public function add_credit_button_tev1( $gateway ) {
@@ -1017,6 +1031,15 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	<td>
 		<label><input <?php checked( $this->setting->get( 'credit', '1' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
 		<label><input <?php checked( (bool) $this->setting->get( 'credit', '1' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="wpsc-paypal-express-cart-border"><?php _e( 'Enable PayPal Credit Banner', 'wp-e-commerce' ); ?></label>
+	</td>
+	<td>
+		<label><input <?php checked( $this->setting->get( 'credit-banner', '1' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit-banner' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+		<label><input <?php checked( (bool) $this->setting->get( 'credit-banner', '1' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit-banner' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 	</td>
 </tr>
 <!-- Currency Conversion -->
