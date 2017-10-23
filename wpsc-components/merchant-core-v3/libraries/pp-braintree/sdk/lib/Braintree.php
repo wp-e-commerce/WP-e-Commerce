@@ -11,7 +11,7 @@ if (version_compare(PHP_VERSION, '5.4.0', '<')) {
 }
 
 
-function requireDependencies() {
+function PPrequireDependencies() {
     $requiredExtensions = ['xmlwriter', 'openssl', 'dom', 'hash', 'curl'];
     foreach ($requiredExtensions AS $ext) {
         if (!extension_loaded($ext)) {
@@ -20,4 +20,4 @@ function requireDependencies() {
     }
 }
 
-requireDependencies();
+PPrequireDependencies();

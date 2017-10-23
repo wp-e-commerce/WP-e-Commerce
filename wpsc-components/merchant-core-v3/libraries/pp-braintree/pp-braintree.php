@@ -1,5 +1,7 @@
 <?php
-class WPEC_Btree_Helpers {
+if ( ! class_exists( 'WPEC_Braintree_Helpers' ) ) :
+
+class WPEC_Braintree_Helpers {
 
 	private static $instance;
 
@@ -10,15 +12,15 @@ class WPEC_Btree_Helpers {
 	}
 
 	public static function get_instance() {
-		if  ( ! isset( self::$instance ) && ! ( self::$instance instanceof WPEC_Btree_Helpers ) ) {
-			self::$instance = new WPEC_Btree_Helpers;
+		if  ( ! isset( self::$instance ) && ! ( self::$instance instanceof WPEC_Braintree_Helpers ) ) {
+			self::$instance = new WPEC_Braintree_Helpers;
 			self::includes();
 			self::add_actions();
 			self::add_filters();
 		}
 		return self::$instance;
 	}
-
+	
 	public static function includes() {
 		require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/sdk/lib/Braintree.php' );
 	}
@@ -725,3 +727,5 @@ class WPEC_Btree_Helpers {
 		<?php
 	}
 }
+
+endif; // End if class_exists check.

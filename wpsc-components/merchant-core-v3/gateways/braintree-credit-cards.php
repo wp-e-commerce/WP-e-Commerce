@@ -5,7 +5,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 		require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/pp-braintree.php' );
 		parent::__construct();
 
-		$this->helpers          = WPEC_Btree_Helpers::get_instance();
+		$this->helpers          = WPEC_Braintree_Helpers::get_instance();
 		$this->title            = __( 'PayPal powered by Braintree - Cards', 'wpec-pp-braintree' );
 		$this->image            = WPSC_URL . '/images/cc.gif';
 		$this->supports         = array( 'default_credit_card_form', 'tokenization', 'tev1', 'auth-capture', 'refunds' );

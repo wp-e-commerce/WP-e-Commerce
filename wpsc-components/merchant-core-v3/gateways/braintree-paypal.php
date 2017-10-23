@@ -5,7 +5,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/pp-braintree.php' );
 		parent::__construct();
 
-		$this->helpers          = WPEC_Btree_Helpers::get_instance();
+		$this->helpers          = WPEC_Braintree_Helpers::get_instance();
 		$this->title            = __( 'PayPal powered by Braintree - PayPal', 'wpec-pp-braintree' );
 		$this->supports         = array( 'default_credit_card_form', 'tokenization', 'tev1' );
 		$this->sandbox          = $this->setting->get( 'sandbox' ) == '1' ? true : false;
@@ -29,7 +29,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		// Tev2 fields
 		add_filter( 'wpsc_default_credit_card_form_fields_braintree-paypal', array( $this, 'tev2_checkout_fields' ), 10, 2 );
 	}
-
+	
 	public function tev2_checkout_fields( $fields, $name ) {
 		$fields = array();
 
@@ -63,7 +63,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 	public function process() {
 		global $braintree_settings;
 
-		WPEC_Btree_Helpers::setBraintreeConfiguration('braintree-paypal');
+		WPEC_Braintree_Helpers::setBraintreeConfiguration('braintree-paypal');
 
 		$order = $this->purchase_log;
 		$payment_method_nonce = $_POST['pp_btree_method_nonce'];
