@@ -6,7 +6,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		parent::__construct();
 
 		$this->helpers          = WPEC_Braintree_Helpers::get_instance();
-		$this->title            = __( 'PayPal powered by Braintree - PayPal', 'wpec-pp-braintree' );
+		$this->title            = __( 'PayPal powered by Braintree - PayPal', 'wp-e-commerce' );
 		$this->supports         = array( 'default_credit_card_form', 'tokenization', 'tev1' );
 		$this->sandbox          = $this->setting->get( 'sandbox' ) == '1' ? true : false;
 		$this->but_size         = $this->setting->get( 'but_size' ) !== null ? $this->setting->get( 'but_size' ) : $this->setting->set( 'but_size', 'responsive' );
@@ -35,7 +35,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 
 		$fields = array(
 			'bt-pp-button' => '<p class="wpsc-form-row wpsc-form-row-wide wpsc-bt-pp-but-field">
-				<label for="' . esc_attr( $name ) . '-bt-pp-but">' . __( 'Click below to continue to PayPal', 'wpec-pp-braintree' ) . '</label>
+				<label for="' . esc_attr( $name ) . '-bt-pp-but">' . __( 'Click below to continue to PayPal', 'wp-e-commerce' ) . '</label>
 				<div id="pp_braintree_pp_button"></div>
 			</p>'
 		);
@@ -48,7 +48,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 
 		$fields = array(
 			'bt-pp-button' => '<tr><td><p class="wpsc-form-row wpsc-form-row-wide wpsc-bt-pp-but-field">
-				<label for="' . esc_attr( $name ) . '-bt-pp-but">' . __( 'Click below to continue to PayPal', 'wpec-pp-braintree' ) . '</label></td></tr>
+				<label for="' . esc_attr( $name ) . '-bt-pp-but">' . __( 'Click below to continue to PayPal', 'wp-e-commerce' ) . '</label></td></tr>
 				<tr><td><div id="pp_braintree_pp_button"></div></td></tr>'
 		);
 
@@ -151,12 +151,12 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		<!-- Account Credentials -->
 		<tr id="bt-pp-manual-header">
 			<td colspan="2">
-				<h4><?php _e( 'Account Credentials', 'wpec-pp-braintree' ); ?></h4>
+				<h4><?php _e( 'Account Credentials', 'wp-e-commerce' ); ?></h4>
 			</td>
 		</tr>
 		<tr id="bt-pp-manual-public-key">
 			<td>
-				<label for="wpsc-worldpay-secure-net-id"><?php _e( 'Public Key', 'wpec-pp-braintree' ); ?></label>
+				<label for="wpsc-worldpay-secure-net-id"><?php _e( 'Public Key', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'public_key' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'public_key' ) ); ?>" id="wpsc-anet-api-id" />
@@ -164,7 +164,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		</tr>
 		<tr id="bt-pp-manual-private-key">
 			<td>
-				<label for="wpsc-worldpay-secure-key"><?php _e( 'Private Key', 'wpec-pp-braintree' ); ?></label>
+				<label for="wpsc-worldpay-secure-key"><?php _e( 'Private Key', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'private_key' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'private_key' ) ); ?>" id="wpsc-anet-trans-key" />
@@ -172,7 +172,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		</tr>
 		<tr id="bt-pp-manual-merchant-id">
 			<td>
-				<label for="wpsc-worldpay-secure-key"><?php _e( 'Merchant ID', 'wpec-pp-braintree' ); ?></label>
+				<label for="wpsc-worldpay-secure-key"><?php _e( 'Merchant ID', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'merchant_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'merchant_id' ) ); ?>" id="wpsc-anet-trans-key" />
@@ -180,11 +180,11 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		</tr>
 		<tr id="bt-pp-manual-sandbox">
 			<td>
-				<label><?php _e( 'Sandbox Mode', 'wpec-pp-braintree' ); ?></label>
+				<label><?php _e( 'Sandbox Mode', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'sandbox' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpec-pp-braintree' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'sandbox' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox' ) ); ?>" value="0" /> <?php _e( 'No', 'wpec-pp-braintree' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'sandbox' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'sandbox' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
 		</tr>
 	<?php
@@ -203,57 +203,57 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 	?>
 		<tr>
 			<td colspan="2">
-				<h4><?php _e( 'Gateway Settings', 'wpec-pp-braintree' ); ?></h4>
+				<h4><?php _e( 'Gateway Settings', 'wp-e-commerce' ); ?></h4>
 			</td>
 		</tr>	
 		<tr>
 			<td>
-				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Size', 'wpec-pp-braintree' ); ?></label>
+				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Size', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<select id="wpsc-worldpay-payment-capture" name="<?php echo esc_attr( $this->setting->get_field_name( 'but_size' ) ); ?>">
-					<option value='small' <?php selected( 'small', $this->setting->get( 'but_size' ) ); ?>><?php _e( 'Small', 'wpec-pp-braintree' )?></option>
-					<option value='medium' <?php selected( 'medium', $this->setting->get( 'but_size' ) ); ?>><?php _e( 'Medium', 'wpec-pp-braintree' )?></option>
-					<option value='responsive' <?php selected( 'responsive', $this->setting->get( 'but_size' ) ); ?>><?php _e( 'Responsive', 'wpec-pp-braintree' )?></option>
+					<option value='small' <?php selected( 'small', $this->setting->get( 'but_size' ) ); ?>><?php _e( 'Small', 'wp-e-commerce' )?></option>
+					<option value='medium' <?php selected( 'medium', $this->setting->get( 'but_size' ) ); ?>><?php _e( 'Medium', 'wp-e-commerce' )?></option>
+					<option value='responsive' <?php selected( 'responsive', $this->setting->get( 'but_size' ) ); ?>><?php _e( 'Responsive', 'wp-e-commerce' )?></option>
 				</select>
 			</td>
 		</tr>	
 		<tr>
 			<td>
-				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Colour', 'wpec-pp-braintree' ); ?></label>
+				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Colour', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<select id="wpsc-worldpay-payment-capture" name="<?php echo esc_attr( $this->setting->get_field_name( 'but_colour' ) ); ?>">
-					<option value='gold' <?php selected( 'gold', $this->setting->get( 'but_colour' ) ); ?>><?php _e( 'Gold', 'wpec-pp-braintree' )?></option>
-					<option value='blue' <?php selected( 'blue', $this->setting->get( 'but_colour' ) ); ?>><?php _e( 'Blue', 'wpec-pp-braintree' )?></option>
-					<option value='silver' <?php selected( 'silver', $this->setting->get( 'but_colour' ) ); ?>><?php _e( 'Silver', 'wpec-pp-braintree' )?></option>
+					<option value='gold' <?php selected( 'gold', $this->setting->get( 'but_colour' ) ); ?>><?php _e( 'Gold', 'wp-e-commerce' )?></option>
+					<option value='blue' <?php selected( 'blue', $this->setting->get( 'but_colour' ) ); ?>><?php _e( 'Blue', 'wp-e-commerce' )?></option>
+					<option value='silver' <?php selected( 'silver', $this->setting->get( 'but_colour' ) ); ?>><?php _e( 'Silver', 'wp-e-commerce' )?></option>
 				</select>
 			</td>
 		</tr>		
 		<tr>
 			<td>
-				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Shape', 'wpec-pp-braintree' ); ?></label>
+				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Shape', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
 				<select id="wpsc-worldpay-payment-capture" name="<?php echo esc_attr( $this->setting->get_field_name( 'but_shape' ) ); ?>">
-					<option value='pill' <?php selected( 'pill', $this->setting->get( 'but_shape' ) ); ?>><?php _e( 'Pill', 'wpec-pp-braintree' )?></option>
-					<option value='rect' <?php selected( 'rect', $this->setting->get( 'but_shape' ) ); ?>><?php _e( 'Rect', 'wpec-pp-braintree' )?></option>
+					<option value='pill' <?php selected( 'pill', $this->setting->get( 'but_shape' ) ); ?>><?php _e( 'Pill', 'wp-e-commerce' )?></option>
+					<option value='rect' <?php selected( 'rect', $this->setting->get( 'but_shape' ) ); ?>><?php _e( 'Rect', 'wp-e-commerce' )?></option>
 				</select>
 			</td>
 		</tr>
 		<!-- Error Logging -->
 		<tr>
 			<td colspan="2">
-				<h4><?php _e( 'Error Logging', 'wpec-pp-braintree' ); ?></h4>
+				<h4><?php _e( 'Error Logging', 'wp-e-commerce' ); ?></h4>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label><?php _e( 'Enable Debugging', 'wpec-pp-braintree' ); ?></label>
+				<label><?php _e( 'Enable Debugging', 'wp-e-commerce' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpec-pp-braintree' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wpec-pp-braintree' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
 		</tr>		
 	<?php

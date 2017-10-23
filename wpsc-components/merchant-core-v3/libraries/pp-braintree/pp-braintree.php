@@ -1,6 +1,4 @@
 <?php
-if ( ! class_exists( 'WPEC_Braintree_Helpers' ) ) :
-
 class WPEC_Braintree_Helpers {
 
 	private static $instance;
@@ -15,11 +13,22 @@ class WPEC_Braintree_Helpers {
 		if  ( ! isset( self::$instance ) && ! ( self::$instance instanceof WPEC_Braintree_Helpers ) ) {
 			self::$instance = new WPEC_Braintree_Helpers;
 
+			self::deactivate_plugins();
 			self::includes();
 			self::add_actions();
 			self::add_filters();
 		}
 		return self::$instance;
+	}
+
+	public static function deactivate_plugins() {
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		if ( ! function_exists( 'deactivate_plugins' ) ) {
+			return;
+		}
+		if ( is_plugin_active( 'wpec-pp-braintree/pp-braintree.php' ) ) {
+			deactivate_plugins( 'wpec-pp-braintree/pp-braintree.php' );
+		}
 	}
 
 	public static function includes() {
@@ -52,11 +61,11 @@ class WPEC_Braintree_Helpers {
 	public function tev1_custom_gateway_name( $name, $gateway ) {
 
 		if ( $gateway['internalname'] == 'braintree-credit-cards' ) {
-			$name = __( 'Cards', 'wpec-pp-braintree' );
+			$name = __( 'Cards', 'wp-e-commerce' );
 		}
 		
 		if ( $gateway['internalname'] == 'braintree-paypal' ) {
-			$name = __( 'PayPal', 'wpec-pp-braintree' );
+			$name = __( 'PayPal', 'wp-e-commerce' );
 		}
 		return $name;
 	}
@@ -195,11 +204,11 @@ class WPEC_Braintree_Helpers {
 			$output .= '<tr class="btpp-braintree-auth">
 							<td>Connect/Disconnect</td>';
 			if ( self::bt_auth_is_connected() ) {
-				$output .= "<td><a href='". esc_url( $connect_url ) . "' class='button-primary'>" . esc_html__( 'Disconnect from PayPal Powered by Braintree', 'wpec-pp-braintree' ) . "</a>
-							<p class='small description'>" . __( 'Merchant account: ', 'wpec-pp-braintree' ) . esc_attr( get_option( 'wpec_braintree_auth_merchant_id' ) ) ."</p></td>";
+				$output .= "<td><a href='". esc_url( $connect_url ) . "' class='button-primary'>" . esc_html__( 'Disconnect from PayPal Powered by Braintree', 'wp-e-commerce' ) . "</a>
+							<p class='small description'>" . __( 'Merchant account: ', 'wp-e-commerce' ) . esc_attr( get_option( 'wpec_braintree_auth_merchant_id' ) ) ."</p></td>";
 			} else {
 				$output .= "<td><a href='" . esc_url( $connect_url ) . "' class='wpec-braintree-connect-button'><img src='" . esc_url( $button_image_url ) . "'/></a>
-							<p class='small description'><a href='". esc_url( 'https://www.braintreepayments.com/partners/learn-more' ) ."' target='_blank'>" . __( 'Learn More ', 'wpec-pp-braintree' ) ."</a></p></td>
+							<p class='small description'><a href='". esc_url( 'https://www.braintreepayments.com/partners/learn-more' ) ."' target='_blank'>" . __( 'Learn More ', 'wp-e-commerce' ) ."</a></p></td>
 							<td></td>";
 			}
 			$output .= '</tr>';
@@ -515,7 +524,7 @@ class WPEC_Braintree_Helpers {
 			}
 			// verify the nonce
 			if ( ! wp_verify_nonce( $nonce, 'connect_paypal_braintree' ) ) {
-				wp_die( __( 'Invalid connection request', 'wpec-pp-braintree' ) );
+				wp_die( __( 'Invalid connection request', 'wp-e-commerce' ) );
 			}
 			$access_token = isset( $_REQUEST[ 'access_token' ] ) ? sanitize_text_field( base64_decode( $_REQUEST[ 'access_token' ] ) ) : false; 
 			if ( $access_token ) {
@@ -555,7 +564,7 @@ class WPEC_Braintree_Helpers {
 		}
 		// verify the nonce
 		if ( ! wp_verify_nonce( $nonce, 'disconnect_paypal_braintree' ) ) {
-			wp_die( __( 'Invalid disconnect request', 'wpec-pp-braintree' ) );
+			wp_die( __( 'Invalid disconnect request', 'wp-e-commerce' ) );
 		}
 		delete_option( 'wpec_braintree_auth_access_token' );
 		delete_option( 'wpec_braintree_auth_environment' );
@@ -723,10 +732,8 @@ class WPEC_Braintree_Helpers {
 		}
 		?>
 		<div class="error notice">
-			<p><?php _e( 'WP eCommerce PayPal powered by Braintree is active but not configured. Please check the Payment gateway settings page', 'wpec-pp-braintree' ); ?></p>
+			<p><?php _e( 'WP eCommerce PayPal powered by Braintree is active but not configured. Please check the Payment gateway settings page', 'wp-e-commerce' ); ?></p>
 		</div>
 		<?php
 	}
 }
-
-endif; // End if class_exists check.
