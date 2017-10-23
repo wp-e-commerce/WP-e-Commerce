@@ -14,13 +14,14 @@ class WPEC_Braintree_Helpers {
 	public static function get_instance() {
 		if  ( ! isset( self::$instance ) && ! ( self::$instance instanceof WPEC_Braintree_Helpers ) ) {
 			self::$instance = new WPEC_Braintree_Helpers;
+
 			self::includes();
 			self::add_actions();
 			self::add_filters();
 		}
 		return self::$instance;
 	}
-	
+
 	public static function includes() {
 		require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/sdk/lib/Braintree.php' );
 	}

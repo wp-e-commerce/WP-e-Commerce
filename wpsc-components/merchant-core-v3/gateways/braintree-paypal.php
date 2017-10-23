@@ -29,7 +29,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		// Tev2 fields
 		add_filter( 'wpsc_default_credit_card_form_fields_braintree-paypal', array( $this, 'tev2_checkout_fields' ), 10, 2 );
 	}
-	
+
 	public function tev2_checkout_fields( $fields, $name ) {
 		$fields = array();
 
