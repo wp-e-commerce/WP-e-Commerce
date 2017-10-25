@@ -203,7 +203,7 @@ class WPEC_Braintree_Helpers {
 
 	public function show_connect_button() {
 		$output = '';
-		if ( self::get_instance()->bt_auth_is_connected() ) {
+		if ( self::get_instance()->bt_auth_can_connect() ) {
 			$connect_url = ! self::get_instance()->bt_auth_is_connected() ? self::wpec_bt_auth_get_connect_url() : self::wpec_bt_auth_get_disconnect_url();
 			$button_image_url = WPSC_MERCHANT_V3_SDKS_URL . '/pp-braintree/sdk/images/connect-braintree.png';
 			$output .= '<tr class="btpp-braintree-auth">
