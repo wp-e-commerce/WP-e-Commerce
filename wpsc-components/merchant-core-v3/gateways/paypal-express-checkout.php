@@ -43,7 +43,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				'incontext'        => (bool) $this->setting->get( 'incontext', '1' ),
 				'shortcut'         => (bool) $this->setting->get( 'shortcut' , '1' ),
 				'credit'           => (bool) $this->setting->get( 'credit' , '1' ),
-				'credit-banner'    => (bool) $this->setting->get( 'credit-banner', '0' )
+				'credit-banners'   => $this->setting->get( 'credit-banners' , 'disabled' ),
 			) );
 
 			// Express Checkout Button
@@ -60,21 +60,43 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			if ( (bool) $this->setting->get( 'credit' ) ) {
 				add_action( 'wpsc_gateway_v2_inside_gateway_label', array( $this, 'add_credit_button_tev1' ) );
 				add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_credit_button' ), 1, 2 );
-				
-				if ( (bool) $this->setting->get( 'credit-banner' ) ) {
-					add_action( 'wpsc_before_form_of_shopping_cart' , array( $this, 'show_credit_banner' ) );
-				}
-				
-			}
 
+				if ( 'disabled' != $this->setting->get( 'credit-banners' ) ) {
+					// Credit Banner locations
+					if ( 'checkout' == $this->setting->get( 'credit-banners' ) ) {
+						add_action( 'wpsc_before_form_of_shopping_cart' , array( $this, 'show_credit_banner_checkout' ) );
+						add_action( 'wpsc_cart_item_table_tfoot' , array( $this, 'show_credit_banner_checkout' ) );
+					}
+					if ( 'products' == $this->setting->get( 'credit-banners' ) ) {
+						add_action( 'wpsc_top_of_products_page', array( $this, 'show_credit_banner_products' ) );
+						add_action( 'wpsc_get_template_part_main-store', array( $this, 'show_credit_banner_products' ) );
+					}
+					if ( 'all' == $this->setting->get( 'credit-banners' ) ) {
+						// Tev1 hooks
+						add_action( 'wpsc_top_of_products_page', array( $this, 'show_credit_banner_products' ) );
+						add_action( 'wpsc_before_form_of_shopping_cart' , array( $this, 'show_credit_banner_checkout' ) );
+						// Tev2 hooks
+						add_action( 'wpsc_get_template_part_main-store', array( $this, 'show_credit_banner_products' ) );
+						add_action( 'wpsc_cart_item_table_tfoot' , array( $this, 'show_credit_banner_checkout' ) );
+					}
+				}
+			}
 		}
 	}
-	
-	public function show_credit_banner() {
-		echo '<div class="wpsc-paypal-credit-banner">';
-		echo '<script type="text/javascript" data-pp-payerid="DTH9KXN7USFL6" data-pp-placementtype="728x90" data-pp-style="BLUWHTYMED">
-		 (function (d, t) {"use strict";var s = d.getElementsByTagName(t)[0], n = d.createElement(t);n.src = "//www.paypalobjects.com/upstream/bizcomponents/js/merchant.js";s.parentNode.insertBefore(n, s);}(document, "script"));
-		</script>';
+
+	public function show_credit_banner_products() {
+		echo '<div class="wpsc-paypal-products-credit-banner">';
+		echo '<script type="text/javascript" data-pp-payerid="DTH9KXN7USFL6" data-pp-placementtype="728x90" data-pp-style="BLUWHTYLRG">
+			 (function (d, t) {"use strict";var s = d.getElementsByTagName(t)[0], n = d.createElement(t);n.src = "//www.paypalobjects.com/upstream/bizcomponents/js/merchant.js";s.parentNode.insertBefore(n, s);}(document, "script"));
+			</script>';
+		echo '</div>';
+	}
+
+	public function show_credit_banner_checkout() {
+		echo '<div class="wpsc-paypal-checkout-credit-banner">';
+		echo '<script type="text/javascript" data-pp-payerid="DTH9KXN7USFL6" data-pp-placementtype="728x90" data-pp-style="BLUWHTYLRG">
+			 (function (d, t) {"use strict";var s = d.getElementsByTagName(t)[0], n = d.createElement(t);n.src = "//www.paypalobjects.com/upstream/bizcomponents/js/merchant.js";s.parentNode.insertBefore(n, s);}(document, "script"));
+			</script>';
 		echo '</div>';
 	}
 
@@ -87,7 +109,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	}
 
 	public function incontext_load_scripts() {
-
 		$is_cart = wpsc_is_theme_engine( '1.0' ) ? wpsc_is_checkout() : ( wpsc_is_checkout() || wpsc_is_cart() );
 
 		if ( $is_cart && wpsc_is_gateway_active( 'paypal-express-checkout' ) ) {
@@ -315,7 +336,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		return $sessionid;
 	}
-	
+
 	/**
 	 * Return Customer to Review Order Page if there are Shipping Costs.
 	 *
@@ -1026,7 +1047,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 </tr>
 <tr>
 	<td>
-		<label for="wpsc-paypal-express-cart-border"><?php _e( 'Enable PayPal Credit', 'wp-e-commerce' ); ?></label>
+		<label for="wpsc-paypal-express-credit"><?php _e( 'Enable PayPal Credit', 'wp-e-commerce' ); ?></label>
 	</td>
 	<td>
 		<label><input <?php checked( $this->setting->get( 'credit', '1' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
@@ -1035,11 +1056,15 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 </tr>
 <tr>
 	<td>
-		<label for="wpsc-paypal-express-cart-border"><?php _e( 'Enable PayPal Credit Banner', 'wp-e-commerce' ); ?></label>
+		<label for="wpsc-paypal-express-credit-banners"><?php _e( 'Enable PayPal Credit Banners', 'wp-e-commerce' ); ?></label>
 	</td>
 	<td>
-		<label><input <?php checked( $this->setting->get( 'credit-banner', '1' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit-banner' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
-		<label><input <?php checked( (bool) $this->setting->get( 'credit-banner', '1' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit-banner' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
+		<select id="wpsc-paypal-express-credit-banner-location" name="<?php echo esc_attr( $this->setting->get_field_name( 'credit-banners' ) ); ?>">
+			<option value='disabled' <?php selected( 'disabled', $this->setting->get( 'credit-banners' ) ); ?>><?php _e( 'Disabled', 'wp-e-commerce' )?></option>
+			<option value='products' <?php selected( 'products', $this->setting->get( 'credit-banners' ) ); ?>><?php _e( 'Show on Products page', 'wp-e-commerce' )?></option>
+			<option value='checkout' <?php selected( 'checkout', $this->setting->get( 'credit-banners' ) ); ?>><?php _e( 'Show on Checkout page', 'wp-e-commerce' )?></option>
+			<option value='all' <?php selected( 'all', $this->setting->get( 'credit-banners' ) ); ?>><?php _e( 'Products and Checkout pages', 'wp-e-commerce' )?></option>
+		</select>
 	</td>
 </tr>
 <!-- Currency Conversion -->
