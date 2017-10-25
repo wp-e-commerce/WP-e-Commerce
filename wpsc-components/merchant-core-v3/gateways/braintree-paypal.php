@@ -67,7 +67,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 	public function process() {
 		global $braintree_settings;
 
-		WPEC_Braintree_Helpers::setBraintreeConfiguration('braintree-paypal');
+		$this->helpers->setBraintreeConfiguration('braintree-paypal');
 
 		$order = $this->purchase_log;
 		$payment_method_nonce = $_POST['pp_btree_method_nonce'];
