@@ -11,7 +11,10 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway {
 		$this->title = __( 'Manual Payment Gateway 3.0', 'wp-e-commerce' );
 
 		parent::__construct();
-}
+
+		add_filter( 'wpsc_purchase_log_customer_notification_raw_message', array( $this, 'filter_message' ), 10, 2 );
+		add_filter( 'wpsc_purchase_log_customer_html_notification_raw_message', array( $this, 'filter_message' ), 10, 2 );
+	}
 
 	/**
 	 * Displays the setup form
@@ -43,5 +46,24 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway {
 	public function process() {
 		$this->purchase_log->set( 'processed', WPSC_PAYMENT_STATUS_RECEIVED )->save();
 		$this->go_to_transaction_results();
+	}
+
+	/**
+	 * Filter the customer notification emails
+	 *
+	 * @access public
+	 * @since 4.0
+	 * @uses WPSC_Payment_Gateway_Setting::get()
+	 *
+	 * @return array $message Modified message with extra instructions from gateway settings
+	 */	
+	public function filter_message( $message, $notification ) {
+		$purchase_log = $notification->get_purchase_log();
+
+		if ( $purchase_log->get('gateway') == 'manual' ) {
+			$message = $this->setting->get( 'payment_instructions' ) . "\r\n\r\n" . $message;
+		}
+
+		return $message;
 	}
 }
