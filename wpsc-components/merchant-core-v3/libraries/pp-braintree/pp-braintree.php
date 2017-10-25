@@ -11,12 +11,16 @@ class WPEC_Braintree_Helpers {
 
 	public static function get_instance() {
 		if  ( ! isset( self::$instance ) && ! ( self::$instance instanceof WPEC_Braintree_Helpers ) ) {
-			self::$instance = new WPEC_Braintree_Helpers;
+			if( version_compare( phpversion(), '5.4', '<' ) ) {
+				return;
+			} else {
+				self::$instance = new WPEC_Braintree_Helpers;
 
-			self::deactivate_plugins();
-			self::includes();
-			self::add_actions();
-			self::add_filters();
+				self::deactivate_plugins();
+				self::includes();
+				self::add_actions();
+				self::add_filters();
+			}
 		}
 		return self::$instance;
 	}
@@ -32,13 +36,7 @@ class WPEC_Braintree_Helpers {
 	}
 
 	public static function includes() {
-
-		try {
-			require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/sdk/lib/Braintree.php' );
-		} catch (Braintree_Exception $e) {
-			return;
-		}
-
+		require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/sdk/lib/Braintree.php' );
 	}
 
 	public static function add_actions() {
