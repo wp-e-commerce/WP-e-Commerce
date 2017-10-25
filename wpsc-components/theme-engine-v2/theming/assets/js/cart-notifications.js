@@ -579,6 +579,7 @@ module.exports = function (args, $id, log) {
 
 				// Update quantity.
 				model.set('quantity', qty);
+				model.sync('update', model);
 
 				this.setTotal();
 			} else {
