@@ -235,7 +235,7 @@ final class WPSC_Payment_Gateways {
 		$classname = ucwords( str_replace( '-', ' ', $filename ) );
 		$classname = 'WPSC_Payment_Gateway_' . str_replace( ' ', '_', $classname );
 
-		if ( file_exists( $file ) ) {
+		if ( file_exists( $file ) && ! class_exists( $classname ) ) {
 			require_once $file;
 		}
 

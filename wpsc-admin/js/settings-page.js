@@ -990,7 +990,7 @@
 					action    : 'sync_shipwire_products',
 					email     : $('input[name="wpsc_options[shipwireemail]"]').val(),
 					password  : $('input[name="wpsc_options[shipwirepassword]"]').val(),
-					server    : $('input[name="wpsc_options[shipwire_test_server]"]').val(),
+					server    : $('input[name="wpsc_options[shipwire_test_server]"]:checked').val(),
 					nonce     : WPSC_Settings_Page.shipping_module_settings_form_nonce
 				},
 				ajax_callback = function(response) {

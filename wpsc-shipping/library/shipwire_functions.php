@@ -60,11 +60,6 @@ class WPSC_Shipwire {
 		if ( ! self::is_active() )
 			return;
 
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			self::set_posted_properties();
-
-		}
-
 		add_action( 'wpsc_update_purchase_log_status', array( $this, 'shipwire_on_checkout' ), 10, 3 );
 
 		//Hooks into ajax handler for Inventory Sync and Tracking API.  Handler is run upon clicking "Update Tracking and Inventory" in Shipping Settings
@@ -73,6 +68,7 @@ class WPSC_Shipwire {
 	}
 
 	private static function set_posted_properties() {
+
 		if ( isset( $_POST['email'] ) )
 			self::$email = sanitize_email( $_POST['email'] );
 
@@ -92,7 +88,7 @@ class WPSC_Shipwire {
 	 * @return boolean
 	 */
 	public static function is_active() {
-		return ( (bool) get_option( 'shipwire' ) && function_exists( 'simplexml_load_string' ) ) || isset( $_POST['server'] );
+		return (bool) get_option( 'shipwire' ) && function_exists( 'simplexml_load_string' );
 	}
 
 	/**
