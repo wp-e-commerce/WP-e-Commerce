@@ -3,8 +3,8 @@ Contributors: JustinSainton
 Donate link: https://wpecommerce.org
 Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 4.5
-Tested up to: 4.8.2
-Stable tag: 3.12.4
+Tested up to: 4.9
+Stable tag: 3.13.0
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,6 +35,13 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.13.0 [2017-10-25] =
+
+* New: Now including PayPal's Braintree payment gateway by default.
+* Fix: Various PHP notices related to custom taxonomies have been resolved.
+* Fix: Edge cases where shipping methods could be disabled, caused by poorly written Shipwire code, have been resolved.
+* Fix: Custom instructions in 3.0 Manual Gateway are now included in the receipt page and emails.
 
 = 3.12.4 [2017-9-23] =
 
