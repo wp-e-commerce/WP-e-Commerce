@@ -460,6 +460,8 @@ abstract class WPSC_Payment_Gateway {
 	public $currency_code;
 
 	public $title;
+	
+	public $description;
 
 	/**
 	 * Supported features such as 'default_credit_card_form', 'refunds'.
@@ -604,9 +606,21 @@ abstract class WPSC_Payment_Gateway {
 		return apply_filters( 'wpsc_payment_gateway_title', $title );
 	}
 
+	/**
+	 * Return the description of the payment gateway. For this to work, $this->description must
+	 * be set already.
+	 *
+	 * It is recommended that the payment gateway description be properly localized using __()
+	 *
+	 * @access public
+	 * @since 4.0.0
+	 * @see __()
+	 *
+	 * @return string
+	 */
 	public function get_description() {
-		$title = empty( $this->description ) ? '' : $this->description;
-		return apply_filters( 'wpsc_payment_gateway_title', $title );
+		$description = empty( $this->description ) ? '' : $this->description;
+		return apply_filters( 'wpsc_payment_gateway_description', $description );
 	}
 	
 	/**
