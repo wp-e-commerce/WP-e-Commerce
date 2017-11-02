@@ -64,6 +64,7 @@ class WPSC_Payment_Gateway_Pro_Pay extends WPSC_Payment_Gateway {
 		parent::__construct();
 
 		$this->title    = __( 'ProPay (TSYS) Payment Gateway', 'wp-e-commerce' );
+		$this->description = __( 'ProPay - Low Payment Processing Pricing- Live Customer Support', 'wp-e-commerce' );
 		$this->supports = array( 'tev1', 'refunds', 'partial-refunds', 'auth-capture' );
 
 		// Define user set variables

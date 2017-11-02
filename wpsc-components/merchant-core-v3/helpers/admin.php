@@ -11,6 +11,7 @@ function _wpsc_merchant_v3_settings_get_gateways( $gateways ) {
 		$gateways[] = array(
 			'id'   => $gateway,
 			'name' => $meta['name'],
+			'desc' => $meta['description'],
 		);
 	}
 

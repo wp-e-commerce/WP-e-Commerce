@@ -113,6 +113,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 				</th>
 				<td class="plugin-title">
 					<label for='<?php echo esc_attr( $gateway['id'] ); ?>_id'><strong><?php echo esc_html( $gateway['name'] ); ?></strong></label>
+					<label for='<?php echo esc_attr( $gateway['id'] ); ?>_id'><em><?php echo esc_html( $gateway['desc'] ); ?></em></label>
 					<div class="row-actions-visible">
 						<span class="edit">
 							<a class='edit-payment-module' title="<?php esc_attr_e( "Edit this Payment Gateway's Settings", 'wp-e-commerce' ) ?>" href='<?php echo esc_url( $this->get_gateway_settings_url( $gateway['id'] ) ); ?>'><?php esc_html_e( 'Settings', 'wp-e-commerce' ); ?></a>

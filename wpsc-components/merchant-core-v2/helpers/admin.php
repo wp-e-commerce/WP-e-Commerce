@@ -10,9 +10,14 @@ function _wpsc_filter_merchant_v2_get_gateways( $gateways ) {
 		        ? $gateway['name']
 		        : $gateway['admin_name'];
 
+		$desc = ! empty( $gateway['description'] )
+		        ? $gateway['description']
+		        : '';
+
 		$gateways[] = array(
 			'id' => $gateway['internalname'],
 			'name' => $name,
+			'desc' => $desc,
 		);
 	}
 

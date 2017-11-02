@@ -260,6 +260,7 @@ final class WPSC_Payment_Gateways {
 		}
 
 		$meta['name']  = $gateway->get_title();
+		$meta['description'] = $gateway->get_description();
 		$meta['image'] = $gateway->get_image_url();
 		$meta['mark']  = $gateway->get_mark_html();
 
@@ -603,6 +604,11 @@ abstract class WPSC_Payment_Gateway {
 		return apply_filters( 'wpsc_payment_gateway_title', $title );
 	}
 
+	public function get_description() {
+		$title = empty( $this->description ) ? '' : $this->description;
+		return apply_filters( 'wpsc_payment_gateway_title', $title );
+	}
+	
 	/**
 	 * Display the payment gateway settings form as seen in WP eCommerce Settings area.
 	 * This method must be overridden by subclasses.
