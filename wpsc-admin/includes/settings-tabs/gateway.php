@@ -106,7 +106,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		$display_name = isset( $payment_gateway_names[ $gateway['id'] ] ) ? $payment_gateway_names[ $gateway['id'] ] : '' ;
 		$gateway_data = false;
 		?>
-			<tr class="wpsc-select-gateway <?php echo $active; ?>" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" id="gateway_list_item_<?php echo $gateway['id'];?>">
+			<tr class="wpsc-select-gateway <?php echo $active; ?>" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" data-order="<?php echo esc_attr( $gateway['order'] ); ?>" id="gateway_list_item_<?php echo $gateway['id'];?>">
 				<th scope="row" class="check-column">
 					<label class="screen-reader-text" for="<?php echo esc_attr( $gateway['id'] ); ?>_id"><?php _e( "Select", 'wp-e-commerce' ); ?> <?php echo esc_html( $gateway['name'] ); ?></label>
 					<input name='wpsc_options[custom_gateway_options][]' <?php checked( $checked ); ?> type='checkbox' value='<?php echo esc_attr( $gateway['id'] ); ?>' id='<?php echo esc_attr( $gateway['id'] ); ?>_id' />
@@ -160,8 +160,11 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 	 * @return bool       True if $b should be ordered after $a based on its name.
 	 */
 	private function gateway_usort_callback( $a, $b ) {
-		return $a['name'] > $b['name'];
-	}
+        if ( $a['order'] == $b['order'] ) {
+            return strcmp( $a['name'], $b['name'] );
+        }
+        return $a['order'] - $b['order'];
+    }
 
 	public function callback_submit_options() {
 		do_action( 'wpsc_submit_gateway_options' );

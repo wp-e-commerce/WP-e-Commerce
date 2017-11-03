@@ -6,18 +6,15 @@ function _wpsc_filter_merchant_v2_get_gateways( $gateways ) {
 	global $nzshpcrt_gateways;
 
 	foreach ( $nzshpcrt_gateways as $gateway ) {
-		$name =   empty( $gateway['admin_name'] )
-		        ? $gateway['name']
-		        : $gateway['admin_name'];
-
-		$desc = ! empty( $gateway['description'] )
-		        ? $gateway['description']
-		        : '';
+		$name =   empty( $gateway['admin_name'] ) ? $gateway['name'] : $gateway['admin_name'];
+		$desc = ! empty( $gateway['description'] ) ? $gateway['description'] : '';
+		$order = ! empty( $gateway['order'] ) ? $gateway['order'] : 10;
 
 		$gateways[] = array(
-			'id' => $gateway['internalname'],
-			'name' => $name,
-			'desc' => $desc,
+			'id'    => $gateway['internalname'],
+			'name'  => $name,
+			'desc'  => $desc,
+			'order' => $order,
 		);
 	}
 
