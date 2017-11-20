@@ -260,6 +260,8 @@ final class WPSC_Payment_Gateways {
 		}
 
 		$meta['name']  = $gateway->get_title();
+		$meta['description'] = $gateway->get_description();
+		$meta['order'] = $gateway->get_order();
 		$meta['image'] = $gateway->get_image_url();
 		$meta['mark']  = $gateway->get_mark_html();
 
@@ -459,6 +461,10 @@ abstract class WPSC_Payment_Gateway {
 	public $currency_code;
 
 	public $title;
+	
+	public $description;
+	
+	public $order;
 
 	/**
 	 * Supported features such as 'default_credit_card_form', 'refunds'.
@@ -602,6 +608,37 @@ abstract class WPSC_Payment_Gateway {
 		$title = empty( $this->title ) ? '' : $this->title;
 		return apply_filters( 'wpsc_payment_gateway_title', $title );
 	}
+
+	/**
+	 * Return the description of the payment gateway. For this to work, $this->description must
+	 * be set already.
+	 *
+	 * It is recommended that the payment gateway description be properly localized using __()
+	 *
+	 * @access public
+	 * @since 4.0.0
+	 * @see __()
+	 *
+	 * @return string
+	 */
+	public function get_description() {
+		$description = empty( $this->description ) ? '' : $this->description;
+		return apply_filters( 'wpsc_payment_gateway_description', $description );
+	}
+
+	/**
+	 * Return the order of the payment gateway. For this to work, $this->order must
+	 * be set already.
+	 *
+	 * @access public
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public function get_order() {
+		$order = empty( $this->order ) ? 10 : $this->order;
+		return apply_filters( 'wpsc_payment_gateway_order', $order );
+	}	
 
 	/**
 	 * Display the payment gateway settings form as seen in WP eCommerce Settings area.
