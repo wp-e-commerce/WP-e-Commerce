@@ -53,7 +53,7 @@ class WPEC_Braintree_Helpers {
 		add_filter( 'wpsc_gateway_name', array( self::$instance, 'tev1_custom_gateway_name'), 10, 2 );
 	}
 
-	public function init() {
+	public static function init() {
 
 		// Add hidden field to hold token value Tev1
 		add_action( 'wpsc_inside_shopping_cart', array( self::$instance, 'te_v1_insert_hidden_field' ) );
