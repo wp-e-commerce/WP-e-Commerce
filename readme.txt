@@ -3,8 +3,8 @@ Contributors: JustinSainton
 Donate link: https://wpecommerce.org
 Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 4.5
-Tested up to: 4.7.2
-Stable tag: 3.12.0
+Tested up to: 4.9
+Stable tag: 3.13.2
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -13,14 +13,14 @@ WP eCommerce is a free, powerful plugin that empowers you to sell anything onlin
 Since 2006, we've been helping entrepreneurs just like you realize their goal of selling online.  Whether you're hoping to sell digital downloads, physical inventory, or subscriptions and memberships - with WP eCommerce, you're only minutes away from your next sale.
 
  * Make the plugin your own with CSS and HTML customizations
- * Learn quickly with our [video tutorials](http://docs.wpecommerce.org/category/resources/videos/)
- * Integration with [dozens of different payment gateways](http://wpecommerce.org/store/premium-plugins/)
+ * Learn quickly with our [video tutorials](http://docs.wpecommerce.org/category/video-tutorials/)
+ * Integration with [dozens of different payment gateways](https://wpecommerce.org/store/)
  * Integrate with many popular WordPress plugins
  * Use built-in marketing tools to sell more
  * Shipping is easy with built in shipping tools and integration with popular couriers
  * Secure check-out with SSL
  * Manage your orders and catalogues with powerful built-in tools
- * Extend your eCommerce site with [additional modules](http://wpecommerce.org/store/premium-plugins/)
+ * Extend your eCommerce site with [additional modules](https://wpecommerce.org/store/)
  * Integrate with WordPress multisite
  * With hundreds of available hooks, developers can make WP eCommerce do anything you can imagine
 
@@ -35,6 +35,45 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.13.2 [2017-11-20] =
+
+* Enhancement: Add options for PayPal Credit banners.
+* Enhancement: Improve Payment Gateway API, allowing for admin gateway descriptions and improved ordering mechanisms.
+* Fix: Ensure that Braintree hidden fields show up early enough for JS integration.
+
+= 3.13.1 [2017-10-25] =
+
+* Fix: Fatal errors in Braintree gateway below PHP 7.0.
+
+= 3.13.0 [2017-10-25] =
+
+* New: Now including PayPal's Braintree payment gateway by default.
+* Fix: Various PHP notices related to custom taxonomies have been resolved.
+* Fix: Edge cases where shipping methods could be disabled, caused by poorly written Shipwire code, have been resolved.
+* Fix: Custom instructions in 3.0 Manual Gateway are now included in the receipt page and emails.
+
+= 3.12.4 [2017-9-23] =
+
+* Fix: Disable Theme Engine V2 by default. (Not yet released)
+
+= 3.12.3 [2017-9-16] =
+
+* Fix: When using the Capture workflow on a previously Authorized transaction and it failed the wrong error message was returned.
+* Fix: When using the Refund feature and doing a full refund the correct ajax response will be returned.
+* Fix: When an order has been fully refunded doesn't show the Refund button anymore.
+* Enhancement: Updated pot file.
+* Enhancement: Payment Gateway API can use default credit card fields for Theme Engine 1.0 and they can be filtered too.
+* Enhancement: Several Theme Engine 2.0 style changes.
+
+= 3.12.2 [2017-3-25] =
+
+* Enhancement: Default PayPal Credit to On, and ensure it is functional for our 1.0 theme engine.
+
+= 3.12.1 [2017-3-24] =
+
+* New: Addition of PayPal Credit to PayPal Express Checkout.
+* Fix: Ensure WPEC works via WP-CLI.
 
 = 3.12.0 [2017-2-17] =
 
@@ -884,7 +923,7 @@ For advanced users, all of our eCommerce templates and CSS can be moved into you
 
 = What payment gateways does WP eCommerce integrate with? =
 
-Our [Gold Cart plugin](https://wpecommerce.org/store/premium-plugins/gold-cart/) contains nearly a dozen payment gateway options, including Authorize.net, LinkPoint and DPS.  Our [Mirijeh integration plugin](https://wpecommerce.org/store/premium-plugins/mijireh-99-payment-gateways-pack/) provides access to nearly one hundred different gateway options.  Beyond that, we have individual integration plugins for [Braintree](https://wpecommerce.org/store/premium-plugins/braintree-payment-gateway/), [Stripe](https://wpecommerce.org/store/premium-plugins/stripe/), [Authorize.net SIM](https://wpecommerce.org/store/premium-plugins/authorize-net-sim-payment-gateway-for-wordpress/) and more.
+Our [Gold Cart plugin](https://wpecommerce.org/store/premium-plugins/gold-cart/) contains nearly a dozen payment gateway options, including Authorize.net, LinkPoint and DPS.  Our [Mirijeh integration plugin](https://wpecommerce.org/store/premium-plugins/mijireh-99-payment-gateways-pack/) provides access to nearly one hundred different gateway options.  Beyond that, we have individual integration plugins for [Braintree](https://wpecommerce.org/store/product/paypal-powered-by-braintree/), [Stripe](https://wpecommerce.org/store/premium-plugins/stripe/), [Authorize.net SIM](https://wpecommerce.org/store/premium-plugins/authorize-net-sim-payment-gateway-for-wordpress/) and more.
 
 = I want to integrate a payment gateway that you don't support. Can you help with that? =
 
@@ -894,7 +933,7 @@ Absolutely!  We have a [growing list of trusted consultants](https://wpecommerce
 
 We have table rate, weight rate and flat rate shipping calculators.
 
-We also currently integrate with UPS, USPS, Australia Post and Shipwire for real-time shipping rates.  We have a premium plugin for [FedEx](https://wpecommerce.org/store/premium-plugins/fedex-shipping-module/) as well.
+We also currently integrate with UPS, USPS, Australia Post and Shipwire for real-time shipping rates.  We have a premium plugin for [FedEx](https://wpecommerce.org/store/product/fedex-shipping-module/) as well.
 
 = Which multi-lingual plugins is WP eCommerce compatible with? =
 
@@ -904,12 +943,13 @@ We currently provide basic support for WPML and qTranslate.  We're excited about
 
 * [Gold Cart](https://wpecommerce.org/store/premium-plugins/gold-cart/) - adds more options, gateways and functionality to your store
 * [MP3 Audio Player](https://wpecommerce.org/store/premium-plugins/mp3-player-plugin/) - Preview audio clips on your website
-* [NextGen Gallery Buy Now Buttons](https://wpecommerce.org/store/premium-plugins/nextgen-gallery-buy-now-buttons/) - turns your NextGen gallery into an eCommerce solution
-* [Members Plugin](https://wpecommerce.org/store/premium-plugins/membership-subscriptions/) - Integrates with PayPal Standard and Authorize.Net, allows you to create a Subscription-Based Product, as well as a "Members-Only" website with paid access to restricted content.
+* [Members Plugin](https://wpecommerce.org/store/product/membership-subscriptions/) - Integrates with PayPal Standard and Authorize.Net, allows you to create a Subscription-Based Product, as well as a "Members-Only" website with paid access to restricted content.
 
 = How do you provide support? =
 
-For users who have purchased a premium plugin from us (or a have purchased a [premium support token](https://wpecommerce.org/store/premium-plugins/premium-support-token/)), we offer high-touch, 1-on-1 support from our trained support staff.  If you submit a support request here, you'll get a helpful response within 24 hours or less (during business hours).
+Each Addon comes with a license key that you can use to receive high-touch, 1-on-1 support from our trained support staff for any issues related to the addon in question. If you submit a support request here, you'll get a helpful response within 24 hours or less (during business hours).
+
+You can also receive premium support for general WP eCommerce issue if you purchase and have a valid Premium Support subscription (https://wpecommerce.org/premium-support-pricing/)
 
 For the rest of our users, we do our best to monitor the WordPress.org support forums and respond in as timely a manner as we are able.  We appreciate the countless helpful volunteers who also take time to respond to forum posts here.
 

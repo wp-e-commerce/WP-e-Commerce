@@ -1,6 +1,6 @@
 <?php
 class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
-	
+
 	public function __construct() {
 		require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/pp-braintree.php' );
 		parent::__construct();
@@ -14,14 +14,18 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 		// Define user set variables
 	}
 
+	public function load() {
+		return version_compare( PHP_VERSION, '5.4.0', '>=' );
+	}
+
 	public function init() {
 		parent::init();
 
 		// Disable if not setup using BT Auth
-		if ( ! $this->helpers::is_gateway_setup( 'braintree-credit-cards' ) ) {
+		if ( ! $this->helpers->is_gateway_setup( 'braintree-credit-cards' ) ) {
 			// Remove gateway if its not setup properly
 			add_filter( 'wpsc_get_active_gateways', array( $this, 'remove_gateways' ) );
-			add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ), 999 );			
+			add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ), 999 );
 		}
 
 		// Tev1 fields
@@ -82,7 +86,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 
 		return $fields;
 	}
-	
+
 	public function tev1_checkout_fields_extra( $name ) {
 		$output = '';
 
@@ -98,7 +102,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 				  </div>
 			</div>';
 
-		echo $output;		
+		echo $output;
 	}
 
 	public function process() {
@@ -132,7 +136,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 			$error = __( '3D Secure verification failed.', 'wp-e-commerce' );
 			$order->set( 'processed', WPSC_Purchase_Log::INCOMPLETE_SALE )->save();
 			$order->add_note( $error );
-			$this->helpers::set_payment_error_message( $error );
+			$this->helpers->set_payment_error_message( $error );
 			wp_safe_redirect( $this->get_shopping_cart_payment_url() );
 		}
 
@@ -183,14 +187,14 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 			'deviceData' => $kount_fraud,
 		);
 
-		if ( $this->helpers::bt_auth_is_connected() ) {
+		if ( $this->helpers->bt_auth_is_connected() ) {
 			$acc_token = get_option( 'wpec_braintree_auth_access_token' );
 			$gateway = new Braintree_Gateway( array(
 				'accessToken' => $acc_token,
 			));
 			$result = $gateway->transaction()->sale( $params );
 		} else {
-			$this->helpers::setBraintreeConfiguration();
+			$this->helpers->setBraintreeConfiguration();
 			$result = Braintree_Transaction::sale( $params );
 		}
 
@@ -210,13 +214,13 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 		} else {
 			if ( $result->transaction ) {
 				$order->set( 'processed', WPSC_Purchase_Log::INCOMPLETE_SALE )->save();
-				$error = $this->helpers::get_failure_status_info( $result, 'message' );
-				$this->helpers::set_payment_error_message( $error );
+				$error = $this->helpers->get_failure_status_info( $result, 'message' );
+				$this->helpers->set_payment_error_message( $error );
 				wp_safe_redirect( $this->get_shopping_cart_payment_url() );
 			} else {
 				$error = "Payment Error: " . $result->message;
 
-				$this->helpers::set_payment_error_message( $error );
+				$this->helpers->set_payment_error_message( $error );
 				wp_safe_redirect( $this->get_shopping_cart_payment_url() );
 			}
 		}
@@ -227,7 +231,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 		$pp_3ds_risk = $this->setting->get( 'three_d_secure_risk' ) != false ? $this->setting->get( 'three_d_secure_risk' ) : 'standard' ;
 		$auth_3ds = false;
 
-		if ( $this->helpers::bt_auth_can_connect() && $this->helpers::bt_auth_is_connected() ) {
+		if ( $this->helpers->bt_auth_can_connect() && $this->helpers->bt_auth_is_connected() ) {
 			$acc_token = get_option( 'wpec_braintree_auth_access_token' );
 
 			$gateway = new Braintree_Gateway( array(
@@ -292,7 +296,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 			$transaction_id = $log->get( 'transactid' );
 			$log->get( 'totalprice' );
 
-			if ( $this->helpers::bt_auth_can_connect() && $this->helpers::bt_auth_is_connected() ) {
+			if ( $this->helpers->bt_auth_can_connect() && $this->helpers->bt_auth_is_connected() ) {
 				$acc_token = get_option( 'wpec_braintree_auth_access_token' );
 
 				$gateway = new Braintree_Gateway( array(
@@ -300,7 +304,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 				));
 				$result = $gateway->transaction()->submitForSettlement( $transaction_id );
 			} else {
-				$this->helpers::setBraintreeConfiguration();
+				$this->helpers->setBraintreeConfiguration();
 				$result = Braintree_Transaction::submitForSettlement( $transaction_id );
 			}
 
@@ -324,7 +328,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 				// Process a Void on the Authorization
 				$transaction_id = $log->get( 'transactid' );
 
-				if ( $this->helpers::bt_auth_can_connect() && $this->helpers::bt_auth_is_connected() ) {
+				if ( $this->helpers->bt_auth_can_connect() && $this->helpers->bt_auth_is_connected() ) {
 					$acc_token = get_option( 'wpec_braintree_auth_access_token' );
 
 					$gateway = new Braintree_Gateway( array(
@@ -332,7 +336,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 					));
 					$result = $gateway->transaction()->void( $transaction_id );
 				} else {
-					$this->helpers::setBraintreeConfiguration();
+					$this->helpers->setBraintreeConfiguration();
 					$result = Braintree_Transaction::void( $transaction_id );
 				}
 
@@ -385,7 +389,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 
 			$transaction_id = $log->get( 'transactid' );
 
-			if ( $this->helpers::bt_auth_can_connect() && $this->helpers::bt_auth_is_connected() ) {
+			if ( $this->helpers->bt_auth_can_connect() && $this->helpers->bt_auth_is_connected() ) {
 				$acc_token = get_option( 'wpec_braintree_auth_access_token' );
 
 				$gateway = new Braintree_Gateway( array(
@@ -393,12 +397,12 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 				));
 				$result = $gateway->transaction()->refund( $transaction_id );
 			} else {
-				$this->helpers::setBraintreeConfiguration();
+				$this->helpers->setBraintreeConfiguration();
 				$result = Braintree_Transaction::refund( $transaction_id );
 			}
 
 			if ( $result->success ) {
-				
+
 				$current_refund = $log->get_total_refunded();
 
 				// Set a log meta entry, and save log before adding refund note.
@@ -411,7 +415,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 			}
 		}
 
-		return false;		
+		return false;
 	}
 
 	public function manual_credentials( $hide = false ) {
@@ -458,11 +462,11 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 		</tr>
 	<?php
 	}
-	
-	
+
+
 	public function setup_form() {
-		if ( $this->helpers::bt_auth_can_connect() ) {
-			echo $this->helpers::show_connect_button();
+		if ( $this->helpers->bt_auth_can_connect() ) {
+			echo $this->helpers->show_connect_button();
 		} else {
 			$this->manual_credentials(true);
 		}
@@ -487,7 +491,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 			<td colspan="2">
 				<h4><?php _e( '3D Secure Settings', 'wp-e-commerce' ); ?></h4>
 			</td>
-		</tr>		
+		</tr>
 		<tr>
 			<td>
 				<label for="wpsc-worldpay-secure-key"><?php _e( '3D Secure Enabled', 'wp-e-commerce' ); ?></label>
@@ -507,7 +511,7 @@ class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 				<label><input <?php checked( (bool) $this->setting->get( 'three_d_secure_only' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'three_d_secure_only' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 				<p class="description"><?php _e( 'Only transactions that pass 3D Secure verifications are allowed to be processed', 'wpsc' ); ?></p>
 			</td>
-		</tr>		
+		</tr>
 		<tr>
 			<td>
 				<label for="wpsc-worldpay-payment-capture"><?php _e( '3D Secure Risk Settings', 'wp-e-commerce' ); ?></label>

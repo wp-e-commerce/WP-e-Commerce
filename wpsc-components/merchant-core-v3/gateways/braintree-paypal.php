@@ -14,14 +14,18 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		$this->but_shape        = $this->setting->get( 'but_shape' ) !== null ? $this->setting->get( 'but_shape' ) : $this->setting->set( 'but_shape', 'pill' );
 	}
 
+	public function load() {
+		return version_compare( PHP_VERSION, '5.4.0', '>=' );
+	}
+
 	public function init() {
 		parent::init();
 
 		// Disable if not setup using BT Auth
-		if ( ! $this->helpers::is_gateway_setup( 'braintree-paypal' ) ) {
+		if ( ! $this->helpers->is_gateway_setup( 'braintree-paypal' ) ) {
 			// Remove gateway if its not setup properly
 			add_filter( 'wpsc_get_active_gateways', array( $this, 'remove_gateways' ) );
-			add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ), 999 );			
+			add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ), 999 );
 		}
 
 		// Tev1 fields
@@ -63,7 +67,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 	public function process() {
 		global $braintree_settings;
 
-		WPEC_Braintree_Helpers::setBraintreeConfiguration('braintree-paypal');
+		$this->helpers->setBraintreeConfiguration('braintree-paypal');
 
 		$order = $this->purchase_log;
 		$payment_method_nonce = $_POST['pp_btree_method_nonce'];
@@ -111,7 +115,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 			),
 		);
 
-		if ( $this->helpers::bt_auth_is_connected() ) {
+		if ( $this->helpers->bt_auth_is_connected() ) {
 			$acc_token = get_option( 'wpec_braintree_auth_access_token' );
 			$gateway = new Braintree_Gateway( array(
 				'accessToken' => $acc_token,
@@ -119,10 +123,10 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 
 			$result = $gateway->transaction()->sale( $params );
 		} else {
-			$this->helpers::setBraintreeConfiguration('braintree-paypal');
+			$this->helpers->setBraintreeConfiguration('braintree-paypal');
 			$result = Braintree_Transaction::sale( $params );
 		}
-		
+
 		// In theory all error handling should be done on the client side...?
 		if ( $result->success ) {
 			// Payment complete
@@ -132,13 +136,13 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 		} else {
 			if ( $result->transaction ) {
 				$order->set( 'processed', WPSC_Purchase_Log::INCOMPLETE_SALE )->save();
-				$error = $this->helpers::get_failure_status_info( $result, 'message' );
-				$this->helpers::set_payment_error_message( $error );
+				$error = $this->helpers->get_failure_status_info( $result, 'message' );
+				$this->helpers->set_payment_error_message( $error );
 				wp_safe_redirect( $this->get_shopping_cart_payment_url() );
 			} else {
 				$error = "Payment Error: " . $result->message;
 
-				$this->helpers::set_payment_error_message( $error );
+				$this->helpers->set_payment_error_message( $error );
 				wp_safe_redirect( $this->get_shopping_cart_payment_url() );
 			}
 		}
@@ -195,8 +199,8 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 	 * @return string
 	 */
 	public function setup_form() {
-		if ( $this->helpers::bt_auth_can_connect() ) {
-			echo $this->helpers::show_connect_button();
+		if ( $this->helpers->bt_auth_can_connect() ) {
+			echo $this->helpers->show_connect_button();
 		} else {
 			$this->manual_credentials(true);
 		}
@@ -205,7 +209,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 			<td colspan="2">
 				<h4><?php _e( 'Gateway Settings', 'wp-e-commerce' ); ?></h4>
 			</td>
-		</tr>	
+		</tr>
 		<tr>
 			<td>
 				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Size', 'wp-e-commerce' ); ?></label>
@@ -217,7 +221,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 					<option value='responsive' <?php selected( 'responsive', $this->setting->get( 'but_size' ) ); ?>><?php _e( 'Responsive', 'wp-e-commerce' )?></option>
 				</select>
 			</td>
-		</tr>	
+		</tr>
 		<tr>
 			<td>
 				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Colour', 'wp-e-commerce' ); ?></label>
@@ -229,7 +233,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 					<option value='silver' <?php selected( 'silver', $this->setting->get( 'but_colour' ) ); ?>><?php _e( 'Silver', 'wp-e-commerce' )?></option>
 				</select>
 			</td>
-		</tr>		
+		</tr>
 		<tr>
 			<td>
 				<label for="wpsc-worldpay-secure-key"><?php _e( 'Button Shape', 'wp-e-commerce' ); ?></label>
@@ -255,7 +259,7 @@ class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wp-e-commerce' ); ?></label>&nbsp;&nbsp;&nbsp;
 				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wp-e-commerce' ); ?></label>
 			</td>
-		</tr>		
+		</tr>
 	<?php
 	}
 

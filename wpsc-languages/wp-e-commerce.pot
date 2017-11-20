@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the WP eCommerce package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP eCommerce 3.12.0\n"
+"Project-Id-Version: WP eCommerce 3.12.4\n"
 "Report-Msgid-Bugs-To: https://wpecommerce.org/\n"
-"POT-Creation-Date: 2017-09-15 20:25:38+00:00\n"
+"POT-Creation-Date: 2017-10-25 20:35:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -94,10 +94,10 @@ msgstr ""
 #: wpsc-admin/admin-form-functions.php:25 wpsc-admin/display-coupon-add.php:59
 #: wpsc-admin/display-coupon-edit.php:84
 #: wpsc-admin/includes/coupon-list-table-class.php:92
-#: wpsc-admin/includes/settings-tabs/shipping.php:261
-#: wpsc-admin/includes/settings-tabs/shipping.php:267
-#: wpsc-admin/includes/settings-tabs/shipping.php:291
-#: wpsc-admin/includes/settings-tabs/shipping.php:297
+#: wpsc-admin/includes/settings-tabs/shipping.php:264
+#: wpsc-admin/includes/settings-tabs/shipping.php:270
+#: wpsc-admin/includes/settings-tabs/shipping.php:294
+#: wpsc-admin/includes/settings-tabs/shipping.php:300
 msgid "Active"
 msgstr ""
 
@@ -3103,9 +3103,16 @@ msgstr ""
 #: wpsc-admin/includes/settings-tabs/admin.php:66
 #: wpsc-admin/includes/settings-tabs/general.php:140
 #: wpsc-admin/includes/settings-tabs/general.php:227
+#: wpsc-admin/includes/settings-tabs/shipping.php:199
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:199
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:233
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:249
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:455
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:496
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:506
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:533
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:186
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:255
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:632
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:641
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:706
@@ -3158,9 +3165,16 @@ msgstr ""
 #: wpsc-admin/includes/settings-tabs/admin.php:67
 #: wpsc-admin/includes/settings-tabs/general.php:141
 #: wpsc-admin/includes/settings-tabs/general.php:228
+#: wpsc-admin/includes/settings-tabs/shipping.php:200
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:200
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:234
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:250
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:456
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:497
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:507
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:534
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:187
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:256
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:633
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:642
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:707
@@ -3445,8 +3459,8 @@ msgid "Display Name"
 msgstr ""
 
 #: wpsc-admin/includes/settings-tabs/gateway.php:94
-#: wpsc-admin/includes/settings-tabs/shipping.php:248
-#: wpsc-admin/includes/settings-tabs/shipping.php:280
+#: wpsc-admin/includes/settings-tabs/shipping.php:251
+#: wpsc-admin/includes/settings-tabs/shipping.php:283
 #: wpsc-admin/includes/tax_and_shipping.php:65 wpsc-admin/settings-page.php:491
 #: wpsc-components/theme-engine-v2/classes/settings-form.php:137
 msgid "Save Changes"
@@ -3972,72 +3986,72 @@ msgstr ""
 msgid "Use Test Server?"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:201
+#: wpsc-admin/includes/settings-tabs/shipping.php:204
 msgid "Force Sync with Shipwire"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:203
+#: wpsc-admin/includes/settings-tabs/shipping.php:206
 msgid "Update Tracking and Inventory"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:219
+#: wpsc-admin/includes/settings-tabs/shipping.php:222
 msgid "Free Shipping Discount"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:230
+#: wpsc-admin/includes/settings-tabs/shipping.php:233
 msgid "Enable Free Shipping Discount"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:242
+#: wpsc-admin/includes/settings-tabs/shipping.php:245
 msgid ""
 "Sales over or equal to %1$s<input type=\"text\" size=\"6\" "
 "name=\"wpsc_options[shipping_discount_value]\" value=\"%2$s\" "
 "id=\"shipping_discount_value\" /> will receive free shipping."
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:250
+#: wpsc-admin/includes/settings-tabs/shipping.php:253
 msgid "Shipping Modules"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:251
+#: wpsc-admin/includes/settings-tabs/shipping.php:254
 msgid ""
 "To enable shipping in WP eCommerce you must select which shipping methods "
 "you want to enable on your site."
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:253
+#: wpsc-admin/includes/settings-tabs/shipping.php:256
 msgid "Tip"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:254
+#: wpsc-admin/includes/settings-tabs/shipping.php:257
 msgid ""
 "For fixed-price shipping options such as \"Pickup - $0, Overnight - $10, "
 "Same day - $20, etc.\", install our free <a href=\"%1$s\">Fixed Rate "
 "Shipping</a> plugin."
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:257
+#: wpsc-admin/includes/settings-tabs/shipping.php:260
 msgid "Internal Shipping Calculators"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:262
-#: wpsc-admin/includes/settings-tabs/shipping.php:268
-#: wpsc-admin/includes/settings-tabs/shipping.php:292
-#: wpsc-admin/includes/settings-tabs/shipping.php:298
+#: wpsc-admin/includes/settings-tabs/shipping.php:265
+#: wpsc-admin/includes/settings-tabs/shipping.php:271
+#: wpsc-admin/includes/settings-tabs/shipping.php:295
+#: wpsc-admin/includes/settings-tabs/shipping.php:301
 msgid "Shipping Calculator"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:282
+#: wpsc-admin/includes/settings-tabs/shipping.php:285
 msgid "External Shipping Calculators"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:285
+#: wpsc-admin/includes/settings-tabs/shipping.php:288
 msgid ""
 "The following shipping modules all need cURL which is not installed on this "
 "server. You may need to contact your web hosting provider to get it set up. "
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:331
+#: wpsc-admin/includes/settings-tabs/shipping.php:334
 msgid "Edit this Shipping Module"
 msgstr ""
 
@@ -4850,6 +4864,7 @@ msgstr ""
 
 #: wpsc-components/merchant-core-v2/helpers/admin.php:86
 #: wpsc-components/merchant-core-v2/helpers/gateways.php:115
+#: wpsc-components/merchant-core-v3/libraries/pp-braintree/pp-braintree.php:68
 msgid "PayPal"
 msgstr ""
 
@@ -4910,6 +4925,8 @@ msgstr ""
 
 #: wpsc-components/merchant-core-v3/classes/payment-gateway.php:484
 #: wpsc-components/merchant-core-v3/classes/payment-gateway.php:521
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:39
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:71
 msgid "Card Number"
 msgstr ""
 
@@ -4920,6 +4937,8 @@ msgstr ""
 
 #: wpsc-components/merchant-core-v3/classes/payment-gateway.php:492
 #: wpsc-components/merchant-core-v3/classes/payment-gateway.php:529
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:43
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:75
 msgid "Expiration Date"
 msgstr ""
 
@@ -4930,6 +4949,8 @@ msgstr ""
 
 #: wpsc-components/merchant-core-v3/classes/payment-gateway.php:496
 #: wpsc-components/merchant-core-v3/classes/payment-gateway.php:533
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:47
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:79
 msgid "Card Code"
 msgstr ""
 
@@ -5009,6 +5030,8 @@ msgid ""
 msgstr ""
 
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:155
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:423
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:154
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:600
 #: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:922
 #: wpsc-components/merchant-core-v3/gateways/paypal-pro.php:386
@@ -5052,6 +5075,8 @@ msgid "Obtained from your Amazon account, under Web Settings."
 msgstr ""
 
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:196
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:452
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:183
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:629
 #: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:959
 #: wpsc-components/merchant-core-v3/gateways/paypal-pro.php:423
@@ -5109,6 +5134,8 @@ msgid "Hide Standard Checkout Button"
 msgstr ""
 
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:240
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:525
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:247
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:714
 #: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1067
 #: wpsc-components/merchant-core-v3/gateways/paypal-pro.php:469
@@ -5118,6 +5145,8 @@ msgid "Error Logging"
 msgstr ""
 
 #: wpsc-components/merchant-core-v3/gateways/amazon-payments.php:246
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:530
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:252
 #: wpsc-components/merchant-core-v3/gateways/paypal-digital-goods.php:719
 #: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1072
 #: wpsc-components/merchant-core-v3/gateways/paypal-pro.php:474
@@ -5360,22 +5389,189 @@ msgstr ""
 msgid "Refunded %s (%s)"
 msgstr ""
 
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:9
+msgid "PayPal powered by Braintree - Cards"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:132
+msgid "3D Secure verification failed."
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:206
+msgid "Order opened. Capture the payment below."
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:343
+msgid "Authorization voided."
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:356
+#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1218
+#: wpsc-components/merchant-core-v3/gateways/pro-pay.php:664
+msgid "Refund Error: You need to specify a refund amount."
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:362
+#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1224
+#: wpsc-components/merchant-core-v3/gateways/pro-pay.php:670
+msgid "Refund Failed: No transaction ID"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:368
+#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1230
+#: wpsc-components/merchant-core-v3/gateways/pro-pay.php:676
+msgid "Invalid refund amount"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:379
+#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1240
+#: wpsc-components/merchant-core-v3/gateways/pro-pay.php:686
+msgid "Refunded %s via Manual Refund"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:428
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:159
+#: wpsc-components/merchant-core-v3/gateways/worldpay.php:76
+msgid "Public Key"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:436
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:167
+msgid "Private Key"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:444
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:175
+#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:951
+msgid "Merchant ID"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:472
+msgid "Transaction Settings"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:477
+msgid "Settlement Type"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:481
+msgid "Upfront Settlement"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:482
+msgid "Deferred Settlement"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:488
+msgid "3D Secure Settings"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:493
+msgid "3D Secure Enabled"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:498
+msgid ""
+"You can change 3D Secure settings from within your Braintree account "
+"settings."
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:503
+msgid "Allow only 3D Secure"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:508
+msgid ""
+"Only transactions that pass 3D Secure verifications are allowed to be "
+"processed"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:513
+msgid "3D Secure Risk Settings"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:517
+#: wpsc-shipping/ups_20.php:89
+msgid "Standard"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-credit-cards.php:518
+msgid "Strict"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:9
+msgid "PayPal powered by Braintree - PayPal"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:38
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:51
+msgid "Click below to continue to PayPal"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:206
+msgid "Gateway Settings"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:211
+msgid "Button Size"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:215
+msgid "Small"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:216
+msgid "Medium"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:217
+msgid "Responsive"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:223
+msgid "Button Colour"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:227
+msgid "Gold"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:228
+msgid "Blue"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:229
+msgid "Silver"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:235
+msgid "Button Shape"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:239
+msgid "Pill"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/gateways/braintree-paypal.php:240
+msgid "Rect"
+msgstr ""
+
 #: wpsc-components/merchant-core-v3/gateways/manual.php:11
 msgid "Manual Payment Gateway 3.0"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/gateways/manual.php:33
+#: wpsc-components/merchant-core-v3/gateways/manual.php:36
 msgid "Instructions"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/gateways/manual.php:35
+#: wpsc-components/merchant-core-v3/gateways/manual.php:38
 #: wpsc-merchants/testmode.merchant.php:56
 msgid ""
 "Enter the payment instructions that you wish to display to your customers "
 "when they make a purchase."
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/gateways/manual.php:36
+#: wpsc-components/merchant-core-v3/gateways/manual.php:39
 msgid ""
 "For example, this is where you the Shop Owner might enter your bank account "
 "details or address so that your customer can make their manual payment."
@@ -5541,10 +5737,6 @@ msgstr ""
 msgid "Last Name:"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:951
-msgid "Merchant ID"
-msgstr ""
-
 #: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1000
 msgid "Enable In-Context Checkout"
 msgstr ""
@@ -5555,26 +5747,6 @@ msgstr ""
 
 #: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1015
 msgid "Enable PayPal Credit"
-msgstr ""
-
-#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1218
-#: wpsc-components/merchant-core-v3/gateways/pro-pay.php:664
-msgid "Refund Error: You need to specify a refund amount."
-msgstr ""
-
-#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1224
-#: wpsc-components/merchant-core-v3/gateways/pro-pay.php:670
-msgid "Refund Failed: No transaction ID"
-msgstr ""
-
-#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1230
-#: wpsc-components/merchant-core-v3/gateways/pro-pay.php:676
-msgid "Invalid refund amount"
-msgstr ""
-
-#: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1240
-#: wpsc-components/merchant-core-v3/gateways/pro-pay.php:686
-msgid "Refunded %s via Manual Refund"
 msgstr ""
 
 #: wpsc-components/merchant-core-v3/gateways/paypal-express-checkout.php:1283
@@ -5672,10 +5844,6 @@ msgid ""
 "Key link."
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/gateways/worldpay.php:76
-msgid "Public Key"
-msgstr ""
-
 #: wpsc-components/merchant-core-v3/gateways/worldpay.php:80
 msgid ""
 "You can obtain the Public Key by signing into the Virtual Terminal. You "
@@ -5737,6 +5905,36 @@ msgstr ""
 
 #: wpsc-components/merchant-core-v3/helpers/admin.php:34
 msgid "To configure a payment module select one on the left."
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/libraries/pp-braintree/pp-braintree.php:64
+msgid "Cards"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/libraries/pp-braintree/pp-braintree.php:207
+msgid "Disconnect from PayPal Powered by Braintree"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/libraries/pp-braintree/pp-braintree.php:208
+msgid "Merchant account: "
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/libraries/pp-braintree/pp-braintree.php:211
+msgid "Learn More "
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/libraries/pp-braintree/pp-braintree.php:527
+msgid "Invalid connection request"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/libraries/pp-braintree/pp-braintree.php:567
+msgid "Invalid disconnect request"
+msgstr ""
+
+#: wpsc-components/merchant-core-v3/libraries/pp-braintree/pp-braintree.php:735
+msgid ""
+"WP eCommerce PayPal powered by Braintree is active but not configured. "
+"Please check the Payment gateway settings page"
 msgstr ""
 
 #: wpsc-components/theme-engine-v1/classes/checkout-ajax.php:216
@@ -8836,48 +9034,48 @@ msgid ""
 "<a href=\"mailto:%s\">webmaster</a> !"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:637
+#: wpsc-includes/misc.functions.php:642
 msgid ""
 "Please refrain from uploading images larger than <strong>%d x %d</strong> "
 "pixels"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:724 wpsc-includes/misc.functions.php:773
+#: wpsc-includes/misc.functions.php:729 wpsc-includes/misc.functions.php:778
 msgid ""
 "%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s! Use "
 "%3$s instead."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:732 wpsc-includes/misc.functions.php:781
+#: wpsc-includes/misc.functions.php:737 wpsc-includes/misc.functions.php:786
 msgid ""
 "%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s with no "
 "alternative available."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:829
+#: wpsc-includes/misc.functions.php:834
 msgid ""
 "%1$s was called with an argument that is <strong>deprecated</strong> since "
 "WP eCommerce version %2$s! %3$s"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:838
+#: wpsc-includes/misc.functions.php:843
 msgid ""
 "%1$s was called with an argument that is <strong>deprecated</strong> since "
 "WP eCommerce version %2$s with no alternative available."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:874
+#: wpsc-includes/misc.functions.php:879
 msgid "(This message was added in WP eCommerce version %s.)"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:875
+#: wpsc-includes/misc.functions.php:880
 msgid ""
 "Please see <a "
 "href=\"http://codex.wordpress.org/Debugging_in_WordPress\">Debugging in "
 "WordPress</a> for more information."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:878
+#: wpsc-includes/misc.functions.php:883
 msgid "%1$s was called <strong>incorrectly</strong>. %2$s %3$s"
 msgstr ""
 
@@ -9982,17 +10180,17 @@ msgstr ""
 msgid "Local Shipping"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:622
+#: wpsc-shipping/library/shipwire_functions.php:618
 msgid "Session expired. Try refreshing your Shipping Settings page."
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:680
+#: wpsc-shipping/library/shipwire_functions.php:676
 msgid "Shipwire updated %d tracking number."
 msgid_plural "Shipwire updated %d tracking numbers."
 msgstr[0] ""
 msgstr[1] ""
 
-#: wpsc-shipping/library/shipwire_functions.php:681
+#: wpsc-shipping/library/shipwire_functions.php:677
 msgid "Shipwire updated inventory on %d product."
 msgid_plural "Shipwire updated inventory on %d products."
 msgstr[0] ""
@@ -10087,10 +10285,6 @@ msgstr ""
 
 #: wpsc-shipping/ups_20.php:88
 msgid "Ground"
-msgstr ""
-
-#: wpsc-shipping/ups_20.php:89
-msgid "Standard"
 msgstr ""
 
 #: wpsc-shipping/ups_20.php:90
@@ -13121,7 +13315,7 @@ msgctxt "google analytics"
 msgid "Google Analytics Tracking ID"
 msgstr ""
 
-#: wpsc-admin/includes/settings-tabs/shipping.php:331
+#: wpsc-admin/includes/settings-tabs/shipping.php:334
 msgctxt "Shipping modules link to individual settings"
 msgid "Settings"
 msgstr ""
@@ -14146,50 +14340,50 @@ msgctxt "PayPal Pro Item Name for Discounts"
 msgid "Coupon / Discount"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:873
-#: wpsc-shipping/library/shipwire_functions.php:910
+#: wpsc-shipping/library/shipwire_functions.php:869
+#: wpsc-shipping/library/shipwire_functions.php:906
 msgctxt "shipwire shipping method"
 msgid "Ground"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:876
-#: wpsc-shipping/library/shipwire_functions.php:913
+#: wpsc-shipping/library/shipwire_functions.php:872
+#: wpsc-shipping/library/shipwire_functions.php:909
 msgctxt "shipwire shipping method"
 msgid "One-Day Shipping"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:879
-#: wpsc-shipping/library/shipwire_functions.php:916
+#: wpsc-shipping/library/shipwire_functions.php:875
+#: wpsc-shipping/library/shipwire_functions.php:912
 msgctxt "shipwire shipping method"
 msgid "Two-Day Shipping"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:882
-#: wpsc-shipping/library/shipwire_functions.php:919
+#: wpsc-shipping/library/shipwire_functions.php:878
+#: wpsc-shipping/library/shipwire_functions.php:915
 msgctxt "shipwire shipping method"
 msgid "Standard Shipping"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:885
-#: wpsc-shipping/library/shipwire_functions.php:922
+#: wpsc-shipping/library/shipwire_functions.php:881
+#: wpsc-shipping/library/shipwire_functions.php:918
 msgctxt "shipwire shipping method"
 msgid "Freight Shipping"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:888
-#: wpsc-shipping/library/shipwire_functions.php:925
+#: wpsc-shipping/library/shipwire_functions.php:884
+#: wpsc-shipping/library/shipwire_functions.php:921
 msgctxt "shipwire shipping method"
 msgid "Economy Shipping"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:891
-#: wpsc-shipping/library/shipwire_functions.php:928
+#: wpsc-shipping/library/shipwire_functions.php:887
+#: wpsc-shipping/library/shipwire_functions.php:924
 msgctxt "shipwire shipping method"
 msgid "Plus Shipping"
 msgstr ""
 
-#: wpsc-shipping/library/shipwire_functions.php:894
-#: wpsc-shipping/library/shipwire_functions.php:931
+#: wpsc-shipping/library/shipwire_functions.php:890
+#: wpsc-shipping/library/shipwire_functions.php:927
 msgctxt "shipwire shipping method"
 msgid "Premium Shipping"
 msgstr ""

@@ -9,8 +9,10 @@ function _wpsc_merchant_v3_settings_get_gateways( $gateways ) {
 	foreach ( WPSC_Payment_Gateways::get_gateways() as $gateway ) {
 		$meta = WPSC_Payment_Gateways::get_meta( $gateway );
 		$gateways[] = array(
-			'id'   => $gateway,
-			'name' => $meta['name'],
+			'id'    => $gateway,
+			'name'  => $meta['name'],
+			'desc'  => $meta['description'],
+			'order' => $meta['order'],
 		);
 	}
 
