@@ -15,7 +15,7 @@ class WPEC_Braintree_Helpers {
 				return;
 			} else {
 				self::$instance = new WPEC_Braintree_Helpers;
-
+				self::init();
 				self::deactivate_plugins();
 				self::includes();
 				self::add_actions();
@@ -43,7 +43,6 @@ class WPEC_Braintree_Helpers {
 		add_action( 'admin_notices', array( self::$instance, 'admin_notices' ), 15 );
 		add_action( 'admin_init', array( self::$instance, 'handle_auth_connect' ) );
 		add_action( 'admin_init', array( self::$instance, 'handle_auth_disconnect' ) );
-		add_action( 'wpsc_loaded', array( self::$instance, 'init' ), 2 );
 		add_action( 'admin_enqueue_scripts', array( self::$instance, 'admin_scripts' ) );
 		add_action( 'wp_enqueue_scripts' , array( self::$instance, 'pp_braintree_enqueue_js' ), 100 );
 		add_action( 'wpsc_submit_gateway_options', array( self::$instance, 'update_payment_gateway_settings' ), 90 );
@@ -55,11 +54,13 @@ class WPEC_Braintree_Helpers {
 	}
 
 	public function init() {
+
 		// Add hidden field to hold token value Tev1
-		add_action( 'wpsc_inside_shopping_cart', array( $this, 'te_v1_insert_hidden_field' ) );
+		add_action( 'wpsc_inside_shopping_cart', array( self::$instance, 'te_v1_insert_hidden_field' ) );
+
 		// Add hidden field to hold token value Tev2
-		add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'te_v2_insert_hidden_field' ) );
-		//add_action( 'wpsc_default_credit_card_form_end', array( $this, 'te_v2_insert_hidden_field' ) );
+		add_filter( 'wpsc_get_checkout_payment_method_form_args', array( self::$instance, 'te_v2_insert_hidden_field' ) );
+
 	}
 
 	public function tev1_custom_gateway_name( $name, $gateway ) {
