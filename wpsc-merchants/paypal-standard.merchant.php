@@ -498,16 +498,18 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
 		$status = 1;
 
-		switch ( strtolower( $this->paypal_ipn_values['payment_status'] ) ) {
-			case 'pending':
-				$status = 2;
-				break;
-			case 'completed':
-				$status = 3;
-				break;
-			case 'denied':
-				$status = 6;
-				break;
+		if ( isset( $this->paypal_ipn_values['payment_status'] ) ) {
+			switch ( strtolower( $this->paypal_ipn_values['payment_status'] ) ) {
+				case 'pending':
+					$status = 2;
+					break;
+				case 'completed':
+					$status = 3;
+					break;
+				case 'denied':
+					$status = 6;
+					break;
+			}
 		}
 
 		do_action( 'wpsc_paypal_standard_ipn', $this->paypal_ipn_values, $this );
@@ -534,7 +536,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 					}
 
 					if ( in_array( $status, array( 2, 3 ) ) ) {
-						transaction_results( $this->cart_data['session_id'], false );
+						$this->go_to_transaction_results( $this->cart_data['session_id'] );
 					}
 
 					break;
@@ -543,7 +545,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				case 'subscr_payment':
 					if ( in_array( $status, array( 2, 3 ) ) ) {
 						$this->set_transaction_details( $this->paypal_ipn_values['subscr_id'], $status );
-						transaction_results( $this->cart_data['session_id'], false );
+						$this->go_to_transaction_results( $this->cart_data['session_id'] );
 					}
 					foreach ( $this->cart_items as $cart_row ) {
 						if ( $cart_row['is_recurring'] == true ) {
@@ -591,8 +593,8 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		// Validate amount
 		// It is worth noting, there are edge cases here that may need to be addressed via filter.
 		// @link https://github.com/wp-e-commerce/WP-e-Commerce/issues/1232.
-		if ( $this->paypal_ipn_values['mc_gross'] != $this->convert( $purchase_log->get( 'totalprice' ) ) ) {
-			$valid = false;
+		if ( isset( $this->paypal_ipn_values['payment_status'] ) ) {
+			$valid = $this->paypal_ipn_values['mc_gross'] != $this->convert( $purchase_log->get( 'totalprice' ) ) ? false : true;
 		}
 
 		return apply_filters( 'wpsc_paypal_standard_is_valid_ipn_response', $valid, $this );
