@@ -555,7 +555,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 
 		global $wpdb;
 
-		if ( ! in_array( $col, array( 'id', 'sessionid' ) ) ) {
+		if ( ! in_array( $col, array( 'id', 'sessionid', 'transactid' ) ) ) {
 			return;
 		}
 
