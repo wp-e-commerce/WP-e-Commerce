@@ -36,11 +36,13 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
-= 3.13.2 [2017-11-20] =
+= 3.13.2 [2018-03-14] =
 
 * Enhancement: Add options for PayPal Credit banners.
 * Enhancement: Improve Payment Gateway API, allowing for admin gateway descriptions and improved ordering mechanisms.
 * Fix: Ensure that Braintree hidden fields show up early enough for JS integration.
+* Fix: Changed code for registration of Addons license keys. Old license keys will need to be registered again.
+* Fix: Undefined notices for subscription payemnts with PayPal standard gateway.
 
 = 3.13.1 [2017-10-25] =
 
