@@ -131,7 +131,6 @@ function _wpsc_download_purchase_log_csv( $args = array() ) {
 				$month = (int) substr( $args['m'], -2 ),			
 			);
 		}
-
 		$date_query = new WP_Date_Query( $query_args , $column = '__date__' );
 		/* this is a subtle hack since the FROM_UNIXTIME doesn't survive WP_Date_Query
 		 * so we use __date__ as a proxy
