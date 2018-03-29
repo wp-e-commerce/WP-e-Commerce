@@ -118,20 +118,34 @@ function _wpsc_download_purchase_log_csv( $args = array() ) {
 		/* translators: %1$s is "start" date, %2$s is "to" date */
 		$csv_name = _x( 'Purchase Log %1$s to %2$s.csv', 'exported purchase log csv file name', 'wp-e-commerce' );
 		$csv_name = sprintf( $csv_name, date( "M-d-Y", $start_timestamp ), date( "M-d-Y", $end_timestamp ) );
+
 	} elseif ( isset( $args['m'] ) ) {
-		$year = (int) substr( $args['m'], 0, 4);
-		$month = (int) substr( $args['m'], -2 );
-		$month_year_sql = "
-			SELECT *
-			FROM " . WPSC_TABLE_PURCHASE_LOGS . "
-			WHERE YEAR(FROM_UNIXTIME(date)) = %d AND MONTH(FROM_UNIXTIME(date)) = %d
+		$where = array( '1 = 1' );
+		add_filter( 'date_query_valid_columns', 'wpsc_set_date_column_to_date' );
+
+		if ( strlen( $args['m'] ) < 4 ) {
+			$query_args = wpsc_assemble_predefined_periods_query( $args['m'] );
+		} else {
+			$query_args = array(
+				$year = (int) substr( $args['m'], 0, 4),
+				$month = (int) substr( $args['m'], -2 ),			
+			);
+		}
+
+		$date_query = new WP_Date_Query( $query_args , $column = '__date__' );
+		/* this is a subtle hack since the FROM_UNIXTIME doesn't survive WP_Date_Query
+		 * so we use __date__ as a proxy
+		 */
+		$where[] = str_replace( '__date__', 'FROM_UNIXTIME(date)', $date_query->get_sql() );
+		$where = implode( ' ', $where );
+
+		$month_year_sql = apply_filters( 'wpsc_purchase_log_month_year_csv', 
+			"SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " 
+			WHERE {$where} 
 			ORDER BY `id` DESC
-		";
-		$month_year_sql = apply_filters( 'wpsc_purchase_log_month_year_csv', $month_year_sql );
-		$data = $wpdb->get_results( $wpdb->prepare( $month_year_sql, $year, $month ), ARRAY_A );
-		/* translators: %1$s is month, %2$s is year */
-		$csv_name = _x( 'Purchase Log %1$s/%2$s.csv', 'exported purchase log csv file name', 'wp-e-commerce' );
-		$csv_name = sprintf( $csv_name, $month, $year );
+		" );
+		$data = $wpdb->get_results( $month_year_sql, ARRAY_A );
+		$csv_name = __( 'Purchase Log Filtered.csv', 'wp-e-commerce' );
 	} else {
 		$sql = apply_filters( 'wpsc_purchase_log_month_year_csv', "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " ORDER BY `id` DESC" );
 		$data = $wpdb->get_results( $sql, ARRAY_A );
