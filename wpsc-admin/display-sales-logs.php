@@ -719,7 +719,7 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function download_csv() {
-		_wpsc_download_purchase_log_csv();
+		_wpsc_download_purchase_log_csv( $_REQUEST );
 	}
 
 	public function process_bulk_action() {
