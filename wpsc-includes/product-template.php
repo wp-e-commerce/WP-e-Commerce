@@ -170,9 +170,10 @@ function wpsc_calculate_price( $product_id, $variations = false, $special = true
 	} else {
 		$price = get_post_meta( $product_id, '_wpsc_price', true );
 	}
+
 	$price = apply_filters( 'wpsc_price', $price, $product_id );
 
-	return $price;
+	return floatval( $price );
 }
 
 /**

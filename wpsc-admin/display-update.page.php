@@ -12,13 +12,13 @@ global $wpdb,$wp_version;
 $show_update_page = 1;
 
 // if there's nothing in the children variation cache, refresh it, just to make sure.
-if ( 0 == count( get_option( 'wpsc-variation_children' ) ) ) {
+if ( 0 == count( get_option( 'wpsc-variation_children', array() ) ) ) {
 	delete_option( 'wpsc-variation_children' );
 	_get_term_hierarchy( 'wpsc-variation' );
 }
 
 // if there's nothing in the children variation cache, refresh it, just to make sure.
-if ( 0 == count( get_option( 'wpsc_product_category_children' ) ) ) {
+if ( 0 == count( get_option( 'wpsc_product_category_children', array() ) ) ) {
 	delete_option( 'wpsc_product_category_children' );
 	_get_term_hierarchy( 'wpsc_product_category_children' );
 }

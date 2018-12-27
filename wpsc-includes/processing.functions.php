@@ -126,7 +126,7 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 			case 4:
 			case 5:
 				foreach ( (array) $all_claimed_stock as $claimed_stock ) {
-					
+
 					$product         = get_post( $claimed_stock->product_id );
 					$current_stock   = get_post_meta( $product->ID, '_wpsc_stock', true );
 					$remaining_stock = $current_stock - $claimed_stock->stock_claimed;
@@ -134,7 +134,7 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 					update_product_meta( $product->ID, 'stock', $remaining_stock );
 
 					$product_meta = get_product_meta( $product->ID, 'product_metadata', true );
-					
+
 					$parent_id = wpsc_product_is_variation( $product->ID );
 
 					if( $parent_id ) {
@@ -144,19 +144,19 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 					} else {
 						$notify_limit = $product_meta['stock_limit_notify'];
 					}
-					
+
 					if ( $notify_limit != 0 && $remaining_stock <= apply_filters( 'wpec_stock_limit_notify', $notify_limit ) ) {
 						// Check if notification has been sent
 						$notify_sent = get_product_meta( $product->ID, 'stock_limit_notify_sent', true );
-						
+
 						if( empty( $notify_sent ) ) {
 							$email_message = sprintf( __( 'The product "%s" has reached stock level "%s".', 'wp-e-commerce' ), $product->post_title, $remaining_stock );
-							
+
 							wp_mail( get_option('purch_log_email'), sprintf(__('%s is low on stock', 'wp-e-commerce'), $product->post_title), $email_message );
-							update_product_meta( $product->ID, 'stock_limit_notify_sent', true );							
+							update_product_meta( $product->ID, 'stock_limit_notify_sent', true );
 						}
 					}
-					
+
 					if ( $remaining_stock < 1 ) {
 						$email_message = sprintf( __( 'The product "%s" is out of stock.', 'wp-e-commerce' ), $product->post_title );
 
@@ -244,7 +244,7 @@ function wpsc_convert_weight( $in_weight, $in_unit, $out_unit = 'pound', $raw = 
 	// other unit names are used when doing imports from CSV
 
 	// convert $in_weight to grams, then convert that to whatever else.
-
+	$in_weight = floatval( $in_weight );
 	switch( strtolower( $in_unit ) ) {
 		case "kilogram":
 		case "kilograms":
@@ -411,11 +411,11 @@ function wpsc_check_weight($state, $product) {
 	$shipping_modules = array();
 	$product_meta = get_product_meta( $product->ID, 'product_metadata',true );
 	if(! $product->post_parent && wpsc_product_has_children($product->ID)) return $state;
-	
+
 	if ( get_option( 'do_not_use_shipping' ) ) {
 		return $state;
 	}
-	
+
 	// only do anything if UPS is on and shipping is used
 	if( array_search( 'ups', $custom_shipping ) !== false )
 		$shipping_modules[] = 'UPS';

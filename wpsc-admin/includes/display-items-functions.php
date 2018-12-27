@@ -239,7 +239,7 @@ function wpsc_price_control_forms() {
 				</thead>
 				<tbody>
 					<?php
-					if ( count( $product_meta['table_rate_price']['quantity'] ) > 0 ) {
+					if ( count( (array) $product_meta['table_rate_price']['quantity'] ) > 0 ) {
 						foreach ( (array) $product_meta['table_rate_price']['quantity'] as $key => $quantity ) {
 							if ( $quantity != '' ) {
 								$table_price = number_format( $product_meta['table_rate_price']['table_price'][ $key ], 2, '.', '' );
@@ -299,7 +299,7 @@ function wpsc_stock_control_forms() {
 	if ( ! isset( $product_meta['unpublish_when_none_left'] ) ) {
 		$product_meta['unpublish_when_none_left'] = '';
 	}
-	
+
 	if ( ! isset( $product_meta['stock_limit_notify'] ) ) {
 		$product_meta['stock_limit_notify'] = '';
 	}
