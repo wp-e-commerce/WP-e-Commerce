@@ -36,6 +36,11 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
+= 3.14.0 [2019-01-24] =
+
+* Fix: Improve integration with new WordPress block editor.
+* Fix: Improve compatibility with PHP 7.2+
+
 = 3.13.1 [2017-10-25] =
 
 * Fix: Fatal errors in Braintree gateway below PHP 7.0.

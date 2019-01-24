@@ -245,6 +245,7 @@ function wpsc_convert_weight( $in_weight, $in_unit, $out_unit = 'pound', $raw = 
 
 	// convert $in_weight to grams, then convert that to whatever else.
 	$in_weight = floatval( $in_weight );
+
 	switch( strtolower( $in_unit ) ) {
 		case "kilogram":
 		case "kilograms":
