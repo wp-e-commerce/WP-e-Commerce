@@ -2,9 +2,9 @@
 Contributors: JustinSainton
 Donate link: https://wpecommerce.org
 Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
-Requires at least: 4.5
-Tested up to: 4.9
-Stable tag: 3.13.1
+Requires at least: 4.7
+Tested up to: 5.0
+Stable tag: 3.14.0
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
