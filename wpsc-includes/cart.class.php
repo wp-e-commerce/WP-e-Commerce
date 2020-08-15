@@ -980,7 +980,7 @@ class WPSC_Cart {
 	 * @return float returns the price as a floating point value
 	 */
 	function calculate_total_weight( $for_shipping = false ) {
-		$total = '';
+		$total = 0;
 		if ( $for_shipping == true ) {
 			foreach ( $this->cart_items as $key => $cart_item ) {
 				if ( $cart_item->uses_shipping == 1 ) {

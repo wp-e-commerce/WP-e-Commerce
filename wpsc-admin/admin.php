@@ -751,7 +751,6 @@ function _wpsc_admin_localizations( $localizations ) {
 
 	$localizations['ajaxurl']           = admin_url( 'admin-ajax.php', 'relative' );
 	$localizations['hidden_boxes']      = '"' . esc_js( $hidden_boxes ) . '"';
-	$localizations['IS_WP27']           = '"' . esc_js( IS_WP27 ) . '"';
 	$localizations['TXT_WPSC_DELETE']   = '"' . esc_js( __( 'Delete', 'wp-e-commerce' ) ) . '"';
 	$localizations['TXT_WPSC_TEXT']     = '"' . esc_js( __( 'Text', 'wp-e-commerce' ) ) . '"';
 	$localizations['TXT_WPSC_EMAIL']    = '"' . esc_js( __( 'Email', 'wp-e-commerce' ) ) . '"';

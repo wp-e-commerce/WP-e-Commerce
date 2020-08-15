@@ -348,7 +348,7 @@ function wpsc_stock_control_forms() {
 
 						<?php
 							$remaining_quantity = wpsc_get_remaining_quantity( $post->ID );
-							$reserved_quantity  = $product_data['meta']['_wpsc_stock'] - $remaining_quantity;
+							$reserved_quantity  = intval( $product_data['meta']['_wpsc_stock'] ) - $remaining_quantity;
 							if ( $reserved_quantity ) {
 								echo '<p><em>';
 								printf( _n('%s of them is reserved for pending or recently completed orders.',

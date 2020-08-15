@@ -1542,7 +1542,7 @@ function wpsc_packing_slip( $purchase_id ) {
 					case 'heading':
 
                         if($form_field['name'] == "Hidden Fields")
-                          continue;
+							break;
                         else
                           echo "	<tr class='heading'><td colspan='2'><strong>" . esc_html( $form_field['name'] ) . ":</strong></td></tr>\n\r";
 					break;

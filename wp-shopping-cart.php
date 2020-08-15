@@ -3,7 +3,7 @@
   * Plugin Name: WP eCommerce
   * Plugin URI: http://wpecommerce.org/
   * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://wpecommerce.org" target="_blank">WPeCommerce.org</a> | <a href="https://wordpress.org/support/plugin/wp-e-commerce/" target="_blank">Support Forum</a> | <a href="http://docs.wpecommerce.org/" target="_blank">Documentation</a>
-  * Version: 3.14.0
+  * Version: 3.15.0
   * Author: WP eCommerce
   * Author URI: http://wpecommerce.org/
   * Text Domain: wp-e-commerce
@@ -193,7 +193,6 @@ class WP_eCommerce {
 	 * @uses wpsc_core_constants()                      Loads the WPEC Core constants
 	 * @uses wpsc_core_is_multisite()                   Checks if this is a multisite install. True if is multisite
 	 * @uses wpsc_core_load_session()                   Loads the WPEC core session
-	 * @uses wpsc_core_constants_version_processing()   Checks and sets a constant for WordPress version
 	 * @uses wpsc_core_constants_table_names()          Sets constants for WPEC table names
 	 * @uses wpsc_core_constants_uploads()              Set the upload related constants
 	 * @uses do_action()                                Calls 'wpsc_constants' which runs after the WPEC constants are defined
@@ -211,8 +210,6 @@ class WP_eCommerce {
 		// Start the wpsc session
 		wpsc_core_load_session();
 
-		// Which version of WPEC
-		wpsc_core_constants_version_processing();
 
 		// WPEC Table names and related constants
 		wpsc_core_constants_table_names();

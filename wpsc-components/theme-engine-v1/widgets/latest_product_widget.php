@@ -111,7 +111,9 @@ class WP_Widget_Latest_Products extends WP_Widget {
 	}
 }
 
-add_action( 'widgets_init', create_function( '', 'return register_widget("WP_Widget_Latest_Products");' ) );
+add_action( 'widgets_init', function() {
+	return register_widget( 'WP_Widget_Latest_Products' );
+} );
 
 function wpsc_latest_product( $args = null, $instance ) {
 	global $wpdb;

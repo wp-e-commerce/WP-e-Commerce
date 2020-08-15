@@ -300,8 +300,9 @@ function _wpsc_action_merchant_v2_validate_payment_method( $valid, $controller )
 				case 'card_number2':
 				case 'card_number3':
 				case 'card_number4':
-					if ( $card_number_error )
-						continue;
+					if ( $card_number_error ) {
+						break;
+					}
 
 					$messages['card_number'] = __( 'Please enter a valid credit card number', 'wp-e-commerce' );
 					$card_number_error = true;

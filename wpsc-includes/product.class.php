@@ -665,7 +665,7 @@ class WPSC_Product {
 	 * @param  array|string $args Arguments. See {@link WPSC_Purchase_Log::fetch_stats()}
 	 * @return array       'sales' and 'earnings' stats
 	 */
-	public function get_stats( $args = '' ) {
+	public function get_stats( $args = [] ) {
 		return WPSC_Purchase_Log::get_stats_for_product( $this->post->ID, $args );
 	}
 }

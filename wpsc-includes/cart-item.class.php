@@ -235,7 +235,7 @@ class WPSC_Cart_Item {
 		if ( isset( $special_price ) && $special_price > 0 && $special_price < $price )
 			$price = $special_price;
 		$priceandstock_id = 0;
-		$this->weight = isset( $product_meta[0]['weight'] ) ? $product_meta[0]["weight"] : 0;
+		$this->weight = isset( $product_meta[0]['weight'] ) ? floatval( $product_meta[0]["weight"] ) : 0;
 		// if we are using table rate price
 		if ( isset( $product_meta[0]['table_rate_price'] ) ) {
 			$levels = $product_meta[0]['table_rate_price'];
@@ -376,7 +376,7 @@ class WPSC_Cart_Item {
 
 	function calculate_shipping($method = null) {
 		global $wpdb, $wpsc_cart, $wpsc_shipping_modules;
-		$shipping = '';
+		$shipping = 0;
 		if($method === null)
 			$method = $this->cart->selected_shipping_method;
 

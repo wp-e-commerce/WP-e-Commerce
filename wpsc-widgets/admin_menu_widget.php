@@ -84,7 +84,9 @@ class WP_Widget_Admin_Menu extends WP_Widget {
 
 }
 
-add_action( 'widgets_init', create_function( '', 'return register_widget("WP_Widget_Admin_Menu");' ) );
+add_action( 'widgets_init', function() {
+	return register_widget( 'WP_Widget_Admin_Menu' );
+} );
 
 /**
  * Admin Menu Widget content function

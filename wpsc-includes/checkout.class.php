@@ -381,7 +381,7 @@ class wpsc_checkout {
 	function validate_forms() {
 		global $wpsc_cart, $wpdb, $current_user, $user_ID, $wpsc_gateway_error_messages, $wpsc_checkout_error_messages, $wpsc_customer_checkout_details, $wpsc_registration_error_messages;
 		$any_bad_inputs = false;
-		$bad_input_message = '';
+		$bad_input_messages = [];
 		$wpsc_gateway_error_messages      = array();
 		$wpsc_checkout_error_messages     = array();
 		$wpsc_registration_error_messages = array();
@@ -548,7 +548,7 @@ class wpsc_checkout {
 		// Check if the shoppers location has changed
 		_wpsc_has_visitor_location_changed();
 
-		$states = array( 'is_valid' => ! $any_bad_inputs, 'error_messages' => $bad_input_message );
+		$states = array( 'is_valid' => ! $any_bad_inputs, 'error_messages' => $bad_input_messages );
 		$states = apply_filters( 'wpsc_checkout_form_validation', $states );
 		return $states;
 	}

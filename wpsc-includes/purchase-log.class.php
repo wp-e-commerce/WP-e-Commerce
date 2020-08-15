@@ -341,7 +341,7 @@ class WPSC_Purchase_Log extends WPSC_Query_Base {
 	 * @param  int $id ID of the product
 	 * @return array   Array containing 'sales' and 'earnings' stats
 	 */
-	public static function get_stats_for_product( $id, $args = '' ) {
+	public static function get_stats_for_product( $id, $args = [] ) {
 
 		$product = WPSC_Product::get_instance( $id );
 

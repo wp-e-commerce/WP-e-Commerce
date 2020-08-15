@@ -37,7 +37,7 @@ function _wpsc_is_session_started() {
 function wpsc_core_load_session() {
 
 	if ( ! _wpsc_is_session_started() ) {
-		@ session_start();
+		@session_start();
 	}
 
 	return _wpsc_is_session_started();
@@ -55,7 +55,7 @@ function wpsc_core_constants() {
 
 	// Define Plugin version
 	if ( ! defined( 'WPSC_VERSION' ) ) {
-		define( 'WPSC_VERSION'            , '3.14.0' );
+		define( 'WPSC_VERSION'            , '3.150' );
 	}
 
 	if ( ! defined( 'WPSC_MINOR_VERSION' ) ) {
@@ -63,7 +63,7 @@ function wpsc_core_constants() {
 	}
 
 	if ( ! defined( 'WPSC_PRESENTABLE_VERSION' ) ) {
-		define( 'WPSC_PRESENTABLE_VERSION', '3.14.0' );
+		define( 'WPSC_PRESENTABLE_VERSION', '3.15.0' );
 	}
 
 	// Define a salt to use when we hash, WPSC_SALT may be defined for us in our config file, so check first
@@ -140,24 +140,6 @@ function wpsc_core_constants() {
 			define( 'WPSC_PAGE_CACHE_IN_USE', true );
 		}
 	}
-}
-
-/**
- * wpsc_core_version_processing()
- */
-function wpsc_core_constants_version_processing() {
-	global $wp_version;
-
-	$version_processing = str_replace( array( '_', '-', '+' ), '.', strtolower( $wp_version ) );
-	$version_processing = str_replace( array( 'alpha', 'beta', 'gamma' ), array( 'a', 'b', 'g' ), $version_processing );
-	$version_processing = preg_split( "/([a-z]+)/i", $version_processing, -1, PREG_SPLIT_DELIM_CAPTURE );
-
-	array_walk( $version_processing, create_function( '&$v', '$v = trim($v,". ");' ) );
-
-	define( 'IS_WP25', version_compare( $version_processing[0], '2.5', '>=' ) );
-	define( 'IS_WP27', version_compare( $version_processing[0], '2.7', '>=' ) );
-	define( 'IS_WP29', version_compare( $version_processing[0], '2.9', '>=' ) );
-	define( 'IS_WP30', version_compare( $version_processing[0], '3.0', '>=' ) );
 }
 
 /**

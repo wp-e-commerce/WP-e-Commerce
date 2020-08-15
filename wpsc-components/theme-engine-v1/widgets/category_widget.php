@@ -161,7 +161,9 @@ class WP_Widget_Product_Categories extends WP_Widget {
 	}
 }
 
-add_action( 'widgets_init', create_function( '', 'return register_widget("WP_Widget_Product_Categories");' ) );
+add_action( 'widgets_init', function(){
+	return register_widget( 'WP_Widget_Product_Categories' );
+});
 
 function wpsc_category_widget_admin_category_list( $category, $level, $fieldconfig ) {
 	// Only let the user choose top-level categories

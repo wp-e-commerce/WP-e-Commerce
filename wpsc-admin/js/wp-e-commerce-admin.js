@@ -25,7 +25,6 @@ if ( typeof wpsc_admin_vars !== undefined ) {
 	var WPSC_IMAGE_URL               = wpsc_admin_vars['WPSC_IMAGE_URL'];
 	var fileThickboxLoadingImage     = wpsc_admin_vars['fileThickboxLoadingImage'];
     var hidden_boxes                 = wpsc_admin_vars['hidden_boxes'];
-    var IS_WP27                      = wpsc_admin_vars['IS_WP27'];
     var TXT_WPSC_DELETE              = wpsc_admin_vars['TXT_WPSC_DELETE'];
     var TXT_WPSC_TEXT                = wpsc_admin_vars['TXT_WPSC_TEXT'];
     var TXT_WPSC_EMAIL               = wpsc_admin_vars['TXT_WPSC_EMAIL'];

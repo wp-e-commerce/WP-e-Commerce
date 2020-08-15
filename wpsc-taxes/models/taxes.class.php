@@ -46,11 +46,11 @@ class wpec_taxes {
 	}
 
 	function wpec_taxes_get_rates() {
-		return $this->taxes_options['wpec_taxes_rates'];
+		return (array) $this->taxes_options['wpec_taxes_rates'];
 	}
 
 	function wpec_taxes_get_bands() {
-		return $this->taxes_options['wpec_taxes_bands'];
+		return (array) $this->taxes_options['wpec_taxes_bands'];
 	}
 
 	function wpec_taxes_get_options() {

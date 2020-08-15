@@ -12,7 +12,7 @@ function wpsc_uploaded_files() {
 	$num = 0;
 	$dirlist = array( );
 
-	if ( count( $wpsc_uploaded_file_cache ) > 0 ) {
+	if ( $wpsc_uploaded_file_cache && count( $wpsc_uploaded_file_cache ) > 0 ) {
 		$dirlist = $wpsc_uploaded_file_cache;
 	} elseif ( $dir ) {
 		while ( ($file = @readdir( $dir )) !== false ) {
