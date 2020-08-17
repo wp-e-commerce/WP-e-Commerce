@@ -476,17 +476,17 @@ function wpsc_register_post_types() {
 		'not_found_in_trash' => __( 'No products found in Trash', 'wp-e-commerce' ),
 		'menu_name'          => __( 'Products'                  , 'wp-e-commerce' ),
 		'parent_item_colon'  => '',
-      );
+	);
     $args = array(
 		'capability_type'      => 'post',
-		'supports'             => array( 'title', 'editor', 'thumbnail', 'block-editor', 'revisions' ),
+		'supports'             => [ 'title', 'editor', 'thumbnail', 'revisions', 'custom-fields' ],
 		'hierarchical'         => true,
 		'exclude_from_search'  => false,
 		'public'               => true,
 		'show_ui'              => true,
 		'show_in_rest'         => true,
 		'show_in_nav_menus'    => true,
-		'menu_icon'            => version_compare( $GLOBALS['wp_version'], '3.8', '<' ) ? WPSC_CORE_IMAGES_URL . '/credit_cards.png' : 'dashicons-cart',
+		'menu_icon'            => 'dashicons-cart',
 		'labels'               => $labels,
 		'query_var'            => true,
 		'register_meta_box_cb' => 'wpsc_meta_boxes',
@@ -495,8 +495,29 @@ function wpsc_register_post_types() {
 			'with_front' => false
 		)
 	);
+
 	$args = apply_filters( 'wpsc_register_post_types_products_args', $args );
 	register_post_type( 'wpsc-product', $args );
+
+	$wpsc_meta_keys = [
+		'_wpsc_stock',
+		'_wpsc_price',
+		'_wpsc_special_price',
+		'_wpsc_sku',
+	];
+
+	foreach ( $wpsc_meta_keys as $key ) {
+		$post_type_object = get_post_type_object( 'wpsc-product' );
+
+		register_post_meta( 'wpsc-product', $key, [
+			'show_in_rest' => true,
+			'single'       => true,
+			'type'         => 'string',
+			'auth_callback' => function() use ( $post_type_object ) {
+				return current_user_can( $post_type_object->cap->edit_posts );
+			}
+		] );
+	}
 
 	// Purchasable product files
 	$args = array(
@@ -703,7 +724,6 @@ function wpsc_get_page_post_names() {
 	return $wpsc_page;
 }
 
-
 /**
  * wpsc_cron()
  *
@@ -872,9 +892,9 @@ function wpsc_core_get_db_version() {
 }
 
 /**
- * get the current WPeC database version
+ * Check if shipping is enabled
  *
- * @return int current database version
+ * @return boolean Whether or not shipping is enabled
  */
 function wpsc_core_shipping_enabled() {
 	$shipping_disabled = get_option( 'do_not_use_shipping', -1 );

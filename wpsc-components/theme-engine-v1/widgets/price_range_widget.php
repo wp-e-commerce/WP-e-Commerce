@@ -140,13 +140,19 @@ function wpsc_price_range( $args = null ) {
 
 }
 
-if(isset($_GET['range'])){
+if ( isset( $_GET['range'] ) ) {
 	add_filter( 'posts_where', 'wpsc_range_where' );
 }
 
 function wpsc_range_where( $where ) {
 	global $wpdb, $wp_query;
-	$range = explode('-', $_GET['range']);
+
+	if ( 'all' === $_GET['range'] ) {
+		return $where;
+	}
+
+	$range = explode( '-', $_GET['range'] );
+
 	if(!strpos($where,'wpsc-product'))
 		return $where;
 	if(!$range[0]){

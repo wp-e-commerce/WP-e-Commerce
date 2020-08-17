@@ -331,8 +331,7 @@ function wpsc_update_product_rating() {
 		$vote_id = $data[0]['id'];
 		setcookie( "voting_cookie[$product_id]", ($vote_id . "," . $rating ), time() + (60 * 60 * 24 * 360) );
 	}
-	if ( $_POST['ajax'] == 'true' ) {
-
+	if ( isset( $_POST['ajax'] ) && $_POST['ajax'] == 'true' ) {
 		exit();
 	}
 }

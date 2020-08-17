@@ -139,10 +139,8 @@ function wpsc_price_control_forms() {
 	$price      = $product_data['meta']['_wpsc_price'];
 	$sale_price = $product_data['meta']['_wpsc_special_price'];
 
-	$wp_38 = version_compare( $GLOBALS['wp_version'], '3.8', '>=' );
-
-	$currency_delete_class = $wp_38 ? ' dashicons dashicons-dismiss' : '';
-	$currency_delete_text  = $wp_38 ? '' : 'x';
+	$currency_delete_class = ' dashicons dashicons-dismiss';
+	$currency_delete_text  = '';
 ?>
 		<em id="wpsc_product_price_metabox_live_title" class="wpsc_metabox_live_title">
 			<p>&nbsp;<?php echo esc_html( $ct_symb ); ?><span><?php echo esc_html( $sale_price ); ?></span></p>

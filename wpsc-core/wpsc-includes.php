@@ -50,10 +50,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log-notes.class.php'    
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form.class.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form-data.class.php'        );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-theme-engine-bootstrap.php'     );
-
-if ( defined( 'REST_API_VERSION' ) ) {
-	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-rest-api.class.php'         );
-}
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-rest-api.class.php'         );
 
 do_action( 'wpsc_loaded_module_'. basename( __FILE__ ) );
 
@@ -79,13 +76,13 @@ include_once( WPSC_FILE_PATH . '/wpsc-widgets/admin_menu_widget.php' );
 // Gregs ASH Shipping
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php' );
 
-// Admin
-if ( is_admin() ) {
+// Admin (Ensure this is loaded in)
+add_action( 'admin_init', function() {
 	include_once( WPSC_FILE_PATH . '/wpsc-admin/admin.php' );
-}
+} );
 
 // WP-CLI support
-if ( defined( 'WP_CLI' ) && WP_CLI && version_compare( phpversion(), '5.3', '>=' ) ) {
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-wp-cli.php' );
 }
 
