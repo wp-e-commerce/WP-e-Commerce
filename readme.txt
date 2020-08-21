@@ -2,7 +2,7 @@
 Contributors: JustinSainton
 Donate link: https://wpecommerce.org
 Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
-Requires at least: 4.7
+Requires at least: 5.0
 Tested up to: 5.5
 Requires PHP: 5.6
 Stable tag: 3.15.0

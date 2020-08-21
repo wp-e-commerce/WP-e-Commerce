@@ -197,12 +197,6 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 		$activate = false;
 	}
 
-	// Our checkout process uses a custom REST API endpoint by default, requiring the REST API.
-	// An alternative approach here would be to filter the fancy notifications to be turned off.
-	if ( version_compare( $GLOBALS['wp_version'], '4.7.0', '<' ) ) {
-		$activate = false;
-	}
-
 	$activate         = apply_filters( '_wpsc_maybe_activate_theme_engine_v2', $activate );
 	$new_theme_engine = $activate ? '2.0' : '1.0';
 	$old_theme_engine = get_option( 'wpsc_get_active_theme_engine' );
