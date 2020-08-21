@@ -5,7 +5,7 @@ Tags: e-commerce, digital downloads, wp-e-commerce, shop, cart, paypal, authoriz
 Requires at least: 5.0
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 3.15.0
+Stable tag: 3.15.1
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -37,7 +37,12 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
-= 3.15.0 [2020-08-17] =
+= 3.15.0 [2020-08-21] =
+
+* Fix: Permissions error on new installations.
+* Fix: Correct constant version.
+
+= 3.15.0 [2020-08-21] =
 
 * Fix: Continued improved integration with new WordPress block editor.
 * Fix: Improve compatibility with PHP 7.3+

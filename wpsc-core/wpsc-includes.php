@@ -77,9 +77,9 @@ include_once( WPSC_FILE_PATH . '/wpsc-widgets/admin_menu_widget.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php' );
 
 // Admin (Ensure this is loaded in)
-add_action( 'admin_init', function() {
+if ( is_admin() || did_action( 'admin_init' ) ) {
 	include_once( WPSC_FILE_PATH . '/wpsc-admin/admin.php' );
-} );
+}
 
 // WP-CLI support
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
