@@ -170,7 +170,11 @@ function _wpsc_filter_special_widget_join( $join ) {
  * 5. Function now expect a single paramter with an array of options (used to be a string which prepended the output).
  */
 
+<<<<<<< HEAD
+function wpsc_specials( $args, $instance ) {
+=======
 function wpsc_specials( $args = null, $instance ) {
+>>>>>>> parent of eb244fad (PHP 8 Compatibility)
 
 	global $wpdb;
 

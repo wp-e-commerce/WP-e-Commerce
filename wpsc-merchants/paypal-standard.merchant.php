@@ -125,10 +125,18 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			'currency_code' => $this->get_paypal_currency_code(),
 			'lc'            => $this->cart_data['store_currency'],
 			'no_note'       => '1',
-			'charset'       => 'utf-8',
-		);
-
-		// IPN data
+			'charset'       => 'utf-8',		
+			
+			);
+			
+		// Set PayPal payments to come through as authorisations
+		if (get_option('authorisation_or_completed_payment') == 1) {
+			$paypal_vars += array(
+			'paymentaction' => 'authorization'
+			);
+		}
+		
+        // IPN data
 		if (get_option('paypal_ipn') == 1) {
 			$notify_url = $this->cart_data['notification_url'];
 			$notify_url = add_query_arg('gateway', 'wpsc_merchant_paypal_standard', $notify_url);
@@ -170,9 +178,10 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		// Order settings to be sent to paypal
 		$paypal_vars += array(
 			'invoice' => $this->cart_data['session_id']
+			
 		);
-
-		if ( $buy_now ) {
+			
+	    if ( $buy_now ) {
 			$paypal_vars['custom'] = 'buy_now';
 		}
 
@@ -651,11 +660,15 @@ function submit_paypal_multiple (){
 		update_option( 'paypal_ship', (int) $_POST['paypal_ship'] );
 	}
 
+    if ( isset( $_POST['authorisation_or_completed_payment'] ) ) {
+		update_option( 'authorisation_or_completed_payment', (int) $_POST['authorisation_or_completed_payment'] );
+	}
+
 	if ( ! isset( $_POST['paypal_form'] ) ) {
 		$_POST['paypal_form'] = array();
 	}
 
-	foreach( (array) $_POST['paypal_form'] as $form => $value ) {
+    foreach( (array) $_POST['paypal_form'] as $form => $value ) {
 		update_option( 'paypal_form_' . $form, sanitize_text_field( $value ) );
 	}
 
@@ -749,7 +762,22 @@ function form_paypal_multiple() {
 			$address_override2 = "checked='checked'";
 			break;
 	}
+	
+	$authorisation_or_completed_payment = get_option( 'authorisation_or_completed_payment' );
+	$authorisation_or_completed_payment1 = "";
+	$authorisation_or_completed_payment2 = "";
+	switch( $authorisation_or_completed_payment ) {
+		case 1:
+			$authorisation_or_completed_payment1 = "checked= 'checked'";
+		    break;
+
+		case 0:
+			default:
+			$authorisation_or_completed_payment2 = "checked='checked'";
+			break;
+	}
 	$output .= "
+	
 	<tr>
 		<td>" . __( "IPN", 'wp-e-commerce' ) . ":</td>
 		<td>
@@ -781,8 +809,21 @@ function form_paypal_multiple() {
 				" . __( "This setting affects your PayPal purchase log. If your customers already have a PayPal account, PayPal will try to populate your PayPal Purchase Log with their PayPal address. This setting tries to replace the address in the PayPal purchase log with the address customers enter on your Checkout page.", 'wp-e-commerce' ) . "
 			</p>
 		</td>
-	</tr>\n";
-
+		</tr>
+		<tr>
+		<td>
+		
+		" . __( 'Payment Authorisations:', 'wp-e-commerce' ) . "
+		</td>
+		<td>
+			<input type='radio' value='1' name='authorisation_or_completed_payment' id='authorisation_or_completed_payment1' " . $authorisation_or_completed_payment1 . " /> <label for='authorisation_or_completed_payment1'>" . __( 'Yes', 'wp-e-commerce' ) . "</label> &nbsp;
+			<input type='radio' value='0' name='authorisation_or_completed_payment' id='authorisation_or_completed_payment2' " . $authorisation_or_completed_payment2 . " /> <label for='authorisation_or_completed_payment2'>" . __( 'No', 'wp-e-commerce' ) . "</label>
+			<p class='description'>
+				" . __( "This setting allows you to choose if you with to have PayPal payments come through as authorisations, or completed payments. Tick yes for payments to come through as authorisations, or no for payments to come through as completed payments. If set to authorisations, you will then be able to capture or void the transaction from within your PayPal account.", 'wp-e-commerce' ) . "
+			</p>
+	    </td>
+    </tr>\n";
+	
 	$store_currency_data = WPSC_Countries::get_currency_data( get_option( 'currency_type' ), true );
 	$current_currency = get_option('paypal_curcode');
 	if ( ( $current_currency == '' ) && in_array( $store_currency_data['code'], $wpsc_gateways['wpsc_merchant_paypal_standard']['supported_currencies']['currency_list'] ) ) {
