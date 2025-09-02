@@ -241,58 +241,8 @@ class WPEC_Braintree_Helpers {
 	 * @return string
 	 */
 	public static function wpec_bt_auth_get_connect_url() {
-		$base = wpsc_get_base_country();
-		$connect_url = 'https://wpecommerce.org/wp-json/wpec/v1/braintree';
-
-		$redirect_url = wp_nonce_url( admin_url( esc_url_raw( 'options-general.php?page=wpsc-settings&tab=gateway' ) ), 'connect_paypal_braintree', 'wpec_paypal_braintree_admin_nonce' );
-
-		$current_user = wp_get_current_user();
-
-		$environment = get_option( 'braintree_sandbox_mode' );
-		$environment = $environment == 'on' ? 'sandbox' : 'production' ;
-
-		// Note:  We doubly urlencode the redirect url to avoid Braintree's server
-		// decoding it which would cause loss of query params on the final redirect
-		$query_args = array(
-			'Auth'              => 'WPeCBraintree',
-			'user_email'        => $current_user->user_email,
-			'business_currency' => wpsc_get_currency_code(),
-			'business_website'  => get_bloginfo( 'url' ),
-			'redirect'          => base64_encode( $redirect_url ),
-		);
-
-		if ( ! empty( $current_user->user_firstname ) ) {
-			$query_args[ 'user_firstName' ] = $current_user->user_firstname;
-		}
-
-		if ( ! empty( $current_user->user_lastname ) ) {
-			$query_args[ 'user_lastName' ] = $current_user->user_lastname;
-		}
-
-		// Let's go ahead and assume the user and business are in the same region and country,
-		// because they probably are.  If not, they can edit these anyways
-		$base_country = new WPSC_Country( $base );
-		$region = new WPSC_Region( get_option( 'base_country' ), get_option( 'base_region' ) );
-
-		$location = in_array( $base_country->get_isocode(), array( 'US', 'UK', 'FR' ) ) ? $base_country->get_isocode() : 'US';
-
-		if ( ! empty( $base ) ) {
-			$query_args['business_country'] = $query_args['user_country'] = $base;
-		}
-
-		if ( ! empty( $region ) ) {
-			$query_args['business_region'] = $query_args['user_region'] = $region->get_code();
-		}
-
-		if ( $site_name = get_bloginfo( 'name' ) ) {
-			$query_args[ 'business_name' ] = $site_name;
-		}
-
-		if ( $site_description = get_bloginfo( 'description' ) ) {
-			$query_args[ 'business_description' ] = $site_description;
-		}
-
-		return add_query_arg( $query_args, $connect_url );
+		// API endpoint no longer available
+		return false;
 	}
 
 	public function bt_auth_can_connect() {

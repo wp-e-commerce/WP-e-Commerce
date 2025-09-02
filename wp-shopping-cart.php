@@ -1,11 +1,9 @@
 <?php
 /**
   * Plugin Name: WP eCommerce
-  * Plugin URI: http://wpecommerce.org/
-  * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://wpecommerce.org" target="_blank">WPeCommerce.org</a> | <a href="https://wordpress.org/support/plugin/wp-e-commerce/" target="_blank">Support Forum</a> | <a href="http://docs.wpecommerce.org/" target="_blank">Documentation</a>
-  * Version: 3.13.2
-  * Author: WP eCommerce
-  * Author URI: http://wpecommerce.org/
+   * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="https://wordpress.org/support/plugin/wp-e-commerce/" target="_blank">Support Forum</a>
+ * Version: 3.13.2
+ * Author: WP eCommerce
   * Text Domain: wp-e-commerce
   **/
 

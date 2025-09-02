@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP eCommerce 3.12.4\n"
-"Report-Msgid-Bugs-To: https://wpecommerce.org/\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-e-commerce/\n"
 "POT-Creation-Date: 2017-10-25 20:35:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -12770,16 +12770,14 @@ msgid ""
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "http://wpecommerce.org/"
+msgid ""
 msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
 "A plugin that provides a WordPress Shopping Cart. See also: <a "
-"href=\"http://wpecommerce.org\" target=\"_blank\">WPeCommerce.org</a> | <a "
 "href=\"https://wordpress.org/support/plugin/wp-e-commerce/\" "
-"target=\"_blank\">Support Forum</a> | <a "
-"href=\"http://docs.wpecommerce.org/\" target=\"_blank\">Documentation</a>"
+"target=\"_blank\">Support Forum</a>"
 msgstr ""
 
 #: wpsc-admin/admin-form-functions.php:222

@@ -499,14 +499,6 @@ function form_paypal_pro() {
 		</tr>\n";
 	}
 
-	$output .="
-	<tr>
-		<td colspan='2'>
-			<p class='description'>
-				" . sprintf( __( "For more help configuring PayPal Pro, please read our documentation <a href='%s'>here</a>.", 'wp-e-commerce' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-pro/' ) ) . "
-				</p>
-		</td>
-	</tr>";
 	return $output;
 }
 

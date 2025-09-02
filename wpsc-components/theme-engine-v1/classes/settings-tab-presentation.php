@@ -460,7 +460,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<?php
 						if ( ! function_exists( 'product_display_grid' ) ) {
 					?>
-					<a href='http://wpecommerce.org/store/premium-plugins/gold-cart/'><?php esc_html_e( 'Purchase unavailable options', 'wp-e-commerce' ); ?></a>
+					<?php esc_html_e( 'Premium options may be available through third-party developers', 'wp-e-commerce' ); ?>
 					<?php
 						}
 					?>

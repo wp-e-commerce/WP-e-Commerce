@@ -36,7 +36,7 @@ class WPSC_Tracking {
 	 * @since 3.12.0
 	 * @access private
 	 */
-	private $api_url = 'https://wpecommerce.org/';
+	private $api_url = '';
 
 	/**
 	 * Get things going

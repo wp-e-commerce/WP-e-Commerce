@@ -1,9 +1,9 @@
 <?php
 add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
 add_action( 'wpsc_hourly_cron_task', '_wpsc_delete_expired_visitors' );
-add_action( 'wpsc_weekly_cron_task', 'wpsc_lic_weekly_license_check' );
+//add_action( 'wpsc_weekly_cron_task', 'wpsc_lic_weekly_license_check' );
 
-/** 
+/**
  * Checks any active Addons license keys and updates license data
  *
  * @since 3.12.0
@@ -24,17 +24,9 @@ function wpsc_lic_weekly_license_check() {
 			'url'       => home_url()
 		);
 
-		// Call the API
-		$response = wp_remote_post( 'https://wpecommerce.org', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-
-		// make sure the response came back okay
-		if ( is_wp_error( $response ) ) {
-			return false;
-		}
-
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-		$active_licenses[ $license['download'] ]['status'] = $license_data->license;
-		$active_licenses[ $license['download'] ]['expire'] = $license_data->expires;
+		// API endpoint no longer available - mark license as inactive
+		$active_licenses[ $license['download'] ]['status'] = 'inactive';
+		$active_licenses[ $license['download'] ]['expire'] = '';
 		update_option( 'wpec_licenses_registered_addons', $active_licenses );
 	}
 }
@@ -43,7 +35,7 @@ function wpsc_add_tracking_cron() {
     $tracking = new WPSC_Tracking();
     $tracking->send_data();
 }
-add_action( 'wpsc_weekly_cron_task', 'wpsc_add_tracking_cron' );
+//add_action( 'wpsc_weekly_cron_task', 'wpsc_add_tracking_cron' );
 
 /**
  * wpsc_clear_stock_claims, clears the stock claims, runs using wp-cron and when editing purchase log statuses via the dashboard

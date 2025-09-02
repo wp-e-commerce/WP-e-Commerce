@@ -140,7 +140,7 @@ global $wpdb;
 
 				<?php }else{ ?>
 
-				<p>	<?php _e(' You don\'t have the Members and Capabilities plugin installed. To start managing your users and creating subscriptions for your site, visit: <a href="https://wpecommerce.org/store/premium-plugins/membership-subscriptions/" target="_blank">Premium Upgrades</a>','wp-e-commerce');
+				<p>	<?php _e(' You don\'t have the Members and Capabilities plugin installed. Additional premium plugins may be available through third-party developers.','wp-e-commerce');
 				}?> </p>
 		</div>
 

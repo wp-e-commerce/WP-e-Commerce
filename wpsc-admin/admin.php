@@ -372,12 +372,7 @@ function wpsc_add_help_tabs() {
 	if ( array_key_exists( $screen->id, $tabs ) ) {
 		$tab = $tabs[$screen->id];
 		$content = '<p><strong>' . __( 'For More Information', 'wp-e-commerce' ) . '</strong></p>';
-		$links = array();
-		foreach( $tab['links'] as $link => $link_title ) {
-			$link = 'http://docs.wpecommerce.org/' . $link;
-			$links[] = '<a target="_blank" href="' . esc_url( $link ) . '">' . esc_html( $link_title ) . '</a>';
-		}
-		$content .= '<p>' . implode( '<br />', $links ) . '</p>';
+		$content .= '<p><a target="_blank" href="' . esc_url( 'https://wordpress.org/support/plugin/wp-e-commerce/' ) . '">' . esc_html__( 'Get Support', 'wp-e-commerce' ) . '</a></p>';
 
 		$screen->add_help_tab( array(
 			'id'      => $screen->id . '_help',
@@ -957,9 +952,8 @@ add_action( 'wp_dashboard_setup', 'wpsc_dashboard_widget_setup' );
  * @uses wp_widget_rss_output()   Display the RSS entries in a list
  */
 function wpsc_dashboard_news() {
-	$rss = fetch_feed( 'http://wpecommerce.org/feed/?category_name=news' );
-	$args = array( 'show_author' => 1, 'show_date' => 1, 'show_summary' => 1, 'items' => 3 );
-	wp_widget_rss_output( $rss, $args );
+	// RSS feed no longer available
+	echo '<p>' . esc_html__( 'For the latest updates and news, visit the WordPress.org plugin page.', 'wp-e-commerce' ) . '</p>';
 
 }
 
@@ -1396,7 +1390,7 @@ function _wpsc_admin_notices_3dot8dot9() {
 	$message .= "\n<p>" . __( '<a href="%2$s">Hide this warning</a>', 'wp-e-commerce' ) . '</p>';
 	$message = sprintf(
 		$message,
-		'https://wpecommerce.org/wp-e-commerce-3-8-9-compatibility-issues/',
+		'https://wordpress.org/support/plugin/wp-e-commerce/',
 		esc_url( add_query_arg( 'dismiss_389_upgrade_notice', 1 ) )
 	);
 
@@ -1465,7 +1459,7 @@ function _wpsc_admin_notices_3dot8dot11() {
 		$message,
 		WPSC_VERSION,
 		'https://github.com/wp-e-commerce/WP-e-Commerce/issues/359',
-		'http://docs.wpecommerce.org/documentation/3-8-11-user-logs',
+		'https://wordpress.org/support/plugin/wp-e-commerce/',
 		esc_url( add_query_arg( 'dismiss_3811_upgrade_notice', 1 ) )
 	);
 
@@ -1509,8 +1503,7 @@ if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
  * @return array $links Updated links
  */
 function wpsc_support_links( $links ) {
-	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'https://wpecommerce.org/support/', 'Support URL', 'wp-e-commerce' ),  __( 'Support', 'wp-e-commerce' ) );
-	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://docs.wpecommerce.org/', 'Documentation URL', 'wp-e-commerce' ),  __( 'Documentation', 'wp-e-commerce' ) );
+	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'https://wordpress.org/support/plugin/wp-e-commerce/', 'Support URL', 'wp-e-commerce' ),  __( 'Support', 'wp-e-commerce' ) );
 
 	return $links;
 }
@@ -1570,8 +1563,7 @@ function wpsc_admin_rate_us( $footer_text ) {
 	global $typenow;
 
 	if ( $typenow == 'wpsc-product' ) {
-		$rate_text = sprintf( __( 'Thank you for using <a href="%1$s" target="_blank">WP eCommerce</a>! Please <a href="%2$s" target="_blank">rate us</a> on <a href="%2$s" target="_blank">WordPress.org</a>', 'wp-e-commerce' ),
-			'https://wpecommerce.org',
+		$rate_text = sprintf( __( 'Thank you for using WP eCommerce! Please <a href="%1$s" target="_blank">rate us</a> on WordPress.org', 'wp-e-commerce' ),
 			'https://wordpress.org/support/plugin/wp-e-commerce/reviews/?filter=5#new-post'
 		);
 		return str_replace( '</span>', '', $footer_text ) . ' | ' . $rate_text . '</span>';

@@ -1,6 +1,5 @@
 /**
  * WP eCommerce - v4.0.0 - 2017-03-15
- * https://wpecommerce.org/
  *
  * Copyright (c) 2017;
  * Licensed GPLv2+

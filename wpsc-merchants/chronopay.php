@@ -435,12 +435,7 @@ function form_chronopay()
 				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_country' ) ) . "
 				</select>
 			</td>
-		</tr>
-		   <tr>
-           <td colspan='2'>
-           	" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wp-e-commerce' ), esc_url( 'https://docs.wpecommerce.org/documentation/chronopay/' ) ) . "
-           </td>
-       </tr>";
+		</tr>";
 
 	return $output;
 }

@@ -267,7 +267,6 @@ class ash_ups {
 			<tr>
 				<td colspan='2'>
 					<p class='description'><?php _e( '* For Negotiated rates, you must enter a UPS account number and select "Show UPS negotiated rates" ', 'wp-e-commerce' ); ?></p>
-					<p class='description'><?php printf( __( "For more help configuring UPS, please <a href='%s'>read our documentation</a>", 'wp-e-commerce' ), esc_url( 'http://docs.wpecommerce.org/wiki/documentation/shipping/ups' ) ); ?></p>
 				</td>
 			</tr>
 		</table></td></tr>

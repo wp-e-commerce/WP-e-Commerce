@@ -5,8 +5,7 @@
   "version": "3.13.2",
   "license": "GPLv2",
   "author": {
-    "name": "WP-e-Commerce",
-    "url": "https://wpecommerce.org/"
+    "name": "WP-e-Commerce"
   },
   "private": true,
   "type": "module",

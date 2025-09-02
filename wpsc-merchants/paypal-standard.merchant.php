@@ -137,7 +137,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				'notify_url' => $notify_url,
 			);
 		}
-		
+
 		// Customer details
 		$paypal_vars += array(
 			'email'      => $this->cart_data['email_address'],
@@ -903,13 +903,6 @@ function form_paypal_multiple() {
 				<select name='paypal_form[country]'>
 				" . nzshpcrt_form_field_list( get_option( 'paypal_form_country' ) ) . "
 				</select>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'>
-				<p class='description'>
-				" . sprintf( __( "For more help configuring PayPal Standard, please read our documentation <a href='%s'>here</a>", 'wp-e-commerce' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-standard/' ) ) . "
-				</p>
 			</td>
 		</tr>\n";
 	}
