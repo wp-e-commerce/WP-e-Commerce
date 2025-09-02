@@ -9,27 +9,40 @@
     "url": "https://wpecommerce.org/"
   },
   "private": true,
-  "devDependencies": {
-    "babelify": "^6.3.0",
-    "grunt": "^0.4.5",
-    "browserify": "^11.1.0",
-    "browserify-shim": "^3.8.10",
-    "grunt-asciify": "~0.2.2",
-    "grunt-checktextdomain": "^1.0.0",
-    "grunt-combine-media-queries": "^1.0.20",
-    "grunt-contrib-cssmin": "^0.9.0",
-    "grunt-contrib-jshint": "^0.11.0",
-    "grunt-contrib-sass": "^0.7.4",
-    "grunt-contrib-uglify": "^2.2.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-exec": "^0.4.7",
-    "grunt-potomo": "^2.1.0",
-    "grunt-wp-i18n": "^0.4.9",
-    "grunt-browserify": "^4.0.1",
-    "load-grunt-tasks": "^0.2.1",
-    "matchdep": "^1.0.1"
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:js && npm run build:css",
+    "build:js": "vite build",
+    "build:css": "node build-css.js",
+    "preview": "vite preview",
+    "lint": "eslint wpsc-admin/js/*.js wpsc-core/js/*.js wpsc-components/**/*.js --ext .js",
+    "lint:fix": "eslint wpsc-admin/js/*.js wpsc-core/js/*.js wpsc-components/**/*.js --ext .js --fix",
+    "makepot": "wp-pot --src '**/*.php' --dest-file 'wpsc-languages/wp-e-commerce.pot' --package 'WP eCommerce' --domain 'wp-e-commerce'",
+    "format": "prettier --write '**/*.{js,css,scss,json,md}'",
+    "check-format": "prettier --check '**/*.{js,css,scss,json,md}'",
+    "legacy:build": "npm run build",
+    "watch": "npm run dev"
   },
-  "browserify-shim": {
-    "jquery": "global:jQuery"
-  }
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^5.4.0",
+    "autoprefixer": "^10.4.19",
+    "cssnano": "^7.0.1",
+    "eslint": "^9.6.0",
+    "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.1.0",
+    "postcss-preset-env": "^9.5.11",
+    "prettier": "^3.3.2",
+    "sass": "^1.77.5",
+    "vite": "^5.3.3",
+    "vite-plugin-laravel": "^0.3.1",
+    "wp-pot": "^1.10.3"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead",
+    "IE 11"
+  ]
 }
