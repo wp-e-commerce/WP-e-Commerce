@@ -452,7 +452,7 @@ function wpsc_display_products_page( $query ) {
 		}
 		if(!empty($query['category_id'])){
 			$term = get_term($query['category_id'],'wpsc_product_category');
-			$id = wpsc_get_meta($query['category_id'], 'category_id','wpsc_old_category');
+			$id = wpsc_get_meta('category_id','wpsc_old_category', $query['category_id']);
 			if( !empty($id)){
 				$term = get_term($id,'wpsc_product_category');
 				$args['wpsc_product_category'] = $term->slug;

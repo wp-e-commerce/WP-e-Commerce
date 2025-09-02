@@ -469,7 +469,7 @@ add_action( 'wpsc_edit_item', '_wpsc_validate_cart_product_quantity', 10, 3 );
  * @return array of shipping options
 */
 function wpsc_selfURL() {
-	$s = empty( $_SERVER ['HTTPS'] ) ? '' : ( $_SERVER ['HTTPS'] == 'on' ) ? 's' : '';
+	$s = empty( $_SERVER ['HTTPS'] ) ? '' : ( ( $_SERVER ['HTTPS'] == 'on' ) ? 's' : '' );
 	$protocol = wpsc_strleft( strtolower( $_SERVER ['SERVER_PROTOCOL'] ), '/' ) . $s;
 	$port = ( $_SERVER ['SERVER_PORT'] == '80' ) ? '' : ( ':' . $_SERVER ['SERVER_PORT'] );
 	return $protocol . '://' . $_SERVER ['SERVER_NAME'] . $port . $_SERVER ['REQUEST_URI'];

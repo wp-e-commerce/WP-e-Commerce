@@ -258,7 +258,7 @@ function get_upgrades($upgrade_folder = '') {
 		$wpsc_upgrades[plugin_basename( $upgrade_file )] = $upgrade_data;
 	}
 
-	uasort( $wpsc_upgrades, create_function( '$a, $b', 'return strnatcasecmp( $a["Name"], $b["Name"] );' ));
+	uasort( $wpsc_upgrades, function($a, $b) { return strnatcasecmp( $a["Name"], $b["Name"] ); });
 
 	$cache_upgrades[ $upgrade_folder ] = $wpsc_upgrades;
 	wp_cache_set('wpsc_upgrades', $cache_upgrades, 'wpsc_upgrades');

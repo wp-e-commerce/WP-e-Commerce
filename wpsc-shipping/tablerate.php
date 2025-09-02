@@ -8,7 +8,7 @@
 
 class tablerate {
 
-	var $internal_name, $name;
+	var $internal_name, $name, $is_external;
 
 	/**
 	 * Constructor

@@ -616,9 +616,9 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 			foreach ( (array) $category_ids as $catid ) {
 				if ( is_array( $catid ) ) {
-					$countries = wpsc_get_meta( $catid[0], 'target_market', 'wpsc_category' );
+					$countries = wpsc_get_meta( 'target_market', 'wpsc_category', $catid[0] );
 				} else {
-					$countries = wpsc_get_meta( $catid, 'target_market', 'wpsc_category' );
+					$countries = wpsc_get_meta( 'target_market', 'wpsc_category', $catid );
 				}
 
 				if ( ! empty( $countries ) && ! in_array( $country_id, (array) $countries ) ) {

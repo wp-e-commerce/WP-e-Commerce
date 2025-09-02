@@ -1118,7 +1118,7 @@ class WPSC_Countries {
 
 		foreach( self::$_maps_to_save_with_core_class as $map_name => $should_be_saved ) {
 			if ( $should_be_saved ) {
-				if ( ( null !== $data[ $map_name ] ) && ! is_a( $data[ $map_name ], 'WPSC_Data_Map' ) ) {
+				if ( is_array( $data ) && isset( $data[ $map_name ] ) && ( null !== $data[ $map_name ] ) && ! is_a( $data[ $map_name ], 'WPSC_Data_Map' ) ) {
 					$transient_is_valid = false;
 					_wpsc_delete_transient( self::transient_name() );
 					break;

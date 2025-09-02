@@ -73,7 +73,7 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 				return $terms;
 			}
 
-			$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_category' ) : null;
+			$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( 'sort_order', 'wpsc_category', $term->term_id ) : null;
 			$term_order = (int) $term_order;
 
 			// unsorted categories should go to the top of the list
@@ -121,7 +121,7 @@ function wpsc_get_terms_variation_sort_filter( $terms ) {
 			return $terms;
 		}
 
-		$term_order = ( $term->taxonomy == 'wpsc-variation' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_variation' ) : null;
+		$term_order = ( $term->taxonomy == 'wpsc-variation' ) ? wpsc_get_meta( 'sort_order', 'wpsc_variation', $term->term_id ) : null;
 		$term_order = (int) $term_order;
 
 		// unsorted categories should go to the top of the list

@@ -152,7 +152,7 @@ function wpsc_core_constants_version_processing() {
 	$version_processing = str_replace( array( 'alpha', 'beta', 'gamma' ), array( 'a', 'b', 'g' ), $version_processing );
 	$version_processing = preg_split( "/([a-z]+)/i", $version_processing, -1, PREG_SPLIT_DELIM_CAPTURE );
 
-	array_walk( $version_processing, create_function( '&$v', '$v = trim($v,". ");' ) );
+	array_walk( $version_processing, function(&$v) { $v = trim($v,". "); });
 
 	define( 'IS_WP25', version_compare( $version_processing[0], '2.5', '>=' ) );
 	define( 'IS_WP27', version_compare( $version_processing[0], '2.7', '>=' ) );

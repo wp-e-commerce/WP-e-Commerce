@@ -1,6 +1,12 @@
 <?php
 class WPSC_Payment_Gateway_Braintree_PayPal extends WPSC_Payment_Gateway {
 
+	public $helpers;
+	public $sandbox;
+	public $but_size;
+	public $but_colour;
+	public $but_shape;
+
 	public function __construct() {
 		require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/pp-braintree.php' );
 		parent::__construct();

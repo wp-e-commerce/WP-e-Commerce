@@ -2,7 +2,7 @@
 
 global $wpsc_purchlog_statuses;
 if ( ! isset( $wpsc_purchlog_statuses ) || ! count( $wpsc_purchlog_statuses ) ) {
-	wpsc_core_load_purchase_log_statuses();
+	add_action( 'init', 'wpsc_core_load_purchase_log_statuses', 1 );
 }
 
 function wpsc_instantiate_purchaselogitem() {

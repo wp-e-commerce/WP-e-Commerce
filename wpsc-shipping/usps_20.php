@@ -13,6 +13,12 @@ class ash_usps {
 	var $usps_id;
 
 	/**
+	 * USPS shipping services
+	 * @var array
+	 */
+	var $services;
+
+	/**
 	 * The USPS password for the API user account
 	 * @var string
 	 * @deprecated Deprecated since 2.0

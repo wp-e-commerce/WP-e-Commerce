@@ -94,7 +94,7 @@ function wpsc_get_acceptable_countries() {
 	$target_market_ids = array();
 
 	foreach ( $cart_category_ids as $category_id ) {
-		$target_markets = wpsc_get_meta( $category_id, 'target_market', 'wpsc_category' );
+		$target_markets = wpsc_get_meta( 'target_market', 'wpsc_category', $category_id );
 		if ( ! empty( $target_markets ) )
 			$target_market_ids[$category_id] = $target_markets;
 	}

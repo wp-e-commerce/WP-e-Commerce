@@ -341,7 +341,7 @@ function wpsc_product_files_htaccess() {
 		$file_handle = @ fopen( $filename, 'w+' );
 		@ fwrite( $file_handle, $htaccess );
 		@ fclose( $file_handle );
-		@ chmod( $file_handle, 0665 );
+		@ chmod( $filename, 0665 );
 	}
 }
 

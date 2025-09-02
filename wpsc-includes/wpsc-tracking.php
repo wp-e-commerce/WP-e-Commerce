@@ -49,7 +49,6 @@ class WPSC_Tracking {
 		add_action( 'wpsc_opt_into_tracking'         , array( $this, 'check_for_optin' ) );
 		add_action( 'wpsc_opt_out_of_tracking'       , array( $this, 'check_for_optout' ) );
 		add_action( 'wpsc_settings_page_save_options', array( $this, 'check_for_settings_optin' ), 10, 2 );
-		add_action( 'admin_notices'                  , array( $this, 'admin_notice' ) );
 	}
 
 	/**
@@ -194,38 +193,6 @@ class WPSC_Tracking {
 		if( isset( $option ) && $option == 'wpsc_usage_tracking' && $value == '1'  ) {
 			$this->send_data( true );
 		}
-	}
-
-	/**
-	 * Display the admin notice to users that have not opted-in or out
-	 *
-	 * @since 3.12.0
-	 * @access public
-	 * @return void
-	 */
-	public function admin_notice() {
-		$hide_notice = get_option( 'wpsc_usage_tracking_notice' );
-
-		if ( $hide_notice ) {
-			return;
-		}
-
-		if ( get_option( 'wpsc_usage_tracking', false ) ) {
-			return;
-		}
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		$optin_url  = esc_url_raw( add_query_arg( 'wpsc_tracking_action', 'opt_into_tracking' ) );
-		$optout_url = esc_url_raw( add_query_arg( 'wpsc_tracking_action', 'opt_out_of_tracking' ) );
-		$extensions_url = $this->api_url . 'store/';
-		echo '<div class="updated"><p>';
-			echo sprintf( __( 'Allow WP eCommerce to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20%s discount to the WPEC shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'wp-e-commerce' ), '%', $extensions_url );
-			echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'wp-e-commerce' ) . '</a>';
-			echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'wp-e-commerce' ) . '</a>';
-		echo '</p></div>';
 	}
 
 	/**

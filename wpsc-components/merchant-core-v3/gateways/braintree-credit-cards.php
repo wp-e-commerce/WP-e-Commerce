@@ -1,6 +1,11 @@
 <?php
 class WPSC_Payment_Gateway_Braintree_Credit_Cards extends WPSC_Payment_Gateway {
 
+	public $helpers;
+	public $image;
+	public $sandbox;
+	public $payment_capture;
+
 	public function __construct() {
 		require_once( WPSC_MERCHANT_V3_SDKS_PATH . '/pp-braintree/pp-braintree.php' );
 		parent::__construct();

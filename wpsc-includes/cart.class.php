@@ -372,7 +372,7 @@ class WPSC_Cart {
 		}
 
 		$this->shipping_methods      = $custom_shipping;
-		$this->shipping_method_count = count( $this->shipping_methods );
+		$this->shipping_method_count = is_array( $this->shipping_methods ) ? count( $this->shipping_methods ) : 0;
 
 		$use_shipping = ! get_option( 'do_not_use_shipping', false );
 		$ready_to_calculate_shipping = apply_filters( 'wpsc_ready_to_calculate_shipping', true, $this );
@@ -400,14 +400,14 @@ class WPSC_Cart {
 						foreach ( $raw_quotes as $key => $value ) {
 							$this->shipping_quotes[$wpsc_shipping_modules[ $shipping_module ]->name. ' ' . $key] = $value;
 						}
-						$this->shipping_quote_count = count( $this->shipping_quotes );
+						$this->shipping_quote_count = is_array( $this->shipping_quotes ) ? count( $this->shipping_quotes ) : 0;
 					}
 				}
 
-				if ( 1 == count( $this->shipping_methods ) ) {
+				if ( is_array( $this->shipping_methods ) && 1 == count( $this->shipping_methods ) ) {
 					$this->selected_shipping_method = $this->shipping_methods[0];
 
-					if ( 1 == count( $this->shipping_quotes ) ) {
+					if ( is_array( $this->shipping_quotes ) && 1 == count( $this->shipping_quotes ) ) {
 						reset( $this->shipping_quotes );
 						$this->selected_shipping_option = key( $this->shipping_quotes );
 					}
@@ -431,7 +431,7 @@ class WPSC_Cart {
 	function get_shipping_option() {
 		global $wpsc_shipping_modules;
 
-		if ( ( count( $this->shipping_quotes ) < 1 ) &&
+		if ( ( ! is_array( $this->shipping_quotes ) || count( $this->shipping_quotes ) < 1 ) &&
 		     isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) &&
 		     is_callable( array( $wpsc_shipping_modules[$this->selected_shipping_method], 'getQuote' ) ) ) {
 			$this->shipping_quotes = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
@@ -441,7 +441,7 @@ class WPSC_Cart {
 			$this->selected_shipping_option = null;
 		}
 
-		if ( count( $this->shipping_quotes ) < 1 ) {
+		if ( ! is_array( $this->shipping_quotes ) || count( $this->shipping_quotes ) < 1 ) {
 			$this->selected_shipping_option = null;
 		}
 
@@ -589,7 +589,7 @@ class WPSC_Cart {
 			$add_item = true;
 			$edit_item = false;
 
-			if ( count( $this->cart_items ) > 0 && $new_cart_item->is_donation != 1 ) {
+			if ( is_array( $this->cart_items ) && count( $this->cart_items ) > 0 && $new_cart_item->is_donation != 1 ) {
 
 				// loop through each cart item
 				foreach ( $this->cart_items as $key => $cart_item ) {
@@ -627,7 +627,7 @@ class WPSC_Cart {
 			$status = $new_cart_item;
 		}
 
-		$this->cart_item_count = count( $this->cart_items );
+		$this->cart_item_count = is_array( $this->cart_items ) ? count( $this->cart_items ) : 0;
 		$this->clear_cache();
 
 		return $status;
@@ -735,7 +735,7 @@ class WPSC_Cart {
 			$cart_item->update_item( 0 );
 			unset( $this->cart_items[$key] );
 			$this->cart_items = array_values( $this->cart_items );
-			$this->cart_item_count = count( $this->cart_items );
+			$this->cart_item_count = is_array( $this->cart_items ) ? count( $this->cart_items ) : 0;
 			$this->current_cart_item = - 1;
 			do_action( 'wpsc_remove_item', $key, $this, $cart_item );
 
@@ -1244,7 +1244,7 @@ class WPSC_Cart {
 
 		$this->current_shipping_method = - 1;
 
-		$this->shipping_method_count = count( $this->shipping_methods );
+		$this->shipping_method_count = is_array( $this->shipping_methods ) ? count( $this->shipping_methods ) : 0;
 
 		if ( $this->shipping_method_count > 0 ) {
 			$this->shipping_method = $this->shipping_methods[0];
@@ -1274,7 +1274,7 @@ class WPSC_Cart {
 			}
 		}
 
-		$this->shipping_quote_count = count( $this->shipping_quotes );
+		$this->shipping_quote_count = is_array( $this->shipping_quotes ) ? count( $this->shipping_quotes ) : 0;
 	}
 
 	/**
@@ -1285,7 +1285,7 @@ class WPSC_Cart {
 	 * @param WPSC_Cart  $wpsc_cart        The WPSC_Cart object.
 	 */
 	function set_default_shipping_quote( $selected_option, $shipping_quotes, $wpsc_cart ) {
-		if ( count( $shipping_quotes ) == 1 ) {
+		if ( is_array( $shipping_quotes ) && count( $shipping_quotes ) == 1 ) {
 			reset( $shipping_quotes );
 			$selected_option = key( $shipping_quotes );
 		}
@@ -1323,7 +1323,7 @@ class WPSC_Cart {
 					}
 
 					// if we have any shipping quotes, break the loop.
-					if ( count( $this->shipping_quotes ) > $shipping_quote_count ) {
+					if ( is_array( $this->shipping_quotes ) && count( $this->shipping_quotes ) > $shipping_quote_count ) {
 						break;
 					}
 				}

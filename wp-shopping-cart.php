@@ -31,6 +31,7 @@ class WP_eCommerce {
 	 */
 	public function __construct() {
 		add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
+		add_action( 'init', array( $this, 'load_textdomain' ), 1 );
 		add_filter( 'wpsc_components', array( $this, '_register_core_components' ) );
 	}
 
@@ -71,25 +72,20 @@ class WP_eCommerce {
 	 */
 	public function _register_core_components( $components ) {
 		$components['merchant']['core-v2'] = array(
-			'title'    => __( 'WP eCommerce Merchant API v2', 'wp-e-commerce' ),
+			'title'    =>  'WP eCommerce Merchant API v2',
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v2/merchant-core-v2.php'
 		);
 
 		$components['merchant']['core-v3'] = array(
-			'title'    => __( 'WP eCommerce Merchant API v3', 'wp-e-commerce' ),
+			'title'    =>  'WP eCommerce Merchant API v3',
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v3/merchant-core-v3.php'
 		);
 
-		$components['marketplace']['core-v1'] = array(
-			'title'    => __( 'WP eCommerce Marketplace API v1', 'wp-e-commerce' ),
-			'includes' =>
-				WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/marketplace-core-v1.php'
-		);
 
 		$components['fancy-notifications']['fancy-notifications-v1'] = array(
-			'title'    => __( 'Fancy Notifications v1', 'wpsc' ),
+			'title'    =>  'Fancy Notifications v1',
 			'includes' => WPSC_FILE_PATH . '/wpsc-components/fancy-notifications/fancy-notifications.php'
 		);
 
@@ -100,7 +96,6 @@ class WP_eCommerce {
 	 * Initialize the basic WP eCommerce constants
 	 *
 	 * @uses plugins_url()              Retrieves url to plugins directory
-	 * @uses load_plugin_textdomain()   Loads plugin transations strings
 	 * @uses plugin_basename()          Gets the basename of a plugin (extracts the name of a plugin from its filename)
 	 * @uses do_action()                Calls 'wpsc_started' which runs after WPEC has started
 	 */
@@ -116,15 +111,27 @@ class WP_eCommerce {
 		define( 'WPSC_FOLDER',    dirname( WPSC_PLUGIN_BASENAME ) );
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 
+		// Finished starting
+		do_action( 'wpsc_started' );
+	}
+
+	/**
+	 * Load plugin textdomain for translations
+	 *
+	 * @uses load_plugin_textdomain()   Loads plugin translation strings
+	 */
+	public function load_textdomain() {
+		// Ensure constants are defined
+		if ( ! defined( 'WPSC_PLUGIN_BASENAME' ) ) {
+			define( 'WPSC_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+		}
+
 		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomain' ), 10, 2 );
 
-		//load text domain
+		// Load text domain
 		if ( ! load_plugin_textdomain( 'wp-e-commerce', false, '../languages/' ) ) {
 			load_plugin_textdomain( 'wp-e-commerce', false, dirname( WPSC_PLUGIN_BASENAME ) . '/wpsc-languages/' );
 		}
-
-		// Finished starting
-		do_action( 'wpsc_started' );
 	}
 
 	/**
@@ -293,11 +300,11 @@ class WP_eCommerce {
 		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
 		add_action( 'init', array( $this, '_wpsc_fire_ready_action' ), 100 );
 
-		// Load the purchase log statuses
-		wpsc_core_load_purchase_log_statuses();
+		// Load the purchase log statuses (deferred to init to avoid early translation loading)
+		add_action( 'init', 'wpsc_core_load_purchase_log_statuses', 1 );
 
-		// Load unique names and checkout form types
-		wpsc_core_load_checkout_data();
+		// Load unique names and checkout form types (deferred to init to avoid early translation loading)
+		add_action( 'init', 'wpsc_core_load_checkout_data', 1 );
 
 		// Load the gateways
 		wpsc_core_load_gateways();

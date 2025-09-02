@@ -12,15 +12,17 @@ global $wpdb,$wp_version;
 $show_update_page = 1;
 
 // if there's nothing in the children variation cache, refresh it, just to make sure.
-if ( 0 == count( get_option( 'wpsc-variation_children' ) ) ) {
+$variation_children = get_option( 'wpsc-variation_children' );
+if ( false === $variation_children || ( is_array( $variation_children ) && 0 == count( $variation_children ) ) ) {
 	delete_option( 'wpsc-variation_children' );
 	_get_term_hierarchy( 'wpsc-variation' );
 }
 
 // if there's nothing in the children variation cache, refresh it, just to make sure.
-if ( 0 == count( get_option( 'wpsc_product_category_children' ) ) ) {
+$category_children = get_option( 'wpsc_product_category_children' );
+if ( false === $category_children || ( is_array( $category_children ) && 0 == count( $category_children ) ) ) {
 	delete_option( 'wpsc_product_category_children' );
-	_get_term_hierarchy( 'wpsc_product_category_children' );
+	_get_term_hierarchy( 'wpsc_product_category' );
 }
 
 $wpsc_version = get_option( 'wpsc_version', '0' );

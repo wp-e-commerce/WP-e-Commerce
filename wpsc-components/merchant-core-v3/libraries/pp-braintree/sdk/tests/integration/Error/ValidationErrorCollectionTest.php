@@ -10,7 +10,7 @@ class ValidationErrorCollectionTest extends Setup
 {
     public function mapValidationErrorsToCodes($validationErrors)
     {
-        $codes = array_map(create_function('$validationError', 'return $validationError->code;'), $validationErrors);
+        $codes = array_map(function($validationError) { return $validationError->code; }, $validationErrors);
         sort($codes);
         return $codes;
     }

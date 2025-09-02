@@ -222,7 +222,7 @@ function wpsc_admin_pages() {
 	$purchase_logs_cap = apply_filters( 'wpsc_purchase_logs_cap', 'administrator' );
 	$page_hooks[] = $purchase_logs_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wp-e-commerce' ), __( 'Store Sales', 'wp-e-commerce' ), $purchase_logs_cap, 'wpsc-purchase-logs', 'wpsc_display_purchase_logs_page' );
 
-	$page_hooks[] = add_submenu_page( 'index.php', __( 'WPeC License', 'wp-e-commerce' ), __( 'WPeC Licensing', 'wp-e-commerce' ), $store_upgrades_cap, 'wpsc-upgrades', 'wpsc_display_upgrades_page' );
+//	$page_hooks[] = add_submenu_page( 'index.php', __( 'WPeC License', 'wp-e-commerce' ), __( 'WPeC Licensing', 'wp-e-commerce' ), $store_upgrades_cap, 'wpsc-upgrades', 'wpsc_display_upgrades_page' );
 
 	// Set the base page for Products
 	$products_page = 'edit.php?post_type=wpsc-product';

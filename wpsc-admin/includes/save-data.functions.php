@@ -193,7 +193,7 @@ function wpsc_admin_category_forms_add() {
 		}
 
 		$countrylist       = WPSC_Countries::get_countries_array( true, true );
-		$selectedCountries = wpsc_get_meta( $category_id, 'target_market', 'wpsc_category' );
+		$selectedCountries = wpsc_get_meta( 'target_market', 'wpsc_category', $category_id );
 	?>
 	<h4><?php esc_html_e( 'Restrict to Target Markets', 'wp-e-commerce' )?></h4>
 	<div class='form-field'>
@@ -385,7 +385,7 @@ function wpsc_admin_category_forms_edit() {
 	</tr>
 	<?php
 		$countrylist = WPSC_Countries::get_countries_array( true, true );
-		$selectedCountries = wpsc_get_meta( $category_id,'target_market','wpsc_category' );
+		$selectedCountries = wpsc_get_meta( 'target_market','wpsc_category', $category_id );
 	?>
 	<tr>
 		<th scope="row" valign="top">

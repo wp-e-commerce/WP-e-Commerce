@@ -318,7 +318,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 *
 	 * @return mixed
 	 */
-	public function current() {
+	public function current(): mixed {
 		$this->fetch();
 		return current( $this->data );
 	}
@@ -330,7 +330,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 *
 	 * @return scalar
 	 */
-	public function key() {
+	public function key(): mixed {
 		$this->fetch();
 		return key( $this->data );
 	}
@@ -342,9 +342,9 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 *
 	 * @return void
 	 */
-	public function next() {
+	public function next(): void {
 		$this->fetch();
-		return next( $this->data );
+		next( $this->data );
 	}
 
 	/**
@@ -366,9 +366,9 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 *
 	 * @return void
 	 */
-	public function rewind() {
+	public function rewind(): void {
 		$this->fetch();
-		return reset( $this->data );
+		reset( $this->data );
 	}
 
 	/**
@@ -378,7 +378,7 @@ class WPSC_Purchase_Log_Notes extends WPSC_Query_Base implements Iterator {
 	 *
 	 * @return boolean
 	 */
-	public function valid() {
+	public function valid(): bool {
 		$this->fetch();
 		return isset( $this->data[ $this->key() ] );
 	}

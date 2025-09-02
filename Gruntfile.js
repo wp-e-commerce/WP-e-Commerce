@@ -31,7 +31,6 @@ module.exports = function( grunt ) {
 				src: [
 					'Gruntfile.js',
 					'wpsc-admin/js/*.js',
-					'wpsc-components/marketplace-core-v1/static/*.js',
 					'wpsc-components/merchant-core-v3/gateways/*.js',
 					'wpsc-components/theme-engine-v2/admin/js/*.js',
 					'wpsc-components/theme-engine-v2/theming/assets/js/*.js',

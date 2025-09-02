@@ -224,7 +224,7 @@ function wpsc_convert_category_groups() {
 	foreach((array)$categorisation_groups as $cat_group) {
 		$wpsc_update->check_timeout();
 
-		$category_id = wpsc_get_meta($cat_group->id, 'category_group_id', 'wpsc_category_group');
+		$category_id = wpsc_get_meta('category_group_id', 'wpsc_category_group', $cat_group->id);
 
 		if(!is_numeric($category_id) || ( $category_id < 1)) {
 			$new_category = wp_insert_term( $cat_group->name, 'wpsc_product_category', array('description' => $cat_group->description));
@@ -269,7 +269,7 @@ function wpsc_convert_categories($new_parent_category, $group_id, $old_parent_ca
 
 		foreach((array)$categorisation as $category) {
 			$wpsc_update->check_timeout();
-			$category_id = wpsc_get_meta($category->id, 'category_id', 'wpsc_old_category');
+			$category_id = wpsc_get_meta('category_id', 'wpsc_old_category', $category->id);
 
 			if(!is_numeric($category_id) || ( $category_id < 1)) {
 				$new_category = wp_insert_term( $category->name, 'wpsc_product_category', array('description' => $category->description, 'parent' => $new_parent_category));
@@ -315,7 +315,7 @@ function wpsc_convert_variation_sets() {
 
 	foreach((array)$variation_sets as $variation_set) {
 		$wpsc_update->check_timeout();
-		$variation_set_id = wpsc_get_meta($variation_set->id, 'variation_set_id', 'wpsc_variation_set');
+		$variation_set_id = wpsc_get_meta('variation_set_id', 'wpsc_variation_set', $variation_set->id);
 
 		if(!is_numeric($variation_set_id) || ( $variation_set_id < 1)) {
 			$slug = sanitize_title( $variation_set->name );
@@ -335,7 +335,7 @@ function wpsc_convert_variation_sets() {
 
 			$variations = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_VARIATION_VALUES."` WHERE `variation_id` IN ({$variation_set->id})");
 			foreach((array)$variations as $variation) {
-				$variation_id = wpsc_get_meta($variation->id, 'variation_id', 'wpsc_variation');
+				$variation_id = wpsc_get_meta('variation_id', 'wpsc_variation', $variation->id);
 
 				if(!is_numeric($variation_id) || ( $variation_id < 1)) {
 					$new_variation = wp_insert_term( $variation->name, 'wpsc-variation',array('parent' => $variation_set_id));
@@ -503,7 +503,7 @@ function wpsc_convert_products_to_posts() {
 			$category_ids = array();
 			$category_data = $wpdb->get_col("SELECT `category_id` FROM `".WPSC_TABLE_ITEM_CATEGORY_ASSOC."` WHERE `product_id` IN ('{$product['id']}')");
 			foreach($category_data as $old_category_id) {
-				$category_ids[] = wpsc_get_meta($old_category_id, 'category_id', 'wpsc_old_category');
+				$category_ids[] = wpsc_get_meta('category_id', 'wpsc_old_category', $old_category_id);
 
 			}
 			wp_set_product_categories($post_id, $category_ids);
@@ -681,7 +681,7 @@ function wpsc_convert_variation_combinations() {
 				// select all values this "product" is associated with, then loop through them, getting the term id of the variation using the value ID
 				$variation_associations_combinations = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_VARIATION_COMBINATIONS." WHERE `priceandstock_id` = '{$variation_item->id}'");
 				foreach((array)$variation_associations_combinations as $association) {
-					$variation_id = (int)wpsc_get_meta($association->value_id, 'variation_id', 'wpsc_variation');
+					$variation_id = (int)wpsc_get_meta('variation_id', 'wpsc_variation', $association->value_id);
 					// discard any values that are null, as they break the selecting of the terms
 					if($variation_id > 0 && in_array($association->value_id, $variation_associations) ) {
 						$variation_ids[] = $variation_id;
@@ -809,7 +809,7 @@ function wpsc_update_files() {
 			'post_status' => 'inherit'
 		);
 
-		$file_id = wpsc_get_meta($product_file->id, '_new_file_id', 'wpsc_files');
+		$file_id = wpsc_get_meta('_new_file_id', 'wpsc_files', $product_file->id);
 
 		if($file_id == null && count($variation_post_ids) == 0) {
 			$file_data = $attachment_template;
@@ -847,7 +847,7 @@ function wpsc_update_files() {
 
 	$download_ids = $wpdb->get_col("SELECT `id` FROM ".WPSC_TABLE_DOWNLOAD_STATUS."");
 	foreach($download_ids as $download_id) {
-		if(wpsc_get_meta($download_id, '_is_legacy', 'wpsc_downloads') !== 'false') {
+		if(wpsc_get_meta('_is_legacy', 'wpsc_downloads', $download_id) !== 'false') {
 			wpsc_update_meta($download_id, '_is_legacy', 'true', 'wpsc_downloads');
 		}
 	}

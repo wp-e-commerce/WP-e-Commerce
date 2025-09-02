@@ -297,7 +297,7 @@ class WPSC_Country {
 		if ( property_exists( $this, $property_name ) ) {
 			$value = $this->$property_name;
 		} else {
-			$value = wpsc_get_meta( $this->_id, $key, __CLASS__ );
+			$value = wpsc_get_meta( $key, __CLASS__, $this->_id );
 		}
 
 		return apply_filters( 'wpsc_country_get_property', $value, $key, $this );

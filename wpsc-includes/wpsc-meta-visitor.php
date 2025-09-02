@@ -570,7 +570,7 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 					case 'current_cart_item': // don't load array cursor
 					case 'current_shipping_method': // don't load array cursor
 					case 'current_shipping_quote': // don't load array cursor
-						continue;
+						break;
 
 					case 'shipping_methods':
 					case 'shipping_quotes':
@@ -654,7 +654,7 @@ function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 				case 'current_cart_item': // don't save array cursor
 				case 'current_shipping_method': // don't save array cursor
 				case 'current_shipping_quote': // don't save array cursor
-					continue;
+					break;
 
 				case 'shipping_methods':
 				case 'shipping_quotes':
